@@ -1,4 +1,5 @@
 use crate::types::configs::CupAndHandleConfig;
+use crate::StrategyResult;
 
 /// Cup and Handle Breakout Strategy
 ///
@@ -15,7 +16,7 @@ pub fn cup_and_handle_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<CupAndHandleConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let cup_depth = config.cup_depth.unwrap_or(0.15);
 	let handle_retracement = config.handle_retracement.unwrap_or(0.3);

@@ -1,12 +1,13 @@
 use crate::internal::moving_sum::moving_sum_internal;
+use crate::{IndicatorError, IndicatorResult};
 
-pub fn vwma(closings: &[f64], volumes: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
+pub fn vwma(closings: &[f64], volumes: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(20) as usize;
 
 	crate::utils::validation::validate_multiple_arrays(&[closings, volumes])?;
 
 	if closings.is_empty() {
-		return Err("Arrays cannot be empty".to_string());
+		return Err(IndicatorError::Custom("Arrays cannot be empty".into()));
 	}
 
 	let price_volume: Vec<f64> = closings

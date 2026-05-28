@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 pub fn moving_min_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![0.0; len];
@@ -18,7 +19,7 @@ pub fn moving_min_internal(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
-pub fn moving_min(values: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
+pub fn moving_min(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;
 	Ok(moving_min_internal(values, period))

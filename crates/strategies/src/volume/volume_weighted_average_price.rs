@@ -1,5 +1,6 @@
 use crate::types::configs::VolumeWeightedAveragePriceConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Volume Weighted Average Price Trend Strategy
 ///
@@ -16,18 +17,22 @@ pub fn volume_weighted_average_price_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VolumeWeightedAveragePriceConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("VWAP period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"VWAP period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Volume Weighted Average Price strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Volume Weighted Average Price strategy".into(),
+		));
 	}
 
 	// Calculate VWAP

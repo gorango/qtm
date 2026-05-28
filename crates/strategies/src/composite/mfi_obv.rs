@@ -1,4 +1,5 @@
 use crate::types::configs::MfiObvConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Mfi Obv
 ///
@@ -9,7 +10,7 @@ pub fn mfi_obv_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<MfiObvConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let mfi_period = config.mfi_period.unwrap_or(14);
 	let oversold = config.oversold.unwrap_or(20.0);
@@ -17,17 +18,17 @@ pub fn mfi_obv_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = (mfi_period + 1) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: MFI + OBV requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let mfi_config = indicators_core::MFIConfig {

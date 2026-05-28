@@ -10,7 +10,7 @@ pub fn lin_reg_slope_strategy(
 	config: Option<LinregSlopeConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::lin_reg_slope_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn lin_reg_slope_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn lin_reg_slope(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

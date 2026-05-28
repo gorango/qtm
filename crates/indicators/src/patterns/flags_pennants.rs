@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn flags_pennants(
 	opens: &[f64],
@@ -8,7 +9,7 @@ pub fn flags_pennants(
 	pole_length: Option<u32>,
 	consolidation_bars: Option<u32>,
 	breakout_threshold: Option<f64>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let pole_length = pole_length.unwrap_or(10) as usize;

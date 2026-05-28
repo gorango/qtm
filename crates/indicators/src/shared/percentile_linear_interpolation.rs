@@ -1,4 +1,5 @@
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -52,7 +53,7 @@ fn percentile_linear_interpolation_internal(
 pub fn percentile_linear_interpolation(
 	values: &[f64],
 	config: Option<PercentileLinearInterpolationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let PercentileLinearInterpolationConfig { period, percentage } =
 		config.unwrap_or(PercentileLinearInterpolationConfig {
 			period: None,

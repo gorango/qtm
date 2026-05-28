@@ -11,7 +11,7 @@ pub fn balance_of_power_strategy(
 	config: Option<BalanceOfPowerConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::balance_of_power_strategy(&openings, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn balance_of_power_strategy_metadata() -> serde_json::Value {
@@ -35,5 +35,5 @@ pub fn balance_of_power(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

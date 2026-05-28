@@ -1,4 +1,5 @@
 use crate::types::configs::PivotPointsConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Pivot Points Trend Strategy
 ///
@@ -14,7 +15,7 @@ pub fn pivot_points_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<PivotPointsConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let _period_high = config.period_high.unwrap_or(20); // Not used in current implementation
@@ -22,11 +23,15 @@ pub fn pivot_points_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("Pivot Points period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Pivot Points period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = highs.len();
 	if data_len < period as usize {
-		return Err("Insufficient data for Pivot Points strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Pivot Points strategy".into(),
+		));
 	}
 
 	// Generate signals based on pivot levels

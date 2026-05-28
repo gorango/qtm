@@ -11,7 +11,7 @@ pub fn vwap_stochastic_strategy(
 	config: Option<VwapStochasticConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::vwap_stochastic_strategy(&highs, &lows, &closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn vwap_stochastic_strategy_metadata() -> serde_json::Value {
@@ -38,5 +38,5 @@ pub fn vwap_stochastic(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

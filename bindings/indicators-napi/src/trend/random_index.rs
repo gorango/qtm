@@ -20,5 +20,5 @@ pub fn random_index(
 		k_period,
 		d_period,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

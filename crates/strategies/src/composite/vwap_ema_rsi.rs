@@ -1,5 +1,6 @@
 use crate::types::configs::VwapEmaRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use indicators_core::ema;
 use indicators_core::rsi;
 use indicators_core::vwap;
@@ -13,7 +14,7 @@ pub fn vwap_ema_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VwapEmaRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let ema_fast_period = config.ema_fast_period.unwrap_or(5);
 	let ema_slow_period = config.ema_slow_period.unwrap_or(20);
@@ -24,11 +25,11 @@ pub fn vwap_ema_rsi_strategy(
 	let min_data_length = ema_slow_period.max(rsi_period) as usize;
 
 	if closes.len() < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: VWAP EMA RSI requires at least {} data points, got {}",
 			min_data_length,
 			closes.len()
-		));
+		)));
 	}
 
 	let closes_vec = closes;
@@ -60,9 +61,9 @@ pub fn vwap_ema_rsi_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let mut signals = Vec::with_capacity(data_len);
 

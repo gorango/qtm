@@ -9,5 +9,6 @@ pub fn value_when(
 	source: Float64Array,
 	config: Option<ValueWhenConfig>,
 ) -> Result<Vec<f64>> {
-	value_when_core(condition.as_ref(), source.as_ref(), config).map_err(napi::Error::from_reason)
+	value_when_core(condition.as_ref(), source.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

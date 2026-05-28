@@ -1,5 +1,6 @@
 use crate::types::configs::EaseOfMovementConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Ease of Movement Strategy
 ///
@@ -15,19 +16,25 @@ pub fn ease_of_movement_strategy(
 	lows: &[f64],
 	volumes: &[f64],
 	config: Option<EaseOfMovementConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 
 	let data_len = highs.len();
 	if highs.len() != lows.len() || highs.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for Ease of Movement strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Ease of Movement strategy".into(),
+		));
 	}
 
 	let highs_vec: Vec<f64> = highs.to_vec();

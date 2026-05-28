@@ -9,5 +9,6 @@ pub fn cointegration(
 	values2: Float64Array,
 	config: Option<CointegrationConfig>,
 ) -> Result<Vec<f64>> {
-	cointegration_core(values1.as_ref(), values2.as_ref(), config).map_err(napi::Error::from_reason)
+	cointegration_core(values1.as_ref(), values2.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

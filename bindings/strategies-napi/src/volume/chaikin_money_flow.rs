@@ -11,7 +11,7 @@ pub fn chaikin_money_flow_strategy(
 	config: Option<ChaikinMoneyFlowConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::chaikin_money_flow_strategy(&highs, &lows, &closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn chaikin_money_flow_strategy_metadata() -> serde_json::Value {
@@ -38,5 +38,5 @@ pub fn chaikin_money_flow(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

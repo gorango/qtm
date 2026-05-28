@@ -8,7 +8,7 @@ pub fn ma_crossover_strategy(
 	config: Option<MaCrossoverConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::ma_crossover_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn ma_crossover_strategy_metadata() -> serde_json::Value {
@@ -25,5 +25,5 @@ pub fn ma_crossover(
 ) -> napi::Result<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MaCrossoverConfig>(c).unwrap_or_default());
 	strategies_core::ma_crossover_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

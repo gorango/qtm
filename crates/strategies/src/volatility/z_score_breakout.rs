@@ -1,5 +1,6 @@
 use crate::types::configs::ZScoreConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Z-Score Breakout Strategy
@@ -14,26 +15,34 @@ use serde_json;
 pub fn z_score_breakout_strategy(
 	closes: &[f64],
 	config: Option<ZScoreConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let mean_period = config.mean_period.unwrap_or(20);
 	let std_period = config.std_period.unwrap_or(20);
 	let threshold = config.threshold.unwrap_or(2.0);
 
 	if !(2..=100).contains(&mean_period) {
-		return Err("Mean period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Mean period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=100).contains(&std_period) {
-		return Err("Std period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Std period must be between 2 and 100".into(),
+		));
 	}
 	if threshold <= 0.0 {
-		return Err("Threshold must be positive".to_string());
+		return Err(StrategyError::Validation(
+			"Threshold must be positive".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	let min_period = mean_period.max(std_period) as usize;
 	if data_len < min_period {
-		return Err("Insufficient data for Z-Score Breakout strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Z-Score Breakout strategy".into(),
+		));
 	}
 
 	let closes_slice: Vec<f64> = closes.to_vec();

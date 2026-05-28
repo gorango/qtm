@@ -1,5 +1,6 @@
 use crate::signals::{crossed_over_series, crossed_under_series};
 use crate::types::configs::BollingerBandsConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Bollinger Bands Breakout
 ///
@@ -7,16 +8,20 @@ use crate::types::configs::BollingerBandsConfig;
 pub fn bollinger_bands_breakout_strategy(
 	closes: &[f64],
 	config: Option<BollingerBandsConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let std_dev = config.std_dev.unwrap_or(2.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("Bollinger Bands Breaknout period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Bollinger Bands Breaknout period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.1..=5.0).contains(&std_dev) {
-		return Err("Bollinger Bands Breaknout std_dev must be between 0.1 and 5.0".to_string());
+		return Err(StrategyError::Validation(
+			"Bollinger Bands Breaknout std_dev must be between 0.1 and 5.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

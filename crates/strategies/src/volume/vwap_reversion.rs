@@ -1,5 +1,6 @@
 use crate::types::configs::VwapReversionConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// VWAP Reversion Strategy
 ///
@@ -16,23 +17,31 @@ pub fn vwap_reversion_strategy(
 	lows: &[f64],
 	volumes: &[f64],
 	config: Option<VwapReversionConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let deviation_threshold = config.deviation_threshold.unwrap_or(0.02);
 
 	let data_len = closes.len();
 	if closes.len() != highs.len() || closes.len() != lows.len() || closes.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if !(0.001..=0.1).contains(&deviation_threshold) {
-		return Err("Deviation threshold must be between 0.001 and 0.1".to_string());
+		return Err(StrategyError::Validation(
+			"Deviation threshold must be between 0.001 and 0.1".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for VWAP Reversion strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for VWAP Reversion strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

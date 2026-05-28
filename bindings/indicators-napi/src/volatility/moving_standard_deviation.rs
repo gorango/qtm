@@ -7,7 +7,7 @@ use napi_derive::napi;
 /// Mstd
 #[napi]
 pub fn mstd(values: Float64Array, config: Option<MSTDConfig>) -> Result<Vec<f64>> {
-	mstd_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	mstd_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Moving Standard Deviation (camelCase alias)
@@ -17,5 +17,5 @@ pub fn movingStandardDeviation(
 	values: Float64Array,
 	config: Option<MSTDConfig>,
 ) -> Result<Vec<f64>> {
-	msd_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	msd_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

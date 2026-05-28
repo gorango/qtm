@@ -9,7 +9,8 @@ pub fn correlation(
 	values2: Float64Array,
 	config: Option<CorrelationConfig>,
 ) -> Result<Vec<f64>> {
-	correlation_core(values1.as_ref(), values2.as_ref(), config).map_err(napi::Error::from_reason)
+	correlation_core(values1.as_ref(), values2.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Pearson Correlation

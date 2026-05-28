@@ -1,4 +1,5 @@
 use crate::types::configs::RocObvRsiConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Roc Obv Rsi
 ///
@@ -7,7 +8,7 @@ pub fn roc_obv_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<RocObvRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let obv_roc_period = config.obv_roc_period.unwrap_or(3);
 	let rsi_period = config.rsi_period.unwrap_or(14);
@@ -16,15 +17,17 @@ pub fn roc_obv_rsi_strategy(
 
 	let data_len = closes.len();
 	if volumes.len() != data_len {
-		return Err("Closes and volumes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Closes and volumes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = (rsi_period + 1).max(obv_roc_period + 1).max(2) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: ROC OBV + RSI requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let rsi_config = indicators_core::RSIConfig {

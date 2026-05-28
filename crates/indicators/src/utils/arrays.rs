@@ -1,4 +1,6 @@
-pub fn validate_arrays_equal_length(arrays: &[&[f64]]) -> Result<(), String> {
+use crate::error::{IndicatorError, IndicatorResult};
+
+pub fn validate_arrays_equal_length(arrays: &[&[f64]]) -> IndicatorResult<()> {
 	if arrays.is_empty() {
 		return Ok(());
 	}
@@ -6,12 +8,12 @@ pub fn validate_arrays_equal_length(arrays: &[&[f64]]) -> Result<(), String> {
 	let len = arrays[0].len();
 	for (i, &arr) in arrays.iter().enumerate() {
 		if arr.len() != len {
-			return Err(format!(
+			return Err(IndicatorError::ArrayLengthMismatch(format!(
 				"Array at index {} has length {}, expected {}",
 				i,
 				arr.len(),
 				len
-			));
+			)));
 		}
 	}
 

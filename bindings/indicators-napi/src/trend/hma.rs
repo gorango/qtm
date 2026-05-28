@@ -5,5 +5,5 @@ use napi_derive::napi;
 /// Hma
 #[napi]
 pub fn hma(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	hma_core(values.as_ref(), period).map_err(napi::Error::from_reason)
+	hma_core(values.as_ref(), period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

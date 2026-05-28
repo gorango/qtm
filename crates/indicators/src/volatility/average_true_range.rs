@@ -1,5 +1,6 @@
 use crate::internal::true_range::tr_internal;
 use crate::trend::rma::rma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -26,7 +27,7 @@ pub fn atr(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<ATRConfig>,
-) -> Result<ATRResult, String> {
+) -> IndicatorResult<ATRResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let config = config.unwrap_or_default();
@@ -44,6 +45,6 @@ pub fn average_true_range(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<ATRConfig>,
-) -> Result<ATRResult, String> {
+) -> IndicatorResult<ATRResult> {
 	atr(highs, lows, closings, config)
 }

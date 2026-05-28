@@ -10,7 +10,7 @@ pub fn larsson_strategy(
 	config: Option<LarssonConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::larsson_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn larsson_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn larsson(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

@@ -1,10 +1,11 @@
 use crate::internal::ema::ema_internal;
+use crate::IndicatorResult;
 
 pub fn absolute_price_oscillator(
 	values: &[f64],
 	fast_period: Option<u32>,
 	slow_period: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let fast_period = fast_period.unwrap_or(14) as usize;
 	let slow_period = slow_period.unwrap_or(30) as usize;
 

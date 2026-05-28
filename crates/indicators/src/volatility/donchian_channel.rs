@@ -1,5 +1,6 @@
 use crate::utils::rolling::rolling_max_growing;
 use crate::utils::rolling::rolling_min_growing;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -10,11 +11,13 @@ pub struct DCResult {
 	pub lower: Vec<f64>,
 }
 
-pub fn dc(closings: &[f64], period: Option<u32>) -> Result<DCResult, String> {
+pub fn dc(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 	let len = closings.len();
 
 	if len == 0 {
-		return Err("Closings array cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Closings array cannot be empty".into(),
+		));
 	}
 
 	let period = period.unwrap_or(4) as usize;
@@ -38,6 +41,6 @@ pub fn dc(closings: &[f64], period: Option<u32>) -> Result<DCResult, String> {
 	})
 }
 
-pub fn donchian_channel(closings: &[f64], period: Option<u32>) -> Result<DCResult, String> {
+pub fn donchian_channel(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 	dc(closings, period)
 }

@@ -10,7 +10,7 @@ pub fn atr_volatility_threshold_strategy(
 	config: Option<AtrVolatilityThresholdConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::atr_volatility_threshold_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn atr_volatility_threshold_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn atr_volatility_threshold(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

@@ -20,7 +20,7 @@ pub fn po(
 		period,
 		smooth,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Projection Oscillator (camelCase alias)
@@ -40,5 +40,5 @@ pub fn projectionOscillator(
 		period,
 		smooth,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

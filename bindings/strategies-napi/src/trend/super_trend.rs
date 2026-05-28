@@ -10,7 +10,7 @@ pub fn super_trend_strategy(
 	config: Option<SuperTrendConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::super_trend_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn super_trend_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn super_trend(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

@@ -1,5 +1,6 @@
 use crate::types::configs::VwapBreakoutConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// VWAP Breakout Strategy
 ///
@@ -16,23 +17,31 @@ pub fn vwap_breakout_strategy(
 	lows: &[f64],
 	volumes: &[f64],
 	config: Option<VwapBreakoutConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let breakout_threshold = config.breakout_threshold.unwrap_or(0.01);
 
 	let data_len = closes.len();
 	if closes.len() != highs.len() || closes.len() != lows.len() || closes.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if !(0.001..=0.1).contains(&breakout_threshold) {
-		return Err("Breakout threshold must be between 0.001 and 0.1".to_string());
+		return Err(StrategyError::Validation(
+			"Breakout threshold must be between 0.001 and 0.1".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for VWAP Breakout strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for VWAP Breakout strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

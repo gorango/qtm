@@ -1,4 +1,5 @@
 use crate::types::configs::AlmahmaDivergenceConfig;
+use crate::{StrategyError, StrategyResult};
 use indicators_core::ALMAConfig;
 use serde_json;
 
@@ -14,7 +15,7 @@ use serde_json;
 pub fn alma_hma_divergence_strategy(
 	closes: &[f64],
 	config: Option<AlmahmaDivergenceConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(9);
 	let slow_period = config.slow_period.unwrap_or(21);
@@ -23,21 +24,31 @@ pub fn alma_hma_divergence_strategy(
 
 	// Validate parameters
 	if !(2..=50).contains(&fast_period) {
-		return Err("ALMA fast period must be between 2 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"ALMA fast period must be between 2 and 50".into(),
+		));
 	}
 	if !(2..=100).contains(&slow_period) {
-		return Err("HMA slow period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"HMA slow period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.0..=1.0).contains(&offset) {
-		return Err("ALMA offset must be between 0 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"ALMA offset must be between 0 and 1".into(),
+		));
 	}
 	if divergence_threshold <= 0.0 {
-		return Err("Divergence threshold must be positive".to_string());
+		return Err(StrategyError::Validation(
+			"Divergence threshold must be positive".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = slow_period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for ALMA HMA Divergence strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for ALMA HMA Divergence strategy".into(),
+		));
 	}
 
 	// Calculate ALMA and HMA

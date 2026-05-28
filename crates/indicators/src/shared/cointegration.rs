@@ -1,5 +1,6 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -96,7 +97,7 @@ pub fn cointegration(
 	values1: &[f64],
 	values2: &[f64],
 	config: Option<CointegrationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let CointegrationConfig {
 		period,
 		beta_period,

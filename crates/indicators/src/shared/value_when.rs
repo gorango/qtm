@@ -1,4 +1,5 @@
 use crate::utils::arrays::validate_arrays_equal_length;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -31,7 +32,7 @@ pub fn value_when(
 	condition: &[f64],
 	source: &[f64],
 	config: Option<ValueWhenConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let ValueWhenConfig { occurrence } = config.unwrap_or(ValueWhenConfig { occurrence: None });
 	let occurrence = occurrence.unwrap_or(1) as usize;
 

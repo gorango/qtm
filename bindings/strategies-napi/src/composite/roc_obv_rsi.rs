@@ -9,7 +9,7 @@ pub fn roc_obv_rsi_strategy(
 	config: Option<RocObvRsiConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::roc_obv_rsi_strategy(&closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn roc_obv_rsi_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn roc_obv_rsi(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

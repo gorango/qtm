@@ -1,5 +1,6 @@
 use crate::types::configs::KdjConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use indicators_core::{StochConfig, StochResult};
 
 /// KDJ Trend Strategy
@@ -16,7 +17,7 @@ pub fn kdj_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<KdjConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let period1 = config.period1.unwrap_or(3);
@@ -26,21 +27,31 @@ pub fn kdj_strategy(
 
 	// Validate parameters
 	if !(5..=100).contains(&period) {
-		return Err("KDJ period must be between 5 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"KDJ period must be between 5 and 100".into(),
+		));
 	}
 	if !(2..=20).contains(&period1) {
-		return Err("KDJ period1 must be between 2 and 20".to_string());
+		return Err(StrategyError::Validation(
+			"KDJ period1 must be between 2 and 20".into(),
+		));
 	}
 	if !(2..=20).contains(&period2) {
-		return Err("KDJ period2 must be between 2 and 20".to_string());
+		return Err(StrategyError::Validation(
+			"KDJ period2 must be between 2 and 20".into(),
+		));
 	}
 	if oversold >= overbought {
-		return Err("KDJ oversold must be less than overbought".to_string());
+		return Err(StrategyError::Validation(
+			"KDJ oversold must be less than overbought".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = (period + period1) as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for KDJ strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for KDJ strategy".into(),
+		));
 	}
 
 	// Calculate KDJ

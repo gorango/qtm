@@ -16,7 +16,7 @@ pub fn head_and_shoulders(
 	deviation: Option<f64>,
 ) -> Result<Vec<f64>> {
 	validate_multiple_arrays(&[&opens, &highs, &lows, &closes])
-		.map_err(napi::Error::from_reason)?;
+		.map_err(|e| napi::Error::from_reason(e.to_string()))?;
 
 	let mut highs_vec = highs.as_ref().to_vec();
 	let mut lows_vec = lows.as_ref().to_vec();

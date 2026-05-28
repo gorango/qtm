@@ -1,5 +1,6 @@
 use crate::types::configs::SmaVwapCrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// SMA-VWAP Crossover Strategy
 ///
@@ -16,7 +17,7 @@ pub fn sma_vwap_crossover_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<SmaVwapCrossoverConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let sma_period = config.sma_period.unwrap_or(3);
 	let vwap_period = config.vwap_period.unwrap_or(14);
@@ -26,10 +27,14 @@ pub fn sma_vwap_crossover_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&sma_period) {
-		return Err("SMA period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"SMA period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&vwap_period) {
-		return Err("VWAP period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"VWAP period must be between 2 and 200".into(),
+		));
 	}
 	let min_period = sma_period.max(vwap_period) as usize;
 	let data_len = highs.len();
@@ -38,7 +43,9 @@ pub fn sma_vwap_crossover_strategy(
 		|| closes.len() < min_period
 		|| volumes.len() < min_period
 	{
-		return Err("Insufficient data for SMA-VWAP crossover strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for SMA-VWAP crossover strategy".into(),
+		));
 	}
 
 	// Calculate SMA

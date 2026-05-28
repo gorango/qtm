@@ -13,7 +13,7 @@ pub fn bullish_engulfing(
 	closes: Float64Array,
 ) -> Result<Vec<f64>> {
 	validate_multiple_arrays(&[&opens, &_highs, &_lows, &closes])
-		.map_err(napi::Error::from_reason)?;
+		.map_err(|e| napi::Error::from_reason(e.to_string()))?;
 
 	let opens = opens.as_ref();
 	let closes = closes.as_ref();
@@ -60,7 +60,7 @@ pub fn bearish_engulfing(
 	closes: Float64Array,
 ) -> Result<Vec<f64>> {
 	validate_multiple_arrays(&[&opens, &_highs, &_lows, &closes])
-		.map_err(napi::Error::from_reason)?;
+		.map_err(|e| napi::Error::from_reason(e.to_string()))?;
 
 	let opens = opens.as_ref();
 	let closes = closes.as_ref();

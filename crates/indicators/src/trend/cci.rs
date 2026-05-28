@@ -1,4 +1,5 @@
 use crate::internal::sma::sma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 fn typical_price_for_cci(highs: &[f64], lows: &[f64], closings: &[f64]) -> Vec<f64> {
@@ -20,7 +21,7 @@ pub fn cci(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<CCIConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let config = config.unwrap_or(CCIConfig { period: Some(20) });

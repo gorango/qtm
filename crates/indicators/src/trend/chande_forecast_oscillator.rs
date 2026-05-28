@@ -1,3 +1,4 @@
+use crate::{IndicatorError, IndicatorResult};
 use std::collections::VecDeque;
 
 fn linear_regression_least_squares(x: &[f64], y: &[f64]) -> Vec<f64> {
@@ -74,9 +75,9 @@ fn moving_linear_regression_least_squares(period: usize, x: &[f64], y: &[f64]) -
 	result
 }
 
-pub fn chande_forecast_oscillator(closings: &[f64]) -> Result<Vec<f64>, String> {
+pub fn chande_forecast_oscillator(closings: &[f64]) -> IndicatorResult<Vec<f64>> {
 	if closings.is_empty() {
-		return Err("Array cannot be empty".to_string());
+		return Err(IndicatorError::Custom("Array cannot be empty".into()));
 	}
 
 	let len = closings.len();
@@ -102,11 +103,11 @@ pub fn chande_forecast_oscillator(closings: &[f64]) -> Result<Vec<f64>, String> 
 pub fn moving_chande_forecast_oscillator(
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 
 	if closings.is_empty() {
-		return Err("Array cannot be empty".to_string());
+		return Err(IndicatorError::Custom("Array cannot be empty".into()));
 	}
 
 	let len = closings.len();

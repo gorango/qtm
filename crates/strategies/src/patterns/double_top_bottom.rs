@@ -1,4 +1,5 @@
 use crate::types::configs::DoubleTopBottomConfig;
+use crate::StrategyResult;
 
 /// Double Top/Bottom Reversal Strategy
 ///
@@ -16,7 +17,7 @@ pub fn double_top_bottom_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<DoubleTopBottomConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_distance = config.min_distance.unwrap_or(10) as usize;
 	let tolerance = config.tolerance.unwrap_or(0.03);

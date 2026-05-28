@@ -1,4 +1,5 @@
 pub mod composite;
+pub mod error;
 pub mod event;
 pub mod expectations;
 pub mod growth;

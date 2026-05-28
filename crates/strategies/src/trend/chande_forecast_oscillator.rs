@@ -1,5 +1,6 @@
 use crate::types::configs::ChandeForecastOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Chande Forecast Oscillator Trend Strategy
 ///
@@ -13,7 +14,7 @@ use crate::utils::signals::{crossed_over, crossed_under};
 pub fn chande_forecast_oscillator_strategy(
 	closes: &[f64],
 	config: Option<ChandeForecastOscillatorConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let overbought = config.overbought.unwrap_or(70.0);
@@ -21,12 +22,16 @@ pub fn chande_forecast_oscillator_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("CFO period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"CFO period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Chande Forecast Oscillator strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Chande Forecast Oscillator strategy".into(),
+		));
 	}
 
 	// Calculate CFO

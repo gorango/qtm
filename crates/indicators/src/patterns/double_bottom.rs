@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn double_bottom(
 	opens: &[f64],
@@ -8,7 +9,7 @@ pub fn double_bottom(
 	tolerance: Option<f64>,
 	min_separation: Option<u32>,
 	lookaround: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let tolerance = tolerance.unwrap_or(0.03);

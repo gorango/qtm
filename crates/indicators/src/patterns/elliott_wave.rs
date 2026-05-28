@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 #[allow(clippy::too_many_arguments)]
 pub fn elliott_wave(
@@ -12,7 +13,7 @@ pub fn elliott_wave(
 	min_wave_separation: Option<u32>,
 	lookaround: Option<u32>,
 	retracement_tolerance: Option<f64>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let wave2_retracement = wave2_retracement.unwrap_or(0.618);

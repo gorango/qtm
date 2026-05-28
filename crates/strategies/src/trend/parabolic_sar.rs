@@ -1,4 +1,5 @@
 use crate::types::configs::ParabolicSarConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Parabolic SAR Trend Strategy
 ///
@@ -14,14 +15,16 @@ pub fn parabolic_sar_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<ParabolicSarConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let step = config.step.unwrap_or(0.02);
 	let max_step = config.max_step.unwrap_or(0.02);
 
 	let data_len = highs.len();
 	if data_len < 2 {
-		return Err("Insufficient data for Parabolic SAR strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Parabolic SAR strategy".into(),
+		));
 	}
 
 	// Convert for later use

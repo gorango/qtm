@@ -9,5 +9,6 @@ pub fn aroon(
 	lows: Float64Array,
 	config: Option<AroonConfig>,
 ) -> Result<AroonResult> {
-	aroon_core(highs.as_ref(), lows.as_ref(), config).map_err(napi::Error::from_reason)
+	aroon_core(highs.as_ref(), lows.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

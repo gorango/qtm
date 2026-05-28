@@ -8,7 +8,7 @@ pub fn correlation_pair_strategy(
 	config: Option<CorrelationPairConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::correlation_pair_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn correlation_pair_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn correlation_pair(
 	let config =
 		config.map(|c| serde_json::from_value::<CorrelationPairConfig>(c).unwrap_or_default());
 	strategies_core::correlation_pair_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

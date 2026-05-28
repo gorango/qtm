@@ -1,4 +1,5 @@
 use crate::types::configs::FlagsPennantsConfig;
+use crate::StrategyResult;
 
 /// Flags and Pennants Continuation Strategy
 ///
@@ -16,7 +17,7 @@ pub fn flags_pennants_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<FlagsPennantsConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let pole_length = config.pole_length.unwrap_or(10) as usize;
 	let consolidation_bars = config.consolidation_bars.unwrap_or(10) as usize;

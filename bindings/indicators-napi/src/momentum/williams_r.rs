@@ -11,5 +11,5 @@ pub fn williams_r(
 	config: Option<WilliamsRConfig>,
 ) -> Result<Vec<f64>> {
 	wr_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), config)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

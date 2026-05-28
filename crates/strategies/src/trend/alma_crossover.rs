@@ -1,5 +1,6 @@
 use crate::types::configs::AlmacrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// ALMA Crossover Trend Strategy
 ///
@@ -13,7 +14,7 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 pub fn alma_crossover_strategy(
 	closes: &[f64],
 	config: Option<AlmacrossoverConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(9);
 	let slow_period = config.slow_period.unwrap_or(21);
@@ -21,15 +22,21 @@ pub fn alma_crossover_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&fast_period) {
-		return Err("ALMA fast period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"ALMA fast period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&slow_period) {
-		return Err("ALMA slow period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"ALMA slow period must be between 2 and 200".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = slow_period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for ALMA Crossover strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for ALMA Crossover strategy".into(),
+		));
 	}
 
 	// Calculate ALMA lines

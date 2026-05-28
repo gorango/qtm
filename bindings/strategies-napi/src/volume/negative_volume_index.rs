@@ -9,7 +9,7 @@ pub fn negative_volume_index_strategy(
 	config: Option<NegativeVolumeIndexConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::negative_volume_index_strategy(&closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn negative_volume_index_strategy_metadata() -> serde_json::Value {
@@ -34,5 +34,5 @@ pub fn negative_volume_index(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

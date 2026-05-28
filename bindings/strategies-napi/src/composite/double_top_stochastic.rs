@@ -10,7 +10,7 @@ pub fn double_top_stochastic_strategy(
 	config: Option<DoubleTopStochasticConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::double_top_stochastic_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn double_top_stochastic_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn double_top_stochastic(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

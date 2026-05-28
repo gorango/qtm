@@ -1,4 +1,5 @@
 use crate::types::configs::VolatilityAdjustedConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Volatility Adjusted
 ///
@@ -6,18 +7,20 @@ use crate::types::configs::VolatilityAdjustedConfig;
 pub fn volatility_adjusted_strategy(
 	closes: &[f64],
 	config: Option<VolatilityAdjustedConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let target_volatility = config.target_volatility.unwrap_or(0.15);
 
 	if !(2..=252).contains(&period) {
-		return Err("Volatility Adjusted period must be between 2 and 252".to_string());
+		return Err(StrategyError::Validation(
+			"Volatility Adjusted period must be between 2 and 252".into(),
+		));
 	}
 	if !(0.01..=1.0).contains(&target_volatility) {
-		return Err(
-			"Volatility Adjusted target_volatility must be between 0.01 and 1.0".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Volatility Adjusted target_volatility must be between 0.01 and 1.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

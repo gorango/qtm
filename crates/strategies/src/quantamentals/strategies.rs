@@ -12,7 +12,11 @@ fn latest_factor_at_or_before(factors: &[FactorPoint], time: f64) -> Option<f64>
 	factors
 		.iter()
 		.filter(|f| f.date <= time)
-		.max_by(|a, b| a.date.partial_cmp(&b.date).unwrap())
+		.max_by(|a, b| {
+			a.date
+				.partial_cmp(&b.date)
+				.expect("f64 values should be comparable")
+		})
 		.map(|f| f.value)
 }
 
@@ -300,12 +304,16 @@ pub fn event_driven_strategy(
 
 	let mut odds_by_time: Vec<f64> = Vec::new();
 	for group in market_groups.values_mut() {
-		group.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+		group.sort_by(|a, b| {
+			a.time
+				.partial_cmp(&b.time)
+				.expect("values should be comparable")
+		});
 		for p in group {
 			odds_by_time.push(p.price);
 		}
 	}
-	odds_by_time.sort_by(|a, b| a.partial_cmp(b).unwrap());
+	odds_by_time.sort_by(|a, b| a.partial_cmp(b).expect("values should be comparable"));
 
 	let mut signals = vec![0i8; prices.len()];
 	let times = times_from_bars(&prices);
@@ -337,7 +345,7 @@ fn latest_odds_above_threshold(
 		.filter(|p| p.time <= time)
 		.map(|p| p.price)
 		.collect();
-	relevant.sort_by(|a, b| a.partial_cmp(b).unwrap());
+	relevant.sort_by(|a, b| a.partial_cmp(b).expect("values should be comparable"));
 	relevant.last().copied().unwrap_or(0.0) > threshold
 }
 
@@ -402,7 +410,11 @@ pub fn on_chain_confirmation_strategy(
 		let latest_flow = flows
 			.iter()
 			.filter(|f| f.time <= prices[i].time)
-			.max_by(|a, b| a.time.partial_cmp(&b.time).unwrap())
+			.max_by(|a, b| {
+				a.time
+					.partial_cmp(&b.time)
+					.expect("values should be comparable")
+			})
 			.map(|f| f.value)
 			.unwrap_or(0.0);
 

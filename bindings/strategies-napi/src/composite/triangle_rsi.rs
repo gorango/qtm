@@ -10,7 +10,7 @@ pub fn triangle_rsi_strategy(
 	config: Option<TriangleRsiConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::triangle_rsi_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn triangle_rsi_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn triangle_rsi(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

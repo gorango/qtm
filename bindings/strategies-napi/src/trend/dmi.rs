@@ -10,7 +10,7 @@ pub fn dmi_strategy(
 	config: Option<DmiConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::dmi_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn dmi_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn dmi(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

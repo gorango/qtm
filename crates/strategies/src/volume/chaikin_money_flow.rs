@@ -1,5 +1,6 @@
 use crate::types::configs::ChaikinMoneyFlowConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Chaikin Money Flow Strategy
 ///
@@ -16,19 +17,25 @@ pub fn chaikin_money_flow_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<ChaikinMoneyFlowConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 
 	let data_len = closes.len();
 	if closes.len() != highs.len() || closes.len() != lows.len() || closes.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for Chaikin Money Flow strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Chaikin Money Flow strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

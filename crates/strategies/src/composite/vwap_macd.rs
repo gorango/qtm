@@ -1,5 +1,6 @@
 use crate::types::configs::VwapMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Vwap Macd
 ///
@@ -10,7 +11,7 @@ pub fn vwap_macd_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VwapMacdConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let macd_fast_period = config.macd_fast_period.unwrap_or(12);
 	let macd_slow_period = config.macd_slow_period.unwrap_or(26);
@@ -18,17 +19,17 @@ pub fn vwap_macd_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = 14.max(macd_slow_period + macd_signal_period) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: VWAP MACD requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let vwap_config = indicators_core::VWAPConfig {

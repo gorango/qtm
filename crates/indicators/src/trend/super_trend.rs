@@ -1,5 +1,6 @@
 use crate::internal::true_range::tr_internal;
 use crate::trend::rma::rma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -15,7 +16,7 @@ pub fn super_trend(
 	closes: &[f64],
 	period: Option<u32>,
 	multiplier: Option<f64>,
-) -> Result<SuperTrendResult, String> {
+) -> IndicatorResult<SuperTrendResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closes])?;
 
 	let period = period.unwrap_or(14) as usize;

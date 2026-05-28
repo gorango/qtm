@@ -1,4 +1,5 @@
 use crate::types::configs::KeltnerVolatilityBreakoutConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Keltner Volatility Breakout
 ///
@@ -8,12 +9,14 @@ pub fn keltner_volatility_breakout_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<KeltnerVolatilityBreakoutConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 
 	if !(2..=100).contains(&period) {
-		return Err("Keltner Volatility Breakout period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Keltner Volatility Breakout period must be between 2 and 100".into(),
+		));
 	}
 
 	let data_len = closes.len();

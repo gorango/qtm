@@ -1,5 +1,6 @@
 use crate::types::configs::DonchianTurtleConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Donchian Breakout
 ///
@@ -7,12 +8,14 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 pub fn donchian_breakout_strategy(
 	closes: &[f64],
 	config: Option<DonchianTurtleConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 
 	if !(2..=100).contains(&period) {
-		return Err("Donchian Breakout period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Donchian Breakout period must be between 2 and 100".into(),
+		));
 	}
 
 	let data_len = closes.len();

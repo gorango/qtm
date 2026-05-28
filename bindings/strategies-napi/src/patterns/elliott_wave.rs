@@ -26,7 +26,7 @@ pub fn elliott_wave_strategy(
 		lookaround,
 		retracement_tolerance,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn elliott_wave_strategy_metadata() -> serde_json::Value {
@@ -57,5 +57,5 @@ pub fn elliott_wave(
 		2,
 		0.05,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

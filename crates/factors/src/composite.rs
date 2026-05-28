@@ -100,7 +100,11 @@ pub fn piotroski_f_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 	}
 
 	for group in symbol_groups.values_mut() {
-		group.sort_by(|a, b| a.date.partial_cmp(&b.date).unwrap());
+		group.sort_by(|a, b| {
+			a.date
+				.partial_cmp(&b.date)
+				.expect("values should be comparable")
+		});
 		for i in 1..group.len() {
 			let cur = group[i];
 			let prev = group[i - 1];

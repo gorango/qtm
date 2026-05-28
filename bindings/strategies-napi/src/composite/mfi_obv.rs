@@ -11,7 +11,7 @@ pub fn mfi_obv_strategy(
 	config: Option<MfiObvConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::mfi_obv_strategy(&highs, &lows, &closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn mfi_obv_strategy_metadata() -> serde_json::Value {
@@ -37,5 +37,5 @@ pub fn mfi_obv(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

@@ -1,5 +1,6 @@
 use crate::types::configs::MACDConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// MACD Trend Strategy
 ///
@@ -10,7 +11,7 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 /// @strategy_name MACD Trend
 /// @category trend
 /// @default_timeframes 15m,1h,4h
-pub fn macd_strategy(closes: &[f64], config: Option<MACDConfig>) -> Result<Vec<i8>, String> {
+pub fn macd_strategy(closes: &[f64], config: Option<MACDConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(12);
 	let slow_period = config.slow_period.unwrap_or(26);
@@ -18,18 +19,26 @@ pub fn macd_strategy(closes: &[f64], config: Option<MACDConfig>) -> Result<Vec<i
 
 	// Validate parameters
 	if !(2..=100).contains(&fast_period) {
-		return Err("MACD fast period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"MACD fast period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&slow_period) {
-		return Err("MACD slow period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"MACD slow period must be between 2 and 200".into(),
+		));
 	}
 	if !(2..=50).contains(&signal_period) {
-		return Err("MACD signal period must be between 2 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"MACD signal period must be between 2 and 50".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = (slow_period + signal_period) as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for MACD strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for MACD strategy".into(),
+		));
 	}
 
 	// Calculate MACD

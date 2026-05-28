@@ -10,7 +10,7 @@ pub fn macd_rsi_strategy(
 	rsi_config: Option<RSIConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::macd_rsi_strategy(&closes, macd_config, rsi_config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn macd_rsi_strategy_metadata() -> serde_json::Value {
@@ -27,5 +27,5 @@ pub fn macd_rsi(
 ) -> napi::Result<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MACDConfig>(c).unwrap_or_default());
 	strategies_core::macd_rsi_strategy(&input.closes, config, None)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

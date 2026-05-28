@@ -1,5 +1,6 @@
 use crate::types::configs::FlagsPennantsConfig;
 use crate::types::configs::MACDConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Flag Pennant Macd
 ///
@@ -10,7 +11,7 @@ pub fn flag_pennant_macd_strategy(
 	closes: &[f64],
 	fp_config: Option<FlagsPennantsConfig>,
 	macd_config: Option<MACDConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let fp_cfg = fp_config.unwrap_or_default();
 	let macd_cfg = macd_config.unwrap_or_default();
 
@@ -45,7 +46,9 @@ pub fn flag_pennant_macd_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len {
-		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs, lows, and closes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = (slow_period + signal_period) as usize;
 	let mut signals = Vec::with_capacity(data_len);

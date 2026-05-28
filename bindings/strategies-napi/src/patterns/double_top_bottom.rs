@@ -11,7 +11,7 @@ pub fn double_top_bottom_strategy(
 	config: Option<DoubleTopBottomConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::double_top_bottom_strategy(&opens, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn double_top_bottom_strategy_metadata() -> serde_json::Value {
@@ -35,5 +35,5 @@ pub fn double_top_bottom(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

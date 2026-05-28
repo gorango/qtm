@@ -10,7 +10,7 @@ pub fn pivot_points_strategy(
 	config: Option<PivotPointsConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::pivot_points_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn pivot_points_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn pivot_points(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

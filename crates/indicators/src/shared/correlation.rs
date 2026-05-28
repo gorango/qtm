@@ -1,5 +1,6 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -63,7 +64,7 @@ pub fn correlation(
 	values1: &[f64],
 	values2: &[f64],
 	config: Option<CorrelationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let CorrelationConfig { period } = config.unwrap_or(CorrelationConfig { period: None });
 	let period = period.unwrap_or(14) as usize;
 
@@ -77,6 +78,6 @@ pub fn pearson_correlation(
 	values1: &[f64],
 	values2: &[f64],
 	config: Option<CorrelationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	correlation(values1, values2, config)
 }

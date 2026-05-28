@@ -1,4 +1,5 @@
 use crate::types::configs::VolumeProfileRsiConfig;
+use crate::{StrategyError, StrategyResult};
 use indicators_core::rsi;
 use indicators_core::volume_profile;
 
@@ -11,7 +12,7 @@ pub fn volume_profile_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VolumeProfileRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let rsi_period = config.rsi_period.unwrap_or(14);
 	let rsi_oversold = config.rsi_oversold.unwrap_or(30.0);
@@ -21,11 +22,11 @@ pub fn volume_profile_rsi_strategy(
 	let min_data_length = (rsi_period + 1).max(2) as usize;
 
 	if closes.len() < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: Volume Profile + RSI requires at least {} data points, got {}",
 			min_data_length,
 			closes.len()
-		));
+		)));
 	}
 
 	let closes_vec = closes;
@@ -46,9 +47,9 @@ pub fn volume_profile_rsi_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let mut signals = Vec::with_capacity(data_len);
 

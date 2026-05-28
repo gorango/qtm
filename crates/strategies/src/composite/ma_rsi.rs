@@ -1,10 +1,11 @@
 use crate::types::configs::MaRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Ma Rsi
 ///
 /// Buy when price above MA and RSI oversold. Sell when below MA and RSI overbought.
-pub fn ma_rsi_strategy(closes: &[f64], config: Option<MaRsiConfig>) -> Result<Vec<i8>, String> {
+pub fn ma_rsi_strategy(closes: &[f64], config: Option<MaRsiConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let ma_period = config.ma_period.unwrap_or(20);
 	let rsi_period = config.rsi_period.unwrap_or(14);
@@ -15,10 +16,10 @@ pub fn ma_rsi_strategy(closes: &[f64], config: Option<MaRsiConfig>) -> Result<Ve
 	let min_periods = ma_period.max(rsi_period) as usize;
 
 	if data_len < min_periods {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: MA + RSI requires at least {} data points, got {}",
 			min_periods, data_len
-		));
+		)));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

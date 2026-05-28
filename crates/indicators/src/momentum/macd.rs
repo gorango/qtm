@@ -1,5 +1,6 @@
 use crate::internal::ema::ema_internal;
 use crate::utils::validation::validate_period;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -33,7 +34,7 @@ pub struct MACDResult {
 /// assert_eq!(result.signal.len(), 10);
 /// assert_eq!(result.histogram.len(), 10);
 /// ```
-pub fn macd(closes: &[f64], config: Option<MACDConfig>) -> Result<MACDResult, String> {
+pub fn macd(closes: &[f64], config: Option<MACDConfig>) -> IndicatorResult<MACDResult> {
 	let config_obj = config.unwrap_or(MACDConfig {
 		fast_period: None,
 		slow_period: None,

@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -8,7 +9,7 @@ pub struct ALMAConfig {
 	pub sigma: Option<f64>,
 }
 
-pub fn alma(values: &[f64], config: Option<ALMAConfig>) -> Result<Vec<f64>, String> {
+pub fn alma(values: &[f64], config: Option<ALMAConfig>) -> IndicatorResult<Vec<f64>> {
 	let config = config.unwrap_or(ALMAConfig {
 		period: Some(9),
 		offset: Some(0.85),

@@ -1,4 +1,5 @@
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -46,7 +47,10 @@ fn percent_rank_internal(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
-pub fn percent_rank(values: &[f64], config: Option<PercentRankConfig>) -> Result<Vec<f64>, String> {
+pub fn percent_rank(
+	values: &[f64],
+	config: Option<PercentRankConfig>,
+) -> IndicatorResult<Vec<f64>> {
 	let PercentRankConfig { period } = config.unwrap_or(PercentRankConfig { period: None });
 	let period = period.unwrap_or(14) as usize;
 

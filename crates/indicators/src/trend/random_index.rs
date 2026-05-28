@@ -1,4 +1,5 @@
 use crate::internal::sma::sma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 fn kdj_moving_max_internal(values: &[f64], period: usize) -> Vec<f64> {
@@ -56,7 +57,7 @@ pub fn random_index(
 	r_period: Option<u32>,
 	k_period: Option<u32>,
 	d_period: Option<u32>,
-) -> Result<KDJResult, String> {
+) -> IndicatorResult<KDJResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let r_period = r_period.unwrap_or(9) as usize;

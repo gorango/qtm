@@ -1,4 +1,5 @@
 use crate::types::configs::AccumulationDistributionConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Accumulation/Distribution Line Strategy
 ///
@@ -15,19 +16,25 @@ pub fn accumulation_distribution_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<AccumulationDistributionConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20) as usize;
 
 	let data_len = closes.len();
 	if closes.len() != highs.len() || closes.len() != lows.len() || closes.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if data_len < period + 1 {
-		return Err("Insufficient data for Accumulation/Distribution strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Accumulation/Distribution strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

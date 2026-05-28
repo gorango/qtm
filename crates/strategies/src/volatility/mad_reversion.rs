@@ -1,4 +1,5 @@
 use crate::types::configs::MadReversionConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Mad Reversion
 ///
@@ -6,16 +7,20 @@ use crate::types::configs::MadReversionConfig;
 pub fn mad_reversion_strategy(
 	closes: &[f64],
 	config: Option<MadReversionConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let deviation_multiplier = config.deviation_multiplier.unwrap_or(2.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("MAD Reversion period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"MAD Reversion period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.1..=10.0).contains(&deviation_multiplier) {
-		return Err("MAD Reversion deviation_multiplier must be between 0.1 and 10.0".to_string());
+		return Err(StrategyError::Validation(
+			"MAD Reversion deviation_multiplier must be between 0.1 and 10.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

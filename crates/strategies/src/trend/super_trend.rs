@@ -1,4 +1,5 @@
 use crate::types::configs::SuperTrendConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Super Trend Trend Strategy
 ///
@@ -14,19 +15,23 @@ pub fn super_trend_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<SuperTrendConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(3);
 	let multiplier = config.multiplier.unwrap_or(3.0);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("SuperTrend period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"SuperTrend period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = highs.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for SuperTrend strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for SuperTrend strategy".into(),
+		));
 	}
 
 	// Calculate SuperTrend

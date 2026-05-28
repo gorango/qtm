@@ -13,7 +13,7 @@ pub fn kc(
 	period: Option<u32>,
 ) -> Result<KCResult> {
 	kc_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), period)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Keltner Channel (camelCase alias)
@@ -26,5 +26,5 @@ pub fn keltnerChannel(
 	period: Option<u32>,
 ) -> Result<KCResult> {
 	kc_alias(highs.as_ref(), lows.as_ref(), closings.as_ref(), period)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

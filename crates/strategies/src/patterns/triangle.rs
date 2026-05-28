@@ -1,4 +1,5 @@
 use crate::types::configs::TriangleConfig;
+use crate::StrategyResult;
 
 /// Triangle Breakout Strategy
 ///
@@ -17,7 +18,7 @@ pub fn triangle_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<TriangleConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_points = config.min_points.unwrap_or(4) as usize;
 	let slope_tolerance = config.slope_tolerance.unwrap_or(0.01);

@@ -5,5 +5,5 @@ use napi_derive::napi;
 /// Rolling Moving Average
 #[napi]
 pub fn rolling_moving_average(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	rma_core(values.as_ref(), period).map_err(napi::Error::from_reason)
+	rma_core(values.as_ref(), period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

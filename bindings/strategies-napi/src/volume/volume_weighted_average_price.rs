@@ -13,7 +13,7 @@ pub fn volume_weighted_average_price_strategy(
 	strategies_core::volume_weighted_average_price_strategy(
 		&highs, &lows, &closes, &volumes, config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn volume_weighted_average_price_strategy_metadata() -> serde_json::Value {
@@ -40,5 +40,5 @@ pub fn volume_weighted_average_price(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

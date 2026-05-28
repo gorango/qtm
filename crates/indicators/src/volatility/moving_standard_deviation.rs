@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -12,7 +13,7 @@ impl Default for MSTDConfig {
 	}
 }
 
-pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> Result<Vec<f64>, String> {
+pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
 	let config = config.unwrap_or_default();
@@ -49,6 +50,6 @@ pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> Result<Vec<f64>, Stri
 pub fn moving_standard_deviation(
 	values: &[f64],
 	config: Option<MSTDConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	mstd(values, config)
 }

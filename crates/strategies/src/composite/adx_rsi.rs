@@ -1,4 +1,5 @@
 use crate::types::configs::AdxRsiConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Adx Rsi
 ///
@@ -8,7 +9,7 @@ pub fn adx_rsi_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<AdxRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let adx_period = config.adx_period.unwrap_or(14);
 	let trend_threshold = config.trend_threshold.unwrap_or(25.0);
@@ -18,15 +19,17 @@ pub fn adx_rsi_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len {
-		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs, lows, and closes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = (adx_period * 2).max(rsi_period + 1) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: ADX + RSI requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let adx_config = indicators_core::ADXConfig {

@@ -9,7 +9,7 @@ pub fn volume_price_trend_strategy(
 	config: Option<VolumePriceTrendConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::volume_price_trend_strategy(&closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn volume_price_trend_strategy_metadata() -> serde_json::Value {
@@ -34,5 +34,5 @@ pub fn volume_price_trend(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

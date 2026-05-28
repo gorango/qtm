@@ -1,5 +1,6 @@
 use crate::types::configs::MacdStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Macd Stochastic
 ///
@@ -9,7 +10,7 @@ pub fn macd_stochastic_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<MacdStochasticConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(12);
 	let slow_period = config.slow_period.unwrap_or(26);
@@ -21,15 +22,17 @@ pub fn macd_stochastic_strategy(
 
 	let data_len = closes.len();
 	if data_len != highs.len() || data_len != lows.len() {
-		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs, lows, and closes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = (slow_period + signal_period).max(k_period + d_period + 1) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: MACD Stochastic requires at least {} data points",
 			min_data_length
-		));
+		)));
 	}
 
 	let macd_config = indicators_core::MACDConfig {

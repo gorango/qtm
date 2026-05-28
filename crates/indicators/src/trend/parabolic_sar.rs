@@ -1,4 +1,5 @@
 use crate::types::trend::Trend;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -20,7 +21,7 @@ pub fn parabolic_sar(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<PSARConfig>,
-) -> Result<PSARResult, String> {
+) -> IndicatorResult<PSARResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let config = config.unwrap_or(PSARConfig {

@@ -1,6 +1,7 @@
 use crate::internal::ema::ema_internal;
 use crate::utils::rolling::rolling_max_growing;
 use crate::utils::rolling::rolling_min_growing;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[allow(dead_code)]
@@ -66,13 +67,15 @@ pub fn po(
 	closings: &[f64],
 	period: Option<u32>,
 	smooth: Option<u32>,
-) -> Result<POResult, String> {
+) -> IndicatorResult<POResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let len = highs.len();
 
 	if len == 0 {
-		return Err("Highs, lows, and closings arrays cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Highs, lows, and closings arrays cannot be empty".into(),
+		));
 	}
 
 	let period = period.unwrap_or(14) as usize;
@@ -127,6 +130,6 @@ pub fn projection_oscillator(
 	closings: &[f64],
 	period: Option<u32>,
 	smooth: Option<u32>,
-) -> Result<POResult, String> {
+) -> IndicatorResult<POResult> {
 	po(highs, lows, closings, period, smooth)
 }

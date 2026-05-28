@@ -8,7 +8,7 @@ pub fn chande_forecast_oscillator_strategy(
 	config: Option<ChandeForecastOscillatorConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::chande_forecast_oscillator_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn chande_forecast_oscillator_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn chande_forecast_oscillator(
 	let config = config
 		.map(|c| serde_json::from_value::<ChandeForecastOscillatorConfig>(c).unwrap_or_default());
 	strategies_core::chande_forecast_oscillator_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

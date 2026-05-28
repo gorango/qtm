@@ -10,7 +10,7 @@ pub fn ichimoku_strategy(
 	config: Option<IchimokuCloudConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::ichimoku_strategy(&closes, &highs, &lows, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn ichimoku_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn ichimoku(
 		input.lows.as_ref().unwrap_or(&input.closes),
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

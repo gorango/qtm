@@ -8,7 +8,7 @@ pub fn momentum_strategy(
 	config: Option<MomentumConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::momentum_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn momentum_strategy_metadata() -> serde_json::Value {
@@ -25,5 +25,5 @@ pub fn momentum(
 ) -> napi::Result<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MomentumConfig>(c).unwrap_or_default());
 	strategies_core::momentum_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

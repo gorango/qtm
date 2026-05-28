@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -15,7 +16,7 @@ impl Default for MeanAbsoluteDeviationConfig {
 pub fn dev(
 	values: &[f64],
 	config: Option<MeanAbsoluteDeviationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
 	let config = config.unwrap_or_default();
@@ -49,6 +50,6 @@ pub fn dev(
 pub fn mean_absolute_deviation(
 	values: &[f64],
 	config: Option<MeanAbsoluteDeviationConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	dev(values, config)
 }

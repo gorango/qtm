@@ -1,6 +1,7 @@
 use crate::trend::moving_max::moving_max_internal;
 use crate::trend::moving_min::moving_min_internal;
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -14,7 +15,7 @@ pub fn williams_r(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<WilliamsRConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let config_obj = config.unwrap_or(WilliamsRConfig { period: None });
 	let period = config_obj.period.unwrap_or(14) as usize;
 

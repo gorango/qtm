@@ -1,5 +1,6 @@
 use crate::internal::moving_std::std_dev_internal;
 use crate::internal::sma::sma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -43,7 +44,7 @@ impl Default for BBConfig {
 /// assert_eq!(result.middle.len(), 5);
 /// assert_eq!(result.lower.len(), 5);
 /// ```
-pub fn bb(closings: &[f64], config: Option<BBConfig>) -> Result<BBResult, String> {
+pub fn bb(closings: &[f64], config: Option<BBConfig>) -> IndicatorResult<BBResult> {
 	let len = closings.len();
 
 	let config = config.unwrap_or_default();
@@ -71,6 +72,6 @@ pub fn bb(closings: &[f64], config: Option<BBConfig>) -> Result<BBResult, String
 	})
 }
 
-pub fn bollinger_bands(closings: &[f64], config: Option<BBConfig>) -> Result<BBResult, String> {
+pub fn bollinger_bands(closings: &[f64], config: Option<BBConfig>) -> IndicatorResult<BBResult> {
 	bb(closings, config)
 }

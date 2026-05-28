@@ -1,4 +1,5 @@
 use crate::internal::moving_sum::moving_sum_internal;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -13,9 +14,9 @@ pub fn vortex(
 	lows: &[f64],
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<VortexResult, String> {
+) -> IndicatorResult<VortexResult> {
 	if highs.is_empty() || lows.is_empty() || closings.is_empty() {
-		return Err("Arrays cannot be empty".to_string());
+		return Err(IndicatorError::Custom("Arrays cannot be empty".into()));
 	}
 
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;

@@ -9,7 +9,7 @@ pub fn awesome_oscillator_strategy(
 	config: Option<AwesomeOscillatorConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::awesome_oscillator_strategy(&highs, &lows, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn awesome_oscillator_strategy_metadata() -> serde_json::Value {
@@ -31,5 +31,5 @@ pub fn awesome_oscillator(
 		input.lows.as_ref().unwrap_or(&input.closes),
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

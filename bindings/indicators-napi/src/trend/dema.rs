@@ -5,5 +5,5 @@ use napi_derive::napi;
 /// Dema
 #[napi]
 pub fn dema(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	dema_core(values.as_ref(), period).map_err(napi::Error::from_reason)
+	dema_core(values.as_ref(), period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

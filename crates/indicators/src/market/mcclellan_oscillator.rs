@@ -1,16 +1,21 @@
 use crate::internal::ema::ema_internal;
+use crate::{IndicatorError, IndicatorResult};
 
-pub fn mcclellan_oscillator(advances: &[f64], declines: &[f64]) -> Result<Vec<f64>, String> {
+pub fn mcclellan_oscillator(advances: &[f64], declines: &[f64]) -> IndicatorResult<Vec<f64>> {
 	if advances.is_empty() || declines.is_empty() {
 		return Ok(vec![]);
 	}
 
 	if advances.len() != declines.len() {
-		return Err("Advances and declines arrays must be equal length".to_string());
+		return Err(IndicatorError::Custom(
+			"Advances and declines arrays must be equal length".into(),
+		));
 	}
 
 	if advances.len() < 39 {
-		return Err("Advances and declines arrays must have at least 39 data points".to_string());
+		return Err(IndicatorError::Custom(
+			"Advances and declines arrays must have at least 39 data points".into(),
+		));
 	}
 
 	let len = advances.len();

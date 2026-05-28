@@ -1,7 +1,8 @@
+use crate::IndicatorResult;
 pub fn annualized_volatility(
 	prices: &[f64],
 	trading_days: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let len = prices.len();
 	let trading_days = trading_days.unwrap_or(252) as f64;
 

@@ -10,7 +10,7 @@ pub fn typical_price_strategy(
 	config: Option<TypicalPriceConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::typical_price_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn typical_price_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn typical_price(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

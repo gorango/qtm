@@ -1,4 +1,5 @@
 use crate::types::configs::HmaTrendConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// HMA Trend Strategy
 ///
@@ -12,19 +13,23 @@ use crate::types::configs::HmaTrendConfig;
 pub fn hma_trend_strategy(
 	closes: &[f64],
 	config: Option<HmaTrendConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(21);
 
 	// Validate parameters
 	if !(2..=200).contains(&period) {
-		return Err("HMA period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"HMA period must be between 2 and 200".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods + 1 {
 		// Need extra point for slope calculation
-		return Err("Insufficient data for HMA Trend strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for HMA Trend strategy".into(),
+		));
 	}
 
 	// Calculate HMA

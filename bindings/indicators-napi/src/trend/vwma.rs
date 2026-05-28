@@ -5,5 +5,6 @@ use napi_derive::napi;
 /// Vwma
 #[napi]
 pub fn vwma(closes: Float64Array, volumes: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	vwma_core(closes.as_ref(), volumes.as_ref(), period).map_err(napi::Error::from_reason)
+	vwma_core(closes.as_ref(), volumes.as_ref(), period)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

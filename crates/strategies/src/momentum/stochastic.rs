@@ -1,5 +1,6 @@
 use crate::types::configs::StochasticConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Stochastic Oscillator Momentum Strategy
 ///
@@ -15,7 +16,7 @@ pub fn stochastic_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<StochasticConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let k_period = config.k_period.unwrap_or(14);
 	let d_period = config.d_period.unwrap_or(3);
@@ -24,20 +25,28 @@ pub fn stochastic_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&k_period) {
-		return Err("Stochastic K period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Stochastic K period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=50).contains(&d_period) {
-		return Err("Stochastic D period must be between 2 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Stochastic D period must be between 2 and 50".into(),
+		));
 	}
 	if !(0.0..=100.0).contains(&oversold) || !(0.0..=100.0).contains(&overbought) {
-		return Err("Stochastic thresholds must be between 0 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Stochastic thresholds must be between 0 and 100".into(),
+		));
 	}
 
 	let min_data_length = (k_period + d_period + 1) as usize;
 	let data_len = highs.len();
 	if data_len < min_data_length || lows.len() < min_data_length || closes.len() < min_data_length
 	{
-		return Err("Insufficient data for Stochastic strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Stochastic strategy".into(),
+		));
 	}
 
 	// Calculate Stochastic values

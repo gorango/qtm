@@ -1,3 +1,4 @@
+pub mod error;
 pub mod internal;
 pub mod market;
 pub mod momentum;
@@ -9,6 +10,8 @@ pub mod utils;
 pub mod volatility;
 pub mod volume;
 pub mod warmup;
+
+pub use error::{IndicatorError, IndicatorResult};
 
 pub use internal::ema::ema_internal;
 pub use internal::moving_sum::moving_sum_internal;

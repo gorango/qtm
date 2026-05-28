@@ -20,7 +20,7 @@ pub fn ab(
 		period,
 		multiplier,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Acceleration Bands (camelCase alias)
@@ -40,5 +40,5 @@ pub fn accelerationBands(
 		period,
 		multiplier,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

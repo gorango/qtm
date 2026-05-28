@@ -3,6 +3,7 @@ use crate::internal::moving_std::std_dev_internal;
 use crate::internal::sma::sma_internal;
 use crate::internal::true_range::tr_internal;
 use crate::trend::rma::rma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -19,7 +20,7 @@ pub fn ttm_squeeze(
 	bb_period: Option<u32>,
 	bb_std_dev: Option<f64>,
 	kc_period: Option<u32>,
-) -> Result<TTMSqueezeResult, String> {
+) -> IndicatorResult<TTMSqueezeResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closes])?;
 
 	let len = highs.len();

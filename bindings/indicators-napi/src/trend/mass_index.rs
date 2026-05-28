@@ -10,5 +10,6 @@ pub fn mass_index(
 	ema_period: Option<u32>,
 	mi_period: Option<u32>,
 ) -> Result<Vec<f64>> {
-	mi_core(highs.as_ref(), lows.as_ref(), ema_period, mi_period).map_err(napi::Error::from_reason)
+	mi_core(highs.as_ref(), lows.as_ref(), ema_period, mi_period)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

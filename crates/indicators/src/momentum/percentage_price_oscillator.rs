@@ -1,5 +1,6 @@
 use crate::internal::ema::ema_internal;
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -21,7 +22,7 @@ pub struct PercentagePriceOscillatorResult {
 pub fn percentage_price_oscillator(
 	prices: &[f64],
 	config: Option<PercentagePriceOscillatorConfig>,
-) -> Result<PercentagePriceOscillatorResult, String> {
+) -> IndicatorResult<PercentagePriceOscillatorResult> {
 	let config_obj = config.unwrap_or(PercentagePriceOscillatorConfig {
 		fast_period: None,
 		slow_period: None,

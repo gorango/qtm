@@ -1,4 +1,5 @@
 use crate::types::configs::OBVConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// OBV Divergence Strategy
 ///
@@ -13,19 +14,25 @@ pub fn obv_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<OBVConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let lookback_period = config.lookback_period.unwrap_or(20) as usize;
 
 	if closes.len() != volumes.len() {
-		return Err("Closes and volumes must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"Closes and volumes must have equal length".into(),
+		));
 	}
 	if !(10..=50).contains(&(lookback_period as u32)) {
-		return Err("Lookback period must be between 10 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Lookback period must be between 10 and 50".into(),
+		));
 	}
 	let data_len = closes.len();
 	if data_len < 2 * lookback_period + 1 {
-		return Err("Insufficient data for OBV strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for OBV strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();
@@ -48,36 +55,36 @@ pub fn obv_strategy(
 
 			let current_price_min = *current_prices
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).unwrap())
+				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::INFINITY);
 			let previous_price_min = *previous_prices
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).unwrap())
+				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::INFINITY);
 			let current_obv_min = *current_obvs
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).unwrap())
+				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::INFINITY);
 			let previous_obv_min = *previous_obvs
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).unwrap())
+				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::INFINITY);
 
 			let current_price_max = *current_prices
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).unwrap())
+				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let previous_price_max = *previous_prices
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).unwrap())
+				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let current_obv_max = *current_obvs
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).unwrap())
+				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let previous_obv_max = *previous_obvs
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).unwrap())
+				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
 				.unwrap_or(&f64::NEG_INFINITY);
 
 			let bullish_divergence =

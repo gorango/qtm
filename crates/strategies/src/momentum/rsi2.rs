@@ -1,5 +1,6 @@
 use crate::types::configs::Rsi2Config;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// RSI2 Momentum Strategy
 ///
@@ -10,7 +11,7 @@ use crate::utils::signals::{crossed_over, crossed_under};
 /// @strategy_name RSI2 Momentum Strategy
 /// @category momentum
 /// @default_timeframes 15m,1h,4h
-pub fn rsi2_strategy(closes: &[f64], config: Option<Rsi2Config>) -> Result<Vec<i8>, String> {
+pub fn rsi2_strategy(closes: &[f64], config: Option<Rsi2Config>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let oversold = config.oversold.unwrap_or(30.0);
@@ -18,18 +19,26 @@ pub fn rsi2_strategy(closes: &[f64], config: Option<Rsi2Config>) -> Result<Vec<i
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("RSI2 period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"RSI2 period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.0..=100.0).contains(&oversold) || !(0.0..=100.0).contains(&overbought) {
-		return Err("RSI2 thresholds must be between 0 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"RSI2 thresholds must be between 0 and 100".into(),
+		));
 	}
 	if oversold >= overbought {
-		return Err("RSI2 oversold must be less than overbought".to_string());
+		return Err(StrategyError::Validation(
+			"RSI2 oversold must be less than overbought".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for RSI2 strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for RSI2 strategy".into(),
+		));
 	}
 
 	// Calculate RSI values

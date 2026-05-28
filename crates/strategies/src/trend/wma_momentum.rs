@@ -1,4 +1,5 @@
 use crate::types::configs::WmaMomentumConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// WMA Momentum Trend Strategy
 ///
@@ -12,18 +13,22 @@ use crate::types::configs::WmaMomentumConfig;
 pub fn wma_momentum_strategy(
 	closes: &[f64],
 	config: Option<WmaMomentumConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("WMA period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"WMA period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods + 1 {
-		return Err("Insufficient data for WMA Momentum strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for WMA Momentum strategy".into(),
+		));
 	}
 
 	// Calculate WMA

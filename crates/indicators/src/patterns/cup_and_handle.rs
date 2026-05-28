@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn cup_and_handle(
 	opens: &[f64],
@@ -8,7 +9,7 @@ pub fn cup_and_handle(
 	cup_depth: Option<f64>,
 	handle_retracement: Option<f64>,
 	min_duration: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let cup_depth = cup_depth.unwrap_or(0.15);

@@ -11,7 +11,7 @@ pub fn flags_pennants_strategy(
 	config: Option<FlagsPennantsConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::flags_pennants_strategy(&opens, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn flags_pennants_strategy_metadata() -> serde_json::Value {
@@ -35,5 +35,5 @@ pub fn flags_pennants(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

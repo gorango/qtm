@@ -1,4 +1,5 @@
 use crate::types::configs::FibonacciRetracementConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Fibonacci Retracement Trend Strategy
 ///
@@ -12,22 +13,28 @@ use crate::types::configs::FibonacciRetracementConfig;
 pub fn fibonacci_retracement_strategy(
 	closes: &[f64],
 	config: Option<FibonacciRetracementConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(50);
 	let fib_level = config.fib_level.unwrap_or(0.618);
 
 	// Validate parameters
 	if !(10..=200).contains(&period) {
-		return Err("Fibonacci period must be between 10 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"Fibonacci period must be between 10 and 200".into(),
+		));
 	}
 	if !(0.0..=1.0).contains(&fib_level) {
-		return Err("Fibonacci level must be between 0 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"Fibonacci level must be between 0 and 1".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Fibonacci Retracement strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Fibonacci Retracement strategy".into(),
+		));
 	}
 
 	// Use constant Fibonacci level for now

@@ -1,5 +1,6 @@
 use crate::types::configs::AccelerationBandsConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Acceleration Bands
 ///
@@ -9,16 +10,20 @@ pub fn acceleration_bands_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<AccelerationBandsConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let multiplier = config.multiplier.unwrap_or(4.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("Acceleration Bands period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Acceleration Bands period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.1..=10.0).contains(&multiplier) {
-		return Err("Acceleration Bands multiplier must be between 0.1 and 10.0".to_string());
+		return Err(StrategyError::Validation(
+			"Acceleration Bands multiplier must be between 0.1 and 10.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

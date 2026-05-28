@@ -1,5 +1,6 @@
 use crate::types::configs::AroonConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Aroon Trend Strategy
@@ -15,7 +16,7 @@ pub fn aroon_strategy(
 	highs: &[f64],
 	lows: &[f64],
 	config: Option<AroonConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let overbought = config.overbought.unwrap_or(70.0);
@@ -23,12 +24,16 @@ pub fn aroon_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("Aroon period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Aroon period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = highs.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Aroon strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Aroon strategy".into(),
+		));
 	}
 
 	// Calculate Aroon

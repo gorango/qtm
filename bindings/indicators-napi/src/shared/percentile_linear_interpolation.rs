@@ -11,5 +11,6 @@ pub fn percentile_linear_interpolation(
 	values: Float64Array,
 	config: Option<PercentileLinearInterpolationConfig>,
 ) -> Result<Vec<f64>> {
-	percentile_linear_interpolation_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	percentile_linear_interpolation_core(values.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

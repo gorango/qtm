@@ -1,11 +1,12 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn bullish_engulfing(
 	opens: &[f64],
 	_highs: &[f64],
 	_lows: &[f64],
 	closes: &[f64],
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, _highs, _lows, closes])?;
 
 	let mut results = vec![0.0; opens.len()];
@@ -45,7 +46,7 @@ pub fn bearish_engulfing(
 	_highs: &[f64],
 	_lows: &[f64],
 	closes: &[f64],
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, _highs, _lows, closes])?;
 
 	let mut results = vec![0.0; opens.len()];

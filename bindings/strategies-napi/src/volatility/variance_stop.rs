@@ -8,7 +8,7 @@ pub fn variance_stop_strategy(
 	config: Option<VarianceStopConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::variance_stop_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn variance_stop_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn variance_stop(
 	let config =
 		config.map(|c| serde_json::from_value::<VarianceStopConfig>(c).unwrap_or_default());
 	strategies_core::variance_stop_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

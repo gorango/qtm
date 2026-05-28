@@ -11,7 +11,7 @@ pub fn accumulation_distribution_strategy(
 	config: Option<AccumulationDistributionConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::accumulation_distribution_strategy(&highs, &lows, &closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn accumulation_distribution_strategy_metadata() -> serde_json::Value {
@@ -38,5 +38,5 @@ pub fn accumulation_distribution(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

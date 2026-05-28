@@ -1,4 +1,5 @@
 use crate::types::configs::LinregSlopeConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Linear Regression Slope Trend Strategy
 ///
@@ -14,7 +15,7 @@ pub fn lin_reg_slope_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<LinregSlopeConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let slope_period = config.slope_period.unwrap_or(10);
@@ -23,18 +24,26 @@ pub fn lin_reg_slope_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("LinReg period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"LinReg period must be between 2 and 100".into(),
+		));
 	}
 	if !(1..=50).contains(&slope_period) {
-		return Err("Slope period must be between 1 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Slope period must be between 1 and 50".into(),
+		));
 	}
 	if !(2..=100).contains(&period_adx) {
-		return Err("ADX period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"ADX period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = (period + slope_period).max(period_adx * 3) as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Linear Regression Slope strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Linear Regression Slope strategy".into(),
+		));
 	}
 
 	// Convert to vec for multiple uses

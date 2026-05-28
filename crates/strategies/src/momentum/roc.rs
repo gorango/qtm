@@ -1,5 +1,6 @@
 use crate::types::configs::RocConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// ROC Momentum Strategy
 ///
@@ -10,7 +11,7 @@ use crate::utils::signals::{crossed_over, crossed_under};
 /// @strategy_name ROC Momentum Strategy
 /// @category momentum
 /// @default_timeframes 15m,1h,4h
-pub fn roc_strategy(closes: &[f64], config: Option<RocConfig>) -> Result<Vec<i8>, String> {
+pub fn roc_strategy(closes: &[f64], config: Option<RocConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let oversold = config.oversold.unwrap_or(-10.0);
@@ -18,15 +19,21 @@ pub fn roc_strategy(closes: &[f64], config: Option<RocConfig>) -> Result<Vec<i8>
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("ROC period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"ROC period must be between 2 and 100".into(),
+		));
 	}
 	if oversold >= overbought {
-		return Err("ROC oversold must be less than overbought".to_string());
+		return Err(StrategyError::Validation(
+			"ROC oversold must be less than overbought".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for ROC strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for ROC strategy".into(),
+		));
 	}
 
 	// Calculate ROC values

@@ -14,7 +14,11 @@ fn integration_buy_and_hold_empty_errors() {
 	let closes: Vec<f64> = vec![];
 	let result = buy_and_hold_strategy(&closes, None);
 	assert!(result.is_err());
-	assert_eq!(result.err().unwrap(), "Input arrays cannot be empty");
+	assert!(result
+		.err()
+		.unwrap()
+		.to_string()
+		.contains("Input arrays cannot be empty"));
 }
 
 #[test]

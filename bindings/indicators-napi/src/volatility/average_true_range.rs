@@ -13,7 +13,7 @@ pub fn atr(
 	config: Option<ATRConfig>,
 ) -> Result<ATRResult> {
 	atr_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), config)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Average True Range (camelCase alias)
@@ -26,5 +26,5 @@ pub fn averageTrueRange(
 	config: Option<ATRConfig>,
 ) -> Result<ATRResult> {
 	atr_alias(highs.as_ref(), lows.as_ref(), closings.as_ref(), config)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

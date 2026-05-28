@@ -1,5 +1,6 @@
 use crate::types::configs::LarssonConfig;
 use crate::utils::signals::consolidating;
+use crate::{StrategyError, StrategyResult};
 use indicators_core::LarssonSignal;
 
 /// Larsson Trend Strategy
@@ -16,7 +17,7 @@ pub fn larsson_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<LarssonConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let use_consolidating_filter = config.use_consolidating_filter.unwrap_or(1) > 0;
 	let consolidating_lookback = config.consolidating_lookback.unwrap_or(10) as usize;
@@ -25,15 +26,17 @@ pub fn larsson_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 
 	let warmup_period = 30; // Based on SMMA period used in Larsson indicator
 	if data_len < warmup_period {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data for Larsson strategy (need at least {} bars)",
 			warmup_period
-		));
+		)));
 	}
 
 	// Convert to vectors for reuse

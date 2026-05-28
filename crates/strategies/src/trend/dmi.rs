@@ -1,5 +1,6 @@
 use crate::types::configs::DmiConfig;
 use crate::utils::signals::crossed_over;
+use crate::{StrategyError, StrategyResult};
 
 /// DMI Trend Strategy
 ///
@@ -16,7 +17,7 @@ pub fn dmi_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<DmiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period_di = config.period_di.unwrap_or(14);
 	let period_adx = config.period_adx.unwrap_or(14);
@@ -24,15 +25,21 @@ pub fn dmi_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period_di) {
-		return Err("DMI DI period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"DMI DI period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=100).contains(&period_adx) {
-		return Err("DMI ADX period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"DMI ADX period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = highs.len();
 	let min_periods = (period_adx * 3) as usize; // ADX needs more periods
 	if data_len < min_periods {
-		return Err("Insufficient data for DMI strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for DMI strategy".into(),
+		));
 	}
 
 	// Calculate ADX (which includes +DI and -DI)

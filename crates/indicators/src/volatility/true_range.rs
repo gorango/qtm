@@ -1,4 +1,5 @@
 use crate::internal::true_range::tr_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -7,7 +8,7 @@ pub struct TrueRangeResult {
 	pub tr_line: Vec<f64>,
 }
 
-pub fn tr(highs: &[f64], lows: &[f64], closings: &[f64]) -> Result<TrueRangeResult, String> {
+pub fn tr(highs: &[f64], lows: &[f64], closings: &[f64]) -> IndicatorResult<TrueRangeResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	Ok(TrueRangeResult {
@@ -19,6 +20,6 @@ pub fn true_range(
 	highs: &[f64],
 	lows: &[f64],
 	closings: &[f64],
-) -> Result<TrueRangeResult, String> {
+) -> IndicatorResult<TrueRangeResult> {
 	tr(highs, lows, closings)
 }

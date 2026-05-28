@@ -7,7 +7,7 @@ use napi_derive::napi;
 /// Dev
 #[napi]
 pub fn dev(values: Float64Array, config: Option<MeanAbsoluteDeviationConfig>) -> Result<Vec<f64>> {
-	dev_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	dev_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Mean Absolute Deviation (camelCase alias)
@@ -17,5 +17,5 @@ pub fn meanAbsoluteDeviation(
 	values: Float64Array,
 	config: Option<MeanAbsoluteDeviationConfig>,
 ) -> Result<Vec<f64>> {
-	mad_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	mad_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

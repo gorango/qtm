@@ -11,7 +11,7 @@ pub fn wedge_strategy(
 	config: Option<WedgeConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::wedge_strategy(&opens, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn wedge_strategy_metadata() -> serde_json::Value {
@@ -34,5 +34,5 @@ pub fn wedge(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

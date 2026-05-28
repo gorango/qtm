@@ -11,7 +11,7 @@ pub fn cup_and_handle_strategy(
 	config: Option<CupAndHandleConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::cup_and_handle_strategy(&opens, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn cup_and_handle_strategy_metadata() -> serde_json::Value {
@@ -35,5 +35,5 @@ pub fn cup_and_handle(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

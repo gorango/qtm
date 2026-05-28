@@ -1,4 +1,5 @@
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -36,7 +37,7 @@ fn percentile_nearest_rank_internal(values: &[f64], period: usize, percentage: f
 pub fn percentile_nearest_rank(
 	values: &[f64],
 	config: Option<PercentileNearestRankConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let PercentileNearestRankConfig { period, percentage } =
 		config.unwrap_or(PercentileNearestRankConfig {
 			period: None,

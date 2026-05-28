@@ -1,6 +1,7 @@
 use crate::trend::moving_max::moving_max_internal;
 use crate::trend::moving_min::moving_min_internal;
 use crate::trend::since::since_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -20,7 +21,7 @@ pub fn aroon(
 	highs: &[f64],
 	lows: &[f64],
 	config: Option<AroonConfig>,
-) -> Result<AroonResult, String> {
+) -> IndicatorResult<AroonResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows])?;
 
 	let config = config.unwrap_or(AroonConfig { period: Some(25) });

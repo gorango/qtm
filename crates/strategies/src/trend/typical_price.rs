@@ -1,4 +1,5 @@
 use crate::types::configs::TypicalPriceConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Typical Price Trend Strategy
 ///
@@ -14,12 +15,14 @@ pub fn typical_price_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<TypicalPriceConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let _config = config.unwrap_or_default();
 
 	let data_len = closes.len();
 	if data_len == 0 {
-		return Err("Input arrays cannot be empty".to_string());
+		return Err(StrategyError::Validation(
+			"Input arrays cannot be empty".into(),
+		));
 	}
 
 	// Calculate Typical Price

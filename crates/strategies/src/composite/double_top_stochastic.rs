@@ -1,4 +1,5 @@
 use crate::types::configs::DoubleTopStochasticConfig;
+use crate::StrategyResult;
 
 /// Double Top Stochastic
 ///
@@ -8,7 +9,7 @@ pub fn double_top_stochastic_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<DoubleTopStochasticConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_distance = config.min_distance.unwrap_or(10);
 	let tolerance = config.tolerance.unwrap_or(0.03);

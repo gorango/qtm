@@ -1,3 +1,6 @@
+pub mod error;
+pub use error::{StrategyError, StrategyResult};
+
 pub mod buy_and_hold;
 pub mod composite;
 pub mod fundamentals;

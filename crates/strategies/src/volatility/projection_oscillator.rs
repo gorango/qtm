@@ -1,4 +1,5 @@
 use crate::types::configs::ProjectionOscillatorConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Projection Oscillator
 ///
@@ -8,16 +9,20 @@ pub fn projection_oscillator_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<ProjectionOscillatorConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let smooth = config.smooth.unwrap_or(3);
 
 	if !(2..=100).contains(&period) {
-		return Err("Projection Oscillator period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Projection Oscillator period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=20).contains(&smooth) {
-		return Err("Projection Oscillator smooth must be between 2 and 20".to_string());
+		return Err(StrategyError::Validation(
+			"Projection Oscillator smooth must be between 2 and 20".into(),
+		));
 	}
 
 	let data_len = closes.len();

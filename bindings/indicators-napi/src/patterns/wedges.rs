@@ -15,7 +15,7 @@ pub fn wedges(
 	slope_tolerance: Option<f64>,
 ) -> Result<Vec<f64>> {
 	validate_multiple_arrays(&[&opens, &highs, &lows, &closes])
-		.map_err(napi::Error::from_reason)?;
+		.map_err(|e| napi::Error::from_reason(e.to_string()))?;
 
 	let highs = highs.as_ref();
 	let lows = lows.as_ref();

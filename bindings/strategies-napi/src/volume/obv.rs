@@ -9,7 +9,7 @@ pub fn obv_strategy(
 	config: Option<OBVConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::obv_strategy(&closes, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn obv_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn obv(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

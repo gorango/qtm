@@ -10,7 +10,7 @@ pub fn keltner_channel_breakout_strategy(
 	config: Option<KeltnerChannelConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::keltner_channel_breakout_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn keltner_channel_breakout_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn keltner_channel_breakout(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

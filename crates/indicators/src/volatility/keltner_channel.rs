@@ -1,6 +1,7 @@
 use crate::internal::ema::ema_internal;
 use crate::internal::true_range::tr_internal;
 use crate::trend::rma::rma_internal;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -16,7 +17,7 @@ pub fn kc(
 	lows: &[f64],
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<KCResult, String> {
+) -> IndicatorResult<KCResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let len = highs.len();
@@ -56,6 +57,6 @@ pub fn keltner_channel(
 	lows: &[f64],
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<KCResult, String> {
+) -> IndicatorResult<KCResult> {
 	kc(highs, lows, closings, period)
 }

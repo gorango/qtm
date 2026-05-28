@@ -169,5 +169,5 @@ pub fn calculate_indicator_warmup(
 	params: serde_json::Value,
 ) -> Result<IndicatorWarmupResult> {
 	indicators_core::calculate_indicator_warmup(indicator_type, params)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

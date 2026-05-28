@@ -10,5 +10,6 @@ pub fn percentile_nearest_rank(
 	values: Float64Array,
 	config: Option<PercentileNearestRankConfig>,
 ) -> Result<Vec<f64>> {
-	percentile_nearest_rank_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	percentile_nearest_rank_core(values.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

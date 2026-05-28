@@ -1,5 +1,6 @@
 use crate::types::configs::VwmaConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// VWMA Trend Strategy
 ///
@@ -14,18 +15,22 @@ pub fn vwma_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VwmaConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 
 	// Validate parameters
 	if !(2..=200).contains(&period) {
-		return Err("VWMA period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"VWMA period must be between 2 and 200".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for VWMA strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for VWMA strategy".into(),
+		));
 	}
 
 	// Convert for later use

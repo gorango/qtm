@@ -1,5 +1,6 @@
 use crate::types::configs::MaCrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Moving Average Crossover Strategy
 ///
@@ -13,20 +14,26 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 pub fn ma_crossover_strategy(
 	closes: &[f64],
 	config: Option<MaCrossoverConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(5);
 	let slow_period = config.slow_period.unwrap_or(20);
 
 	// Validate parameters
 	if !(2..=100).contains(&fast_period) {
-		return Err("Fast MA period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Fast MA period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&slow_period) {
-		return Err("Slow MA period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"Slow MA period must be between 2 and 200".into(),
+		));
 	}
 	if closes.len() < slow_period as usize {
-		return Err("Insufficient data for MA Crossover strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for MA Crossover strategy".into(),
+		));
 	}
 
 	// Calculate moving averages using the NAPI functions

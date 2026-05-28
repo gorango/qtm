@@ -10,7 +10,7 @@ pub fn ease_of_movement_strategy(
 	config: Option<EaseOfMovementConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::ease_of_movement_strategy(&highs, &lows, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn ease_of_movement_strategy_metadata() -> serde_json::Value {
@@ -36,5 +36,5 @@ pub fn ease_of_movement(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

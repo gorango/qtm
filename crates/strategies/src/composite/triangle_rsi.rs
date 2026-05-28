@@ -1,4 +1,5 @@
 use crate::types::configs::TriangleRsiConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Triangle Rsi
 ///
@@ -8,7 +9,7 @@ pub fn triangle_rsi_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<TriangleRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_points = config.min_points.unwrap_or(4);
 	let slope_tolerance = config.slope_tolerance.unwrap_or(0.01);
@@ -39,7 +40,9 @@ pub fn triangle_rsi_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len {
-		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs, lows, and closes arrays must have the same length".into(),
+		));
 	}
 	let mut signals = Vec::with_capacity(data_len);
 

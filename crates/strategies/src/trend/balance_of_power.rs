@@ -1,5 +1,6 @@
 use crate::types::configs::BalanceOfPowerConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Balance of Power Trend Strategy
 ///
@@ -16,12 +17,14 @@ pub fn balance_of_power_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<BalanceOfPowerConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let _config = config.unwrap_or_default(); // Period not used in current implementation
 
 	let data_len = openings.len();
 	if data_len == 0 {
-		return Err("Input arrays cannot be empty".to_string());
+		return Err(StrategyError::Validation(
+			"Input arrays cannot be empty".into(),
+		));
 	}
 
 	// Calculate Balance of Power

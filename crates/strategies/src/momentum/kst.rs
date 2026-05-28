@@ -1,5 +1,6 @@
 use crate::types::configs::KSTConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// KST Trend Strategy
@@ -11,7 +12,7 @@ use serde_json;
 /// @strategy_name KST Trend
 /// @category momentum
 /// @default_timeframes 1h,4h,1d
-pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> Result<Vec<i8>, String> {
+pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let roc1_period = config.roc1_period.unwrap_or(10);
 	let roc2_period = config.roc2_period.unwrap_or(15);
@@ -28,13 +29,17 @@ pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> Result<Vec<i8>
 		signal_period,
 	] {
 		if !(2..=100).contains(period) {
-			return Err("KST periods must be between 2 and 100".to_string());
+			return Err(StrategyError::Validation(
+				"KST periods must be between 2 and 100".into(),
+			));
 		}
 	}
 	let data_len = closes.len();
 	let min_periods = (roc4_period + signal_period) as usize; // Rough estimate
 	if data_len < min_periods {
-		return Err("Insufficient data for KST strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for KST strategy".into(),
+		));
 	}
 
 	// Calculate KST

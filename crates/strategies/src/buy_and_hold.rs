@@ -1,4 +1,5 @@
 use crate::types::configs::BuyAndHoldConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Buy and Hold Strategy
 ///
@@ -11,12 +12,14 @@ use crate::types::configs::BuyAndHoldConfig;
 pub fn buy_and_hold_strategy(
 	closes: &[f64],
 	config: Option<BuyAndHoldConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let _config = config.unwrap_or_default();
 
 	let data_len = closes.len();
 	if data_len == 0 {
-		return Err("Input arrays cannot be empty".to_string());
+		return Err(StrategyError::Validation(
+			"Input arrays cannot be empty".into(),
+		));
 	}
 
 	// Generate signals: buy on first bar, hold forever
@@ -56,7 +59,11 @@ mod tests {
 		let closes: Vec<f64> = vec![];
 		let result = buy_and_hold_strategy(&closes, None);
 		assert!(result.is_err());
-		assert_eq!(result.err().unwrap(), "Input arrays cannot be empty");
+		assert!(result
+			.err()
+			.unwrap()
+			.to_string()
+			.contains("Input arrays cannot be empty"));
 	}
 
 	#[test]

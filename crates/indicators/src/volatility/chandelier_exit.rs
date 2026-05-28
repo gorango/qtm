@@ -2,6 +2,7 @@ use crate::internal::true_range::tr_internal;
 use crate::trend::rma::rma_internal;
 use crate::utils::rolling::rolling_max_growing;
 use crate::utils::rolling::rolling_min_growing;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -16,13 +17,15 @@ pub fn ce(
 	lows: &[f64],
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<CEResult, String> {
+) -> IndicatorResult<CEResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let len = highs.len();
 
 	if len == 0 {
-		return Err("Highs, lows, and closings arrays cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Highs, lows, and closings arrays cannot be empty".into(),
+		));
 	}
 
 	let period = period.unwrap_or(22) as usize;
@@ -61,6 +64,6 @@ pub fn chandelier_exit(
 	lows: &[f64],
 	closings: &[f64],
 	period: Option<u32>,
-) -> Result<CEResult, String> {
+) -> IndicatorResult<CEResult> {
 	ce(highs, lows, closings, period)
 }

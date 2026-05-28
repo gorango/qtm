@@ -1,5 +1,6 @@
 use crate::types::configs::LinRegChannelConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Linear Regression Channel Trend Strategy
 ///
@@ -13,19 +14,23 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 pub fn lin_reg_channel_strategy(
 	closes: &[f64],
 	config: Option<LinRegChannelConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let offset = config.offset.unwrap_or(0.0);
 
 	// Validate parameters
 	if !(2..=200).contains(&period) {
-		return Err("Linear Regression Channel period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"Linear Regression Channel period must be between 2 and 200".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if data_len < period as usize {
-		return Err("Insufficient data for Linear Regression Channel strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Linear Regression Channel strategy".into(),
+		));
 	}
 
 	// Convert Float64Array to Vec<f64>

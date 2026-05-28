@@ -1,5 +1,6 @@
 use crate::types::configs::CorrelationPairConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Correlation Pair Strategy
@@ -14,7 +15,7 @@ use serde_json;
 pub fn correlation_pair_strategy(
 	closes: &[f64],
 	config: Option<CorrelationPairConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let entry_threshold = config.entry_threshold.unwrap_or(0.7);
@@ -22,18 +23,26 @@ pub fn correlation_pair_strategy(
 	let second_closes = config.second_closes.unwrap_or_default();
 
 	if !(2..=100).contains(&period) {
-		return Err("Period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.0..=1.0).contains(&entry_threshold) || !(0.0..=1.0).contains(&exit_threshold) {
-		return Err("Thresholds must be between 0 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"Thresholds must be between 0 and 1".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if second_closes.len() != data_len {
-		return Err("secondCloses must have the same length as closes".to_string());
+		return Err(StrategyError::Validation(
+			"secondCloses must have the same length as closes".into(),
+		));
 	}
 	if data_len < period as usize + 1 {
-		return Err("Insufficient data for Correlation Pair strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Correlation Pair strategy".into(),
+		));
 	}
 
 	let second_closes_array: &[f64] = &second_closes;

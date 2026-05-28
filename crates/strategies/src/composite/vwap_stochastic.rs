@@ -1,5 +1,6 @@
 use crate::types::configs::VwapStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use indicators_core::stochastic_oscillator;
 use indicators_core::vwap;
 
@@ -12,7 +13,7 @@ pub fn vwap_stochastic_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VwapStochasticConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let vwap_period = config.vwap_period.unwrap_or(14);
 	let k_period = config.k_period.unwrap_or(14);
@@ -22,17 +23,17 @@ pub fn vwap_stochastic_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let min_data_length = vwap_period.max(k_period + d_period) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: VWAP Stochastic requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let highs_vec = highs;

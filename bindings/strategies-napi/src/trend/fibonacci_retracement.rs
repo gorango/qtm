@@ -8,7 +8,7 @@ pub fn fibonacci_retracement_strategy(
 	config: Option<FibonacciRetracementConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::fibonacci_retracement_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn fibonacci_retracement_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn fibonacci_retracement(
 	let config =
 		config.map(|c| serde_json::from_value::<FibonacciRetracementConfig>(c).unwrap_or_default());
 	strategies_core::fibonacci_retracement_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

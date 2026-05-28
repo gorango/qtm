@@ -8,7 +8,7 @@ pub fn alma_crossover_strategy(
 	config: Option<AlmacrossoverConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::alma_crossover_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn alma_crossover_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn alma_crossover(
 	let config =
 		config.map(|c| serde_json::from_value::<AlmacrossoverConfig>(c).unwrap_or_default());
 	strategies_core::alma_crossover_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

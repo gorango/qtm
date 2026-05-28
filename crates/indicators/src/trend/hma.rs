@@ -1,6 +1,7 @@
 use crate::trend::wma::wma_internal;
+use crate::IndicatorResult;
 
-pub fn hma(values: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
+pub fn hma(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(16) as usize;
 	crate::utils::validation::validate_period(period)?;
 	let half_period = period / 2;

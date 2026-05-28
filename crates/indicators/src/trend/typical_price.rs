@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 pub fn typical_price_internal(highs: &[f64], lows: &[f64], closings: &[f64]) -> Vec<f64> {
 	highs
 		.iter()
@@ -6,7 +7,7 @@ pub fn typical_price_internal(highs: &[f64], lows: &[f64], closings: &[f64]) -> 
 		.collect()
 }
 
-pub fn typical_price(highs: &[f64], lows: &[f64], closings: &[f64]) -> Result<Vec<f64>, String> {
+pub fn typical_price(highs: &[f64], lows: &[f64], closings: &[f64]) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 	Ok(typical_price_internal(highs, lows, closings))
 }

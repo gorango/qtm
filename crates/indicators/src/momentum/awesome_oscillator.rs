@@ -1,5 +1,6 @@
 use crate::internal::sma::sma_internal;
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -13,7 +14,7 @@ pub fn awesome_oscillator(
 	highs: &[f64],
 	lows: &[f64],
 	config: Option<AwesomeOscillatorConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let config_obj = config.unwrap_or(AwesomeOscillatorConfig {
 		fast_period: None,
 		slow_period: None,

@@ -1,4 +1,5 @@
 use crate::trend::rma::rma_internal;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -20,7 +21,7 @@ pub fn adx(
 	lows: &[f64],
 	closings: &[f64],
 	config: Option<ADXConfig>,
-) -> Result<ADXResult, String> {
+) -> IndicatorResult<ADXResult> {
 	let config = config.unwrap_or(ADXConfig { period: Some(14) });
 	let period = config.period.unwrap_or(14) as usize;
 
@@ -28,11 +29,11 @@ pub fn adx(
 	crate::utils::validation::validate_period(period)?;
 
 	if highs.len() < period + 1 {
-		return Err(format!(
+		return Err(IndicatorError::Custom(format!(
 			"Not enough data points. Need at least {}, got {}",
 			period + 1,
 			highs.len()
-		));
+		)));
 	}
 
 	let len = highs.len();

@@ -1,4 +1,5 @@
 use crate::types::configs::WmaConfirmationConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// WMA Confirmation Trend Strategy
 ///
@@ -12,22 +13,28 @@ use crate::types::configs::WmaConfirmationConfig;
 pub fn wma_confirmation_strategy(
 	closes: &[f64],
 	config: Option<WmaConfirmationConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let threshold = config.threshold.unwrap_or(0.001);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("WMA period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"WMA period must be between 2 and 100".into(),
+		));
 	}
 	if threshold <= 0.0 {
-		return Err("WMA threshold must be positive".to_string());
+		return Err(StrategyError::Validation(
+			"WMA threshold must be positive".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods + 1 {
-		return Err("Insufficient data for WMA Confirmation strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for WMA Confirmation strategy".into(),
+		));
 	}
 
 	// Calculate WMA

@@ -8,12 +8,12 @@ use napi_derive::napi;
 /// Bbw
 #[napi]
 pub fn bbw(bb: BBResult, period: Option<u32>) -> Result<BBWResult> {
-	bbw_core(bb, period).map_err(napi::Error::from_reason)
+	bbw_core(bb, period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Bollinger Bands Width (camelCase alias)
 #[napi]
 #[allow(non_snake_case)]
 pub fn bollingerBandsWidth(bb: BBResult, period: Option<u32>) -> Result<BBWResult> {
-	bbw_alias(bb, period).map_err(napi::Error::from_reason)
+	bbw_alias(bb, period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

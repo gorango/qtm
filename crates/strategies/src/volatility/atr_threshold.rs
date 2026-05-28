@@ -1,4 +1,5 @@
 use crate::types::configs::AtrThresholdConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Atr Threshold
 ///
@@ -8,16 +9,20 @@ pub fn atr_threshold_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<AtrThresholdConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let multiplier = config.multiplier.unwrap_or(2.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("ATR Threshold period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"ATR Threshold period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.1..=10.0).contains(&multiplier) {
-		return Err("ATR Threshold multiplier must be between 0.1 and 10.0".to_string());
+		return Err(StrategyError::Validation(
+			"ATR Threshold multiplier must be between 0.1 and 10.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

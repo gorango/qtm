@@ -11,5 +11,5 @@ pub fn percentage_price_oscillator(
 	prices: Float64Array,
 	config: Option<PercentagePriceOscillatorConfig>,
 ) -> Result<PercentagePriceOscillatorResult> {
-	ppo_core(prices.as_ref(), config).map_err(napi::Error::from_reason)
+	ppo_core(prices.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

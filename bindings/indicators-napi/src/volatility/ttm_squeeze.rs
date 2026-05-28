@@ -22,7 +22,7 @@ pub fn ttm_squeeze(
 		bb_std_dev,
 		kc_period,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Ttm Squeeze (camelCase alias)
@@ -44,5 +44,5 @@ pub fn ttmSqueeze(
 		bb_std_dev,
 		kc_period,
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

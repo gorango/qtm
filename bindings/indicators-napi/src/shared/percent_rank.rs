@@ -5,5 +5,5 @@ use napi_derive::napi;
 /// Percent Rank
 #[napi]
 pub fn percent_rank(values: Float64Array, config: Option<PercentRankConfig>) -> Result<Vec<f64>> {
-	percent_rank_core(values.as_ref(), config).map_err(napi::Error::from_reason)
+	percent_rank_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
 }

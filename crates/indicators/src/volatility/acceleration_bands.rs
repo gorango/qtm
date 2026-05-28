@@ -1,4 +1,5 @@
 use crate::internal::sma::sma_internal;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -15,13 +16,15 @@ pub fn ab(
 	closings: &[f64],
 	period: Option<u32>,
 	multiplier: Option<f64>,
-) -> Result<ABResult, String> {
+) -> IndicatorResult<ABResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
 
 	let len = highs.len();
 
 	if len == 0 {
-		return Err("Highs, lows, and closings arrays cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Highs, lows, and closings arrays cannot be empty".into(),
+		));
 	}
 
 	let period = period.unwrap_or(20) as usize;
@@ -69,6 +72,6 @@ pub fn acceleration_bands(
 	closings: &[f64],
 	period: Option<u32>,
 	multiplier: Option<f64>,
-) -> Result<ABResult, String> {
+) -> IndicatorResult<ABResult> {
 	ab(highs, lows, closings, period, multiplier)
 }

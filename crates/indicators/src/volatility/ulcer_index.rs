@@ -1,11 +1,14 @@
 use crate::internal::sma::sma_internal;
 use crate::utils::rolling::rolling_max;
+use crate::{IndicatorError, IndicatorResult};
 
-pub fn ui(closings: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
+pub fn ui(closings: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let len = closings.len();
 
 	if len == 0 {
-		return Err("Closings array cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Closings array cannot be empty".into(),
+		));
 	}
 
 	let period = period.unwrap_or(14) as usize;
@@ -45,6 +48,6 @@ pub fn ui(closings: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
 	Ok(result)
 }
 
-pub fn ulcer_index(closings: &[f64], period: Option<u32>) -> Result<Vec<f64>, String> {
+pub fn ulcer_index(closings: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	ui(closings, period)
 }

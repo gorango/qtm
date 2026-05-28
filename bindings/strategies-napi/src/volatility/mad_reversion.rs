@@ -8,7 +8,7 @@ pub fn mad_reversion_strategy(
 	config: Option<MadReversionConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::mad_reversion_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn mad_reversion_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn mad_reversion(
 	let config =
 		config.map(|c| serde_json::from_value::<MadReversionConfig>(c).unwrap_or_default());
 	strategies_core::mad_reversion_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

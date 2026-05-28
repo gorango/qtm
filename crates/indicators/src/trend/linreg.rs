@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -7,7 +8,7 @@ pub struct LinRegConfig {
 	pub offset: Option<u32>,
 }
 
-pub fn linreg(values: &[f64], config: Option<LinRegConfig>) -> Result<Vec<f64>, String> {
+pub fn linreg(values: &[f64], config: Option<LinRegConfig>) -> IndicatorResult<Vec<f64>> {
 	let config = config.unwrap_or(LinRegConfig {
 		period: Some(14),
 		offset: Some(0),

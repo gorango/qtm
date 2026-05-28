@@ -25,7 +25,11 @@ pub fn price_to_earnings(
 	prices: Vec<Bar>,
 ) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
-	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	prices_sorted.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.expect("values should be comparable")
+	});
 
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -161,7 +165,11 @@ pub fn earnings_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 /// Dividend Yield: `dividendsPerShare / price`. Uses closest price on/after filing date.
 pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
-	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	prices_sorted.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.expect("values should be comparable")
+	});
 
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -234,7 +242,11 @@ pub fn free_cash_flow_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 /// Margin of Safety: `dcfValue / price - 1`. Positive means undervalued per DCF.
 pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
-	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	prices_sorted.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.expect("values should be comparable")
+	});
 
 	let mut results = Vec::new();
 	for f in &fundamentals {

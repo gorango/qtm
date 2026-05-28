@@ -1,4 +1,5 @@
 use crate::types::configs::PairsTradingConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Pairs Trading
 ///
@@ -6,20 +7,26 @@ use crate::types::configs::PairsTradingConfig;
 pub fn pairs_trading_strategy(
 	closes: &[f64],
 	config: Option<PairsTradingConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(100);
 	let entry_threshold = config.entry_threshold.unwrap_or(2.0);
 	let exit_threshold = config.exit_threshold.unwrap_or(0.5);
 
 	if !(2..=500).contains(&period) {
-		return Err("Pairs Trading period must be between 2 and 500".to_string());
+		return Err(StrategyError::Validation(
+			"Pairs Trading period must be between 2 and 500".into(),
+		));
 	}
 	if !(0.1..=10.0).contains(&entry_threshold) {
-		return Err("Pairs Trading entry_threshold must be between 0.1 and 10.0".to_string());
+		return Err(StrategyError::Validation(
+			"Pairs Trading entry_threshold must be between 0.1 and 10.0".into(),
+		));
 	}
 	if !(0.1..=5.0).contains(&exit_threshold) {
-		return Err("Pairs Trading exit_threshold must be between 0.1 and 5.0".to_string());
+		return Err(StrategyError::Validation(
+			"Pairs Trading exit_threshold must be between 0.1 and 5.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

@@ -11,7 +11,8 @@ pub fn tr(
 	lows: Float64Array,
 	closings: Float64Array,
 ) -> Result<TrueRangeResult> {
-	tr_core(highs.as_ref(), lows.as_ref(), closings.as_ref()).map_err(napi::Error::from_reason)
+	tr_core(highs.as_ref(), lows.as_ref(), closings.as_ref())
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// True Range (camelCase alias)
@@ -22,5 +23,6 @@ pub fn trueRange(
 	lows: Float64Array,
 	closings: Float64Array,
 ) -> Result<TrueRangeResult> {
-	tr_alias(highs.as_ref(), lows.as_ref(), closings.as_ref()).map_err(napi::Error::from_reason)
+	tr_alias(highs.as_ref(), lows.as_ref(), closings.as_ref())
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

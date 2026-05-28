@@ -1,4 +1,5 @@
 use crate::types::configs::CorrelationReversionConfig;
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Correlation Reversion Strategy
@@ -13,25 +14,33 @@ use serde_json;
 pub fn correlation_reversion_strategy(
 	closes: &[f64],
 	config: Option<CorrelationReversionConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let reversion_threshold = config.reversion_threshold.unwrap_or(0.2);
 	let second_closes = config.second_closes.unwrap_or_default();
 
 	if !(2..=100).contains(&period) {
-		return Err("Period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.0..=1.0).contains(&reversion_threshold) {
-		return Err("Reversion threshold must be between 0 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"Reversion threshold must be between 0 and 1".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if second_closes.len() != data_len {
-		return Err("secondCloses must have the same length as closes".to_string());
+		return Err(StrategyError::Validation(
+			"secondCloses must have the same length as closes".into(),
+		));
 	}
 	if data_len < period as usize + 1 {
-		return Err("Insufficient data for Correlation Reversion strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Correlation Reversion strategy".into(),
+		));
 	}
 
 	let second_closes_array: &[f64] = &second_closes;

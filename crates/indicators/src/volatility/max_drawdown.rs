@@ -1,4 +1,5 @@
-pub fn max_drawdown(prices: &[f64], period: u32) -> Result<Vec<f64>, String> {
+use crate::IndicatorResult;
+pub fn max_drawdown(prices: &[f64], period: u32) -> IndicatorResult<Vec<f64>> {
 	let len = prices.len();
 	let period = period as usize;
 

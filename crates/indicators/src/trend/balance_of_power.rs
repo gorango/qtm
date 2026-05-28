@@ -1,9 +1,10 @@
+use crate::IndicatorResult;
 pub fn balance_of_power(
 	openings: &[f64],
 	highs: &[f64],
 	lows: &[f64],
 	closings: &[f64],
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_multiple_arrays(&[openings, highs, lows, closings])?;
 
 	let result: Vec<f64> = openings

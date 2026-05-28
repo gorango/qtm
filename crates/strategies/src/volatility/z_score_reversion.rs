@@ -1,4 +1,5 @@
 use crate::types::configs::ZScoreReversionConfig;
+use crate::{StrategyError, StrategyResult};
 
 /// Z Score Reversion
 ///
@@ -6,16 +7,20 @@ use crate::types::configs::ZScoreReversionConfig;
 pub fn z_score_reversion_strategy(
 	closes: &[f64],
 	config: Option<ZScoreReversionConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let threshold = config.threshold.unwrap_or(2.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("Z-Score Reversion period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Z-Score Reversion period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.1..=10.0).contains(&threshold) {
-		return Err("Z-Score Reversion threshold must be between 0.1 and 10.0".to_string());
+		return Err(StrategyError::Validation(
+			"Z-Score Reversion threshold must be between 0.1 and 10.0".into(),
+		));
 	}
 
 	let data_len = closes.len();

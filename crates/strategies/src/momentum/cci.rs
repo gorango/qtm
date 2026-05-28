@@ -1,5 +1,6 @@
 use crate::types::configs::CciConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// CCI Momentum Strategy
 ///
@@ -15,7 +16,7 @@ pub fn cci_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<CciConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let oversold = config.oversold.unwrap_or(-100.0);
@@ -23,18 +24,26 @@ pub fn cci_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("CCI period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"CCI period must be between 2 and 100".into(),
+		));
 	}
 	if oversold >= overbought {
-		return Err("CCI oversold must be less than overbought".to_string());
+		return Err(StrategyError::Validation(
+			"CCI oversold must be less than overbought".into(),
+		));
 	}
 
 	let data_len = highs.len();
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for CCI strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for CCI strategy".into(),
+		));
 	}
 	if lows.len() != data_len || closes.len() != data_len {
-		return Err("All price arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"All price arrays must have the same length".into(),
+		));
 	}
 
 	// Calculate CCI values

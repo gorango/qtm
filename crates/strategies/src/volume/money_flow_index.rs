@@ -1,5 +1,6 @@
 use crate::types::configs::MoneyFlowIndexConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Money Flow Index Strategy
 ///
@@ -16,7 +17,7 @@ pub fn money_flow_index_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<MoneyFlowIndexConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let oversold = config.oversold.unwrap_or(20.0);
@@ -24,16 +25,24 @@ pub fn money_flow_index_strategy(
 
 	let data_len = closes.len();
 	if closes.len() != highs.len() || closes.len() != lows.len() || closes.len() != volumes.len() {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if !(0.0..=100.0).contains(&oversold) || !(0.0..=100.0).contains(&overbought) {
-		return Err("MFI thresholds must be between 0 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"MFI thresholds must be between 0 and 100".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for Money Flow Index strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Money Flow Index strategy".into(),
+		));
 	}
 
 	let highs_vec: Vec<f64> = highs.to_vec();

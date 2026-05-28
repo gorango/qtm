@@ -1,5 +1,6 @@
 use crate::types::configs::MomentumConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Momentum Trend Strategy
@@ -14,7 +15,7 @@ use serde_json;
 pub fn momentum_strategy(
 	closes: &[f64],
 	config: Option<MomentumConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let overbought = config.overbought.unwrap_or(70.0);
@@ -22,12 +23,16 @@ pub fn momentum_strategy(
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("Momentum period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Momentum period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Momentum strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Momentum strategy".into(),
+		));
 	}
 
 	// Calculate Momentum
@@ -106,7 +111,11 @@ mod tests {
 		let closes = vec![100.0; 5];
 		let result = momentum_strategy(&closes, None);
 		assert!(result.is_err());
-		assert!(result.err().unwrap().contains("Insufficient data"));
+		assert!(result
+			.err()
+			.unwrap()
+			.to_string()
+			.contains("Insufficient data"));
 	}
 
 	#[test]

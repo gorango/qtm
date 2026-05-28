@@ -1,6 +1,7 @@
 use crate::types::configs::MACDConfig;
 use crate::types::configs::RSIConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Macd Rsi
 ///
@@ -9,7 +10,7 @@ pub fn macd_rsi_strategy(
 	closes: &[f64],
 	macd_config: Option<MACDConfig>,
 	rsi_config: Option<RSIConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let macd_cfg = macd_config.unwrap_or_default();
 	let rsi_cfg = rsi_config.unwrap_or_default();
 
@@ -24,10 +25,10 @@ pub fn macd_rsi_strategy(
 	let min_data_length = (slow_period + signal_period).max(rsi_period + 1) as usize;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: MACD + RSI requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let macd_cfg_ind = indicators_core::MACDConfig {

@@ -1,3 +1,5 @@
+use crate::{StrategyError, StrategyResult};
+
 /// Elliott Wave Pattern Strategy
 ///
 /// Generates buy signals for impulse waves (1, 2)
@@ -19,22 +21,32 @@ pub fn elliott_wave_strategy(
 	min_wave_separation: u32,
 	lookaround: u32,
 	retracement_tolerance: f64,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let data_len = closes.len();
 	if opens.len() != data_len || highs.len() != data_len || lows.len() != data_len {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if !(0.3..=1.0).contains(&wave2_retracement) || !(0.2..=0.8).contains(&wave4_retracement) {
-		return Err("Retracement values out of range".to_string());
+		return Err(StrategyError::Validation(
+			"Retracement values out of range".into(),
+		));
 	}
 	if !(1.0..=3.0).contains(&wave3_min_extension) {
-		return Err("Wave 3 extension out of range".to_string());
+		return Err(StrategyError::Validation(
+			"Wave 3 extension out of range".into(),
+		));
 	}
 	if !(2..=20).contains(&min_wave_separation) || !(1..=5).contains(&lookaround) {
-		return Err("Wave separation or lookaround out of range".to_string());
+		return Err(StrategyError::Validation(
+			"Wave separation or lookaround out of range".into(),
+		));
 	}
 	if !(0.05..=0.3).contains(&retracement_tolerance) {
-		return Err("Retracement tolerance out of range".to_string());
+		return Err(StrategyError::Validation(
+			"Retracement tolerance out of range".into(),
+		));
 	}
 
 	// Calculate Elliott Wave

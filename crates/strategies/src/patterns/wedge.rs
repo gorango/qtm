@@ -1,4 +1,5 @@
 use crate::types::configs::WedgeConfig;
+use crate::StrategyResult;
 use serde_json;
 
 /// Wedge Breakout Strategy
@@ -18,7 +19,7 @@ pub fn wedge_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<WedgeConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_points = config.min_points.unwrap_or(4) as usize;
 	let slope_tolerance = config.slope_tolerance.unwrap_or(0.0001);

@@ -1,5 +1,6 @@
 use crate::types::configs::AbsolutePriceOscillatorConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Absolute Price Oscillator Trend Strategy
@@ -14,22 +15,28 @@ use serde_json;
 pub fn absolute_price_oscillator_strategy(
 	closes: &[f64],
 	config: Option<AbsolutePriceOscillatorConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(10);
 	let slow_period = config.slow_period.unwrap_or(20);
 
 	// Validate parameters
 	if !(2..=100).contains(&fast_period) {
-		return Err("APO fast period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"APO fast period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&slow_period) {
-		return Err("APO slow period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"APO slow period must be between 2 and 200".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = slow_period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Absolute Price Oscillator strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Absolute Price Oscillator strategy".into(),
+		));
 	}
 
 	// Calculate APO

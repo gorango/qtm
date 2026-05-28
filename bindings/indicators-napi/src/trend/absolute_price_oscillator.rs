@@ -9,5 +9,6 @@ pub fn absolute_price_oscillator(
 	fast_period: Option<u32>,
 	slow_period: Option<u32>,
 ) -> Result<Vec<f64>> {
-	apo_core(closes.as_ref(), fast_period, slow_period).map_err(napi::Error::from_reason)
+	apo_core(closes.as_ref(), fast_period, slow_period)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

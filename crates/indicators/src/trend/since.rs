@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 pub fn since_internal(values: &[f64]) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![0.0; len];
@@ -23,6 +24,6 @@ pub fn since_internal(values: &[f64]) -> Vec<f64> {
 	result
 }
 
-pub fn since(values: &[f64]) -> Result<Vec<f64>, String> {
+pub fn since(values: &[f64]) -> IndicatorResult<Vec<f64>> {
 	Ok(since_internal(values))
 }

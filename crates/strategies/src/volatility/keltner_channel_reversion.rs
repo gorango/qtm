@@ -1,5 +1,6 @@
 use crate::types::configs::KeltnerChannelConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Keltner Channel Reversion
 ///
@@ -9,12 +10,14 @@ pub fn keltner_channel_reversion_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<KeltnerChannelConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 
 	if !(2..=100).contains(&period) {
-		return Err("Keltner Channel period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Keltner Channel period must be between 2 and 100".into(),
+		));
 	}
 
 	let data_len = closes.len();

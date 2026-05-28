@@ -1,10 +1,11 @@
 use crate::types::configs::BbRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Bb Rsi
 ///
 /// Buy when price is near lower Bollinger Band and RSI is oversold. Sell when price is near upper band and RSI is overbought.
-pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> Result<Vec<i8>, String> {
+pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let bb_period = config.bb_period.unwrap_or(20);
 	let bb_std_dev = config.bb_std_dev.unwrap_or(2.0);
@@ -16,10 +17,10 @@ pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> Result<Ve
 	let min_data_length = bb_period.max(rsi_period) as usize + 1;
 
 	if data_len < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: BB-RSI requires at least {} data points, got {}",
 			min_data_length, data_len
-		));
+		)));
 	}
 
 	let bb_config = indicators_core::BBConfig {

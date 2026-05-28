@@ -1,5 +1,6 @@
 use crate::types::configs::UltimateOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Ultimate Oscillator Momentum Strategy
 ///
@@ -15,7 +16,7 @@ pub fn ultimate_oscillator_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<UltimateOscillatorConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period1 = config.period1.unwrap_or(7);
 	let period2 = config.period2.unwrap_or(14);
@@ -28,25 +29,37 @@ pub fn ultimate_oscillator_strategy(
 		|| !(2..=100).contains(&period2)
 		|| !(2..=100).contains(&period3)
 	{
-		return Err("Ultimate Oscillator periods must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Ultimate Oscillator periods must be between 2 and 100".into(),
+		));
 	}
 	if period1 >= period2 || period2 >= period3 {
-		return Err("Ultimate Oscillator periods must be in ascending order".to_string());
+		return Err(StrategyError::Validation(
+			"Ultimate Oscillator periods must be in ascending order".into(),
+		));
 	}
 	if !(0.0..=100.0).contains(&oversold) || !(0.0..=100.0).contains(&overbought) {
-		return Err("Ultimate Oscillator thresholds must be between 0 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Ultimate Oscillator thresholds must be between 0 and 100".into(),
+		));
 	}
 	if oversold >= overbought {
-		return Err("Ultimate Oscillator oversold must be less than overbought".to_string());
+		return Err(StrategyError::Validation(
+			"Ultimate Oscillator oversold must be less than overbought".into(),
+		));
 	}
 
 	let min_period = period1.max(period2).max(period3);
 	let data_len = highs.len();
 	if data_len < (min_period as usize) + 1 {
-		return Err("Insufficient data for Ultimate Oscillator strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Ultimate Oscillator strategy".into(),
+		));
 	}
 	if lows.len() != data_len || closes.len() != data_len {
-		return Err("All price arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"All price arrays must have the same length".into(),
+		));
 	}
 
 	// Calculate Ultimate Oscillator values

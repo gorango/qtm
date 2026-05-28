@@ -1,5 +1,6 @@
 use crate::types::configs::PercentRankConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Percent Rank Strategy
@@ -14,22 +15,28 @@ use serde_json;
 pub fn percent_rank_strategy(
 	closes: &[f64],
 	config: Option<PercentRankConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let entry_percentile = config.entry_percentile.unwrap_or(80.0);
 	let exit_percentile = config.exit_percentile.unwrap_or(50.0);
 
 	if !(2..=100).contains(&period) {
-		return Err("Period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 2 and 100".into(),
+		));
 	}
 	if !(0.0..=100.0).contains(&entry_percentile) || !(0.0..=100.0).contains(&exit_percentile) {
-		return Err("Percentiles must be between 0 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Percentiles must be between 0 and 100".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if data_len < period as usize + 1 {
-		return Err("Insufficient data for Percent Rank strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Percent Rank strategy".into(),
+		));
 	}
 
 	let pr_config = indicators_core::PercentRankConfig {

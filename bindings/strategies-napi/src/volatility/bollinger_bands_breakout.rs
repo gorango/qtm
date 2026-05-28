@@ -8,7 +8,7 @@ pub fn bollinger_bands_breakout_strategy(
 	config: Option<BollingerBandsConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::bollinger_bands_breakout_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn bollinger_bands_breakout_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn bollinger_bands_breakout(
 	let config =
 		config.map(|c| serde_json::from_value::<BollingerBandsConfig>(c).unwrap_or_default());
 	strategies_core::bollinger_bands_breakout_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

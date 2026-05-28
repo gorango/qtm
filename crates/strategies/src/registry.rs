@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
+use crate::StrategyResult;
 use crate::*;
 
 #[derive(Clone)]
@@ -20,7 +21,7 @@ macro_rules! register_strategy {
 			$id.to_string(),
 			Box::new($function)
 				as Box<
-					dyn Fn(&StrategyInput, Option<serde_json::Value>) -> Result<Vec<i8>, String>
+					dyn Fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>>
 						+ Send
 						+ Sync,
 				>,
@@ -30,7 +31,7 @@ macro_rules! register_strategy {
 
 pub type StrategyRegistryImpl = HashMap<
 	String,
-	Box<dyn Fn(&StrategyInput, Option<serde_json::Value>) -> Result<Vec<i8>, String> + Send + Sync>,
+	Box<dyn Fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>> + Send + Sync>,
 >;
 
 static STRATEGY_REGISTRY: OnceLock<StrategyRegistryImpl> = OnceLock::new();
@@ -178,7 +179,7 @@ pub fn get_strategy_registry_impl() -> &'static StrategyRegistryImpl {
 pub fn buy_and_hold(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<BuyAndHoldConfig>(c).unwrap_or_default());
 	crate::buy_and_hold_strategy(&input.closes, config)
 }
@@ -186,7 +187,7 @@ pub fn buy_and_hold(
 pub fn cup_and_handle(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<CupAndHandleConfig>(c).unwrap_or_default());
 	crate::cup_and_handle_strategy(
@@ -201,7 +202,7 @@ pub fn cup_and_handle(
 pub fn double_top_bottom(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<DoubleTopBottomConfig>(c).unwrap_or_default());
 	crate::double_top_bottom_strategy(
@@ -213,7 +214,7 @@ pub fn double_top_bottom(
 	)
 }
 
-pub fn wedge(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn wedge(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<WedgeConfig>(c).unwrap_or_default());
 	crate::wedge_strategy(
 		input.opens.as_ref().unwrap_or(&input.closes),
@@ -227,7 +228,7 @@ pub fn wedge(input: &StrategyInput, config: Option<serde_json::Value>) -> Result
 pub fn head_and_shoulders(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<HeadAndShouldersConfig>(c).unwrap_or_default());
 	crate::head_and_shoulders_strategy(
@@ -242,7 +243,7 @@ pub fn head_and_shoulders(
 pub fn triangle(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<TriangleConfig>(c).unwrap_or_default());
 	crate::triangle_strategy(
 		input.opens.as_ref().unwrap_or(&input.closes),
@@ -256,7 +257,7 @@ pub fn triangle(
 pub fn elliott_wave(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let _ = config;
 	let opens = input.opens.as_ref().unwrap_or(&input.closes);
 	let highs = input.highs.as_ref().unwrap_or(&input.closes);
@@ -278,7 +279,7 @@ pub fn elliott_wave(
 pub fn flags_pennants(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<FlagsPennantsConfig>(c).unwrap_or_default());
 	crate::flags_pennants_strategy(
@@ -290,12 +291,12 @@ pub fn flags_pennants(
 	)
 }
 
-pub fn bb_rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn bb_rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<BbRsiConfig>(c).unwrap_or_default());
 	crate::bb_rsi_strategy(&input.closes, config)
 }
 
-pub fn ma_rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn ma_rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MaRsiConfig>(c).unwrap_or_default());
 	crate::ma_rsi_strategy(&input.closes, config)
 }
@@ -303,14 +304,14 @@ pub fn ma_rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> Resul
 pub fn obv_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<RSIConfig>(c).unwrap_or_default());
 	crate::obv_rsi_strategy(
 		&input.closes,
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -318,7 +319,7 @@ pub fn obv_rsi(
 pub fn macd_stochastic(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<MacdStochasticConfig>(c).unwrap_or_default());
 	crate::macd_stochastic_strategy(
@@ -332,7 +333,7 @@ pub fn macd_stochastic(
 pub fn volume_profile_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VolumeProfileRsiConfig>(c).unwrap_or_default());
 	crate::volume_profile_rsi_strategy(
@@ -342,7 +343,7 @@ pub fn volume_profile_rsi(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -350,7 +351,7 @@ pub fn volume_profile_rsi(
 pub fn double_top_stochastic(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<DoubleTopStochasticConfig>(c).unwrap_or_default());
 	crate::double_top_stochastic_strategy(
@@ -364,14 +365,14 @@ pub fn double_top_stochastic(
 pub fn roc_obv_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<RocObvRsiConfig>(c).unwrap_or_default());
 	crate::roc_obv_rsi_strategy(
 		&input.closes,
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -379,7 +380,7 @@ pub fn roc_obv_rsi(
 pub fn macd_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MACDConfig>(c).unwrap_or_default());
 	crate::macd_rsi_strategy(&input.closes, config, None)
 }
@@ -387,7 +388,7 @@ pub fn macd_rsi(
 pub fn adx_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<AdxRsiConfig>(c).unwrap_or_default());
 	crate::adx_rsi_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -400,7 +401,7 @@ pub fn adx_rsi(
 pub fn rsi_macd(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<RsiMacdConfig>(c).unwrap_or_default());
 	crate::rsi_macd_strategy(&input.closes, config)
 }
@@ -408,7 +409,7 @@ pub fn rsi_macd(
 pub fn mfi_obv(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MfiObvConfig>(c).unwrap_or_default());
 	crate::mfi_obv_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -417,7 +418,7 @@ pub fn mfi_obv(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -425,7 +426,7 @@ pub fn mfi_obv(
 pub fn vwap_ema_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<VwapEmaRsiConfig>(c).unwrap_or_default());
 	crate::vwap_ema_rsi_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -434,7 +435,7 @@ pub fn vwap_ema_rsi(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -442,7 +443,7 @@ pub fn vwap_ema_rsi(
 pub fn triangle_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<TriangleRsiConfig>(c).unwrap_or_default());
 	crate::triangle_rsi_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -455,7 +456,7 @@ pub fn triangle_rsi(
 pub fn vwap_macd(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<VwapMacdConfig>(c).unwrap_or_default());
 	crate::vwap_macd_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -464,7 +465,7 @@ pub fn vwap_macd(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -472,7 +473,7 @@ pub fn vwap_macd(
 pub fn vwap_stochastic(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VwapStochasticConfig>(c).unwrap_or_default());
 	crate::vwap_stochastic_strategy(
@@ -482,7 +483,7 @@ pub fn vwap_stochastic(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -490,7 +491,7 @@ pub fn vwap_stochastic(
 pub fn vwap_rsi(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<VwapRsiConfig>(c).unwrap_or_default());
 	crate::vwap_rsi_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -499,7 +500,7 @@ pub fn vwap_rsi(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -507,7 +508,7 @@ pub fn vwap_rsi(
 pub fn flag_pennant_macd(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<FlagsPennantsConfig>(c).unwrap_or_default());
 	crate::flag_pennant_macd_strategy(
@@ -522,7 +523,7 @@ pub fn flag_pennant_macd(
 pub fn correlation_pair(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<CorrelationPairConfig>(c).unwrap_or_default());
 	crate::correlation_pair_strategy(&input.closes, config)
@@ -531,7 +532,7 @@ pub fn correlation_pair(
 pub fn percent_rank(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<PercentRankConfig>(c).unwrap_or_default());
 	crate::percent_rank_strategy(&input.closes, config)
 }
@@ -539,7 +540,7 @@ pub fn percent_rank(
 pub fn cointegration(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<CointegrationConfig>(c).unwrap_or_default());
 	crate::cointegration_strategy(&input.closes, config)
@@ -548,18 +549,18 @@ pub fn cointegration(
 pub fn correlation_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<CorrelationReversionConfig>(c).unwrap_or_default());
 	crate::correlation_reversion_strategy(&input.closes, config)
 }
 
-pub fn roc(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn roc(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<RocConfig>(c).unwrap_or_default());
 	crate::roc_strategy(&input.closes, config)
 }
 
-pub fn kst(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn kst(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<KSTConfig>(c).unwrap_or_default());
 	crate::kst_strategy(&input.closes, config)
 }
@@ -567,7 +568,7 @@ pub fn kst(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 pub fn stochastic(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<StochasticConfig>(c).unwrap_or_default());
 	crate::stochastic_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -577,7 +578,7 @@ pub fn stochastic(
 	)
 }
 
-pub fn cci(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn cci(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<CciConfig>(c).unwrap_or_default());
 	crate::cci_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -590,7 +591,7 @@ pub fn cci(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 pub fn ultimate_oscillator(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<UltimateOscillatorConfig>(c).unwrap_or_default());
 	crate::ultimate_oscillator_strategy(
@@ -604,17 +605,17 @@ pub fn ultimate_oscillator(
 pub fn momentum(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MomentumConfig>(c).unwrap_or_default());
 	crate::momentum_strategy(&input.closes, config)
 }
 
-pub fn rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn rsi(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<RSIConfig>(c).unwrap_or_default());
 	crate::rsi_strategy(&input.closes, config)
 }
 
-pub fn rsi2(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn rsi2(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<Rsi2Config>(c).unwrap_or_default());
 	crate::rsi2_strategy(&input.closes, config)
 }
@@ -622,7 +623,7 @@ pub fn rsi2(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<
 pub fn awesome_oscillator(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<AwesomeOscillatorConfig>(c).unwrap_or_default());
 	crate::awesome_oscillator_strategy(
@@ -635,7 +636,7 @@ pub fn awesome_oscillator(
 pub fn williams_r(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<WilliamsRConfig>(c).unwrap_or_default());
 	crate::williams_r_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -648,7 +649,7 @@ pub fn williams_r(
 pub fn ichimoku(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<IchimokuCloudConfig>(c).unwrap_or_default());
 	crate::ichimoku_strategy(
@@ -662,7 +663,7 @@ pub fn ichimoku(
 pub fn lin_reg_channel(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<LinRegChannelConfig>(c).unwrap_or_default());
 	crate::lin_reg_channel_strategy(&input.closes, config)
@@ -671,7 +672,7 @@ pub fn lin_reg_channel(
 pub fn balance_of_power(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<BalanceOfPowerConfig>(c).unwrap_or_default());
 	crate::balance_of_power_strategy(
@@ -686,7 +687,7 @@ pub fn balance_of_power(
 pub fn alma_crossover(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<AlmacrossoverConfig>(c).unwrap_or_default());
 	crate::alma_crossover_strategy(&input.closes, config)
@@ -695,7 +696,7 @@ pub fn alma_crossover(
 pub fn pivot_points(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<PivotPointsConfig>(c).unwrap_or_default());
 	crate::pivot_points_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -708,24 +709,24 @@ pub fn pivot_points(
 pub fn wma_momentum(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<WmaMomentumConfig>(c).unwrap_or_default());
 	crate::wma_momentum_strategy(&input.closes, config)
 }
 
-pub fn vwma(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn vwma(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<VwmaConfig>(c).unwrap_or_default());
 	crate::vwma_strategy(
 		&input.closes,
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
 
-pub fn dmi(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn dmi(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<DmiConfig>(c).unwrap_or_default());
 	crate::dmi_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -735,7 +736,7 @@ pub fn dmi(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 	)
 }
 
-pub fn aroon(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn aroon(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<AroonConfig>(c).unwrap_or_default());
 	crate::aroon_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -747,7 +748,7 @@ pub fn aroon(input: &StrategyInput, config: Option<serde_json::Value>) -> Result
 pub fn typical_price(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<TypicalPriceConfig>(c).unwrap_or_default());
 	crate::typical_price_strategy(
@@ -761,7 +762,7 @@ pub fn typical_price(
 pub fn larsson(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<LarssonConfig>(c).unwrap_or_default());
 	crate::larsson_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -771,7 +772,7 @@ pub fn larsson(
 	)
 }
 
-pub fn macd(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn macd(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MACDConfig>(c).unwrap_or_default());
 	crate::macd_strategy(&input.closes, config)
 }
@@ -779,13 +780,13 @@ pub fn macd(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<
 pub fn fibonacci_retracement(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<FibonacciRetracementConfig>(c).unwrap_or_default());
 	crate::fibonacci_retracement_strategy(&input.closes, config)
 }
 
-pub fn adx(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn adx(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<ADXConfig>(c).unwrap_or_default());
 	crate::adx_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -798,7 +799,7 @@ pub fn adx(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 pub fn lin_reg_slope(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<LinregSlopeConfig>(c).unwrap_or_default());
 	crate::lin_reg_slope_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -811,7 +812,7 @@ pub fn lin_reg_slope(
 pub fn absolute_price_oscillator(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<AbsolutePriceOscillatorConfig>(c).unwrap_or_default());
 	crate::absolute_price_oscillator_strategy(&input.closes, config)
@@ -820,7 +821,7 @@ pub fn absolute_price_oscillator(
 pub fn parabolic_sar(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<ParabolicSarConfig>(c).unwrap_or_default());
 	crate::parabolic_sar_strategy(
@@ -834,7 +835,7 @@ pub fn parabolic_sar(
 pub fn super_trend(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<SuperTrendConfig>(c).unwrap_or_default());
 	crate::super_trend_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -847,7 +848,7 @@ pub fn super_trend(
 pub fn sma_vwap_crossover(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<SmaVwapCrossoverConfig>(c).unwrap_or_default());
 	crate::sma_vwap_crossover_strategy(
@@ -857,7 +858,7 @@ pub fn sma_vwap_crossover(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -865,13 +866,13 @@ pub fn sma_vwap_crossover(
 pub fn wma_confirmation(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<WmaConfirmationConfig>(c).unwrap_or_default());
 	crate::wma_confirmation_strategy(&input.closes, config)
 }
 
-pub fn kdj(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn kdj(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<KdjConfig>(c).unwrap_or_default());
 	crate::kdj_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -884,7 +885,7 @@ pub fn kdj(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 pub fn alma_hma_divergence(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<AlmahmaDivergenceConfig>(c).unwrap_or_default());
 	crate::alma_hma_divergence_strategy(&input.closes, config)
@@ -893,7 +894,7 @@ pub fn alma_hma_divergence(
 pub fn ma_crossover(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MaCrossoverConfig>(c).unwrap_or_default());
 	crate::ma_crossover_strategy(&input.closes, config)
 }
@@ -901,7 +902,7 @@ pub fn ma_crossover(
 pub fn hma_trend(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<HmaTrendConfig>(c).unwrap_or_default());
 	crate::hma_trend_strategy(&input.closes, config)
 }
@@ -909,7 +910,7 @@ pub fn hma_trend(
 pub fn macd_crossover(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<MacdCrossoverConfig>(c).unwrap_or_default());
 	crate::macd_crossover_strategy(&input.closes, config)
@@ -918,13 +919,13 @@ pub fn macd_crossover(
 pub fn chande_forecast_oscillator(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<ChandeForecastOscillatorConfig>(c).unwrap_or_default());
 	crate::chande_forecast_oscillator_strategy(&input.closes, config)
 }
 
-pub fn vortex(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn vortex(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<VortexConfig>(c).unwrap_or_default());
 	crate::vortex_strategy(
 		input.highs.as_ref().unwrap_or(&input.closes),
@@ -937,7 +938,7 @@ pub fn vortex(input: &StrategyInput, config: Option<serde_json::Value>) -> Resul
 pub fn atr_threshold(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<AtrThresholdConfig>(c).unwrap_or_default());
 	crate::atr_threshold_strategy(
@@ -951,7 +952,7 @@ pub fn atr_threshold(
 pub fn pairs_trading(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<PairsTradingConfig>(c).unwrap_or_default());
 	crate::pairs_trading_strategy(&input.closes, config)
@@ -960,7 +961,7 @@ pub fn pairs_trading(
 pub fn bollinger_bands_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<BollingerBandsConfig>(c).unwrap_or_default());
 	crate::bollinger_bands_breakout_strategy(&input.closes, config)
@@ -969,7 +970,7 @@ pub fn bollinger_bands_breakout(
 pub fn z_score_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<ZScoreConfig>(c).unwrap_or_default());
 	crate::z_score_breakout_strategy(&input.closes, config)
 }
@@ -977,7 +978,7 @@ pub fn z_score_breakout(
 pub fn donchian_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<DonchianTurtleConfig>(c).unwrap_or_default());
 	crate::donchian_reversion_strategy(&input.closes, config)
@@ -986,7 +987,7 @@ pub fn donchian_reversion(
 pub fn bollinger_bands_mean_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<BollingerBandsConfig>(c).unwrap_or_default());
 	crate::bollinger_bands_mean_reversion_strategy(&input.closes, config)
@@ -995,7 +996,7 @@ pub fn bollinger_bands_mean_reversion(
 pub fn mad_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<MadReversionConfig>(c).unwrap_or_default());
 	crate::mad_reversion_strategy(&input.closes, config)
@@ -1004,7 +1005,7 @@ pub fn mad_reversion(
 pub fn acceleration_bands(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<AccelerationBandsConfig>(c).unwrap_or_default());
 	crate::acceleration_bands_strategy(
@@ -1018,7 +1019,7 @@ pub fn acceleration_bands(
 pub fn projection_oscillator(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<ProjectionOscillatorConfig>(c).unwrap_or_default());
 	crate::projection_oscillator_strategy(
@@ -1032,7 +1033,7 @@ pub fn projection_oscillator(
 pub fn z_score_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<ZScoreReversionConfig>(c).unwrap_or_default());
 	crate::z_score_reversion_strategy(&input.closes, config)
@@ -1041,7 +1042,7 @@ pub fn z_score_reversion(
 pub fn keltner_channel_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<KeltnerChannelConfig>(c).unwrap_or_default());
 	crate::keltner_channel_reversion_strategy(
@@ -1055,7 +1056,7 @@ pub fn keltner_channel_reversion(
 pub fn donchian_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<DonchianTurtleConfig>(c).unwrap_or_default());
 	crate::donchian_breakout_strategy(&input.closes, config)
@@ -1064,7 +1065,7 @@ pub fn donchian_breakout(
 pub fn atr_volatility_threshold(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<AtrVolatilityThresholdConfig>(c).unwrap_or_default());
 	crate::atr_volatility_threshold_strategy(
@@ -1078,7 +1079,7 @@ pub fn atr_volatility_threshold(
 pub fn opening_range_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<OpeningRangeBreakoutConfig>(c).unwrap_or_default());
 	crate::opening_range_breakout_strategy(
@@ -1092,7 +1093,7 @@ pub fn opening_range_breakout(
 pub fn keltner_channel_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<KeltnerChannelConfig>(c).unwrap_or_default());
 	crate::keltner_channel_breakout_strategy(
@@ -1106,7 +1107,7 @@ pub fn keltner_channel_breakout(
 pub fn volatility_adjusted(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VolatilityAdjustedConfig>(c).unwrap_or_default());
 	crate::volatility_adjusted_strategy(&input.closes, config)
@@ -1115,7 +1116,7 @@ pub fn volatility_adjusted(
 pub fn standard_deviation(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<StandardDeviationConfig>(c).unwrap_or_default());
 	crate::standard_deviation_strategy(&input.closes, config)
@@ -1124,7 +1125,7 @@ pub fn standard_deviation(
 pub fn variance_stop(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VarianceStopConfig>(c).unwrap_or_default());
 	crate::variance_stop_strategy(&input.closes, config)
@@ -1133,7 +1134,7 @@ pub fn variance_stop(
 pub fn keltner_volatility_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<KeltnerVolatilityBreakoutConfig>(c).unwrap_or_default());
 	crate::keltner_volatility_breakout_strategy(
@@ -1147,7 +1148,7 @@ pub fn keltner_volatility_breakout(
 pub fn money_flow_index(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<MoneyFlowIndexConfig>(c).unwrap_or_default());
 	crate::money_flow_index_strategy(
@@ -1157,7 +1158,7 @@ pub fn money_flow_index(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1165,7 +1166,7 @@ pub fn money_flow_index(
 pub fn volume_weighted_average_price(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<VolumeWeightedAveragePriceConfig>(c).unwrap_or_default());
 	crate::volume_weighted_average_price_strategy(
@@ -1175,7 +1176,7 @@ pub fn volume_weighted_average_price(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1183,7 +1184,7 @@ pub fn volume_weighted_average_price(
 pub fn accumulation_distribution(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config
 		.map(|c| serde_json::from_value::<AccumulationDistributionConfig>(c).unwrap_or_default());
 	crate::accumulation_distribution_strategy(
@@ -1193,7 +1194,7 @@ pub fn accumulation_distribution(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1201,7 +1202,7 @@ pub fn accumulation_distribution(
 pub fn chaikin_money_flow(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<ChaikinMoneyFlowConfig>(c).unwrap_or_default());
 	crate::chaikin_money_flow_strategy(
@@ -1211,7 +1212,7 @@ pub fn chaikin_money_flow(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1219,7 +1220,7 @@ pub fn chaikin_money_flow(
 pub fn obv_confirmation(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<ObvConfirmationConfig>(c).unwrap_or_default());
 	crate::obv_confirmation_strategy(
@@ -1227,7 +1228,7 @@ pub fn obv_confirmation(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1235,7 +1236,7 @@ pub fn obv_confirmation(
 pub fn vwap_reversion(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VwapReversionConfig>(c).unwrap_or_default());
 	crate::vwap_reversion_strategy(
@@ -1245,7 +1246,7 @@ pub fn vwap_reversion(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1253,7 +1254,7 @@ pub fn vwap_reversion(
 pub fn ease_of_movement(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<EaseOfMovementConfig>(c).unwrap_or_default());
 	crate::ease_of_movement_strategy(
@@ -1262,7 +1263,7 @@ pub fn ease_of_movement(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1270,7 +1271,7 @@ pub fn ease_of_movement(
 pub fn vwap_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VwapBreakoutConfig>(c).unwrap_or_default());
 	crate::vwap_breakout_strategy(
@@ -1280,19 +1281,19 @@ pub fn vwap_breakout(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
 
-pub fn obv(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<Vec<i8>, String> {
+pub fn obv(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<OBVConfig>(c).unwrap_or_default());
 	crate::obv_strategy(
 		&input.closes,
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1300,7 +1301,7 @@ pub fn obv(input: &StrategyInput, config: Option<serde_json::Value>) -> Result<V
 pub fn negative_volume_index(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<NegativeVolumeIndexConfig>(c).unwrap_or_default());
 	crate::negative_volume_index_strategy(
@@ -1308,7 +1309,7 @@ pub fn negative_volume_index(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1316,14 +1317,14 @@ pub fn negative_volume_index(
 pub fn force_index(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<ForceIndexConfig>(c).unwrap_or_default());
 	crate::force_index_strategy(
 		&input.closes,
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1331,7 +1332,7 @@ pub fn force_index(
 pub fn volume_price_trend(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config =
 		config.map(|c| serde_json::from_value::<VolumePriceTrendConfig>(c).unwrap_or_default());
 	crate::volume_price_trend_strategy(
@@ -1339,7 +1340,7 @@ pub fn volume_price_trend(
 		input
 			.volumes
 			.as_ref()
-			.ok_or_else(|| "Volumes required".to_string())?,
+			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -1352,391 +1353,472 @@ pub fn get_strategy_registry() -> crate::types::results::StrategyRegistry {
 
 	strategies.insert(
 		"buy-and-hold".to_string(),
-		serde_json::from_value(crate::buy_and_hold_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::buy_and_hold_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"adx-rsi-trend-momentum".to_string(),
-		serde_json::from_value(crate::adx_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::adx_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"bb-rsi-breakout".to_string(),
-		serde_json::from_value(crate::bb_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::bb_rsi_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"double-top-stochastic-reversal".to_string(),
-		serde_json::from_value(crate::double_top_stochastic_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::double_top_stochastic_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"flag-pennant-macd-continuation".to_string(),
-		serde_json::from_value(crate::flag_pennant_macd_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::flag_pennant_macd_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"ma-rsi-trend-following".to_string(),
-		serde_json::from_value(crate::ma_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::ma_rsi_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"macd-rsi-momentum".to_string(),
-		serde_json::from_value(crate::macd_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::macd_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"macd-stochastic-confirmation".to_string(),
-		serde_json::from_value(crate::macd_stochastic_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::macd_stochastic_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"mfi-obv-volume-flow".to_string(),
-		serde_json::from_value(crate::mfi_obv_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::mfi_obv_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"obv-rsi-volume-confirmation".to_string(),
-		serde_json::from_value(crate::obv_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::obv_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"roc-obv-rsi-momentum".to_string(),
-		serde_json::from_value(crate::roc_obv_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::roc_obv_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"rsi-macd-confirmation".to_string(),
-		serde_json::from_value(crate::rsi_macd_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::rsi_macd_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"triangle-rsi-breakout".to_string(),
-		serde_json::from_value(crate::triangle_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::triangle_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"volume-profile-rsi".to_string(),
-		serde_json::from_value(crate::volume_profile_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::volume_profile_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-ema-rsi-trend".to_string(),
-		serde_json::from_value(crate::vwap_ema_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_ema_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-macd-momentum".to_string(),
-		serde_json::from_value(crate::vwap_macd_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_macd_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-rsi-breakout".to_string(),
-		serde_json::from_value(crate::vwap_rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_rsi_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-stochastic-confirmation".to_string(),
-		serde_json::from_value(crate::vwap_stochastic_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_stochastic_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"awesomeOscillator".to_string(),
-		serde_json::from_value(crate::awesome_oscillator_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::awesome_oscillator_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"cci".to_string(),
-		serde_json::from_value(crate::cci_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::cci_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"ichimoku".to_string(),
-		serde_json::from_value(crate::ichimoku_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::ichimoku_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"kst".to_string(),
-		serde_json::from_value(crate::kst_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::kst_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"momentum".to_string(),
-		serde_json::from_value(crate::momentum_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::momentum_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"roc".to_string(),
-		serde_json::from_value(crate::roc_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::roc_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"rsi".to_string(),
-		serde_json::from_value(crate::rsi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::rsi_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"rsi2".to_string(),
-		serde_json::from_value(crate::rsi2_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::rsi2_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"stochastic".to_string(),
-		serde_json::from_value(crate::stochastic_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::stochastic_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"ultimateOscillator".to_string(),
-		serde_json::from_value(crate::ultimate_oscillator_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::ultimate_oscillator_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"williamsR".to_string(),
-		serde_json::from_value(crate::williams_r_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::williams_r_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"cup-and-handle-breakout".to_string(),
-		serde_json::from_value(crate::cup_and_handle_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::cup_and_handle_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"double-top-bottom-reversal".to_string(),
-		serde_json::from_value(crate::double_top_bottom_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::double_top_bottom_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"elliott-wave-pattern".to_string(),
-		serde_json::from_value(crate::percent_rank_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::percent_rank_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"flags-pennants-continuation".to_string(),
-		serde_json::from_value(crate::flags_pennants_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::flags_pennants_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"head-and-shoulders-reversal".to_string(),
-		serde_json::from_value(crate::head_and_shoulders_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::head_and_shoulders_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"triangle-breakout".to_string(),
-		serde_json::from_value(crate::triangle_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::triangle_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"wedge-breakout".to_string(),
-		serde_json::from_value(crate::wedge_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::wedge_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"cointegration".to_string(),
-		serde_json::from_value(crate::cointegration_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::cointegration_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"correlation-pair-trading".to_string(),
-		serde_json::from_value(crate::correlation_pair_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::correlation_pair_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"correlation-mean-reversion".to_string(),
-		serde_json::from_value(crate::correlation_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::correlation_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"percentRank-ranking".to_string(),
-		serde_json::from_value(crate::percent_rank_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::percent_rank_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"absolutePriceOscillator".to_string(),
-		serde_json::from_value(crate::absolute_price_oscillator_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::absolute_price_oscillator_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"adx".to_string(),
-		serde_json::from_value(crate::adx_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::adx_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"almaCrossover".to_string(),
-		serde_json::from_value(crate::alma_crossover_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::alma_crossover_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"almaHmaDivergence".to_string(),
-		serde_json::from_value(crate::alma_hma_divergence_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::alma_hma_divergence_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"aroon".to_string(),
-		serde_json::from_value(crate::aroon_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::aroon_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"balanceOfPower".to_string(),
-		serde_json::from_value(crate::balance_of_power_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::balance_of_power_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"chandeForecastOscillator".to_string(),
-		serde_json::from_value(crate::chande_forecast_oscillator_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::chande_forecast_oscillator_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"dmi".to_string(),
-		serde_json::from_value(crate::dmi_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::dmi_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"fibonacciRetracement".to_string(),
-		serde_json::from_value(crate::fibonacci_retracement_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::fibonacci_retracement_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"hmaTrend".to_string(),
-		serde_json::from_value(crate::hma_trend_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::hma_trend_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"kdj".to_string(),
-		serde_json::from_value(crate::kdj_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::kdj_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"larsson".to_string(),
-		serde_json::from_value(crate::larsson_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::larsson_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"linRegChannel".to_string(),
-		serde_json::from_value(crate::lin_reg_channel_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::lin_reg_channel_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"linRegSlope".to_string(),
-		serde_json::from_value(crate::lin_reg_slope_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::lin_reg_slope_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"maCrossover".to_string(),
-		serde_json::from_value(crate::ma_crossover_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::ma_crossover_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"macd".to_string(),
-		serde_json::from_value(crate::macd_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::macd_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"macdCrossover".to_string(),
-		serde_json::from_value(crate::macd_crossover_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::macd_crossover_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"parabolicSar".to_string(),
-		serde_json::from_value(crate::parabolic_sar_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::parabolic_sar_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"pivotPoints".to_string(),
-		serde_json::from_value(crate::pivot_points_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::pivot_points_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"smaVwapCrossover".to_string(),
-		serde_json::from_value(crate::sma_vwap_crossover_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::sma_vwap_crossover_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"superTrend".to_string(),
-		serde_json::from_value(crate::super_trend_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::super_trend_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"typicalPrice".to_string(),
-		serde_json::from_value(crate::typical_price_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::typical_price_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vortex".to_string(),
-		serde_json::from_value(crate::vortex_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vortex_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwma".to_string(),
-		serde_json::from_value(crate::vwma_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwma_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"wmaConfirmation".to_string(),
-		serde_json::from_value(crate::wma_confirmation_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::wma_confirmation_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"wmaMomentum".to_string(),
-		serde_json::from_value(crate::wma_momentum_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::wma_momentum_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"accelerationBands".to_string(),
-		serde_json::from_value(crate::acceleration_bands_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::acceleration_bands_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"atrThreshold".to_string(),
-		serde_json::from_value(crate::atr_threshold_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::atr_threshold_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"atrVolatilityThreshold".to_string(),
-		serde_json::from_value(crate::atr_volatility_threshold_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::atr_volatility_threshold_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"bollingerBandsBreakout".to_string(),
-		serde_json::from_value(crate::bollinger_bands_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::bollinger_bands_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"bollingerBandsMeanReversion".to_string(),
-		serde_json::from_value(crate::bollinger_bands_mean_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::bollinger_bands_mean_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"donchianBreakout".to_string(),
-		serde_json::from_value(crate::donchian_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::donchian_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"donchianReversion".to_string(),
-		serde_json::from_value(crate::donchian_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::donchian_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"keltnerChannelBreakout".to_string(),
-		serde_json::from_value(crate::keltner_channel_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::keltner_channel_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"keltnerChannelReversion".to_string(),
-		serde_json::from_value(crate::keltner_channel_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::keltner_channel_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"keltnerVolatilityBreakout".to_string(),
-		serde_json::from_value(crate::keltner_volatility_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::keltner_volatility_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"madReversion".to_string(),
-		serde_json::from_value(crate::mad_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::mad_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"openingRangeBreakout".to_string(),
-		serde_json::from_value(crate::opening_range_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::opening_range_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"pairsTrading".to_string(),
-		serde_json::from_value(crate::pairs_trading_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::pairs_trading_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"projectionOscillator".to_string(),
-		serde_json::from_value(crate::projection_oscillator_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::projection_oscillator_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"standardDeviation".to_string(),
-		serde_json::from_value(crate::standard_deviation_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::standard_deviation_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"varianceStop".to_string(),
-		serde_json::from_value(crate::variance_stop_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::variance_stop_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"volatilityAdjusted".to_string(),
-		serde_json::from_value(crate::volatility_adjusted_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::volatility_adjusted_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"zScoreBreakout".to_string(),
-		serde_json::from_value(crate::z_score_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::z_score_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"zScoreReversion".to_string(),
-		serde_json::from_value(crate::z_score_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::z_score_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"accumulation-distribution".to_string(),
-		serde_json::from_value(crate::accumulation_distribution_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::accumulation_distribution_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"chaikin-money-flow".to_string(),
-		serde_json::from_value(crate::chaikin_money_flow_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::chaikin_money_flow_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"ease-of-movement".to_string(),
-		serde_json::from_value(crate::ease_of_movement_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::ease_of_movement_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"force-index".to_string(),
-		serde_json::from_value(crate::force_index_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::force_index_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"money-flow-index".to_string(),
-		serde_json::from_value(crate::money_flow_index_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::money_flow_index_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"negative-volume-index".to_string(),
-		serde_json::from_value(crate::negative_volume_index_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::negative_volume_index_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"obv".to_string(),
-		serde_json::from_value(crate::obv_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::obv_strategy_metadata()).expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"obv-confirmation".to_string(),
-		serde_json::from_value(crate::obv_confirmation_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::obv_confirmation_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"volume-price-trend".to_string(),
-		serde_json::from_value(crate::volume_price_trend_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::volume_price_trend_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"volumeWeightedAveragePrice".to_string(),
-		serde_json::from_value(crate::volume_weighted_average_price_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::volume_weighted_average_price_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-breakout".to_string(),
-		serde_json::from_value(crate::vwap_breakout_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_breakout_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 	strategies.insert(
 		"vwap-reversion".to_string(),
-		serde_json::from_value(crate::vwap_reversion_strategy_metadata()).unwrap(),
+		serde_json::from_value(crate::vwap_reversion_strategy_metadata())
+			.expect("valid strategy metadata"),
 	);
 
 	crate::types::results::StrategyRegistry { strategies }

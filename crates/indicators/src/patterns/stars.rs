@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn stars(
 	opens: &[f64],
@@ -7,7 +8,7 @@ pub fn stars(
 	closes: &[f64],
 	body_ratio_threshold: Option<f64>,
 	gap_threshold: Option<f64>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let body_ratio_threshold = body_ratio_threshold.unwrap_or(0.3);

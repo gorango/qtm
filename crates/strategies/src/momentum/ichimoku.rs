@@ -1,5 +1,6 @@
 use crate::types::configs::IchimokuCloudConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Ichimoku Cloud Trend Strategy
@@ -16,7 +17,7 @@ pub fn ichimoku_strategy(
 	highs: &[f64],
 	lows: &[f64],
 	config: Option<IchimokuCloudConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let short = config.short.unwrap_or(9);
 	let medium = config.medium.unwrap_or(26);
@@ -27,14 +28,16 @@ pub fn ichimoku_strategy(
 	let max_period = short.max(medium).max(long).max(close_period);
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len {
-		return Err("All input arrays must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"All input arrays must have equal length".into(),
+		));
 	}
 	if data_len < max_period as usize + 1 {
-		return Err(format!(
+		return Err(StrategyError::Validation(format!(
 			"Insufficient data for Ichimoku strategy: requires at least {} points, got {}",
 			max_period + 1,
 			data_len
-		));
+		)));
 	}
 
 	// Calculate Ichimoku Cloud

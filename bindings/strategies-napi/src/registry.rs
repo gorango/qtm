@@ -5,13 +5,13 @@ use strategies_core::{StrategyDefinition, StrategyRegistry};
 
 macro_rules! register_strategy {
 	($map:ident, $key:literal, $($tokens:tt)*) => {
-		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).unwrap());
+		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).expect("valid strategy metadata"));
 	};
 }
 
 macro_rules! register_defaults {
 	($map:ident, $key:literal, $($tokens:tt)*) => {
-		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).unwrap());
+		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).expect("valid strategy metadata"));
 	};
 }
 /// Registry of all available strategies

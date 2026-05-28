@@ -8,7 +8,7 @@ pub fn standard_deviation_strategy(
 	config: Option<StandardDeviationConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::standard_deviation_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn standard_deviation_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn standard_deviation(
 	let config =
 		config.map(|c| serde_json::from_value::<StandardDeviationConfig>(c).unwrap_or_default());
 	strategies_core::standard_deviation_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

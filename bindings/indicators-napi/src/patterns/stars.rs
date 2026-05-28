@@ -15,7 +15,7 @@ pub fn stars(
 	gap_threshold: Option<f64>,
 ) -> Result<Vec<f64>> {
 	validate_multiple_arrays(&[&opens, &highs, &lows, &closes])
-		.map_err(napi::Error::from_reason)?;
+		.map_err(|e| napi::Error::from_reason(e.to_string()))?;
 
 	let opens = opens.as_ref();
 	let highs = highs.as_ref();

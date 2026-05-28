@@ -10,7 +10,7 @@ pub fn acceleration_bands_strategy(
 	config: Option<AccelerationBandsConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::acceleration_bands_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn acceleration_bands_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn acceleration_bands(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

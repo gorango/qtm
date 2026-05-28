@@ -10,7 +10,7 @@ pub fn opening_range_breakout_strategy(
 	config: Option<OpeningRangeBreakoutConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::opening_range_breakout_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn opening_range_breakout_strategy_metadata() -> serde_json::Value {
@@ -33,5 +33,5 @@ pub fn opening_range_breakout(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

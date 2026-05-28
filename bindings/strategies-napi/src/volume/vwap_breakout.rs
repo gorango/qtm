@@ -11,7 +11,7 @@ pub fn vwap_breakout_strategy(
 	config: Option<VwapBreakoutConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::vwap_breakout_strategy(&closes, &highs, &lows, &volumes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn vwap_breakout_strategy_metadata() -> serde_json::Value {
@@ -38,5 +38,5 @@ pub fn vwap_breakout(
 		))?,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

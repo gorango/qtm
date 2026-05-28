@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -139,7 +140,7 @@ pub fn calculate_percent_rank_warmup(period: u32) -> u32 {
 pub fn calculate_indicator_warmup(
 	indicator_type: String,
 	params: serde_json::Value,
-) -> Result<IndicatorWarmupResult, String> {
+) -> IndicatorResult<IndicatorWarmupResult> {
 	let period = params.get("period").and_then(|v| v.as_u64()).unwrap_or(14) as u32;
 
 	let warmup = match indicator_type.to_lowercase().as_str() {

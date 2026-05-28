@@ -1,5 +1,6 @@
 use crate::internal::moving_std::std_dev_internal;
 use crate::internal::sma::sma_internal;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -14,17 +15,17 @@ impl Default for ZScoreConfig {
 	}
 }
 
-pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> Result<Vec<f64>, String> {
+pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20) as usize;
 
 	if len < period {
-		return Err(format!(
+		return Err(IndicatorError::Custom(format!(
 			"Not enough data points. Need at least {}, got {}",
 			period, len
-		));
+		)));
 	}
 
 	crate::utils::validation::validate_period(period)?;
@@ -46,6 +47,6 @@ pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> Result<Vec<f64>, Stri
 	Ok(result)
 }
 
-pub fn z_score(values: &[f64], config: Option<ZScoreConfig>) -> Result<Vec<f64>, String> {
+pub fn z_score(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f64>> {
 	zs(values, config)
 }

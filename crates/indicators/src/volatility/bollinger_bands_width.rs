@@ -1,5 +1,6 @@
 use crate::internal::ema::ema_internal;
 use crate::volatility::bollinger_bands::BBResult;
+use crate::{IndicatorError, IndicatorResult};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -9,15 +10,19 @@ pub struct BBWResult {
 	pub width_ema: Vec<f64>,
 }
 
-pub fn bbw(bb: BBResult, period: Option<u32>) -> Result<BBWResult, String> {
+pub fn bbw(bb: BBResult, period: Option<u32>) -> IndicatorResult<BBWResult> {
 	let len = bb.upper.len();
 
 	if len == 0 {
-		return Err("Bollinger bands result cannot be empty".to_string());
+		return Err(IndicatorError::Custom(
+			"Bollinger bands result cannot be empty".into(),
+		));
 	}
 
 	if bb.upper.len() != bb.middle.len() || bb.upper.len() != bb.lower.len() {
-		return Err("Bollinger bands arrays must have the same length".to_string());
+		return Err(IndicatorError::Custom(
+			"Bollinger bands arrays must have the same length".into(),
+		));
 	}
 
 	let period = period.unwrap_or(90) as usize;
@@ -44,6 +49,6 @@ pub fn bbw(bb: BBResult, period: Option<u32>) -> Result<BBWResult, String> {
 	Ok(BBWResult { width, width_ema })
 }
 
-pub fn bollinger_bands_width(bb: BBResult, period: Option<u32>) -> Result<BBWResult, String> {
+pub fn bollinger_bands_width(bb: BBResult, period: Option<u32>) -> IndicatorResult<BBWResult> {
 	bbw(bb, period)
 }

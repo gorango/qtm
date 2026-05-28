@@ -1,5 +1,6 @@
 use crate::types::configs::VortexConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use indicators_core::VortexResult;
 
 /// Vortex Trend Strategy
@@ -16,18 +17,22 @@ pub fn vortex_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<VortexConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("Vortex period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Vortex period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = closes.len();
 	let min_periods = period as usize;
 	if data_len < min_periods {
-		return Err("Insufficient data for Vortex strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Vortex strategy".into(),
+		));
 	}
 
 	// Calculate Vortex

@@ -1,12 +1,13 @@
 use crate::types::configs::RsiMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use indicators_core::macd;
 use indicators_core::rsi;
 
 /// Rsi Macd
 ///
 /// Buy when RSI is oversold and MACD confirms bullish crossover. Sell on bearish alignment.
-pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> Result<Vec<i8>, String> {
+pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let rsi_period = config.rsi_period.unwrap_or(14);
 	let rsi_oversold = config.rsi_oversold.unwrap_or(30.0);
@@ -18,11 +19,11 @@ pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> Resul
 	let min_data_length = (rsi_period + 1).max(macd_slow_period + macd_signal_period) as usize;
 
 	if closes.len() < min_data_length {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: RSI MACD requires at least {} data points, got {}",
 			min_data_length,
 			closes.len()
-		));
+		)));
 	}
 
 	let rsi_config = indicators_core::RSIConfig {

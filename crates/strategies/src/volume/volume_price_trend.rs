@@ -1,5 +1,6 @@
 use crate::types::configs::VolumePriceTrendConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Volume Price Trend Strategy
 ///
@@ -14,23 +15,31 @@ pub fn volume_price_trend_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VolumePriceTrendConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_criteria_met = config.min_criteria_met.unwrap_or(1);
 	let vpt_threshold = config.vpt_threshold.unwrap_or(0.1);
 
 	if closes.len() != volumes.len() {
-		return Err("Closes and volumes must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"Closes and volumes must have equal length".into(),
+		));
 	}
 	if !(1..=2).contains(&min_criteria_met) {
-		return Err("minCriteriaMet must be between 1 and 2".to_string());
+		return Err(StrategyError::Validation(
+			"minCriteriaMet must be between 1 and 2".into(),
+		));
 	}
 	if !(0.0..=1.0).contains(&vpt_threshold) {
-		return Err("VPT threshold must be between 0 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"VPT threshold must be between 0 and 1".into(),
+		));
 	}
 	let data_len = closes.len();
 	if data_len < 50 {
-		return Err("Insufficient data for VPT strategy (need at least 50 bars)".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for VPT strategy (need at least 50 bars)".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

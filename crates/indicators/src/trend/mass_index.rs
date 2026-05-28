@@ -1,12 +1,13 @@
 use crate::internal::ema::ema_internal;
 use crate::internal::moving_sum::moving_sum_internal;
+use crate::IndicatorResult;
 
 pub fn mass_index(
 	highs: &[f64],
 	lows: &[f64],
 	ema_period: Option<u32>,
 	mi_period: Option<u32>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows])?;
 
 	let ema_period = ema_period.unwrap_or(9) as usize;

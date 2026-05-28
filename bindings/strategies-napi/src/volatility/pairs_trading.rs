@@ -8,7 +8,7 @@ pub fn pairs_trading_strategy(
 	config: Option<PairsTradingConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::pairs_trading_strategy(&closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn pairs_trading_strategy_metadata() -> serde_json::Value {
@@ -26,5 +26,5 @@ pub fn pairs_trading(
 	let config =
 		config.map(|c| serde_json::from_value::<PairsTradingConfig>(c).unwrap_or_default());
 	strategies_core::pairs_trading_strategy(&input.closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

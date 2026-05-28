@@ -1,4 +1,5 @@
 use crate::utils::validation;
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -10,7 +11,7 @@ pub struct PriceRateOfChangeConfig {
 pub fn price_rate_of_change(
 	values: &[f64],
 	config: Option<PriceRateOfChangeConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	let config_obj = config.unwrap_or(PriceRateOfChangeConfig { period: None });
 	let period = config_obj.period.unwrap_or(3) as usize;
 

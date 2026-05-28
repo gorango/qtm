@@ -1,5 +1,6 @@
 use crate::types::configs::ForceIndexConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Force Index Strategy
 ///
@@ -14,7 +15,7 @@ pub fn force_index_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<ForceIndexConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(13);
 	let oversold = config.oversold.unwrap_or(-0.1);
@@ -22,19 +23,29 @@ pub fn force_index_strategy(
 
 	let data_len = closes.len();
 	if closes.len() != volumes.len() {
-		return Err("Closes and volumes must have equal length".to_string());
+		return Err(StrategyError::Validation(
+			"Closes and volumes must have equal length".into(),
+		));
 	}
 	if !(5..=50).contains(&period) {
-		return Err("Period must be between 5 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 5 and 50".into(),
+		));
 	}
 	if !(overbought..=1.0).contains(&oversold) && !(-1.0..=0.0).contains(&oversold) {
-		return Err("Oversold threshold must be between -1 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"Oversold threshold must be between -1 and 1".into(),
+		));
 	}
 	if !(overbought..=1.0).contains(&overbought) && !(-1.0..=0.0).contains(&overbought) {
-		return Err("Overbought threshold must be between -1 and 1".to_string());
+		return Err(StrategyError::Validation(
+			"Overbought threshold must be between -1 and 1".into(),
+		));
 	}
 	if data_len < (period as usize) + 1 {
-		return Err("Insufficient data for Force Index strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Force Index strategy".into(),
+		));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();

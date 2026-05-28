@@ -1,4 +1,5 @@
 use crate::types::configs::HeadAndShouldersConfig;
+use crate::StrategyResult;
 
 /// Head and Shoulders Reversal Strategy
 ///
@@ -16,7 +17,7 @@ pub fn head_and_shoulders_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<HeadAndShouldersConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let min_distance = config.min_distance.unwrap_or(5) as usize;
 	let tolerance = config.tolerance.unwrap_or(0.02);

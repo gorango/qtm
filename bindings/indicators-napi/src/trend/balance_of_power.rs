@@ -16,5 +16,5 @@ pub fn balance_of_power(
 		lows.as_ref(),
 		closes.as_ref(),
 	)
-	.map_err(napi::Error::from_reason)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

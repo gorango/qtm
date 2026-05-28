@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn wedges(
 	opens: &[f64],
@@ -7,7 +8,7 @@ pub fn wedges(
 	closes: &[f64],
 	min_points: Option<u32>,
 	slope_tolerance: Option<f64>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let min_points = min_points.unwrap_or(4) as usize;
@@ -90,8 +91,12 @@ pub fn wedges(
 
 	let end_index = *recent_peaks
 		.last()
-		.unwrap()
-		.max(recent_troughs.last().unwrap());
+		.expect("recent_peaks should be non-empty after pattern detection")
+		.max(
+			recent_troughs
+				.last()
+				.expect("recent_troughs should be non-empty after pattern detection"),
+		);
 
 	for i in (end_index + 1)..highs.len() {
 		let close = closes[i];

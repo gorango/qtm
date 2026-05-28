@@ -1,5 +1,6 @@
 use crate::types::configs::OpeningRangeBreakoutConfig;
 use crate::utils::signals::consolidating;
+use crate::{StrategyError, StrategyResult};
 
 /// Opening Range Breakout
 ///
@@ -9,18 +10,20 @@ pub fn opening_range_breakout_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<OpeningRangeBreakoutConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let lookback = config.lookback.unwrap_or(10);
 	let threshold_pct = config.threshold_pct.unwrap_or(0.02);
 
 	if !(2..=50).contains(&lookback) {
-		return Err("Opening Range Breakout lookback must be between 2 and 50".to_string());
+		return Err(StrategyError::Validation(
+			"Opening Range Breakout lookback must be between 2 and 50".into(),
+		));
 	}
 	if !(0.001..=0.1).contains(&threshold_pct) {
-		return Err(
-			"Opening Range Breakout threshold_pct must be between 0.001 and 0.1".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Opening Range Breakout threshold_pct must be between 0.001 and 0.1".into(),
+		));
 	}
 
 	let highs_vec = highs;

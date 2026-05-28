@@ -13,7 +13,7 @@ pub fn ce(
 	period: Option<u32>,
 ) -> Result<CEResult> {
 	ce_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), period)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Chandelier Exit (camelCase alias)
@@ -26,5 +26,5 @@ pub fn chandelierExit(
 	period: Option<u32>,
 ) -> Result<CEResult> {
 	ce_alias(highs.as_ref(), lows.as_ref(), closings.as_ref(), period)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

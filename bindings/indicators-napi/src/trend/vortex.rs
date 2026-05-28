@@ -11,5 +11,5 @@ pub fn vortex(
 	period: Option<u32>,
 ) -> Result<VortexResult> {
 	vortex_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), period)
-		.map_err(napi::Error::from_reason)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

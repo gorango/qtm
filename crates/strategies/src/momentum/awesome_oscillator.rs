@@ -1,5 +1,6 @@
 use crate::types::configs::AwesomeOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 
 /// Awesome Oscillator Momentum Strategy
 ///
@@ -14,28 +15,38 @@ pub fn awesome_oscillator_strategy(
 	highs: &[f64],
 	lows: &[f64],
 	config: Option<AwesomeOscillatorConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(5);
 	let slow_period = config.slow_period.unwrap_or(34);
 
 	// Validate parameters
 	if !(2..=100).contains(&fast_period) {
-		return Err("Awesome Oscillator fast period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Awesome Oscillator fast period must be between 2 and 100".into(),
+		));
 	}
 	if !(5..=200).contains(&slow_period) {
-		return Err("Awesome Oscillator slow period must be between 5 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"Awesome Oscillator slow period must be between 5 and 200".into(),
+		));
 	}
 	if fast_period >= slow_period {
-		return Err("Awesome Oscillator fast period must be less than slow period".to_string());
+		return Err(StrategyError::Validation(
+			"Awesome Oscillator fast period must be less than slow period".into(),
+		));
 	}
 
 	let data_len = highs.len();
 	if data_len < (slow_period as usize) + 1 {
-		return Err("Insufficient data for Awesome Oscillator strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Awesome Oscillator strategy".into(),
+		));
 	}
 	if lows.len() != data_len {
-		return Err("Highs and lows arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs and lows arrays must have the same length".into(),
+		));
 	}
 
 	// Calculate Awesome Oscillator values

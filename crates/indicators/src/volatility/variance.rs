@@ -1,3 +1,4 @@
+use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
@@ -12,7 +13,7 @@ impl Default for VarianceConfig {
 	}
 }
 
-pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> Result<Vec<f64>, String> {
+pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
 	let config = config.unwrap_or_default();
@@ -43,6 +44,6 @@ pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> Result<Vec<f6
 pub fn rolling_variance(
 	values: &[f64],
 	config: Option<VarianceConfig>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	variance(values, config)
 }

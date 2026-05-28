@@ -1,5 +1,6 @@
 use crate::types::configs::VwapRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 
 /// Vwap Rsi
 ///
@@ -10,7 +11,7 @@ pub fn vwap_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
 	config: Option<VwapRsiConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let vwap_period = config.vwap_period.unwrap_or(14);
 	let rsi_period = config.rsi_period.unwrap_or(14);
@@ -19,17 +20,17 @@ pub fn vwap_rsi_strategy(
 
 	let data_len = closes.len();
 	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
-		return Err(
-			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
-		);
+		return Err(StrategyError::Validation(
+			"Highs, lows, closes, and volumes arrays must have the same length".into(),
+		));
 	}
 	let min_periods = vwap_period.max(rsi_period) as usize;
 
 	if data_len < min_periods {
-		return Err(format!(
+		return Err(StrategyError::InsufficientData(format!(
 			"Insufficient data: VWAP + RSI requires at least {} data points, got {}",
 			min_periods, data_len
-		));
+		)));
 	}
 
 	let vwap_config = indicators_core::VWAPConfig {

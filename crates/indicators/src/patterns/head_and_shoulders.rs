@@ -1,4 +1,5 @@
 use crate::utils::validation::validate_multiple_arrays;
+use crate::IndicatorResult;
 
 pub fn head_and_shoulders(
 	opens: &[f64],
@@ -8,7 +9,7 @@ pub fn head_and_shoulders(
 	min_distance: Option<u32>,
 	tolerance: Option<f64>,
 	deviation: Option<f64>,
-) -> Result<Vec<f64>, String> {
+) -> IndicatorResult<Vec<f64>> {
 	validate_multiple_arrays(&[opens, highs, lows, closes])?;
 
 	let mut highs_vec = highs.to_vec();

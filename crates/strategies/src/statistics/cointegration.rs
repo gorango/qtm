@@ -1,5 +1,6 @@
 use crate::types::configs::CointegrationConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// Cointegration Strategy
@@ -14,7 +15,7 @@ use serde_json;
 pub fn cointegration_strategy(
 	closes: &[f64],
 	config: Option<CointegrationConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(20);
 	let beta_period = config.beta_period.unwrap_or(60);
@@ -22,23 +23,33 @@ pub fn cointegration_strategy(
 	let second_closes = config.second_closes.unwrap_or_default();
 
 	if !(2..=100).contains(&period) {
-		return Err("Period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"Period must be between 2 and 100".into(),
+		));
 	}
 	if !(2..=200).contains(&beta_period) {
-		return Err("Beta period must be between 2 and 200".to_string());
+		return Err(StrategyError::Validation(
+			"Beta period must be between 2 and 200".into(),
+		));
 	}
 	if entry_threshold <= 0.0 {
-		return Err("Entry threshold must be positive".to_string());
+		return Err(StrategyError::Validation(
+			"Entry threshold must be positive".into(),
+		));
 	}
 
 	let data_len = closes.len();
 	if second_closes.len() != data_len {
-		return Err("secondCloses must have the same length as closes".to_string());
+		return Err(StrategyError::Validation(
+			"secondCloses must have the same length as closes".into(),
+		));
 	}
 
 	let min_required = period.max(beta_period) as usize;
 	if data_len < min_required {
-		return Err("Insufficient data for Cointegration strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for Cointegration strategy".into(),
+		));
 	}
 
 	let second_closes_array = &second_closes;

@@ -10,7 +10,7 @@ pub fn stochastic_strategy(
 	config: Option<StochasticConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::stochastic_strategy(&highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn stochastic_strategy_metadata() -> serde_json::Value {
@@ -32,5 +32,5 @@ pub fn stochastic(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

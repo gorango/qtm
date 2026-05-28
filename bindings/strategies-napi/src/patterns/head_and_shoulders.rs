@@ -11,7 +11,7 @@ pub fn head_and_shoulders_strategy(
 	config: Option<HeadAndShouldersConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::head_and_shoulders_strategy(&opens, &highs, &lows, &closes, config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn head_and_shoulders_strategy_metadata() -> serde_json::Value {
@@ -35,5 +35,5 @@ pub fn head_and_shoulders(
 		&input.closes,
 		config,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

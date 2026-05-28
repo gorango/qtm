@@ -1,5 +1,6 @@
 use crate::types::configs::ADXConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use crate::{StrategyError, StrategyResult};
 use serde_json;
 
 /// ADX Trend Strategy
@@ -17,22 +18,28 @@ pub fn adx_strategy(
 	lows: &[f64],
 	closes: &[f64],
 	config: Option<ADXConfig>,
-) -> Result<Vec<i8>, String> {
+) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
 	let trend_threshold = config.trend_threshold.unwrap_or(25.0);
 
 	// Validate parameters
 	if !(2..=100).contains(&period) {
-		return Err("ADX period must be between 2 and 100".to_string());
+		return Err(StrategyError::Validation(
+			"ADX period must be between 2 and 100".into(),
+		));
 	}
 	let data_len = highs.len();
 	if data_len != lows.len() || data_len != closes.len() {
-		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+		return Err(StrategyError::Validation(
+			"Highs, lows, and closes arrays must have the same length".into(),
+		));
 	}
 	let min_periods = (period * 3) as usize; // ADX needs more periods
 	if data_len < min_periods {
-		return Err("Insufficient data for ADX strategy".to_string());
+		return Err(StrategyError::InsufficientData(
+			"Insufficient data for ADX strategy".into(),
+		));
 	}
 
 	// Calculate ADX

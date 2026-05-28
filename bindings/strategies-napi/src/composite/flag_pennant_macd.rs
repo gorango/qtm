@@ -12,7 +12,7 @@ pub fn flag_pennant_macd_strategy(
 	macd_config: Option<MACDConfig>,
 ) -> napi::Result<Vec<i8>> {
 	strategies_core::flag_pennant_macd_strategy(&highs, &lows, &closes, fp_config, macd_config)
-		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+		.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }
 
 pub fn flag_pennant_macd_strategy_metadata() -> serde_json::Value {
@@ -36,5 +36,5 @@ pub fn flag_pennant_macd(
 		config,
 		None,
 	)
-	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e))
+	.map_err(|e| napi::Error::new(napi::Status::InvalidArg, e.to_string()))
 }

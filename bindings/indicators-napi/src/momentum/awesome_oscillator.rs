@@ -9,5 +9,6 @@ pub fn awesome_oscillator(
 	lows: Float64Array,
 	config: Option<AwesomeOscillatorConfig>,
 ) -> Result<Vec<f64>> {
-	ao_core(highs.as_ref(), lows.as_ref(), config).map_err(napi::Error::from_reason)
+	ao_core(highs.as_ref(), lows.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
