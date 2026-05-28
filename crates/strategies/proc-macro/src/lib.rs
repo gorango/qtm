@@ -263,6 +263,7 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 				default_timeframes: &[#(#default_timeframes),*],
 				description: #description,
 				handler: #wrapped_fn_name,
+				defaults_fn: #defaults_fn_name,
 			}
 		}
 	};

@@ -1,515 +1,136 @@
 use napi_derive::napi;
-use serde_json;
 use std::collections::HashMap;
-use strategies_core::{StrategyDefinition, StrategyRegistry};
+use strategies_core::{registry::get_strategy_descriptors, StrategyDefinition, StrategyRegistry};
 
-macro_rules! register_strategy {
-	($map:ident, $key:literal, $($tokens:tt)*) => {
-		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).expect("valid strategy metadata"));
-	};
-}
-
-macro_rules! register_defaults {
-	($map:ident, $key:literal, $($tokens:tt)*) => {
-		$map.insert($key.to_string(), serde_json::from_value($($tokens)*).expect("valid strategy metadata"));
-	};
-}
 /// Registry of all available strategies
 #[napi]
 pub fn get_strategy_registry() -> StrategyRegistry {
-	// Ensure implementation registry is initialized
 	let _ = crate::get_strategy_registry_impl();
 	let mut strategies = HashMap::new();
 
-	register_strategy!(
-		strategies,
-		"buy-and-hold",
-		crate::buy_and_hold::buy_and_hold_strategy_metadata()
-	);
+	// Auto-collected from #[strategy] descriptors
+	for desc in get_strategy_descriptors() {
+		strategies.insert(
+			desc.id.to_string(),
+			StrategyDefinition {
+				id: desc.id.to_string(),
+				name: desc.name.to_string(),
+				category: desc.category.to_string(),
+				default_timeframes: desc
+					.default_timeframes
+					.iter()
+					.map(|s| s.to_string())
+					.collect(),
+				description: Some(desc.description.to_string()),
+			},
+		);
+	}
 
-	// Composite strategies
-	register_strategy!(
-		strategies,
+	// Composite strategies (manually registered — not yet migrated to #[strategy])
+	insert_composite(
+		&mut strategies,
 		"adx-rsi-trend-momentum",
-		crate::composite::adx_rsi::adx_rsi_strategy_metadata()
+		crate::composite::adx_rsi::adx_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"bb-rsi-breakout",
-		crate::composite::bb_rsi::bb_rsi_strategy_metadata()
+		crate::composite::bb_rsi::bb_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"double-top-stochastic-reversal",
-		crate::composite::double_top_stochastic::double_top_stochastic_strategy_metadata()
+		crate::composite::double_top_stochastic::double_top_stochastic_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"flag-pennant-macd-continuation",
-		crate::composite::flag_pennant_macd::flag_pennant_macd_strategy_metadata()
+		crate::composite::flag_pennant_macd::flag_pennant_macd_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"ma-rsi-trend-following",
-		crate::composite::ma_rsi::ma_rsi_strategy_metadata()
+		crate::composite::ma_rsi::ma_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"macd-rsi-momentum",
-		crate::composite::macd_rsi::macd_rsi_strategy_metadata()
+		crate::composite::macd_rsi::macd_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"macd-stochastic-confirmation",
-		crate::composite::macd_stochastic::macd_stochastic_strategy_metadata()
+		crate::composite::macd_stochastic::macd_stochastic_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"mfi-obv-volume-flow",
-		crate::composite::mfi_obv::mfi_obv_strategy_metadata()
+		crate::composite::mfi_obv::mfi_obv_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"obv-rsi-volume-confirmation",
-		crate::composite::obv_rsi::obv_rsi_strategy_metadata()
+		crate::composite::obv_rsi::obv_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"roc-obv-rsi-momentum",
-		crate::composite::roc_obv_rsi::roc_obv_rsi_strategy_metadata()
+		crate::composite::roc_obv_rsi::roc_obv_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"rsi-macd-confirmation",
-		crate::composite::rsi_macd::rsi_macd_strategy_metadata()
+		crate::composite::rsi_macd::rsi_macd_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"triangle-rsi-breakout",
-		crate::composite::triangle_rsi::triangle_rsi_strategy_metadata()
+		crate::composite::triangle_rsi::triangle_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"volume-profile-rsi",
-		crate::composite::volume_profile_rsi::volume_profile_rsi_strategy_metadata()
+		crate::composite::volume_profile_rsi::volume_profile_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"vwap-ema-rsi-trend",
-		crate::composite::vwap_ema_rsi::vwap_ema_rsi_strategy_metadata()
+		crate::composite::vwap_ema_rsi::vwap_ema_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"vwap-macd-momentum",
-		crate::composite::vwap_macd::vwap_macd_strategy_metadata()
+		crate::composite::vwap_macd::vwap_macd_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"vwap-rsi-breakout",
-		crate::composite::vwap_rsi::vwap_rsi_strategy_metadata()
+		crate::composite::vwap_rsi::vwap_rsi_strategy_metadata(),
 	);
-	register_strategy!(
-		strategies,
+	insert_composite(
+		&mut strategies,
 		"vwap-stochastic-confirmation",
-		crate::composite::vwap_stochastic::vwap_stochastic_strategy_metadata()
+		crate::composite::vwap_stochastic::vwap_stochastic_strategy_metadata(),
 	);
 
-	// Momentum strategies
-	register_strategy!(
-		strategies,
-		"awesomeOscillator",
-		crate::momentum::awesome_oscillator::awesome_oscillator_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"cci",
-		crate::momentum::cci::cci_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"ichimoku",
-		crate::momentum::ichimoku::ichimoku_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"kst",
-		crate::momentum::kst::kst_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"momentum",
-		crate::momentum::momentum::momentum_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"roc",
-		crate::momentum::roc::roc_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"rsi",
-		crate::momentum::rsi::rsi_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"rsi2",
-		crate::momentum::rsi2::rsi2_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"stochastic",
-		crate::momentum::stochastic::stochastic_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"ultimateOscillator",
-		crate::momentum::ultimate_oscillator::ultimate_oscillator_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"williamsR",
-		crate::momentum::williams_r::williams_r_strategy_metadata()
-	);
-
-	// Pattern strategies
-	register_strategy!(
-		strategies,
-		"cup-and-handle-breakout",
-		crate::patterns::cup_and_handle::cup_and_handle_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"double-top-bottom-reversal",
-		crate::patterns::double_top_bottom::double_top_bottom_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
+	// Base strategies not using #[strategy] (non-standard signatures)
+	insert_composite(
+		&mut strategies,
 		"elliott-wave-pattern",
-		crate::statistics::percent_rank::percent_rank_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"flags-pennants-continuation",
-		crate::patterns::flags_pennants::flags_pennants_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"head-and-shoulders-reversal",
-		crate::patterns::head_and_shoulders::head_and_shoulders_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"triangle-breakout",
-		crate::patterns::triangle::triangle_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"wedge-breakout",
-		crate::patterns::wedge::wedge_strategy_metadata()
-	);
-
-	// Statistics strategies
-	register_strategy!(
-		strategies,
-		"cointegration",
-		crate::statistics::cointegration::cointegration_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"correlation-pair-trading",
-		crate::statistics::correlation_pair::correlation_pair_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"correlation-mean-reversion",
-		crate::statistics::correlation_reversion::correlation_reversion_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"percentRank-ranking",
-		crate::statistics::percent_rank::percent_rank_strategy_metadata()
-	);
-
-	// Trend strategies
-	register_strategy!(
-		strategies,
-		"absolutePriceOscillator",
-		crate::trend::absolute_price_oscillator::absolute_price_oscillator_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"adx",
-		crate::trend::adx::adx_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"almaCrossover",
-		crate::trend::alma_crossover::alma_crossover_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"almaHmaDivergence",
-		crate::trend::alma_hma_divergence::alma_hma_divergence_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"aroon",
-		crate::trend::aroon::aroon_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"balanceOfPower",
-		crate::trend::balance_of_power::balance_of_power_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"chandeForecastOscillator",
-		crate::trend::chande_forecast_oscillator::chande_forecast_oscillator_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"dmi",
-		crate::trend::dmi::dmi_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"fibonacciRetracement",
-		crate::trend::fibonacci_retracement::fibonacci_retracement_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"hmaTrend",
-		crate::trend::hma_trend::hma_trend_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"kdj",
-		crate::trend::kdj::kdj_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"larsson",
-		crate::trend::larsson::larsson_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"linRegChannel",
-		crate::trend::lin_reg_channel::lin_reg_channel_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"linRegSlope",
-		crate::trend::lin_reg_slope::lin_reg_slope_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"maCrossover",
-		crate::trend::ma_crossover::ma_crossover_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"macd",
-		crate::trend::macd::macd_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"macdCrossover",
-		crate::trend::macd_crossover::macd_crossover_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"parabolicSar",
-		crate::trend::parabolic_sar::parabolic_sar_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"pivotPoints",
-		crate::trend::pivot_points::pivot_points_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"smaVwapCrossover",
-		crate::trend::sma_vwap_crossover::sma_vwap_crossover_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"superTrend",
-		crate::trend::super_trend::super_trend_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"typicalPrice",
-		crate::trend::typical_price::typical_price_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"vortex",
-		crate::trend::vortex::vortex_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"vwma",
-		crate::trend::vwma::vwma_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"wmaConfirmation",
-		crate::trend::wma_confirmation::wma_confirmation_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"wmaMomentum",
-		crate::trend::wma_momentum::wma_momentum_strategy_metadata()
-	);
-
-	// Volatility strategies
-	register_strategy!(
-		strategies,
-		"accelerationBands",
-		crate::volatility::acceleration_bands::acceleration_bands_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"atrThreshold",
-		crate::volatility::atr_threshold::atr_threshold_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"atrVolatilityThreshold",
-		crate::volatility::atr_volatility_threshold::atr_volatility_threshold_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"bollingerBandsBreakout",
-		crate::volatility::bollinger_bands_breakout::bollinger_bands_breakout_strategy_metadata()
-	);
-	register_strategy!(strategies, "bollingerBandsMeanReversion", crate::volatility::bollinger_bands_mean_reversion::bollinger_bands_mean_reversion_strategy_metadata());
-	register_strategy!(
-		strategies,
-		"donchianBreakout",
-		crate::volatility::donchian_breakout::donchian_breakout_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"donchianReversion",
-		crate::volatility::donchian_reversion::donchian_reversion_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"keltnerChannelBreakout",
-		crate::volatility::keltner_channel_breakout::keltner_channel_breakout_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"keltnerChannelReversion",
-		crate::volatility::keltner_channel_reversion::keltner_channel_reversion_strategy_metadata()
-	);
-	register_strategy!(strategies, "keltnerVolatilityBreakout", crate::volatility::keltner_volatility_breakout::keltner_volatility_breakout_strategy_metadata());
-	register_strategy!(
-		strategies,
-		"madReversion",
-		crate::volatility::mad_reversion::mad_reversion_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"openingRangeBreakout",
-		crate::volatility::opening_range_breakout::opening_range_breakout_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"pairsTrading",
-		crate::volatility::pairs_trading::pairs_trading_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"projectionOscillator",
-		crate::volatility::projection_oscillator::projection_oscillator_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"standardDeviation",
-		crate::volatility::standard_deviation::standard_deviation_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"varianceStop",
-		crate::volatility::variance_stop::variance_stop_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"volatilityAdjusted",
-		crate::volatility::volatility_adjusted::volatility_adjusted_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"zScoreBreakout",
-		crate::volatility::z_score_breakout::z_score_breakout_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"zScoreReversion",
-		crate::volatility::z_score_reversion::z_score_reversion_strategy_metadata()
-	);
-
-	// Volume strategies
-	register_strategy!(
-		strategies,
-		"accumulation-distribution",
-		crate::volume::accumulation_distribution::accumulation_distribution_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"chaikin-money-flow",
-		crate::volume::chaikin_money_flow::chaikin_money_flow_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"ease-of-movement",
-		crate::volume::ease_of_movement::ease_of_movement_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"force-index",
-		crate::volume::force_index::force_index_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"money-flow-index",
-		crate::volume::money_flow_index::money_flow_index_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"negative-volume-index",
-		crate::volume::negative_volume_index::negative_volume_index_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"obv",
-		crate::volume::obv::obv_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"obv-confirmation",
-		crate::volume::obv_confirmation::obv_confirmation_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"volume-price-trend",
-		crate::volume::volume_price_trend::volume_price_trend_strategy_metadata()
-	);
-	register_strategy!(strategies, "volumeWeightedAveragePrice", crate::volume::volume_weighted_average_price::volume_weighted_average_price_strategy_metadata());
-	register_strategy!(
-		strategies,
-		"vwap-breakout",
-		crate::volume::vwap_breakout::vwap_breakout_strategy_metadata()
-	);
-	register_strategy!(
-		strategies,
-		"vwap-reversion",
-		crate::volume::vwap_reversion::vwap_reversion_strategy_metadata()
+		crate::patterns::elliott_wave::elliott_wave_strategy_metadata(),
 	);
 
 	StrategyRegistry { strategies }
+}
+
+fn insert_composite(
+	map: &mut HashMap<String, StrategyDefinition>,
+	id: &str,
+	metadata: serde_json::Value,
+) {
+	if let Ok(def) = serde_json::from_value::<StrategyDefinition>(metadata) {
+		map.insert(id.to_string(), def);
+	}
 }
 
 /// Get strategies by category
@@ -550,479 +171,114 @@ pub fn get_all_categories() -> Vec<String> {
 pub fn get_strategy_defaults() -> serde_json::Value {
 	let mut defaults = serde_json::Map::new();
 
-	register_defaults!(
-		defaults,
-		"buy-and-hold",
-		crate::buy_and_hold::buy_and_hold_strategy_defaults()
-	);
+	// Auto-collected from #[strategy] descriptors
+	for desc in get_strategy_descriptors() {
+		defaults.insert(desc.id.to_string(), (desc.defaults_fn)());
+	}
 
-	// Composite defaults
-	register_defaults!(
-		defaults,
+	// Composite strategy defaults
+	insert_default(
+		&mut defaults,
 		"adx-rsi-trend-momentum",
-		crate::composite::adx_rsi::adx_rsi_strategy_defaults()
+		crate::composite::adx_rsi::adx_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"bb-rsi-breakout",
-		crate::composite::bb_rsi::bb_rsi_strategy_defaults()
+		crate::composite::bb_rsi::bb_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"double-top-stochastic-reversal",
-		crate::composite::double_top_stochastic::double_top_stochastic_strategy_defaults()
+		crate::composite::double_top_stochastic::double_top_stochastic_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"flag-pennant-macd-continuation",
-		crate::composite::flag_pennant_macd::flag_pennant_macd_strategy_defaults()
+		crate::composite::flag_pennant_macd::flag_pennant_macd_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"ma-rsi-trend-following",
-		crate::composite::ma_rsi::ma_rsi_strategy_defaults()
+		crate::composite::ma_rsi::ma_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"macd-rsi-momentum",
-		crate::composite::macd_rsi::macd_rsi_strategy_defaults()
+		crate::composite::macd_rsi::macd_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"macd-stochastic-confirmation",
-		crate::composite::macd_stochastic::macd_stochastic_strategy_defaults()
+		crate::composite::macd_stochastic::macd_stochastic_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"mfi-obv-volume-flow",
-		crate::composite::mfi_obv::mfi_obv_strategy_defaults()
+		crate::composite::mfi_obv::mfi_obv_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"obv-rsi-volume-confirmation",
-		crate::composite::obv_rsi::obv_rsi_strategy_defaults()
+		crate::composite::obv_rsi::obv_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"roc-obv-rsi-momentum",
-		crate::composite::roc_obv_rsi::roc_obv_rsi_strategy_defaults()
+		crate::composite::roc_obv_rsi::roc_obv_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"rsi-macd-confirmation",
-		crate::composite::rsi_macd::rsi_macd_strategy_defaults()
+		crate::composite::rsi_macd::rsi_macd_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"triangle-rsi-breakout",
-		crate::composite::triangle_rsi::triangle_rsi_strategy_defaults()
+		crate::composite::triangle_rsi::triangle_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"volume-profile-rsi",
-		crate::composite::volume_profile_rsi::volume_profile_rsi_strategy_defaults()
+		crate::composite::volume_profile_rsi::volume_profile_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"vwap-ema-rsi-trend",
-		crate::composite::vwap_ema_rsi::vwap_ema_rsi_strategy_defaults()
+		crate::composite::vwap_ema_rsi::vwap_ema_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"vwap-macd-momentum",
-		crate::composite::vwap_macd::vwap_macd_strategy_defaults()
+		crate::composite::vwap_macd::vwap_macd_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"vwap-rsi-breakout",
-		crate::composite::vwap_rsi::vwap_rsi_strategy_defaults()
+		crate::composite::vwap_rsi::vwap_rsi_strategy_defaults(),
 	);
-	register_defaults!(
-		defaults,
+	insert_default(
+		&mut defaults,
 		"vwap-stochastic-confirmation",
-		crate::composite::vwap_stochastic::vwap_stochastic_strategy_defaults()
+		crate::composite::vwap_stochastic::vwap_stochastic_strategy_defaults(),
 	);
 
-	// Momentum defaults
-	register_defaults!(
-		defaults,
-		"awesomeOscillator",
-		crate::momentum::awesome_oscillator::awesome_oscillator_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"cci",
-		crate::momentum::cci::cci_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"ichimoku",
-		crate::momentum::ichimoku::ichimoku_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"kst",
-		crate::momentum::kst::kst_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"momentum",
-		crate::momentum::momentum::momentum_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"roc",
-		crate::momentum::roc::roc_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"rsi",
-		crate::momentum::rsi::rsi_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"rsi2",
-		crate::momentum::rsi2::rsi2_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"stochastic",
-		crate::momentum::stochastic::stochastic_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"ultimateOscillator",
-		crate::momentum::ultimate_oscillator::ultimate_oscillator_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"williamsR",
-		crate::momentum::williams_r::williams_r_strategy_defaults()
-	);
-
-	// Pattern defaults
-	register_defaults!(
-		defaults,
-		"cup-and-handle-breakout",
-		crate::patterns::cup_and_handle::cup_and_handle_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"double-top-bottom-reversal",
-		crate::patterns::double_top_bottom::double_top_bottom_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
+	// Base strategies not using #[strategy]
+	insert_default(
+		&mut defaults,
 		"elliott-wave-pattern",
-		crate::statistics::percent_rank::percent_rank_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"flags-pennants-continuation",
-		crate::patterns::flags_pennants::flags_pennants_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"head-and-shoulders-reversal",
-		crate::patterns::head_and_shoulders::head_and_shoulders_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"triangle-breakout",
-		crate::patterns::triangle::triangle_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"wedge-breakout",
-		crate::patterns::wedge::wedge_strategy_defaults()
-	);
-
-	// Statistics defaults
-	register_defaults!(
-		defaults,
-		"cointegration",
-		crate::statistics::cointegration::cointegration_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"correlation-pair-trading",
-		crate::statistics::correlation_pair::correlation_pair_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"correlation-mean-reversion",
-		crate::statistics::correlation_reversion::correlation_reversion_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"percentRank-ranking",
-		crate::statistics::percent_rank::percent_rank_strategy_defaults()
-	);
-
-	// Trend defaults
-	register_defaults!(
-		defaults,
-		"absolutePriceOscillator",
-		crate::trend::absolute_price_oscillator::absolute_price_oscillator_strategy_defaults()
-	);
-	register_defaults!(defaults, "adx", crate::trend::adx::adx_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"almaCrossover",
-		crate::trend::alma_crossover::alma_crossover_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"almaHmaDivergence",
-		crate::trend::alma_hma_divergence::alma_hma_divergence_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"aroon",
-		crate::trend::aroon::aroon_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"balanceOfPower",
-		crate::trend::balance_of_power::balance_of_power_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"chandeForecastOscillator",
-		crate::trend::chande_forecast_oscillator::chande_forecast_oscillator_strategy_defaults()
-	);
-	register_defaults!(defaults, "dmi", crate::trend::dmi::dmi_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"fibonacciRetracement",
-		crate::trend::fibonacci_retracement::fibonacci_retracement_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"hmaTrend",
-		crate::trend::hma_trend::hma_trend_strategy_defaults()
-	);
-	register_defaults!(defaults, "kdj", crate::trend::kdj::kdj_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"larsson",
-		crate::trend::larsson::larsson_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"linRegChannel",
-		crate::trend::lin_reg_channel::lin_reg_channel_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"linRegSlope",
-		crate::trend::lin_reg_slope::lin_reg_slope_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"maCrossover",
-		crate::trend::ma_crossover::ma_crossover_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"macd",
-		crate::trend::macd::macd_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"macdCrossover",
-		crate::trend::macd_crossover::macd_crossover_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"parabolicSar",
-		crate::trend::parabolic_sar::parabolic_sar_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"pivotPoints",
-		crate::trend::pivot_points::pivot_points_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"smaVwapCrossover",
-		crate::trend::sma_vwap_crossover::sma_vwap_crossover_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"superTrend",
-		crate::trend::super_trend::super_trend_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"typicalPrice",
-		crate::trend::typical_price::typical_price_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"vortex",
-		crate::trend::vortex::vortex_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"vwma",
-		crate::trend::vwma::vwma_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"wmaConfirmation",
-		crate::trend::wma_confirmation::wma_confirmation_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"wmaMomentum",
-		crate::trend::wma_momentum::wma_momentum_strategy_defaults()
-	);
-
-	// Volatility defaults
-	register_defaults!(
-		defaults,
-		"accelerationBands",
-		crate::volatility::acceleration_bands::acceleration_bands_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"atrThreshold",
-		crate::volatility::atr_threshold::atr_threshold_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"atrVolatilityThreshold",
-		crate::volatility::atr_volatility_threshold::atr_volatility_threshold_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"bollingerBandsBreakout",
-		crate::volatility::bollinger_bands_breakout::bollinger_bands_breakout_strategy_defaults()
-	);
-	register_defaults!(defaults, "bollingerBandsMeanReversion", crate::volatility::bollinger_bands_mean_reversion::bollinger_bands_mean_reversion_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"donchianBreakout",
-		crate::volatility::donchian_breakout::donchian_breakout_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"donchianReversion",
-		crate::volatility::donchian_reversion::donchian_reversion_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"keltnerChannelBreakout",
-		crate::volatility::keltner_channel_breakout::keltner_channel_breakout_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"keltnerChannelReversion",
-		crate::volatility::keltner_channel_reversion::keltner_channel_reversion_strategy_defaults()
-	);
-	register_defaults!(defaults, "keltnerVolatilityBreakout", crate::volatility::keltner_volatility_breakout::keltner_volatility_breakout_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"madReversion",
-		crate::volatility::mad_reversion::mad_reversion_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"openingRangeBreakout",
-		crate::volatility::opening_range_breakout::opening_range_breakout_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"pairsTrading",
-		crate::volatility::pairs_trading::pairs_trading_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"projectionOscillator",
-		crate::volatility::projection_oscillator::projection_oscillator_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"standardDeviation",
-		crate::volatility::standard_deviation::standard_deviation_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"varianceStop",
-		crate::volatility::variance_stop::variance_stop_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"volatilityAdjusted",
-		crate::volatility::volatility_adjusted::volatility_adjusted_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"zScoreBreakout",
-		crate::volatility::z_score_breakout::z_score_breakout_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"zScoreReversion",
-		crate::volatility::z_score_reversion::z_score_reversion_strategy_defaults()
-	);
-
-	// Volume defaults
-	register_defaults!(
-		defaults,
-		"accumulation-distribution",
-		crate::volume::accumulation_distribution::accumulation_distribution_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"chaikin-money-flow",
-		crate::volume::chaikin_money_flow::chaikin_money_flow_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"ease-of-movement",
-		crate::volume::ease_of_movement::ease_of_movement_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"force-index",
-		crate::volume::force_index::force_index_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"money-flow-index",
-		crate::volume::money_flow_index::money_flow_index_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"negative-volume-index",
-		crate::volume::negative_volume_index::negative_volume_index_strategy_defaults()
-	);
-	register_defaults!(defaults, "obv", crate::volume::obv::obv_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"obv-confirmation",
-		crate::volume::obv_confirmation::obv_confirmation_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"volume-price-trend",
-		crate::volume::volume_price_trend::volume_price_trend_strategy_defaults()
-	);
-	register_defaults!(defaults, "volumeWeightedAveragePrice", crate::volume::volume_weighted_average_price::volume_weighted_average_price_strategy_defaults());
-	register_defaults!(
-		defaults,
-		"vwap-breakout",
-		crate::volume::vwap_breakout::vwap_breakout_strategy_defaults()
-	);
-	register_defaults!(
-		defaults,
-		"vwap-reversion",
-		crate::volume::vwap_reversion::vwap_reversion_strategy_defaults()
+		crate::patterns::elliott_wave::elliott_wave_strategy_defaults(),
 	);
 
 	serde_json::Value::Object(defaults)
+}
+
+fn insert_default(
+	map: &mut serde_json::Map<String, serde_json::Value>,
+	id: &str,
+	value: serde_json::Value,
+) {
+	map.insert(id.to_string(), value);
 }
 
 /// Get all strategy categories

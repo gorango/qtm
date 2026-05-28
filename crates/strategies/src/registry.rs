@@ -22,9 +22,15 @@ pub struct StrategyDescriptor {
 	pub default_timeframes: &'static [&'static str],
 	pub description: &'static str,
 	pub handler: fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>>,
+	pub defaults_fn: fn() -> serde_json::Value,
 }
 
 inventory::collect!(StrategyDescriptor);
+
+/// Returns all strategy descriptors registered via `#[strategy]`.
+pub fn get_strategy_descriptors() -> Vec<&'static StrategyDescriptor> {
+	inventory::iter::<StrategyDescriptor>.into_iter().collect()
+}
 
 #[macro_export]
 macro_rules! register_strategy {
