@@ -1,0 +1,24 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/factors",
+    "crates/indicators",
+    "crates/strategies",
+    "bindings/factors-napi",
+    "bindings/indicators-napi",
+    "bindings/strategies-napi",
+]
+
+[workspace.dependencies]
+napi = { version = "3", features = ["serde-json"] }
+napi-derive = "3"
+napi-build = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rayon = "1.8"
+proptest = { version = "1", default-features = false, features = ["std"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3

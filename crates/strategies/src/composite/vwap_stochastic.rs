@@ -1,0 +1,139 @@
+use crate::types::configs::VwapStochasticConfig;
+use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use indicators_core::stochastic_oscillator;
+use indicators_core::vwap;
+
+/// Vwap Stochastic
+///
+/// Buy when price above VWAP with stochastic bullish crossover. Sell on bearish crossover below VWAP.
+pub fn vwap_stochastic_strategy(
+	highs: &[f64],
+	lows: &[f64],
+	closes: &[f64],
+	volumes: &[f64],
+	config: Option<VwapStochasticConfig>,
+) -> Result<Vec<i8>, String> {
+	let config = config.unwrap_or_default();
+	let vwap_period = config.vwap_period.unwrap_or(14);
+	let k_period = config.k_period.unwrap_or(14);
+	let d_period = config.d_period.unwrap_or(3);
+	let oversold = config.oversold.unwrap_or(20.0);
+	let overbought = config.overbought.unwrap_or(80.0);
+
+	let data_len = closes.len();
+	if highs.len() != data_len || lows.len() != data_len || volumes.len() != data_len {
+		return Err(
+			"Highs, lows, closes, and volumes arrays must have the same length".to_string(),
+		);
+	}
+	let min_data_length = vwap_period.max(k_period + d_period) as usize;
+
+	if data_len < min_data_length {
+		return Err(format!(
+			"Insufficient data: VWAP Stochastic requires at least {} data points, got {}",
+			min_data_length, data_len
+		));
+	}
+
+	let highs_vec = highs;
+	let lows_vec = lows;
+	let closes_vec = closes;
+	let volumes_vec = volumes;
+
+	let vwap_config = indicators_core::VWAPConfig {
+		price_source: None,
+		anchored: None,
+		session_length: None,
+		period: Some(vwap_period),
+	};
+	let vwap_values = vwap(
+		highs_vec,
+		lows_vec,
+		closes_vec,
+		volumes_vec,
+		Some(vwap_config),
+	);
+
+	let stoch_config = indicators_core::StochConfig {
+		k_period: Some(k_period),
+		d_period: Some(d_period),
+	};
+	let stoch_result = stochastic_oscillator(highs_vec, lows_vec, closes_vec, Some(stoch_config));
+
+	let data_len = closes.len();
+	let mut signals = Vec::with_capacity(data_len);
+
+	for i in 0..data_len {
+		let signal = if i < min_data_length {
+			0
+		} else {
+			let crossed_over_vwap = crossed_over_series(closes, &vwap_values, i as u32);
+			let crossed_under_vwap = crossed_under_series(closes, &vwap_values, i as u32);
+
+			if crossed_over_vwap && stoch_result.k[i] < oversold {
+				1
+			} else if crossed_under_vwap && stoch_result.k[i] > overbought {
+				-1
+			} else {
+				0
+			}
+		};
+		signals.push(signal);
+	}
+
+	Ok(signals)
+}
+
+pub fn vwap_stochastic_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "vwap-stochastic-confirmation",
+		"name": "VWAP + Stochastic Confirmation",
+		"category": "composite",
+		"description": "VWAP + Stochastic confirmation",
+		"default_timeframes": ["15m", "1h", "4h"]
+	})
+}
+
+pub fn vwap_stochastic_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"vwap_period": 14,
+			"k_period": 14,
+			"d_period": 3,
+			"oversold": 20.0,
+			"overbought": 80.0
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "vwap_period",
+				"min": 5.0,
+				"max": 50.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "k_period",
+				"min": 5.0,
+				"max": 20.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "d_period",
+				"min": 2.0,
+				"max": 10.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "oversold",
+				"min": 10.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "overbought",
+				"min": 70.0,
+				"max": 90.0,
+				"step": 1.0
+			}
+		]
+	})
+}

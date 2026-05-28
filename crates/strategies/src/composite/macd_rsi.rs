@@ -1,0 +1,130 @@
+use crate::types::configs::MACDConfig;
+use crate::types::configs::RSIConfig;
+use crate::utils::signals::{crossed_over_series, crossed_under_series};
+
+/// Macd Rsi
+///
+/// Buy when RSI is oversold and MACD confirms bullish crossover. Sell on bearish alignment.
+pub fn macd_rsi_strategy(
+	closes: &[f64],
+	macd_config: Option<MACDConfig>,
+	rsi_config: Option<RSIConfig>,
+) -> Result<Vec<i8>, String> {
+	let macd_cfg = macd_config.unwrap_or_default();
+	let rsi_cfg = rsi_config.unwrap_or_default();
+
+	let fast_period = macd_cfg.fast_period.unwrap_or(12);
+	let slow_period = macd_cfg.slow_period.unwrap_or(26);
+	let signal_period = macd_cfg.signal_period.unwrap_or(9);
+	let rsi_period = rsi_cfg.period.unwrap_or(14);
+	let oversold = rsi_cfg.oversold.unwrap_or(30.0);
+	let overbought = rsi_cfg.overbought.unwrap_or(70.0);
+
+	let data_len = closes.len();
+	let min_data_length = (slow_period + signal_period).max(rsi_period + 1) as usize;
+
+	if data_len < min_data_length {
+		return Err(format!(
+			"Insufficient data: MACD + RSI requires at least {} data points, got {}",
+			min_data_length, data_len
+		));
+	}
+
+	let macd_cfg_ind = indicators_core::MACDConfig {
+		fast_period: Some(fast_period),
+		slow_period: Some(slow_period),
+		signal_period: Some(signal_period),
+	};
+	let closes_vec: Vec<f64> = closes.to_vec();
+	let macd_result = indicators_core::macd(&closes_vec, Some(macd_cfg_ind))?;
+
+	let rsi_cfg_ind = indicators_core::RSIConfig {
+		period: Some(rsi_period),
+	};
+	let rsi_values = indicators_core::rsi(&closes_vec, Some(rsi_cfg_ind));
+
+	let mut signals = Vec::with_capacity(data_len);
+
+	for (i, &rsi_value) in rsi_values.iter().enumerate().take(data_len) {
+		let signal = if i < min_data_length {
+			0
+		} else {
+			let macd_bullish =
+				crossed_over_series(&macd_result.macd, &macd_result.signal, i as u32);
+			let macd_bearish =
+				crossed_under_series(&macd_result.macd, &macd_result.signal, i as u32);
+
+			if macd_bullish && rsi_value < oversold {
+				1
+			} else if macd_bearish && rsi_value > overbought {
+				-1
+			} else {
+				0
+			}
+		};
+		signals.push(signal);
+	}
+
+	Ok(signals)
+}
+
+pub fn macd_rsi_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "macd-rsi-momentum",
+		"name": "MACD + RSI Momentum",
+		"category": "composite",
+		"description": "MACD + RSI momentum confirmation",
+		"default_timeframes": ["15m", "1h", "4h"]
+	})
+}
+
+pub fn macd_rsi_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"fast_period": 12,
+			"slow_period": 26,
+			"signal_period": 9,
+			"rsi_period": 14,
+			"oversold": 30.0,
+			"overbought": 70.0
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "fast_period",
+				"min": 5.0,
+				"max": 20.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "slow_period",
+				"min": 20.0,
+				"max": 50.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "signal_period",
+				"min": 5.0,
+				"max": 20.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "rsi_period",
+				"min": 5.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "oversold",
+				"min": 10.0,
+				"max": 40.0,
+				"step": 5.0
+			},
+			{
+				"param_name": "overbought",
+				"min": 60.0,
+				"max": 90.0,
+				"step": 5.0
+			}
+		]
+	})
+}

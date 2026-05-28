@@ -1,0 +1,16 @@
+[package]
+name = "strategies-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+rayon.workspace = true
+indicators-core = { path = "../indicators" }
+factors-core = { path = "../factors" }
+napi = { workspace = true, optional = true }
+napi-derive = { workspace = true, optional = true }
+
+[features]
+napi = ["dep:napi", "dep:napi-derive"]

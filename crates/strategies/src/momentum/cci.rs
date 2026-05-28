@@ -1,0 +1,103 @@
+use crate::types::configs::CciConfig;
+use crate::utils::signals::{crossed_over, crossed_under};
+
+/// CCI Momentum Strategy
+///
+/// Generates buy signals when CCI crosses below oversold level
+/// Generates sell signals when CCI crosses above overbought level
+///
+/// @strategy_id cci
+/// @strategy_name CCI Momentum Strategy
+/// @category momentum
+/// @default_timeframes 15m,1h,4h
+pub fn cci_strategy(
+	highs: &[f64],
+	lows: &[f64],
+	closes: &[f64],
+	config: Option<CciConfig>,
+) -> Result<Vec<i8>, String> {
+	let config = config.unwrap_or_default();
+	let period = config.period.unwrap_or(20);
+	let oversold = config.oversold.unwrap_or(-100.0);
+	let overbought = config.overbought.unwrap_or(100.0);
+
+	// Validate parameters
+	if !(2..=100).contains(&period) {
+		return Err("CCI period must be between 2 and 100".to_string());
+	}
+	if oversold >= overbought {
+		return Err("CCI oversold must be less than overbought".to_string());
+	}
+
+	let data_len = highs.len();
+	if data_len < (period as usize) + 1 {
+		return Err("Insufficient data for CCI strategy".to_string());
+	}
+	if lows.len() != data_len || closes.len() != data_len {
+		return Err("All price arrays must have the same length".to_string());
+	}
+
+	// Calculate CCI values
+	let cci_config = indicators_core::CCIConfig {
+		period: Some(period),
+	};
+	let cci_values = indicators_core::cci(highs, lows, closes, Some(cci_config))?;
+
+	// Generate signals
+	let mut signals = Vec::with_capacity(data_len);
+
+	for i in 0..data_len {
+		let signal = if crossed_under(&cci_values, oversold, i as u32) {
+			1 // Buy signal
+		} else if crossed_over(&cci_values, overbought, i as u32) {
+			-1 // Sell signal
+		} else {
+			0 // Hold
+		};
+		signals.push(signal);
+	}
+
+	Ok(signals)
+}
+
+/// Get CCI strategy metadata for registry
+pub fn cci_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "cci",
+		"name": "CCI Momentum Strategy",
+		"category": "momentum",
+		"default_timeframes": ["15m", "1h", "4h"],
+		"description": "Generates buy signals when CCI crosses below oversold level and sell signals when CCI crosses above overbought level"
+	})
+}
+
+/// Get CCI strategy default parameters
+pub fn cci_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"period": 20,
+			"oversold": -100.0,
+			"overbought": 100.0
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "period",
+				"min": 10.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "oversold",
+				"min": -150.0,
+				"max": -80.0,
+				"step": 10.0
+			},
+			{
+				"param_name": "overbought",
+				"min": 80.0,
+				"max": 150.0,
+				"step": 10.0
+			}
+		]
+	})
+}

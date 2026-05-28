@@ -1,0 +1,131 @@
+use crate::types::configs::LinregSlopeConfig;
+
+/// Linear Regression Slope Trend Strategy
+///
+/// Generates signals based on slope direction with ADX confirmation
+/// Buy when slope > 0 and ADX > threshold, sell when slope < 0 and ADX > threshold
+///
+/// @strategy_id linRegSlope
+/// @strategy_name Linear Regression Slope Trend
+/// @category trend
+/// @default_timeframes 1h,4h,1d
+pub fn lin_reg_slope_strategy(
+	highs: &[f64],
+	lows: &[f64],
+	closes: &[f64],
+	config: Option<LinregSlopeConfig>,
+) -> Result<Vec<i8>, String> {
+	let config = config.unwrap_or_default();
+	let period = config.period.unwrap_or(20);
+	let slope_period = config.slope_period.unwrap_or(10);
+	let period_adx = config.period_adx.unwrap_or(14);
+	let adx_threshold = config.adx_threshold.unwrap_or(25.0);
+
+	// Validate parameters
+	if !(2..=100).contains(&period) {
+		return Err("LinReg period must be between 2 and 100".to_string());
+	}
+	if !(1..=50).contains(&slope_period) {
+		return Err("Slope period must be between 1 and 50".to_string());
+	}
+	if !(2..=100).contains(&period_adx) {
+		return Err("ADX period must be between 2 and 100".to_string());
+	}
+	let data_len = closes.len();
+	let min_periods = (period + slope_period).max(period_adx * 3) as usize;
+	if data_len < min_periods {
+		return Err("Insufficient data for Linear Regression Slope strategy".to_string());
+	}
+
+	// Convert to vec for multiple uses
+	let closes_vec: Vec<f64> = closes.to_vec();
+
+	// Calculate Linear Regression
+	let linreg_config = indicators_core::LinRegConfig {
+		period: Some(period),
+		offset: Some(0),
+	};
+	let linreg_result = indicators_core::linreg(&closes_vec, Some(linreg_config))?;
+
+	// Calculate ADX for confirmation
+	let adx_config = indicators_core::ADXConfig {
+		period: Some(period_adx),
+	};
+	let adx_result = indicators_core::adx(highs, lows, closes, Some(adx_config))?;
+
+	// Calculate slope (difference over slope_period)
+	let mut slopes = vec![0.0; data_len];
+	for i in slope_period as usize..data_len {
+		slopes[i] = linreg_result[i] - linreg_result[i - slope_period as usize];
+	}
+
+	// Generate signals
+	let signals: Vec<i8> = slopes
+		.iter()
+		.zip(adx_result.adx.iter())
+		.enumerate()
+		.take(data_len)
+		.map(|(i, (&slope, &adx_val))| {
+			if i < min_periods {
+				0 // Not enough data
+			} else if slope > 0.0 && adx_val > adx_threshold {
+				1 // Buy signal: positive slope with ADX confirmation
+			} else if slope < 0.0 && adx_val > adx_threshold {
+				-1 // Sell signal: negative slope with ADX confirmation
+			} else {
+				0 // Hold
+			}
+		})
+		.collect();
+
+	Ok(signals)
+}
+
+/// Get Linear Regression Slope strategy metadata for registry
+pub fn lin_reg_slope_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "linRegSlope",
+		"name": "Linear Regression Slope Trend",
+		"category": "trend",
+		"default_timeframes": ["1h", "4h", "1d"],
+		"description": "Generates signals based on slope direction with ADX confirmation for trending markets"
+	})
+}
+
+/// Get Linear Regression Slope strategy default parameters
+pub fn lin_reg_slope_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"period": 20,
+			"slope_period": 10,
+			"period_adx": 14,
+			"adx_threshold": 25.0
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "period",
+				"min": 10.0,
+				"max": 50.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "slope_period",
+				"min": 5.0,
+				"max": 20.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "period_adx",
+				"min": 5.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "adx_threshold",
+				"min": 15.0,
+				"max": 35.0,
+				"step": 1.0
+			}
+		]
+	})
+}

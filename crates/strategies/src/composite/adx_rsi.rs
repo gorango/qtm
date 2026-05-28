@@ -1,0 +1,122 @@
+use crate::types::configs::AdxRsiConfig;
+
+/// Adx Rsi
+///
+/// Buy when ADX is above trend threshold and RSI is oversold. Sell when ADX is strong and RSI is overbought.
+pub fn adx_rsi_strategy(
+	highs: &[f64],
+	lows: &[f64],
+	closes: &[f64],
+	config: Option<AdxRsiConfig>,
+) -> Result<Vec<i8>, String> {
+	let config = config.unwrap_or_default();
+	let adx_period = config.adx_period.unwrap_or(14);
+	let trend_threshold = config.trend_threshold.unwrap_or(25.0);
+	let rsi_period = config.rsi_period.unwrap_or(14);
+	let oversold = config.oversold.unwrap_or(30.0);
+	let overbought = config.overbought.unwrap_or(70.0);
+
+	let data_len = closes.len();
+	if highs.len() != data_len || lows.len() != data_len {
+		return Err("Highs, lows, and closes arrays must have the same length".to_string());
+	}
+	let min_data_length = (adx_period * 2).max(rsi_period + 1) as usize;
+
+	if data_len < min_data_length {
+		return Err(format!(
+			"Insufficient data: ADX + RSI requires at least {} data points, got {}",
+			min_data_length, data_len
+		));
+	}
+
+	let adx_config = indicators_core::ADXConfig {
+		period: Some(adx_period),
+	};
+	let highs_vec: Vec<f64> = highs.to_vec();
+	let lows_vec: Vec<f64> = lows.to_vec();
+	let closes_vec: Vec<f64> = closes.to_vec();
+	let adx_result = indicators_core::adx(&highs_vec, &lows_vec, &closes_vec, Some(adx_config));
+
+	let rsi_config = indicators_core::RSIConfig {
+		period: Some(rsi_period),
+	};
+	let rsi_values = indicators_core::rsi(&closes_vec, Some(rsi_config));
+
+	let adx = adx_result.as_ref().unwrap();
+	let mut signals = Vec::with_capacity(data_len);
+
+	for (i, (&adx_value, &rsi_value)) in adx
+		.adx
+		.iter()
+		.zip(rsi_values.iter())
+		.enumerate()
+		.take(data_len)
+	{
+		let signal = if i < (adx_period * 2) as usize {
+			0
+		} else if adx_value > trend_threshold && rsi_value < oversold {
+			1
+		} else if adx_value > trend_threshold && rsi_value > overbought {
+			-1
+		} else {
+			0
+		};
+		signals.push(signal);
+	}
+
+	Ok(signals)
+}
+
+pub fn adx_rsi_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "adx-rsi-trend-momentum",
+		"name": "ADX + RSI Trend Momentum",
+		"category": "composite",
+		"description": "Combine ADX trend + RSI momentum",
+		"default_timeframes": ["15m", "1h", "4h"]
+	})
+}
+
+pub fn adx_rsi_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"adx_period": 14,
+			"trend_threshold": 25.0,
+			"rsi_period": 14,
+			"oversold": 30.0,
+			"overbought": 70.0
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "adx_period",
+				"min": 5.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "trend_threshold",
+				"min": 20.0,
+				"max": 40.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "rsi_period",
+				"min": 5.0,
+				"max": 30.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "oversold",
+				"min": 10.0,
+				"max": 40.0,
+				"step": 5.0
+			},
+			{
+				"param_name": "overbought",
+				"min": 60.0,
+				"max": 90.0,
+				"step": 5.0
+			}
+		]
+	})
+}

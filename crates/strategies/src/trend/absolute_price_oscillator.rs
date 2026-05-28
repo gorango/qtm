@@ -1,0 +1,92 @@
+use crate::types::configs::AbsolutePriceOscillatorConfig;
+use crate::utils::signals::{crossed_over_series, crossed_under_series};
+use serde_json;
+
+/// Absolute Price Oscillator Trend Strategy
+///
+/// Generates buy signals when APO crosses above zero line
+/// Generates sell signals when APO crosses below zero line
+///
+/// @strategy_id absolutePriceOscillator
+/// @strategy_name Absolute Price Oscillator Trend
+/// @category trend
+/// @default_timeframes 15m,1h,4h
+pub fn absolute_price_oscillator_strategy(
+	closes: &[f64],
+	config: Option<AbsolutePriceOscillatorConfig>,
+) -> Result<Vec<i8>, String> {
+	let config = config.unwrap_or_default();
+	let fast_period = config.fast_period.unwrap_or(10);
+	let slow_period = config.slow_period.unwrap_or(20);
+
+	// Validate parameters
+	if !(2..=100).contains(&fast_period) {
+		return Err("APO fast period must be between 2 and 100".to_string());
+	}
+	if !(2..=200).contains(&slow_period) {
+		return Err("APO slow period must be between 2 and 200".to_string());
+	}
+	let data_len = closes.len();
+	let min_periods = slow_period as usize;
+	if data_len < min_periods {
+		return Err("Insufficient data for Absolute Price Oscillator strategy".to_string());
+	}
+
+	// Calculate APO
+	let apo_result =
+		indicators_core::absolute_price_oscillator(closes, Some(fast_period), Some(slow_period))?;
+
+	// Generate signals
+	let mut signals = Vec::with_capacity(data_len);
+	let zero_line = vec![0.0; apo_result.len()];
+
+	for i in 0..data_len {
+		let signal = if i < min_periods {
+			0 // Not enough data
+		} else if crossed_over_series(&apo_result, &zero_line, i as u32) {
+			1 // Buy signal: APO crosses above zero
+		} else if crossed_under_series(&apo_result, &zero_line, i as u32) {
+			-1 // Sell signal: APO crosses below zero
+		} else {
+			0 // Hold
+		};
+		signals.push(signal);
+	}
+
+	Ok(signals)
+}
+
+/// Get Absolute Price Oscillator strategy metadata for registry
+pub fn absolute_price_oscillator_strategy_metadata() -> serde_json::Value {
+	serde_json::json!({
+		"id": "absolutePriceOscillator",
+		"name": "Absolute Price Oscillator Trend",
+		"category": "trend",
+		"default_timeframes": ["15m", "1h", "4h"],
+		"description": "Generates buy signals when APO crosses above zero and sell signals when APO crosses below zero"
+	})
+}
+
+/// Get Absolute Price Oscillator strategy default parameters
+pub fn absolute_price_oscillator_strategy_defaults() -> serde_json::Value {
+	serde_json::json!({
+		"params": {
+			"fast_period": 10,
+			"slow_period": 20
+		},
+		"optimization_bounds": [
+			{
+				"param_name": "fast_period",
+				"min": 5.0,
+				"max": 20.0,
+				"step": 1.0
+			},
+			{
+				"param_name": "slow_period",
+				"min": 15.0,
+				"max": 50.0,
+				"step": 1.0
+			}
+		]
+	})
+}
