@@ -91,7 +91,6 @@ pub fn get_strategy_registry_impl() -> &'static StrategyRegistryImpl {
 		register_strategy!(registry, "vwap_stochastic", vwap_stochastic);
 
 		// Base strategies not yet migrated to #[strategy]
-		register_strategy!(registry, "elliott_wave", elliott_wave);
 		registry
 	})
 }
@@ -173,28 +172,6 @@ pub fn triangle(
 		input.lows.as_ref().unwrap_or(&input.closes),
 		&input.closes,
 		config,
-	)
-}
-
-pub fn elliott_wave(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let _ = config;
-	let opens = input.opens.as_ref().unwrap_or(&input.closes);
-	let highs = input.highs.as_ref().unwrap_or(&input.closes);
-	let lows = input.lows.as_ref().unwrap_or(&input.closes);
-	crate::elliott_wave_strategy(
-		opens,
-		highs,
-		lows,
-		&input.closes,
-		0.5,
-		0.38,
-		1.618,
-		5,
-		2,
-		0.05,
 	)
 }
 

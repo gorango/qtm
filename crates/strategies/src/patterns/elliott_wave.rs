@@ -1,27 +1,41 @@
+use crate::types::configs::ElliottWaveConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Elliott Wave Pattern Strategy
 ///
 /// Generates buy signals for impulse waves (1, 2)
 /// Generates sell signals for corrective waves (-1, -2)
-///
-/// @strategy_id elliott-wave-pattern
-/// @strategy_name Elliott Wave Pattern Strategy
-/// @category patterns
-/// @default_timeframes 1h,4h,1d
-#[allow(clippy::too_many_arguments)]
+#[strategy(
+	id = "elliott-wave-pattern",
+	name = "Elliott Wave Pattern Strategy",
+	category = "patterns",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals for impulse waves and sell signals for corrective waves",
+	opt_params = r#"[
+		{"param_name": "wave2_retracement", "min": 0.3, "max": 1.0, "step": 0.05},
+		{"param_name": "wave4_retracement", "min": 0.2, "max": 0.8, "step": 0.05},
+		{"param_name": "wave3_min_extension", "min": 1.0, "max": 3.0, "step": 0.1},
+		{"param_name": "min_wave_separation", "min": 2.0, "max": 20.0, "step": 1.0},
+		{"param_name": "lookaround", "min": 1.0, "max": 5.0, "step": 1.0},
+		{"param_name": "retracement_tolerance", "min": 0.05, "max": 0.3, "step": 0.025}
+	]"#
+)]
 pub fn elliott_wave_strategy(
 	opens: &[f64],
 	highs: &[f64],
 	lows: &[f64],
 	closes: &[f64],
-	wave2_retracement: f64,
-	wave4_retracement: f64,
-	wave3_min_extension: f64,
-	min_wave_separation: u32,
-	lookaround: u32,
-	retracement_tolerance: f64,
+	config: Option<ElliottWaveConfig>,
 ) -> StrategyResult<Vec<i8>> {
+	let config = config.unwrap_or_default();
+	let wave2_retracement = config.wave2_retracement.unwrap_or(0.618);
+	let wave4_retracement = config.wave4_retracement.unwrap_or(0.382);
+	let wave3_min_extension = config.wave3_min_extension.unwrap_or(1.618);
+	let min_wave_separation = config.min_wave_separation.unwrap_or(5);
+	let lookaround = config.lookaround.unwrap_or(2);
+	let retracement_tolerance = config.retracement_tolerance.unwrap_or(0.1);
+
 	let data_len = closes.len();
 	if opens.len() != data_len || highs.len() != data_len || lows.len() != data_len {
 		return Err(StrategyError::Validation(
@@ -75,67 +89,4 @@ pub fn elliott_wave_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Elliott Wave strategy metadata for registry
-pub fn elliott_wave_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "elliott-wave-pattern",
-		"name": "Elliott Wave Pattern Strategy",
-		"category": "patterns",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals for impulse waves and sell signals for corrective waves"
-	})
-}
-
-/// Get Elliott Wave strategy default parameters
-pub fn elliott_wave_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"wave2_retracement": 0.618,
-			"wave4_retracement": 0.382,
-			"wave3_min_extension": 1.618,
-			"min_wave_separation": 5,
-			"lookaround": 2,
-			"retracement_tolerance": 0.1
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "wave2_retracement",
-				"min": 0.3,
-				"max": 1.0,
-				"step": 0.05
-			},
-			{
-				"param_name": "wave4_retracement",
-				"min": 0.2,
-				"max": 0.8,
-				"step": 0.05
-			},
-			{
-				"param_name": "wave3_min_extension",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			},
-			{
-				"param_name": "min_wave_separation",
-				"min": 2.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "lookaround",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "retracement_tolerance",
-				"min": 0.05,
-				"max": 0.3,
-				"step": 0.025
-			}
-		]
-	})
 }

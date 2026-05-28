@@ -113,13 +113,6 @@ pub fn get_strategy_registry() -> StrategyRegistry {
 		crate::composite::vwap_stochastic::vwap_stochastic_strategy_metadata(),
 	);
 
-	// Base strategies not using #[strategy] (non-standard signatures)
-	insert_composite(
-		&mut strategies,
-		"elliott-wave-pattern",
-		strategies_core::elliott_wave_strategy_metadata(),
-	);
-
 	StrategyRegistry { strategies }
 }
 
@@ -261,13 +254,6 @@ pub fn get_strategy_defaults() -> serde_json::Value {
 		&mut defaults,
 		"vwap-stochastic-confirmation",
 		crate::composite::vwap_stochastic::vwap_stochastic_strategy_defaults(),
-	);
-
-	// Base strategies not using #[strategy]
-	insert_default(
-		&mut defaults,
-		"elliott-wave-pattern",
-		strategies_core::elliott_wave_strategy_defaults(),
 	);
 
 	serde_json::Value::Object(defaults)
