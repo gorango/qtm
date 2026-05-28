@@ -1,16 +1,23 @@
 use crate::types::configs::MaCrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Moving Average Crossover Strategy
 ///
 /// Generates buy signals when fast MA crosses above slow MA
 /// Generates sell signals when fast MA crosses below slow MA
-///
-/// @strategy_id ma-crossover
-/// @strategy_name Moving Average Crossover Information
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "ma-crossover",
+	name = "Moving Average Crossover Information",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when fast MA crosses above slow MA and sell signals when fast MA crosses below slow MA",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 3.0, "max": 10.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 10.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn ma_crossover_strategy(
 	closes: &[f64],
 	config: Option<MaCrossoverConfig>,
@@ -58,39 +65,4 @@ pub fn ma_crossover_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get MA Crossover strategy metadata for registry
-pub fn ma_crossover_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "ma-crossover",
-		"name": "Moving Average Crossover Information",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when fast MA crosses above slow MA and sell signals when fast MA crosses below slow MA"
-	})
-}
-
-/// Get MA Crossover strategy default parameters
-pub fn ma_crossover_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 5,
-			"slow_period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 3.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,5 +1,6 @@
 use crate::types::configs::FlagsPennantsConfig;
 use crate::StrategyResult;
+use strategies_proc_macro::strategy;
 
 /// Flags and Pennants Continuation Strategy
 ///
@@ -11,6 +12,19 @@ use crate::StrategyResult;
 /// @strategy_name Flags and Pennants Continuation Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "flags-pennants-continuation",
+	name = "Flags and Pennants Continuation Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects flag and pennant continuation patterns",
+	opt_params = r#"[
+		{"param_name": "poleLength", "min": 5, "max": 50, "step": 5},
+		{"param_name": "consolidationBars", "min": 5, "max": 50, "step": 5},
+		{"param_name": "breakoutThreshold", "min": 0.0, "max": 0.1, "step": 0.005},
+		{"param_name": "additionalBuffer", "min": 1, "max": 20, "step": 1}
+	]"#
+)]
 pub fn flags_pennants_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -53,53 +67,4 @@ pub fn flags_pennants_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Flags and Pennants strategy metadata for registry
-pub fn flags_pennants_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "flags-pennants-continuation",
-		"name": "Flags and Pennants Continuation Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects flag and pennant continuation patterns"
-	})
-}
-
-/// Get Flags and Pennants strategy default parameters
-pub fn flags_pennants_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"poleLength": 10,
-			"consolidationBars": 10,
-			"breakoutThreshold": 0.02,
-			"additionalBuffer": 5
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "poleLength",
-				"min": 5,
-				"max": 50,
-				"step": 5
-			},
-			{
-				"param_name": "consolidationBars",
-				"min": 5,
-				"max": 50,
-				"step": 5
-			},
-			{
-				"param_name": "breakoutThreshold",
-				"min": 0.0,
-				"max": 0.1,
-				"step": 0.005
-			},
-			{
-				"param_name": "additionalBuffer",
-				"min": 1,
-				"max": 20,
-				"step": 1
-			}
-		]
-	})
 }

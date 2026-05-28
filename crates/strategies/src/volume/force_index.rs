@@ -1,16 +1,24 @@
 use crate::types::configs::ForceIndexConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Force Index Strategy
 ///
 /// Generates buy signals when Force Index crosses above oversold threshold
 /// Generates sell signals when Force Index crosses below overbought threshold
-///
-/// @strategy_id force-index
-/// @strategy_name Force Index
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "force-index",
+	name = "Force Index",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when Force Index crosses above oversold threshold, sell signals when Force Index crosses below overbought threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "oversold", "min": -0.5, "max": -0.01, "step": 0.01},
+		{"param_name": "overbought", "min": 0.01, "max": 0.5, "step": 0.01}
+	]"#
+)]
 pub fn force_index_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -72,46 +80,4 @@ pub fn force_index_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Force Index strategy metadata for registry
-pub fn force_index_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "force-index",
-		"name": "Force Index",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when Force Index crosses above oversold threshold, sell signals when Force Index crosses below overbought threshold"
-	})
-}
-
-/// Get Force Index strategy default parameters
-pub fn force_index_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 13,
-			"oversold": -0.1,
-			"overbought": 0.1
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": -0.5,
-				"max": -0.01,
-				"step": 0.01
-			},
-			{
-				"param_name": "overbought",
-				"min": 0.01,
-				"max": 0.5,
-				"step": 0.01
-			}
-		]
-	})
 }

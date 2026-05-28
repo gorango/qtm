@@ -1,15 +1,21 @@
 use crate::types::configs::AccumulationDistributionConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Accumulation/Distribution Line Strategy
 ///
 /// Generates buy signals when AD line and price are both increasing (bullish confirmation)
 /// Generates sell signals when AD and price diverge (bearish divergence)
-///
-/// @strategy_id accumulation-distribution
-/// @strategy_name Accumulation/Distribution Line
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "accumulation-distribution",
+	name = "Accumulation/Distribution Line",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when AD line and price are both increasing, sell signals on divergence between AD and price",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn accumulation_distribution_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -70,32 +76,4 @@ pub fn accumulation_distribution_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Accumulation/Distribution strategy metadata for registry
-pub fn accumulation_distribution_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "accumulation-distribution",
-		"name": "Accumulation/Distribution Line",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when AD line and price are both increasing, sell signals on divergence between AD and price"
-	})
-}
-
-/// Get Accumulation/Distribution strategy default parameters
-pub fn accumulation_distribution_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

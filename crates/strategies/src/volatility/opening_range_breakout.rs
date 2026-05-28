@@ -1,10 +1,22 @@
 use crate::types::configs::OpeningRangeBreakoutConfig;
 use crate::utils::signals::consolidating;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Opening Range Breakout
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "openingRangeBreakout",
+	name = "Opening Range Breakout Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals on breakout from consolidation and sell signals during consolidation",
+	opt_params = r#"[
+		{"param_name": "lookback", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "thresholdPct", "min": 0.005, "max": 0.05, "step": 0.005}
+	]"#
+)]
 pub fn opening_range_breakout_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -47,37 +59,4 @@ pub fn opening_range_breakout_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn opening_range_breakout_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "openingRangeBreakout",
-		"name": "Opening Range Breakout Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals on breakout from consolidation and sell signals during consolidation"
-	})
-}
-
-pub fn opening_range_breakout_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"lookback": 10,
-			"thresholdPct": 0.02
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "lookback",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "thresholdPct",
-				"min": 0.005,
-				"max": 0.05,
-				"step": 0.005
-			}
-		]
-	})
 }

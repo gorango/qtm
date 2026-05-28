@@ -1,16 +1,24 @@
 use crate::types::configs::Rsi2Config;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// RSI2 Momentum Strategy
 ///
 /// Generates buy signals when RSI crosses above oversold level
 /// Generates sell signals when RSI crosses below overbought level
-///
-/// @strategy_id rsi2
-/// @strategy_name RSI2 Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "rsi2",
+	name = "RSI2 Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}
+	]"#
+)]
 pub fn rsi2_strategy(closes: &[f64], config: Option<Rsi2Config>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
@@ -62,46 +70,4 @@ pub fn rsi2_strategy(closes: &[f64], config: Option<Rsi2Config>) -> StrategyResu
 	}
 
 	Ok(signals)
-}
-
-/// Get RSI2 strategy metadata for registry
-pub fn rsi2_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "rsi2",
-		"name": "RSI2 Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level"
-	})
-}
-
-/// Get RSI2 strategy default parameters
-pub fn rsi2_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

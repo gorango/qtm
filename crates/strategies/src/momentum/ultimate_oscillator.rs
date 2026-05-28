@@ -1,16 +1,26 @@
 use crate::types::configs::UltimateOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Ultimate Oscillator Momentum Strategy
 ///
 /// Generates buy signals when UO crosses above oversold level
 /// Generates sell signals when UO crosses below overbought level
-///
-/// @strategy_id ultimateOscillator
-/// @strategy_name Ultimate Oscillator Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "ultimateOscillator",
+	name = "Ultimate Oscillator Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when UO crosses above oversold level and sell signals when UO crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "period1", "min": 5.0, "max": 10.0, "step": 1.0},
+		{"param_name": "period2", "min": 10.0, "max": 20.0, "step": 1.0},
+		{"param_name": "period3", "min": 20.0, "max": 40.0, "step": 1.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}
+	]"#
+)]
 pub fn ultimate_oscillator_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -85,60 +95,4 @@ pub fn ultimate_oscillator_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Ultimate Oscillator strategy metadata for registry
-pub fn ultimate_oscillator_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "ultimateOscillator",
-		"name": "Ultimate Oscillator Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when UO crosses above oversold level and sell signals when UO crosses below overbought level"
-	})
-}
-
-/// Get Ultimate Oscillator strategy default parameters
-pub fn ultimate_oscillator_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period1": 7,
-			"period2": 14,
-			"period3": 28,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period1",
-				"min": 5.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "period2",
-				"min": 10.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "period3",
-				"min": 20.0,
-				"max": 40.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

@@ -4,6 +4,7 @@ members = [
     "crates/factors",
     "crates/indicators",
     "crates/strategies",
+    "crates/strategies/proc-macro",
     "bindings/factors-napi",
     "bindings/indicators-napi",
     "bindings/strategies-napi",

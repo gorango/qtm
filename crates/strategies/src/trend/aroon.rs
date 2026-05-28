@@ -2,16 +2,24 @@ use crate::types::configs::AroonConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Aroon Trend Strategy
 ///
 /// Generates buy signals when Aroon Up crosses over overbought level
 /// Generates sell signals when Aroon Down crosses under oversold level
-///
-/// @strategy_id aroon
-/// @strategy_name Aroon Trend
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "aroon",
+	name = "Aroon Trend",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when Aroon Up crosses over overbought level and sell signals when Aroon Down crosses under oversold level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}
+	]"#
+)]
 pub fn aroon_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -59,46 +67,4 @@ pub fn aroon_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Aroon strategy metadata for registry
-pub fn aroon_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "aroon",
-		"name": "Aroon Trend",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when Aroon Up crosses over overbought level and sell signals when Aroon Down crosses under oversold level"
-	})
-}
-
-/// Get Aroon strategy default parameters
-pub fn aroon_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"overbought": 70.0,
-			"oversold": 30.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			}
-		]
-	})
 }

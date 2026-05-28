@@ -2,17 +2,24 @@ use crate::types::configs::ADXConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// ADX Trend Strategy
 ///
 /// Generates buy signals when ADX crosses above trend threshold in bullish direction (+DI > -DI)
 /// Generates sell signals when ADX crosses above trend threshold in bearish direction (-DI > +DI)
 /// or when ADX crosses below trend threshold (ranging market)
-///
-/// @strategy_id adx
-/// @strategy_name ADX Trend
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "adx",
+	name = "ADX Trend",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when ADX crosses above trend threshold in bullish trends (+DI > -DI), sell signals in bearish trends (-DI > +DI) or ranging markets",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "trend_threshold", "min": 15.0, "max": 35.0, "step": 1.0}
+	]"#
+)]
 pub fn adx_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -71,39 +78,4 @@ pub fn adx_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get ADX strategy metadata for registry
-pub fn adx_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "adx",
-		"name": "ADX Trend",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when ADX crosses above trend threshold in bullish trends (+DI > -DI), sell signals in bearish trends (-DI > +DI) or ranging markets"
-	})
-}
-
-/// Get ADX strategy default parameters
-pub fn adx_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"trend_threshold": 25.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "trend_threshold",
-				"min": 15.0,
-				"max": 35.0,
-				"step": 1.0
-			}
-		]
-	})
 }

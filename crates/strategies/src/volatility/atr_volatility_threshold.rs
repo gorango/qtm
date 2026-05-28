@@ -1,9 +1,21 @@
 use crate::types::configs::AtrVolatilityThresholdConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Atr Volatility Threshold
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "atrVolatilityThreshold",
+	name = "ATR Volatility Threshold Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when ATR is below threshold and sell signals when ATR exceeds threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "volatilityThreshold", "min": 0.4, "max": 4.0, "step": 0.05}
+	]"#
+)]
 pub fn atr_volatility_threshold_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -50,37 +62,4 @@ pub fn atr_volatility_threshold_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn atr_volatility_threshold_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "atrVolatilityThreshold",
-		"name": "ATR Volatility Threshold Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when ATR is below threshold and sell signals when ATR exceeds threshold"
-	})
-}
-
-pub fn atr_volatility_threshold_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"volatilityThreshold": 1.2
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "volatilityThreshold",
-				"min": 0.4,
-				"max": 4.0,
-				"step": 0.05
-			}
-		]
-	})
 }

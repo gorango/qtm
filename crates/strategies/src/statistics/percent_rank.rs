@@ -2,6 +2,7 @@ use crate::types::configs::PercentRankConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Percent Rank Strategy
 ///
@@ -12,6 +13,18 @@ use serde_json;
 /// @strategy_name Percent Rank Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "percentRank-ranking",
+	name = "Percent Rank Strategy",
+	category = "statistics",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when percent rank crosses over entry percentile and sell signals when percent rank crosses under exit percentile",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "entryPercentile", "min": 50.0, "max": 95.0, "step": 5.0},
+		{"param_name": "exitPercentile", "min": 5.0, "max": 50.0, "step": 5.0}
+	]"#
+)]
 pub fn percent_rank_strategy(
 	closes: &[f64],
 	config: Option<PercentRankConfig>,
@@ -69,44 +82,4 @@ pub fn percent_rank_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn percent_rank_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "percentRank-ranking",
-		"name": "Percent Rank Strategy",
-		"category": "statistics",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when percent rank crosses over entry percentile and sell signals when percent rank crosses under exit percentile"
-	})
-}
-
-pub fn percent_rank_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"entryPercentile": 80.0,
-			"exitPercentile": 50.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "entryPercentile",
-				"min": 50.0,
-				"max": 95.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "exitPercentile",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 5.0
-			}
-		]
-	})
 }

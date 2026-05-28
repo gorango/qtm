@@ -1,6 +1,7 @@
 use crate::types::configs::CorrelationReversionConfig;
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Correlation Reversion Strategy
 ///
@@ -11,6 +12,18 @@ use serde_json;
 /// @strategy_name Correlation Mean Reversion Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "correlation-mean-reversion",
+	name = "Correlation Mean Reversion Strategy",
+	category = "statistics",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when correlation drops below reversion threshold and sell signals when correlation exceeds 1.5x reversion threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "reversionThreshold", "min": 0.1, "max": 0.5, "step": 0.05},
+		{"param_name": "holdingPeriod", "min": 1.0, "max": 20.0, "step": 1.0}
+	]"#
+)]
 pub fn correlation_reversion_strategy(
 	closes: &[f64],
 	config: Option<CorrelationReversionConfig>,
@@ -74,45 +87,4 @@ pub fn correlation_reversion_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn correlation_reversion_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "correlation-mean-reversion",
-		"name": "Correlation Mean Reversion Strategy",
-		"category": "statistics",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when correlation drops below reversion threshold and sell signals when correlation exceeds 1.5x reversion threshold"
-	})
-}
-
-pub fn correlation_reversion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"reversionThreshold": 0.2,
-			"holdingPeriod": 5,
-			"secondCloses": []
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "reversionThreshold",
-				"min": 0.1,
-				"max": 0.5,
-				"step": 0.05
-			},
-			{
-				"param_name": "holdingPeriod",
-				"min": 1.0,
-				"max": 20.0,
-				"step": 1.0
-			}
-		]
-	})
 }

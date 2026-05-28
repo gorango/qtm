@@ -1,10 +1,21 @@
 use crate::types::configs::DonchianTurtleConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Donchian Breakout
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "donchianBreakout",
+	name = "Donchian Breakout Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "True Turtle Trading strategy: generates buy signals when price crosses over upper channel and sell signals when price crosses under lower channel",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn donchian_breakout_strategy(
 	closes: &[f64],
 	config: Option<DonchianTurtleConfig>,
@@ -40,30 +51,4 @@ pub fn donchian_breakout_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn donchian_breakout_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "donchianBreakout",
-		"name": "Donchian Breakout Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "True Turtle Trading strategy: generates buy signals when price crosses over upper channel and sell signals when price crosses under lower channel"
-	})
-}
-
-pub fn donchian_breakout_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

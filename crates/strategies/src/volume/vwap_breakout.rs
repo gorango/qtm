@@ -1,16 +1,23 @@
 use crate::types::configs::VwapBreakoutConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// VWAP Breakout Strategy
 ///
 /// Generates buy signals when price crosses above VWAP + breakout threshold
 /// Generates sell signals when price crosses below VWAP
-///
-/// @strategy_id vwap-breakout
-/// @strategy_name VWAP Breakout
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "vwap-breakout",
+	name = "VWAP Breakout",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price crosses above VWAP + breakout threshold, sell signals when price crosses below VWAP",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "breakout_threshold", "min": 0.005, "max": 0.1, "step": 0.005}
+	]"#
+)]
 pub fn vwap_breakout_strategy(
 	closes: &[f64],
 	highs: &[f64],
@@ -83,39 +90,4 @@ pub fn vwap_breakout_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get VWAP Breakout strategy metadata for registry
-pub fn vwap_breakout_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "vwap-breakout",
-		"name": "VWAP Breakout",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price crosses above VWAP + breakout threshold, sell signals when price crosses below VWAP"
-	})
-}
-
-/// Get VWAP Breakout strategy default parameters
-pub fn vwap_breakout_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"breakout_threshold": 0.01
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "breakout_threshold",
-				"min": 0.005,
-				"max": 0.1,
-				"step": 0.005
-			}
-		]
-	})
 }

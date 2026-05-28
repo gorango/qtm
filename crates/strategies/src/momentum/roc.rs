@@ -1,16 +1,24 @@
 use crate::types::configs::RocConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// ROC Momentum Strategy
 ///
 /// Generates buy signals when ROC crosses above oversold level
 /// Generates sell signals when ROC crosses below overbought level
-///
-/// @strategy_id roc
-/// @strategy_name ROC Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "roc",
+	name = "ROC Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when ROC crosses above oversold level and sell signals when ROC crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "oversold", "min": -50.0, "max": -5.0, "step": 5.0},
+		{"param_name": "overbought", "min": 5.0, "max": 50.0, "step": 5.0}
+	]"#
+)]
 pub fn roc_strategy(closes: &[f64], config: Option<RocConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(14);
@@ -57,46 +65,4 @@ pub fn roc_strategy(closes: &[f64], config: Option<RocConfig>) -> StrategyResult
 	}
 
 	Ok(signals)
-}
-
-/// Get ROC strategy metadata for registry
-pub fn roc_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "roc",
-		"name": "ROC Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when ROC crosses above oversold level and sell signals when ROC crosses below overbought level"
-	})
-}
-
-/// Get ROC strategy default parameters
-pub fn roc_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"oversold": -10.0,
-			"overbought": 10.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": -50.0,
-				"max": -5.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 5.0
-			}
-		]
-	})
 }

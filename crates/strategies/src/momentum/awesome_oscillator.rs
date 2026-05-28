@@ -1,16 +1,23 @@
 use crate::types::configs::AwesomeOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Awesome Oscillator Momentum Strategy
 ///
 /// Generates buy signals when AO crosses above zero
 /// Generates sell signals when AO crosses below zero
-///
-/// @strategy_id awesomeOscillator
-/// @strategy_name Awesome Oscillator Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "awesomeOscillator",
+	name = "Awesome Oscillator Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when AO crosses above zero and sell signals when AO crosses below zero",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 3.0, "max": 10.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 20.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn awesome_oscillator_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -72,39 +79,4 @@ pub fn awesome_oscillator_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Awesome Oscillator strategy metadata for registry
-pub fn awesome_oscillator_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "awesomeOscillator",
-		"name": "Awesome Oscillator Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when AO crosses above zero and sell signals when AO crosses below zero"
-	})
-}
-
-/// Get Awesome Oscillator strategy default parameters
-pub fn awesome_oscillator_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 5,
-			"slow_period": 34
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 3.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 20.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

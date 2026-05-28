@@ -1,15 +1,21 @@
 use crate::types::configs::OBVConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// OBV Divergence Strategy
 ///
 /// Generates buy signals when price makes lower lows while OBV makes higher lows (bullish divergence)
 /// Generates sell signals when price makes higher highs while OBV makes lower highs (bearish divergence)
-///
-/// @strategy_id obv
-/// @strategy_name OBV Divergence
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "obv",
+	name = "OBV Divergence",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals on bullish divergence (price lower low, OBV higher low) and sell signals on bearish divergence (price higher high, OBV lower high)",
+	opt_params = r#"[
+		{"param_name": "lookback_period", "min": 10.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn obv_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -104,32 +110,4 @@ pub fn obv_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get OBV strategy metadata for registry
-pub fn obv_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "obv",
-		"name": "OBV Divergence",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals on bullish divergence (price lower low, OBV higher low) and sell signals on bearish divergence (price higher high, OBV lower high)"
-	})
-}
-
-/// Get OBV strategy default parameters
-pub fn obv_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"lookback_period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "lookback_period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,17 +1,24 @@
 use crate::types::configs::ZScoreConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
-use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Z-Score Breakout Strategy
 ///
 /// Generates buy signals when z-score crosses over positive threshold (strong upward momentum)
 /// Generates sell signals when z-score crosses under negative threshold (strong downward momentum)
-///
-/// @strategy_id zScoreBreakout
-/// @strategy_name Z-Score Breakout Strategy
-/// @category volatility
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "zScoreBreakout",
+	name = "Z-Score Breakout Strategy",
+	category = "volatility",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when z-score crosses over positive threshold and sell signals when z-score crosses under negative threshold",
+	opt_params = r#"[
+		{"param_name": "meanPeriod", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "stdPeriod", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "threshold", "min": 1.0, "max": 3.0, "step": 0.1}
+	]"#
+)]
 pub fn z_score_breakout_strategy(
 	closes: &[f64],
 	config: Option<ZScoreConfig>,
@@ -89,44 +96,4 @@ pub fn z_score_breakout_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn z_score_breakout_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "zScoreBreakout",
-		"name": "Z-Score Breakout Strategy",
-		"category": "volatility",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when z-score crosses over positive threshold and sell signals when z-score crosses under negative threshold"
-	})
-}
-
-pub fn z_score_breakout_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"meanPeriod": 20,
-			"stdPeriod": 20,
-			"threshold": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "meanPeriod",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "stdPeriod",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "threshold",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			}
-		]
-	})
 }

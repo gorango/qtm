@@ -1,16 +1,24 @@
 use crate::types::configs::ChandeForecastOscillatorConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Chande Forecast Oscillator Trend Strategy
 ///
 /// Generates buy signals when CFO crosses under oversold level
 /// Generates sell signals when CFO crosses over overbought level
-///
-/// @strategy_id chandeForecastOscillator
-/// @strategy_name Chande Forecast Oscillator Trend
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "chandeForecastOscillator",
+	name = "Chande Forecast Oscillator Trend",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when CFO crosses under oversold level and sell signals when CFO crosses over overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}
+	]"#
+)]
 pub fn chande_forecast_oscillator_strategy(
 	closes: &[f64],
 	config: Option<ChandeForecastOscillatorConfig>,
@@ -54,46 +62,4 @@ pub fn chande_forecast_oscillator_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Chande Forecast Oscillator strategy metadata for registry
-pub fn chande_forecast_oscillator_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "chandeForecastOscillator",
-		"name": "Chande Forecast Oscillator Trend",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when CFO crosses under oversold level and sell signals when CFO crosses over overbought level"
-	})
-}
-
-/// Get Chande Forecast Oscillator strategy default parameters
-pub fn chande_forecast_oscillator_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"overbought": 70.0,
-			"oversold": 30.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			}
-		]
-	})
 }

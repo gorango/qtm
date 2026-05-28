@@ -1,17 +1,25 @@
 use crate::types::configs::IchimokuCloudConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Ichimoku Cloud Trend Strategy
 ///
 /// Generates buy signals when price crosses above cloud top
 /// Generates sell signals when price crosses below cloud bottom
-///
-/// @strategy_id ichimoku
-/// @strategy_name Ichimoku Cloud Trend
-/// @category momentum
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "ichimoku",
+	name = "Ichimoku Cloud Trend",
+	category = "momentum",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when price crosses above cloud top and sell signals when price crosses below cloud bottom",
+	opt_params = r#"[
+		{"param_name": "short", "min": 5.0, "max": 15.0, "step": 1.0},
+		{"param_name": "medium", "min": 20.0, "max": 35.0, "step": 1.0},
+		{"param_name": "long", "min": 40.0, "max": 70.0, "step": 2.0},
+		{"param_name": "close", "min": 20.0, "max": 35.0, "step": 1.0}
+	]"#
+)]
 pub fn ichimoku_strategy(
 	closes: &[f64],
 	highs: &[f64],
@@ -77,53 +85,4 @@ pub fn ichimoku_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Ichimoku strategy metadata for registry
-pub fn ichimoku_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "ichimoku",
-		"name": "Ichimoku Cloud Trend",
-		"category": "momentum",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when price crosses above cloud top and sell signals when price crosses below cloud bottom"
-	})
-}
-
-/// Get Ichimoku strategy default parameters
-pub fn ichimoku_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"short": 9,
-			"medium": 26,
-			"long": 52,
-			"close": 26
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "short",
-				"min": 5.0,
-				"max": 15.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "medium",
-				"min": 20.0,
-				"max": 35.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "long",
-				"min": 40.0,
-				"max": 70.0,
-				"step": 2.0
-			},
-			{
-				"param_name": "close",
-				"min": 20.0,
-				"max": 35.0,
-				"step": 1.0
-			}
-		]
-	})
 }

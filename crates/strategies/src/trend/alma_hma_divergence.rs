@@ -2,16 +2,25 @@ use crate::types::configs::AlmahmaDivergenceConfig;
 use crate::{StrategyError, StrategyResult};
 use indicators_core::ALMAConfig;
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// ALMA HMA Divergence Trend Strategy
 ///
 /// Generates buy signals when ALMA diverges above HMA by threshold
 /// Generates sell signals when ALMA diverges below HMA by threshold
-///
-/// @strategy_id almaHmaDivergence
-/// @strategy_name ALMA HMA Divergence Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "almaHmaDivergence",
+	name = "ALMA HMA Divergence Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when ALMA diverges above HMA by threshold and sell signals when ALMA diverges below HMA by threshold",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "offset", "min": 0.5, "max": 1.0, "step": 0.05},
+		{"param_name": "divergence_threshold", "min": 0.001, "max": 0.1, "step": 0.001}
+	]"#
+)]
 pub fn alma_hma_divergence_strategy(
 	closes: &[f64],
 	config: Option<AlmahmaDivergenceConfig>,
@@ -83,53 +92,4 @@ pub fn alma_hma_divergence_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get ALMA HMA Divergence strategy metadata for registry
-pub fn alma_hma_divergence_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "almaHmaDivergence",
-		"name": "ALMA HMA Divergence Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when ALMA diverges above HMA by threshold and sell signals when ALMA diverges below HMA by threshold"
-	})
-}
-
-/// Get ALMA HMA Divergence strategy default parameters
-pub fn alma_hma_divergence_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 9,
-			"slow_period": 21,
-			"offset": 0.85,
-			"divergence_threshold": 0.01
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "offset",
-				"min": 0.5,
-				"max": 1.0,
-				"step": 0.05
-			},
-			{
-				"param_name": "divergence_threshold",
-				"min": 0.001,
-				"max": 0.1,
-				"step": 0.001
-			}
-		]
-	})
 }

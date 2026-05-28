@@ -1,15 +1,21 @@
 use crate::types::configs::WmaMomentumConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// WMA Momentum Trend Strategy
 ///
 /// Generates buy signals when WMA is increasing
 /// Generates sell signals when WMA is decreasing
-///
-/// @strategy_id wmaMomentum
-/// @strategy_name WMA Momentum Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "wmaMomentum",
+	name = "WMA Momentum Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when WMA is increasing and sell signals when WMA is decreasing",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn wma_momentum_strategy(
 	closes: &[f64],
 	config: Option<WmaMomentumConfig>,
@@ -51,32 +57,4 @@ pub fn wma_momentum_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get WMA Momentum strategy metadata for registry
-pub fn wma_momentum_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "wmaMomentum",
-		"name": "WMA Momentum Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when WMA is increasing and sell signals when WMA is decreasing"
-	})
-}
-
-/// Get WMA Momentum strategy default parameters
-pub fn wma_momentum_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

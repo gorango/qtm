@@ -1,9 +1,21 @@
 use crate::types::configs::StandardDeviationConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Standard Deviation
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "standardDeviation",
+	name = "Standard Deviation Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when standard deviation is below threshold and sell signals when it exceeds threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "threshold", "min": 1.0, "max": 5.0, "step": 0.1}
+	]"#
+)]
 pub fn standard_deviation_strategy(
 	closes: &[f64],
 	config: Option<StandardDeviationConfig>,
@@ -44,37 +56,4 @@ pub fn standard_deviation_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn standard_deviation_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "standardDeviation",
-		"name": "Standard Deviation Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when standard deviation is below threshold and sell signals when it exceeds threshold"
-	})
-}
-
-pub fn standard_deviation_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"threshold": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "threshold",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 0.1
-			}
-		]
-	})
 }

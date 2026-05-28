@@ -1,10 +1,22 @@
 use crate::types::configs::AccelerationBandsConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Acceleration Bands
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "accelerationBands",
+	name = "Acceleration Bands Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price crosses under lower band and sell signals when price crosses over upper band",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "multiplier", "min": 1.0, "max": 5.0, "step": 0.1}
+	]"#
+)]
 pub fn acceleration_bands_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -49,37 +61,4 @@ pub fn acceleration_bands_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn acceleration_bands_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "accelerationBands",
-		"name": "Acceleration Bands Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price crosses under lower band and sell signals when price crosses over upper band"
-	})
-}
-
-pub fn acceleration_bands_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"multiplier": 4.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "multiplier",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 0.1
-			}
-		]
-	})
 }

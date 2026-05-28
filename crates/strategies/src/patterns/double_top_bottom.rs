@@ -1,5 +1,6 @@
 use crate::types::configs::DoubleTopBottomConfig;
 use crate::StrategyResult;
+use strategies_proc_macro::strategy;
 
 /// Double Top/Bottom Reversal Strategy
 ///
@@ -11,6 +12,18 @@ use crate::StrategyResult;
 /// @strategy_name Double Top/Bottom Reversal Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "double-top-bottom-reversal",
+	name = "Double Top/Bottom Reversal Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects double top (bearish) and double bottom (bullish) reversal patterns",
+	opt_params = r#"[
+		{"param_name": "minDistance", "min": 5, "max": 50, "step": 1},
+		{"param_name": "tolerance", "min": 0.0, "max": 0.1, "step": 0.005},
+		{"param_name": "lookaround", "min": 1, "max": 5, "step": 1}
+	]"#
+)]
 pub fn double_top_bottom_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -67,46 +80,4 @@ pub fn double_top_bottom_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Double Top/Bottom strategy metadata for registry
-pub fn double_top_bottom_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "double-top-bottom-reversal",
-		"name": "Double Top/Bottom Reversal Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects double top (bearish) and double bottom (bullish) reversal patterns"
-	})
-}
-
-/// Get Double Top/Bottom strategy default parameters
-pub fn double_top_bottom_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"minDistance": 10,
-			"tolerance": 0.03,
-			"lookaround": 2
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "minDistance",
-				"min": 5,
-				"max": 50,
-				"step": 1
-			},
-			{
-				"param_name": "tolerance",
-				"min": 0.0,
-				"max": 0.1,
-				"step": 0.005
-			},
-			{
-				"param_name": "lookaround",
-				"min": 1,
-				"max": 5,
-				"step": 1
-			}
-		]
-	})
 }

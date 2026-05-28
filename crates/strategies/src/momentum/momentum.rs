@@ -1,17 +1,24 @@
 use crate::types::configs::MomentumConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
-use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Momentum Trend Strategy
 ///
 /// Generates buy signals when momentum crosses below oversold level
 /// Generates sell signals when momentum crosses above overbought level
-///
-/// @strategy_id momentum
-/// @strategy_name Momentum Trend
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "momentum",
+	name = "Momentum Trend",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when momentum crosses below oversold level and sell signals when momentum crosses above overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}
+	]"#
+)]
 pub fn momentum_strategy(
 	closes: &[f64],
 	config: Option<MomentumConfig>,
@@ -58,48 +65,6 @@ pub fn momentum_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Momentum strategy metadata for registry
-pub fn momentum_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "momentum",
-		"name": "Momentum Trend",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when momentum crosses below oversold level and sell signals when momentum crosses above overbought level"
-	})
-}
-
-/// Get Momentum strategy default parameters
-pub fn momentum_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"overbought": 70.0,
-			"oversold": 30.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			}
-		]
-	})
 }
 
 #[cfg(test)]

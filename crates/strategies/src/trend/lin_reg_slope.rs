@@ -1,15 +1,24 @@
 use crate::types::configs::LinregSlopeConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Linear Regression Slope Trend Strategy
 ///
 /// Generates signals based on slope direction with ADX confirmation
 /// Buy when slope > 0 and ADX > threshold, sell when slope < 0 and ADX > threshold
-///
-/// @strategy_id linRegSlope
-/// @strategy_name Linear Regression Slope Trend
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "linRegSlope",
+	name = "Linear Regression Slope Trend",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates signals based on slope direction with ADX confirmation for trending markets",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "slope_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "period_adx", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "adx_threshold", "min": 15.0, "max": 35.0, "step": 1.0}
+	]"#
+)]
 pub fn lin_reg_slope_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -88,53 +97,4 @@ pub fn lin_reg_slope_strategy(
 		.collect();
 
 	Ok(signals)
-}
-
-/// Get Linear Regression Slope strategy metadata for registry
-pub fn lin_reg_slope_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "linRegSlope",
-		"name": "Linear Regression Slope Trend",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates signals based on slope direction with ADX confirmation for trending markets"
-	})
-}
-
-/// Get Linear Regression Slope strategy default parameters
-pub fn lin_reg_slope_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"slope_period": 10,
-			"period_adx": 14,
-			"adx_threshold": 25.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slope_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "period_adx",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "adx_threshold",
-				"min": 15.0,
-				"max": 35.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,9 +1,21 @@
 use crate::types::configs::VolatilityAdjustedConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Volatility Adjusted
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "volatilityAdjusted",
+	name = "Volatility Adjusted Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when annualized volatility is below target and sell signals when it exceeds target",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "targetVolatility", "min": 0.05, "max": 0.5, "step": 0.01}
+	]"#
+)]
 pub fn volatility_adjusted_strategy(
 	closes: &[f64],
 	config: Option<VolatilityAdjustedConfig>,
@@ -41,37 +53,4 @@ pub fn volatility_adjusted_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn volatility_adjusted_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "volatilityAdjusted",
-		"name": "Volatility Adjusted Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when annualized volatility is below target and sell signals when it exceeds target"
-	})
-}
-
-pub fn volatility_adjusted_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"targetVolatility": 0.15
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "targetVolatility",
-				"min": 0.05,
-				"max": 0.5,
-				"step": 0.01
-			}
-		]
-	})
 }

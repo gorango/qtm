@@ -1,15 +1,19 @@
 use crate::types::configs::TypicalPriceConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Typical Price Trend Strategy
 ///
 /// Generates buy signals when close > typical price
 /// Generates sell signals when close < typical price
-///
-/// @strategy_id typicalPrice
-/// @strategy_name Typical Price Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "typicalPrice",
+	name = "Typical Price Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when close is above typical price and sell signals when close is below typical price",
+	opt_params = r#"[]"#
+)]
 pub fn typical_price_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -43,23 +47,4 @@ pub fn typical_price_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Typical Price strategy metadata for registry
-pub fn typical_price_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "typicalPrice",
-		"name": "Typical Price Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when close is above typical price and sell signals when close is below typical price"
-	})
-}
-
-/// Get Typical Price strategy default parameters
-pub fn typical_price_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {},
-		"optimization_bounds": []
-	})
 }

@@ -1,16 +1,24 @@
 use crate::types::configs::CciConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// CCI Momentum Strategy
 ///
 /// Generates buy signals when CCI crosses below oversold level
 /// Generates sell signals when CCI crosses above overbought level
-///
-/// @strategy_id cci
-/// @strategy_name CCI Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "cci",
+	name = "CCI Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when CCI crosses below oversold level and sell signals when CCI crosses above overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 30.0, "step": 1.0},
+		{"param_name": "oversold", "min": -150.0, "max": -80.0, "step": 10.0},
+		{"param_name": "overbought", "min": 80.0, "max": 150.0, "step": 10.0}
+	]"#
+)]
 pub fn cci_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -67,46 +75,4 @@ pub fn cci_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get CCI strategy metadata for registry
-pub fn cci_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "cci",
-		"name": "CCI Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when CCI crosses below oversold level and sell signals when CCI crosses above overbought level"
-	})
-}
-
-/// Get CCI strategy default parameters
-pub fn cci_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"oversold": -100.0,
-			"overbought": 100.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": -150.0,
-				"max": -80.0,
-				"step": 10.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 80.0,
-				"max": 150.0,
-				"step": 10.0
-			}
-		]
-	})
 }

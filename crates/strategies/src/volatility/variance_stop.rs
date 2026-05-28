@@ -1,9 +1,21 @@
 use crate::types::configs::VarianceStopConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Variance Stop
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "varianceStop",
+	name = "Variance Stop Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when variance is below multiplier and sell signals when it exceeds multiplier",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "multiplier", "min": 1.0, "max": 5.0, "step": 0.1}
+	]"#
+)]
 pub fn variance_stop_strategy(
 	closes: &[f64],
 	config: Option<VarianceStopConfig>,
@@ -44,37 +56,4 @@ pub fn variance_stop_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn variance_stop_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "varianceStop",
-		"name": "Variance Stop Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when variance is below multiplier and sell signals when it exceeds multiplier"
-	})
-}
-
-pub fn variance_stop_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"multiplier": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "multiplier",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 0.1
-			}
-		]
-	})
 }

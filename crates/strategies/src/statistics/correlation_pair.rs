@@ -2,6 +2,7 @@ use crate::types::configs::CorrelationPairConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Correlation Pair Strategy
 ///
@@ -12,6 +13,18 @@ use serde_json;
 /// @strategy_name Correlation Pair Trading Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "correlation-pair-trading",
+	name = "Correlation Pair Trading Strategy",
+	category = "statistics",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when correlation between two assets crosses over entry threshold and sell signals when correlation crosses under exit threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "entryThreshold", "min": 0.1, "max": 0.9, "step": 0.05},
+		{"param_name": "exitThreshold", "min": 0.1, "max": 0.9, "step": 0.05}
+	]"#
+)]
 pub fn correlation_pair_strategy(
 	closes: &[f64],
 	config: Option<CorrelationPairConfig>,
@@ -77,46 +90,4 @@ pub fn correlation_pair_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn correlation_pair_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "correlation-pair-trading",
-		"name": "Correlation Pair Trading Strategy",
-		"category": "statistics",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when correlation between two assets crosses over entry threshold and sell signals when correlation crosses under exit threshold"
-	})
-}
-
-pub fn correlation_pair_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"entryThreshold": 0.7,
-			"exitThreshold": 0.3,
-			"spreadMethod": "ratio",
-			"secondCloses": []
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "entryThreshold",
-				"min": 0.1,
-				"max": 0.9,
-				"step": 0.05
-			},
-			{
-				"param_name": "exitThreshold",
-				"min": 0.1,
-				"max": 0.9,
-				"step": 0.05
-			}
-		]
-	})
 }

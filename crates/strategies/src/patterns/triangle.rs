@@ -1,5 +1,6 @@
 use crate::types::configs::TriangleConfig;
 use crate::StrategyResult;
+use strategies_proc_macro::strategy;
 
 /// Triangle Breakout Strategy
 ///
@@ -12,6 +13,19 @@ use crate::StrategyResult;
 /// @strategy_name Triangle Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "triangle-breakout",
+	name = "Triangle Breakout Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects triangle patterns and generates breakout signals",
+	opt_params = r#"[
+		{"param_name": "minPoints", "min": 3, "max": 10, "step": 1},
+		{"param_name": "slopeTolerance", "min": 0.0, "max": 0.1, "step": 0.005},
+		{"param_name": "minDataLength", "min": 15, "max": 50, "step": 5},
+		{"param_name": "angleTolerance", "min": 0.0001, "max": 0.01, "step": 0.0001}
+	]"#
+)]
 pub fn triangle_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -54,53 +68,4 @@ pub fn triangle_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Triangle strategy metadata for registry
-pub fn triangle_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "triangle-breakout",
-		"name": "Triangle Breakout Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects triangle patterns and generates breakout signals"
-	})
-}
-
-/// Get Triangle strategy default parameters
-pub fn triangle_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"minPoints": 4,
-			"slopeTolerance": 0.01,
-			"minDataLength": 20,
-			"angleTolerance": 0.001
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "minPoints",
-				"min": 3,
-				"max": 10,
-				"step": 1
-			},
-			{
-				"param_name": "slopeTolerance",
-				"min": 0.0,
-				"max": 0.1,
-				"step": 0.005
-			},
-			{
-				"param_name": "minDataLength",
-				"min": 15,
-				"max": 50,
-				"step": 5
-			},
-			{
-				"param_name": "angleTolerance",
-				"min": 0.0001,
-				"max": 0.01,
-				"step": 0.0001
-			}
-		]
-	})
 }

@@ -1,16 +1,23 @@
 use crate::types::configs::NegativeVolumeIndexConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Negative Volume Index Strategy
 ///
 /// Generates buy signals when NVI crosses above its SMA
 /// Generates sell signals when NVI crosses below its SMA
-///
-/// @strategy_id negative-volume-index
-/// @strategy_name Negative Volume Index
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "negative-volume-index",
+	name = "Negative Volume Index",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when NVI crosses above start level, sell signals when NVI crosses below start level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "start", "min": 100.0, "max": 10000.0, "step": 100.0}
+	]"#
+)]
 pub fn negative_volume_index_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -59,39 +66,4 @@ pub fn negative_volume_index_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Negative Volume Index strategy metadata for registry
-pub fn negative_volume_index_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "negative-volume-index",
-		"name": "Negative Volume Index",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when NVI crosses above start level, sell signals when NVI crosses below start level"
-	})
-}
-
-/// Get Negative Volume Index strategy default parameters
-pub fn negative_volume_index_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"start": 1000.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "start",
-				"min": 100.0,
-				"max": 10000.0,
-				"step": 100.0
-			}
-		]
-	})
 }

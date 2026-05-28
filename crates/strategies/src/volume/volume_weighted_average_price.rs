@@ -1,16 +1,22 @@
 use crate::types::configs::VolumeWeightedAveragePriceConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Volume Weighted Average Price Trend Strategy
 ///
 /// Generates buy signals when price crosses above VWAP
 /// Generates sell signals when price crosses below VWAP
-///
-/// @strategy_id volumeWeightedAveragePrice
-/// @strategy_name Volume Weighted Average Price Trend
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "volumeWeightedAveragePrice",
+	name = "Volume Weighted Average Price Trend",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price crosses above VWAP and sell signals when price crosses below VWAP",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn volume_weighted_average_price_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -62,32 +68,4 @@ pub fn volume_weighted_average_price_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Volume Weighted Average Price strategy metadata for registry
-pub fn volume_weighted_average_price_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "volumeWeightedAveragePrice",
-		"name": "Volume Weighted Average Price Trend",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price crosses above VWAP and sell signals when price crosses below VWAP"
-	})
-}
-
-/// Get Volume Weighted Average Price strategy default parameters
-pub fn volume_weighted_average_price_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

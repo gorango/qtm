@@ -1,16 +1,22 @@
 use crate::types::configs::ChaikinMoneyFlowConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Chaikin Money Flow Strategy
 ///
 /// Generates buy signals when CMF crosses above zero
 /// Generates sell signals when CMF crosses below zero
-///
-/// @strategy_id chaikin-money-flow
-/// @strategy_name Chaikin Money Flow
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "chaikin-money-flow",
+	name = "Chaikin Money Flow",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when CMF crosses above zero, sell signals when CMF crosses below zero",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn chaikin_money_flow_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -67,32 +73,4 @@ pub fn chaikin_money_flow_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Chaikin Money Flow strategy metadata for registry
-pub fn chaikin_money_flow_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "chaikin-money-flow",
-		"name": "Chaikin Money Flow",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when CMF crosses above zero, sell signals when CMF crosses below zero"
-	})
-}
-
-/// Get Chaikin Money Flow strategy default parameters
-pub fn chaikin_money_flow_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,16 +1,24 @@
 use crate::types::configs::MoneyFlowIndexConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Money Flow Index Strategy
 ///
 /// Generates buy signals when MFI crosses below oversold level
 /// Generates sell signals when MFI crosses above overbought level
-///
-/// @strategy_id money-flow-index
-/// @strategy_name Money Flow Index
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "money-flow-index",
+	name = "Money Flow Index",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when MFI crosses below oversold level, sell signals when MFI crosses above overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 1.0},
+		{"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 1.0}
+	]"#
+)]
 pub fn money_flow_index_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -69,46 +77,4 @@ pub fn money_flow_index_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Money Flow Index strategy metadata for registry
-pub fn money_flow_index_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "money-flow-index",
-		"name": "Money Flow Index",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when MFI crosses below oversold level, sell signals when MFI crosses above overbought level"
-	})
-}
-
-/// Get Money Flow Index strategy default parameters
-pub fn money_flow_index_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -2,16 +2,22 @@ use crate::types::configs::VortexConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::VortexResult;
+use strategies_proc_macro::strategy;
 
 /// Vortex Trend Strategy
 ///
 /// Generates buy signals when VI+ crosses above VI-
 /// Generates sell signals when VI+ crosses below VI-
-///
-/// @strategy_id vortex
-/// @strategy_name Vortex Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "vortex",
+	name = "Vortex Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when VI+ crosses above VI- and sell signals when VI+ crosses below VI-",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn vortex_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -57,32 +63,4 @@ pub fn vortex_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Vortex strategy metadata for registry
-pub fn vortex_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "vortex",
-		"name": "Vortex Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when VI+ crosses above VI- and sell signals when VI+ crosses below VI-"
-	})
-}
-
-/// Get Vortex strategy default parameters
-pub fn vortex_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

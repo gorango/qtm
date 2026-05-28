@@ -1,10 +1,22 @@
 use crate::signals::{crossed_over_series, crossed_under_series};
 use crate::types::configs::BollingerBandsConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Bollinger Bands Mean Reversion
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "bollingerBandsMeanReversion",
+	name = "Bollinger Bands Mean Reversion Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price falls below lower band and sell signals when price rises above upper band",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "stdDev", "min": 1.0, "max": 3.0, "step": 0.1}
+	]"#
+)]
 pub fn bollinger_bands_mean_reversion_strategy(
 	closes: &[f64],
 	config: Option<BollingerBandsConfig>,
@@ -55,37 +67,4 @@ pub fn bollinger_bands_mean_reversion_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn bollinger_bands_mean_reversion_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "bollingerBandsMeanReversion",
-		"name": "Bollinger Bands Mean Reversion Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price falls below lower band and sell signals when price rises above upper band"
-	})
-}
-
-pub fn bollinger_bands_mean_reversion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"stdDev": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "stdDev",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			}
-		]
-	})
 }

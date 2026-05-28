@@ -2,16 +2,25 @@ use crate::types::configs::LarssonConfig;
 use crate::utils::signals::consolidating;
 use crate::{StrategyError, StrategyResult};
 use indicators_core::LarssonSignal;
+use strategies_proc_macro::strategy;
 
 /// Larsson Trend Strategy
 ///
 /// Generates buy signals when price is above Fibonacci level
 /// Generates sell signals when price is below Fibonacci level
-///
-/// @strategy_id larsson
-/// @strategy_name Larsson Trend
-/// @category trend
-/// @default_timeframes 4h, 1d
+#[strategy(
+	id = "larsson",
+	name = "Larsson Trend",
+	category = "trend",
+	default_timeframes = ["4h", "1d"],
+	description = "Generates buy signals for impulse waves and sell signals for corrective waves using Larsson indicator with consolidating filter",
+	opt_params = r#"[
+		{"param_name": "use_consolidating_filter", "min": 0.0, "max": 1.0, "step": 1.0},
+		{"param_name": "consolidating_lookback", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "consolidating_threshold_pct", "min": 0.01, "max": 0.05, "step": 0.005},
+		{"param_name": "signal_offset", "min": -2.0, "max": 2.0, "step": 1.0}
+	]"#
+)]
 pub fn larsson_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -86,53 +95,4 @@ pub fn larsson_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Larsson strategy metadata for registry
-pub fn larsson_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "larsson",
-		"name": "Larsson Trend",
-		"category": "trend",
-		"default_timeframes": ["4h", "1d"],
-		"description": "Generates buy signals for impulse waves and sell signals for corrective waves using Larsson indicator with consolidating filter"
-	})
-}
-
-/// Get Larsson strategy default parameters
-pub fn larsson_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"use_consolidating_filter": 1,
-			"consolidating_lookback": 10,
-			"consolidating_threshold_pct": 0.02,
-			"signal_offset": 0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "use_consolidating_filter",
-				"min": 0.0,
-				"max": 1.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "consolidating_lookback",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "consolidating_threshold_pct",
-				"min": 0.01,
-				"max": 0.05,
-				"step": 0.005
-			},
-			{
-				"param_name": "signal_offset",
-				"min": -2.0,
-				"max": 2.0,
-				"step": 1.0
-			}
-		]
-	})
 }

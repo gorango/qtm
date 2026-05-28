@@ -2,16 +2,26 @@ use crate::types::configs::KdjConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::{StochConfig, StochResult};
+use strategies_proc_macro::strategy;
 
 /// KDJ Trend Strategy
 ///
 /// Generates buy signals when J crosses above oversold level
 /// Generates sell signals when J crosses below overbought level
-///
-/// @strategy_id kdj
-/// @strategy_name KDJ Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "kdj",
+	name = "KDJ Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when J crosses above oversold level and sell signals when J crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "period1", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "period2", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0},
+		{"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}
+	]"#
+)]
 pub fn kdj_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -92,60 +102,4 @@ pub fn kdj_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get KDJ strategy metadata for registry
-pub fn kdj_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "kdj",
-		"name": "KDJ Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when J crosses above oversold level and sell signals when J crosses below overbought level"
-	})
-}
-
-/// Get KDJ strategy default parameters
-pub fn kdj_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"period1": 3,
-			"period2": 3,
-			"overbought": 80.0,
-			"oversold": 20.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "period1",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "period2",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 1.0
-			}
-		]
-	})
 }

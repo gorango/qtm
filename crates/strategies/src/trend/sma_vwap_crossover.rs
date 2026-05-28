@@ -1,16 +1,25 @@
 use crate::types::configs::SmaVwapCrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// SMA-VWAP Crossover Strategy
 ///
 /// Generates buy signals when SMA crosses above VWAP
 /// Generates sell signals when SMA crosses below VWAP
-///
-/// @strategy_id smaVwapCrossover
-/// @strategy_name Sma Vwap Crossover
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "smaVwapCrossover",
+	name = "Sma Vwap Crossover",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when SMA crosses above VWAP and sell signals when SMA crosses below VWAP",
+	opt_params = r#"[
+		{"param_name": "sma_period", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "vwap_period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "anchored", "min": 0.0, "max": 1.0, "step": 1.0},
+		{"param_name": "session_length", "min": 60.0, "max": 1440.0, "step": 60.0}
+	]"#
+)]
 pub fn sma_vwap_crossover_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -78,54 +87,4 @@ pub fn sma_vwap_crossover_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get SMA-VWAP Crossover strategy metadata for registry
-pub fn sma_vwap_crossover_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "smaVwapCrossover",
-		"name": "Sma Vwap Crossover",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when SMA crosses above VWAP and sell signals when SMA crosses below VWAP"
-	})
-}
-
-/// Get SMA-VWAP Crossover strategy default parameters
-pub fn sma_vwap_crossover_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"sma_period": 3,
-			"vwap_period": 14,
-			"price_source": "hlc3",
-			"anchored": true,
-			"session_length": 1440
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "sma_period",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "vwap_period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "anchored",
-				"min": 0.0,
-				"max": 1.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "session_length",
-				"min": 60.0,
-				"max": 1440.0,
-				"step": 60.0
-			}
-		]
-	})
 }

@@ -1,16 +1,23 @@
 use crate::types::configs::VwapReversionConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// VWAP Reversion Strategy
 ///
 /// Generates buy signals when price crosses below VWAP - deviation threshold
 /// Generates sell signals when price crosses above VWAP + deviation threshold
-///
-/// @strategy_id vwap-reversion
-/// @strategy_name VWAP Reversion
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "vwap-reversion",
+	name = "VWAP Reversion",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price crosses below VWAP - deviation threshold, sell signals when price crosses above VWAP + deviation threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "deviation_threshold", "min": 0.01, "max": 0.1, "step": 0.005}
+	]"#
+)]
 pub fn vwap_reversion_strategy(
 	closes: &[f64],
 	highs: &[f64],
@@ -83,39 +90,4 @@ pub fn vwap_reversion_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get VWAP Reversion strategy metadata for registry
-pub fn vwap_reversion_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "vwap-reversion",
-		"name": "VWAP Reversion",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price crosses below VWAP - deviation threshold, sell signals when price crosses above VWAP + deviation threshold"
-	})
-}
-
-/// Get VWAP Reversion strategy default parameters
-pub fn vwap_reversion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"deviation_threshold": 0.02
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "deviation_threshold",
-				"min": 0.01,
-				"max": 0.1,
-				"step": 0.005
-			}
-		]
-	})
 }

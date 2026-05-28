@@ -1,16 +1,22 @@
 use crate::types::configs::VwmaConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// VWMA Trend Strategy
 ///
 /// Generates buy signals when price crosses above VWMA
 /// Generates sell signals when price crosses below VWMA
-///
-/// @strategy_id vwma
-/// @strategy_name VWMA Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "vwma",
+	name = "VWMA Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price crosses above VWMA and sell signals when price crosses below VWMA",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn vwma_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -56,32 +62,4 @@ pub fn vwma_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get VWMA strategy metadata for registry
-pub fn vwma_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "vwma",
-		"name": "VWMA Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price crosses above VWMA and sell signals when price crosses below VWMA"
-	})
-}
-
-/// Get VWMA strategy default parameters
-pub fn vwma_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

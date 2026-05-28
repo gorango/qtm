@@ -1,16 +1,25 @@
 use crate::types::configs::StochasticConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Stochastic Oscillator Momentum Strategy
 ///
 /// Generates buy signals when %K crosses above oversold level
 /// Generates sell signals when %K crosses below overbought level
-///
-/// @strategy_id stochastic
-/// @strategy_name Stochastic Oscillator Momentum
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "stochastic",
+	name = "Stochastic Oscillator Momentum",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when %K crosses above oversold level and sell signals when %K crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0},
+		{"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}
+	]"#
+)]
 pub fn stochastic_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -72,53 +81,4 @@ pub fn stochastic_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Stochastic strategy metadata for registry
-pub fn stochastic_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "stochastic",
-		"name": "Stochastic Oscillator Momentum",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when %K crosses above oversold level and sell signals when %K crosses below overbought level"
-	})
-}
-
-/// Get Stochastic strategy default parameters
-pub fn stochastic_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"k_period": 14,
-			"d_period": 3,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "k_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "d_period",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 1.0
-			}
-		]
-	})
 }

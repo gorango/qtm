@@ -1,16 +1,23 @@
 use crate::types::configs::LinRegChannelConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Linear Regression Channel Trend Strategy
 ///
 /// Generates buy signals when price crosses above the linear regression line
 /// Generates sell signals when price crosses below the linear regression line
-///
-/// @strategy_id linRegChannel
-/// @strategy_name Linear Regression Channel
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "linRegChannel",
+	name = "Linear Regression Channel",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when price crosses above the linear regression line and sell signals when price crosses below",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "offset", "min": -2.0, "max": 2.0, "step": 0.1}
+	]"#
+)]
 pub fn lin_reg_channel_strategy(
 	closes: &[f64],
 	config: Option<LinRegChannelConfig>,
@@ -63,39 +70,4 @@ pub fn lin_reg_channel_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Linear Regression Channel strategy metadata for registry
-pub fn lin_reg_channel_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "linRegChannel",
-		"name": "Linear Regression Channel",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when price crosses above the linear regression line and sell signals when price crosses below"
-	})
-}
-
-/// Get Linear Regression Channel strategy default parameters
-pub fn lin_reg_channel_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"offset": 0.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "offset",
-				"min": -2.0,
-				"max": 2.0,
-				"step": 0.1
-			}
-		]
-	})
 }

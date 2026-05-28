@@ -2,16 +2,23 @@ use crate::types::configs::AbsolutePriceOscillatorConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Absolute Price Oscillator Trend Strategy
 ///
 /// Generates buy signals when APO crosses above zero line
 /// Generates sell signals when APO crosses below zero line
-///
-/// @strategy_id absolutePriceOscillator
-/// @strategy_name Absolute Price Oscillator Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "absolutePriceOscillator",
+	name = "Absolute Price Oscillator Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when APO crosses above zero and sell signals when APO crosses below zero",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 15.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn absolute_price_oscillator_strategy(
 	closes: &[f64],
 	config: Option<AbsolutePriceOscillatorConfig>,
@@ -61,39 +68,4 @@ pub fn absolute_price_oscillator_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Absolute Price Oscillator strategy metadata for registry
-pub fn absolute_price_oscillator_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "absolutePriceOscillator",
-		"name": "Absolute Price Oscillator Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when APO crosses above zero and sell signals when APO crosses below zero"
-	})
-}
-
-/// Get Absolute Price Oscillator strategy default parameters
-pub fn absolute_price_oscillator_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 10,
-			"slow_period": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 15.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,6 +1,31 @@
 use crate::error::{IndicatorError, IndicatorResult};
 use crate::utils::arrays::validate_arrays_equal_length;
 
+/// Checks that `value` is in [`min`, `max`].
+/// `err` is a callable `|msg: String| -> E` that constructs the error.
+#[macro_export]
+macro_rules! validate_range {
+	($value:expr, $min:expr, $max:expr, $name:expr, $err:expr) => {
+		if $value < $min {
+			return Err(($err)(format!("{} must be at least {}", $name, $min)));
+		}
+		if $value > $max {
+			return Err(($err)(format!("{} must be at most {}", $name, $max)));
+		}
+	};
+}
+
+/// Checks that `len >= min_len`.
+/// `err` is a callable `|min, actual| -> E` that constructs the error.
+#[macro_export]
+macro_rules! validate_min_data {
+	($len:expr, $min_len:expr, $err:expr) => {
+		if $len < $min_len {
+			return Err(($err)($min_len, $len));
+		}
+	};
+}
+
 pub fn validate_period(period: usize) -> IndicatorResult<()> {
 	if period == 0 {
 		return Err(IndicatorError::InvalidPeriod(period));

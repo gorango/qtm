@@ -1,6 +1,7 @@
 use crate::types::configs::WedgeConfig;
 use crate::StrategyResult;
 use serde_json;
+use strategies_proc_macro::strategy;
 
 /// Wedge Breakout Strategy
 ///
@@ -13,6 +14,18 @@ use serde_json;
 /// @strategy_name Wedge Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "wedge-breakout",
+	name = "Wedge Breakout Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects wedge patterns and generates breakout signals opposite to wedge direction",
+	opt_params = r#"[
+		{"param_name": "minPoints", "min": 3, "max": 10, "step": 1},
+		{"param_name": "slopeTolerance", "min": 0.0, "max": 0.01, "step": 0.0001},
+		{"param_name": "minDataLength", "min": 15, "max": 50, "step": 5}
+	]"#
+)]
 pub fn wedge_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -53,46 +66,4 @@ pub fn wedge_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Wedge strategy metadata for registry
-pub fn wedge_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "wedge-breakout",
-		"name": "Wedge Breakout Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects wedge patterns and generates breakout signals opposite to wedge direction"
-	})
-}
-
-/// Get Wedge strategy default parameters
-pub fn wedge_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"minPoints": 4,
-			"slopeTolerance": 0.0001,
-			"minDataLength": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "minPoints",
-				"min": 3,
-				"max": 10,
-				"step": 1
-			},
-			{
-				"param_name": "slopeTolerance",
-				"min": 0.0,
-				"max": 0.01,
-				"step": 0.0001
-			},
-			{
-				"param_name": "minDataLength",
-				"min": 15,
-				"max": 50,
-				"step": 5
-			}
-		]
-	})
 }

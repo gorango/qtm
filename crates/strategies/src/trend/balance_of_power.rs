@@ -1,18 +1,21 @@
 use crate::types::configs::BalanceOfPowerConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Balance of Power Trend Strategy
 ///
 /// Generates buy signals when BOP crosses over zero
 /// Generates sell signals when BOP crosses under zero
-///
-/// @strategy_id balanceOfPower
-/// @strategy_name Balance of Power Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "balanceOfPower",
+	name = "Balance of Power Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when Balance of Power crosses over zero and sell signals when Balance of Power crosses under zero"
+)]
 pub fn balance_of_power_strategy(
-	openings: &[f64],
+	opens: &[f64],
 	highs: &[f64],
 	lows: &[f64],
 	closes: &[f64],
@@ -20,7 +23,7 @@ pub fn balance_of_power_strategy(
 ) -> StrategyResult<Vec<i8>> {
 	let _config = config.unwrap_or_default(); // Period not used in current implementation
 
-	let data_len = openings.len();
+	let data_len = opens.len();
 	if data_len == 0 {
 		return Err(StrategyError::Validation(
 			"Input arrays cannot be empty".into(),
@@ -28,7 +31,7 @@ pub fn balance_of_power_strategy(
 	}
 
 	// Calculate Balance of Power
-	let bop_result = indicators_core::balance_of_power(openings, highs, lows, closes)?;
+	let bop_result = indicators_core::balance_of_power(opens, highs, lows, closes)?;
 
 	// Generate signals
 	let mut signals = Vec::with_capacity(data_len);
@@ -45,25 +48,4 @@ pub fn balance_of_power_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Balance of Power strategy metadata for registry
-pub fn balance_of_power_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "balanceOfPower",
-		"name": "Balance of Power Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when Balance of Power crosses over zero and sell signals when Balance of Power crosses under zero"
-	})
-}
-
-/// Get Balance of Power strategy default parameters
-pub fn balance_of_power_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14
-		},
-		"optimization_bounds": []
-	})
 }

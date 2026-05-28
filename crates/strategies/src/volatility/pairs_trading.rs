@@ -1,9 +1,22 @@
 use crate::types::configs::PairsTradingConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Pairs Trading
 ///
 /// Buy when spread deviates below threshold (undervalued). Sell when above threshold (overvalued).
+#[strategy(
+	id = "pairsTrading",
+	name = "Pairs Trading Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Stateful strategy that enters positions based on z-score entry thresholds and exits on exit thresholds",
+	opt_params = r#"[
+		{"param_name": "period", "min": 20.0, "max": 200.0, "step": 10.0},
+		{"param_name": "entryThreshold", "min": 1.0, "max": 3.0, "step": 0.1},
+		{"param_name": "exitThreshold", "min": 0.1, "max": 1.0, "step": 0.1}
+	]"#
+)]
 pub fn pairs_trading_strategy(
 	closes: &[f64],
 	config: Option<PairsTradingConfig>,
@@ -63,44 +76,4 @@ pub fn pairs_trading_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn pairs_trading_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "pairsTrading",
-		"name": "Pairs Trading Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Stateful strategy that enters positions based on z-score entry thresholds and exits on exit thresholds"
-	})
-}
-
-pub fn pairs_trading_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 100,
-			"entryThreshold": 2.0,
-			"exitThreshold": 0.5
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 20.0,
-				"max": 200.0,
-				"step": 10.0
-			},
-			{
-				"param_name": "entryThreshold",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			},
-			{
-				"param_name": "exitThreshold",
-				"min": 0.1,
-				"max": 1.0,
-				"step": 0.1
-			}
-		]
-	})
 }

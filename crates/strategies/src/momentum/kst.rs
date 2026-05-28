@@ -1,17 +1,26 @@
 use crate::types::configs::KSTConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-use serde_json;
+use strategies_proc_macro::strategy;
 
 /// KST Trend Strategy
 ///
 /// Generates buy signals when KST crosses above signal line
 /// Generates sell signals when KST crosses below signal line
-///
-/// @strategy_id kst
-/// @strategy_name KST Trend
-/// @category momentum
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "kst",
+	name = "KST Trend",
+	category = "momentum",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates buy signals when KST crosses above signal line and sell signals when KST crosses below signal line",
+	opt_params = r#"[
+		{"param_name": "roc1_period", "min": 5.0, "max": 15.0, "step": 1.0},
+		{"param_name": "roc2_period", "min": 10.0, "max": 20.0, "step": 1.0},
+		{"param_name": "roc3_period", "min": 15.0, "max": 25.0, "step": 1.0},
+		{"param_name": "roc4_period", "min": 20.0, "max": 40.0, "step": 1.0},
+		{"param_name": "signal_period", "min": 5.0, "max": 15.0, "step": 1.0}
+	]"#
+)]
 pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let roc1_period = config.roc1_period.unwrap_or(10);
@@ -73,60 +82,4 @@ pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> StrategyResult
 	}
 
 	Ok(signals)
-}
-
-/// Get KST strategy metadata for registry
-pub fn kst_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "kst",
-		"name": "KST Trend",
-		"category": "momentum",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates buy signals when KST crosses above signal line and sell signals when KST crosses below signal line"
-	})
-}
-
-/// Get KST strategy default parameters
-pub fn kst_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"roc1_period": 10,
-			"roc2_period": 15,
-			"roc3_period": 20,
-			"roc4_period": 30,
-			"signal_period": 9
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "roc1_period",
-				"min": 5.0,
-				"max": 15.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "roc2_period",
-				"min": 10.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "roc3_period",
-				"min": 15.0,
-				"max": 25.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "roc4_period",
-				"min": 20.0,
-				"max": 40.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "signal_period",
-				"min": 5.0,
-				"max": 15.0,
-				"step": 1.0
-			}
-		]
-	})
 }

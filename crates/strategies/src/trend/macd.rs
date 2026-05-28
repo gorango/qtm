@@ -1,16 +1,24 @@
 use crate::types::configs::MACDConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// MACD Trend Strategy
 ///
 /// Generates buy signals when MACD line crosses above signal line
 /// Generates sell signals when MACD line crosses below signal line
-///
-/// @strategy_id macd
-/// @strategy_name MACD Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "macd",
+	name = "MACD Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when MACD line crosses above signal line and sell signals when MACD line crosses below signal line",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 20.0, "max": 50.0, "step": 1.0},
+		{"param_name": "signal_period", "min": 5.0, "max": 20.0, "step": 1.0}
+	]"#
+)]
 pub fn macd_strategy(closes: &[f64], config: Option<MACDConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let fast_period = config.fast_period.unwrap_or(12);
@@ -66,46 +74,4 @@ pub fn macd_strategy(closes: &[f64], config: Option<MACDConfig>) -> StrategyResu
 	}
 
 	Ok(signals)
-}
-
-/// Get MACD strategy metadata for registry
-pub fn macd_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "macd",
-		"name": "MACD Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when MACD line crosses above signal line and sell signals when MACD line crosses below signal line"
-	})
-}
-
-/// Get MACD strategy default parameters
-pub fn macd_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 12,
-			"slow_period": 26,
-			"signal_period": 9
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 20.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "signal_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			}
-		]
-	})
 }

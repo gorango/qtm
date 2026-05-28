@@ -1,15 +1,21 @@
 use crate::types::configs::HmaTrendConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// HMA Trend Strategy
 ///
 /// Generates signals based on HMA slope direction
 /// Buy when HMA is rising, sell when HMA is falling
-///
-/// @strategy_id hmaTrend
-/// @strategy_name HMA Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "hmaTrend",
+	name = "HMA Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when HMA is rising and sell signals when HMA is falling",
+	opt_params = r#"[
+		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn hma_trend_strategy(
 	closes: &[f64],
 	config: Option<HmaTrendConfig>,
@@ -52,32 +58,4 @@ pub fn hma_trend_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get HMA Trend strategy metadata for registry
-pub fn hma_trend_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "hmaTrend",
-		"name": "HMA Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when HMA is rising and sell signals when HMA is falling"
-	})
-}
-
-/// Get HMA Trend strategy default parameters
-pub fn hma_trend_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 21
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 10.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

@@ -1,15 +1,22 @@
 use crate::types::configs::ParabolicSarConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Parabolic SAR Trend Strategy
 ///
 /// Generates buy signals when price is above SAR
 /// Generates sell signals when price is below SAR
-///
-/// @strategy_id parabolicSar
-/// @strategy_name Parabolic SAR Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "parabolicSar",
+	name = "Parabolic SAR Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price is above SAR and sell signals when price is below SAR",
+	opt_params = r#"[
+		{"param_name": "step", "min": 0.01, "max": 0.05, "step": 0.005},
+		{"param_name": "max_step", "min": 0.01, "max": 0.1, "step": 0.01}
+	]"#
+)]
 pub fn parabolic_sar_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -68,39 +75,4 @@ pub fn parabolic_sar_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Parabolic SAR strategy metadata for registry
-pub fn parabolic_sar_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "parabolicSar",
-		"name": "Parabolic SAR Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price is above SAR and sell signals when price is below SAR"
-	})
-}
-
-/// Get Parabolic SAR strategy default parameters
-pub fn parabolic_sar_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"step": 0.02,
-			"max_step": 0.02
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "step",
-				"min": 0.01,
-				"max": 0.05,
-				"step": 0.005
-			},
-			{
-				"param_name": "max_step",
-				"min": 0.01,
-				"max": 0.1,
-				"step": 0.01
-			}
-		]
-	})
 }

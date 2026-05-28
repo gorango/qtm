@@ -14,6 +14,18 @@ pub struct StrategyInput {
 	pub timestamps: Option<Vec<f64>>,
 }
 
+/// Descriptor for a registered strategy, collected via `inventory`.
+pub struct StrategyDescriptor {
+	pub id: &'static str,
+	pub name: &'static str,
+	pub category: &'static str,
+	pub default_timeframes: &'static [&'static str],
+	pub description: &'static str,
+	pub handler: fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>>,
+}
+
+inventory::collect!(StrategyDescriptor);
+
 #[macro_export]
 macro_rules! register_strategy {
 	($registry:expr, $id:expr, $function:expr) => {
@@ -40,52 +52,24 @@ pub fn get_strategy_registry_impl() -> &'static StrategyRegistryImpl {
 	STRATEGY_REGISTRY.get_or_init(|| {
 		let mut registry = HashMap::new();
 
-		// Register strategies using original bindings IDs
-		register_strategy!(registry, "rsi", rsi);
-		register_strategy!(registry, "macd", macd);
-		register_strategy!(registry, "awesomeOscillator", awesome_oscillator);
-		register_strategy!(registry, "cci", cci);
-		register_strategy!(registry, "roc", roc);
-		register_strategy!(registry, "rsi2", rsi2);
-		register_strategy!(registry, "stochastic", stochastic);
-		register_strategy!(registry, "ultimateOscillator", ultimate_oscillator);
-		register_strategy!(registry, "williamsR", williams_r);
-		register_strategy!(registry, "dmi", dmi);
-		register_strategy!(
-			registry,
-			"absolutePriceOscillator",
-			absolute_price_oscillator
-		);
-		register_strategy!(registry, "adx", adx);
-		register_strategy!(registry, "almaCrossover", alma_crossover);
-		register_strategy!(registry, "almaHmaDivergence", alma_hma_divergence);
-		register_strategy!(registry, "aroon", aroon);
-		register_strategy!(registry, "balanceOfPower", balance_of_power);
-		register_strategy!(
-			registry,
-			"chandeForecastOscillator",
-			chande_forecast_oscillator
-		);
-		register_strategy!(registry, "kdj", kdj);
-		register_strategy!(registry, "linRegChannel", lin_reg_channel);
-		register_strategy!(registry, "linRegSlope", lin_reg_slope);
-		register_strategy!(registry, "larsson", larsson);
-		register_strategy!(registry, "maCrossover", ma_crossover);
-		register_strategy!(registry, "macdCrossover", macd_crossover);
-		register_strategy!(registry, "parabolicSar", parabolic_sar);
-		register_strategy!(registry, "pivotPoints", pivot_points);
-		register_strategy!(registry, "smaVwapCrossover", sma_vwap_crossover);
-		register_strategy!(registry, "superTrend", super_trend);
-		register_strategy!(registry, "typicalPrice", typical_price);
-		register_strategy!(registry, "vortex", vortex);
-		register_strategy!(registry, "vwma", vwma);
-		register_strategy!(registry, "wmaConfirmation", wma_confirmation);
-		register_strategy!(registry, "wmaMomentum", wma_momentum);
+		// Collect strategies registered via #[strategy] attribute macro
+		for desc in inventory::iter::<StrategyDescriptor> {
+			registry.insert(
+				desc.id.to_string(),
+				Box::new(desc.handler)
+					as Box<
+						dyn Fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>>
+							+ Send
+							+ Sync,
+					>,
+			);
+		}
+
+		// Composite strategies (manually registered — combine 2+ indicators)
 		register_strategy!(registry, "obv_rsi", obv_rsi);
 		register_strategy!(registry, "adx_rsi", adx_rsi);
 		register_strategy!(registry, "bb_rsi", bb_rsi);
 		register_strategy!(registry, "double_top_stochastic", double_top_stochastic);
-		register_strategy!(registry, "fibonacciRetracement", fibonacci_retracement);
 		register_strategy!(registry, "flag_pennant_macd", flag_pennant_macd);
 		register_strategy!(registry, "ma_rsi", ma_rsi);
 		register_strategy!(registry, "macd_rsi", macd_rsi);
@@ -99,77 +83,9 @@ pub fn get_strategy_registry_impl() -> &'static StrategyRegistryImpl {
 		register_strategy!(registry, "vwap_macd", vwap_macd);
 		register_strategy!(registry, "vwap_rsi", vwap_rsi);
 		register_strategy!(registry, "vwap_stochastic", vwap_stochastic);
+
+		// Base strategies not yet migrated to #[strategy]
 		register_strategy!(registry, "elliott_wave", elliott_wave);
-		register_strategy!(registry, "buyAndHold", buy_and_hold);
-		register_strategy!(registry, "triangle", triangle);
-		register_strategy!(registry, "cup_and_handle", cup_and_handle);
-		register_strategy!(registry, "double_top_bottom", double_top_bottom);
-		register_strategy!(registry, "flags_pennants", flags_pennants);
-		register_strategy!(registry, "hmaTrend", hma_trend);
-		register_strategy!(registry, "head_and_shoulders", head_and_shoulders);
-		register_strategy!(registry, "wedge", wedge);
-		register_strategy!(registry, "ichimoku", ichimoku);
-		register_strategy!(registry, "kst", kst);
-		register_strategy!(registry, "momentum", momentum);
-		register_strategy!(registry, "cointegration-pair-trading", cointegration);
-		register_strategy!(registry, "correlation-pair-trading", correlation_pair);
-		register_strategy!(
-			registry,
-			"correlation-mean-reversion",
-			correlation_reversion
-		);
-		register_strategy!(registry, "percentRank-ranking", percent_rank);
-		register_strategy!(registry, "accelerationBands", acceleration_bands);
-		register_strategy!(registry, "atrThreshold", atr_threshold);
-		register_strategy!(registry, "atrVolatilityThreshold", atr_volatility_threshold);
-		register_strategy!(registry, "bollingerBandsBreakout", bollinger_bands_breakout);
-		register_strategy!(
-			registry,
-			"bollingerBandsMeanReversion",
-			bollinger_bands_mean_reversion
-		);
-		register_strategy!(registry, "donchianBreakout", donchian_breakout);
-		register_strategy!(registry, "donchianReversion", donchian_reversion);
-		register_strategy!(registry, "keltnerChannelBreakout", keltner_channel_breakout);
-		register_strategy!(
-			registry,
-			"keltnerChannelReversion",
-			keltner_channel_reversion
-		);
-		register_strategy!(
-			registry,
-			"keltnerVolatilityBreakout",
-			keltner_volatility_breakout
-		);
-		register_strategy!(registry, "madReversion", mad_reversion);
-		register_strategy!(registry, "openingRangeBreakout", opening_range_breakout);
-		register_strategy!(registry, "pairsTrading", pairs_trading);
-		register_strategy!(registry, "projectionOscillator", projection_oscillator);
-		register_strategy!(registry, "standardDeviation", standard_deviation);
-		register_strategy!(registry, "varianceStop", variance_stop);
-		register_strategy!(registry, "volatilityAdjusted", volatility_adjusted);
-		register_strategy!(registry, "zScoreBreakout", z_score_breakout);
-		register_strategy!(registry, "zScoreReversion", z_score_reversion);
-		register_strategy!(
-			registry,
-			"accumulation-distribution",
-			accumulation_distribution
-		);
-		register_strategy!(registry, "chaikin-money-flow", chaikin_money_flow);
-		register_strategy!(registry, "ease-of-movement", ease_of_movement);
-		register_strategy!(registry, "force-index", force_index);
-		register_strategy!(registry, "money-flow-index", money_flow_index);
-		register_strategy!(registry, "negative-volume-index", negative_volume_index);
-		register_strategy!(registry, "obv", obv);
-		register_strategy!(registry, "obv-confirmation", obv_confirmation);
-		register_strategy!(registry, "volume-price-trend", volume_price_trend);
-		register_strategy!(
-			registry,
-			"volume-weighted-average-price",
-			volume_weighted_average_price
-		);
-		register_strategy!(registry, "vwap-breakout", vwap_breakout);
-		register_strategy!(registry, "vwap-reversion", vwap_reversion);
 		registry
 	})
 }
@@ -669,21 +585,6 @@ pub fn lin_reg_channel(
 	crate::lin_reg_channel_strategy(&input.closes, config)
 }
 
-pub fn balance_of_power(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config =
-		config.map(|c| serde_json::from_value::<BalanceOfPowerConfig>(c).unwrap_or_default());
-	crate::balance_of_power_strategy(
-		input.opens.as_ref().unwrap_or(&input.closes),
-		input.highs.as_ref().unwrap_or(&input.closes),
-		input.lows.as_ref().unwrap_or(&input.closes),
-		&input.closes,
-		config,
-	)
-}
-
 pub fn alma_crossover(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
@@ -702,26 +603,6 @@ pub fn pivot_points(
 		input.highs.as_ref().unwrap_or(&input.closes),
 		input.lows.as_ref().unwrap_or(&input.closes),
 		&input.closes,
-		config,
-	)
-}
-
-pub fn wma_momentum(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config = config.map(|c| serde_json::from_value::<WmaMomentumConfig>(c).unwrap_or_default());
-	crate::wma_momentum_strategy(&input.closes, config)
-}
-
-pub fn vwma(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
-	let config = config.map(|c| serde_json::from_value::<VwmaConfig>(c).unwrap_or_default());
-	crate::vwma_strategy(
-		&input.closes,
-		input
-			.volumes
-			.as_ref()
-			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
 		config,
 	)
 }
@@ -770,11 +651,6 @@ pub fn larsson(
 		&input.closes,
 		config,
 	)
-}
-
-pub fn macd(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
-	let config = config.map(|c| serde_json::from_value::<MACDConfig>(c).unwrap_or_default());
-	crate::macd_strategy(&input.closes, config)
 }
 
 pub fn fibonacci_retracement(
@@ -845,33 +721,6 @@ pub fn super_trend(
 	)
 }
 
-pub fn sma_vwap_crossover(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config =
-		config.map(|c| serde_json::from_value::<SmaVwapCrossoverConfig>(c).unwrap_or_default());
-	crate::sma_vwap_crossover_strategy(
-		input.highs.as_ref().unwrap_or(&input.closes),
-		input.lows.as_ref().unwrap_or(&input.closes),
-		&input.closes,
-		input
-			.volumes
-			.as_ref()
-			.ok_or_else(|| StrategyError::VolumesRequired("Volumes required".into()))?,
-		config,
-	)
-}
-
-pub fn wma_confirmation(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config =
-		config.map(|c| serde_json::from_value::<WmaConfirmationConfig>(c).unwrap_or_default());
-	crate::wma_confirmation_strategy(&input.closes, config)
-}
-
 pub fn kdj(input: &StrategyInput, config: Option<serde_json::Value>) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<KdjConfig>(c).unwrap_or_default());
 	crate::kdj_strategy(
@@ -897,14 +746,6 @@ pub fn ma_crossover(
 ) -> StrategyResult<Vec<i8>> {
 	let config = config.map(|c| serde_json::from_value::<MaCrossoverConfig>(c).unwrap_or_default());
 	crate::ma_crossover_strategy(&input.closes, config)
-}
-
-pub fn hma_trend(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config = config.map(|c| serde_json::from_value::<HmaTrendConfig>(c).unwrap_or_default());
-	crate::hma_trend_strategy(&input.closes, config)
 }
 
 pub fn macd_crossover(
@@ -949,15 +790,6 @@ pub fn atr_threshold(
 	)
 }
 
-pub fn pairs_trading(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config =
-		config.map(|c| serde_json::from_value::<PairsTradingConfig>(c).unwrap_or_default());
-	crate::pairs_trading_strategy(&input.closes, config)
-}
-
 pub fn bollinger_bands_breakout(
 	input: &StrategyInput,
 	config: Option<serde_json::Value>,
@@ -965,14 +797,6 @@ pub fn bollinger_bands_breakout(
 	let config =
 		config.map(|c| serde_json::from_value::<BollingerBandsConfig>(c).unwrap_or_default());
 	crate::bollinger_bands_breakout_strategy(&input.closes, config)
-}
-
-pub fn z_score_breakout(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config = config.map(|c| serde_json::from_value::<ZScoreConfig>(c).unwrap_or_default());
-	crate::z_score_breakout_strategy(&input.closes, config)
 }
 
 pub fn donchian_reversion(
@@ -1028,15 +852,6 @@ pub fn projection_oscillator(
 		&input.closes,
 		config,
 	)
-}
-
-pub fn z_score_reversion(
-	input: &StrategyInput,
-	config: Option<serde_json::Value>,
-) -> StrategyResult<Vec<i8>> {
-	let config =
-		config.map(|c| serde_json::from_value::<ZScoreReversionConfig>(c).unwrap_or_default());
-	crate::z_score_reversion_strategy(&input.closes, config)
 }
 
 pub fn keltner_channel_reversion(

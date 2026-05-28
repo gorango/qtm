@@ -1,16 +1,22 @@
 use crate::types::configs::VolumePriceTrendConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Volume Price Trend Strategy
 ///
 /// Generates buy signals when VPT crosses above positive threshold with volume confirmation
 /// Generates sell signals when VPT crosses below negative threshold with volume confirmation
-///
-/// @strategy_id volume-price-trend
-/// @strategy_name Volume Price Trend
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "volume-price-trend",
+	name = "Volume Price Trend",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when VPT crosses above positive threshold with volume confirmation, sell signals when VPT crosses below negative threshold with volume confirmation",
+	opt_params = r#"[
+		{"param_name": "vpt_threshold", "min": 0.01, "max": 0.5, "step": 0.01}
+	]"#
+)]
 pub fn volume_price_trend_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -83,33 +89,4 @@ pub fn volume_price_trend_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Volume Price Trend strategy metadata for registry
-pub fn volume_price_trend_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "volume-price-trend",
-		"name": "Volume Price Trend",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when VPT crosses above positive threshold with volume confirmation, sell signals when VPT crosses below negative threshold with volume confirmation"
-	})
-}
-
-/// Get Volume Price Trend strategy default parameters
-pub fn volume_price_trend_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"min_criteria_met": 1,
-			"vpt_threshold": 0.1
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "vpt_threshold",
-				"min": 0.01,
-				"max": 0.5,
-				"step": 0.01
-			}
-		]
-	})
 }

@@ -1,5 +1,6 @@
 use crate::types::configs::CupAndHandleConfig;
 use crate::StrategyResult;
+use strategies_proc_macro::strategy;
 
 /// Cup and Handle Breakout Strategy
 ///
@@ -10,6 +11,18 @@ use crate::StrategyResult;
 /// @strategy_name Cup and Handle Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "cup-and-handle-breakout",
+	name = "Cup and Handle Breakout Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects bullish continuation cup and handle pattern",
+	opt_params = r#"[
+		{"param_name": "cupDepth", "min": 0.05, "max": 0.3, "step": 0.01},
+		{"param_name": "handleRetracement", "min": 0.1, "max": 0.5, "step": 0.05},
+		{"param_name": "minDuration", "min": 10, "max": 50, "step": 5}
+	]"#
+)]
 pub fn cup_and_handle_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -49,46 +62,4 @@ pub fn cup_and_handle_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Cup and Handle strategy metadata for registry
-pub fn cup_and_handle_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "cup-and-handle-breakout",
-		"name": "Cup and Handle Breakout Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects bullish continuation cup and handle pattern"
-	})
-}
-
-/// Get Cup and Handle strategy default parameters
-pub fn cup_and_handle_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"cupDepth": 0.15,
-			"handleRetracement": 0.3,
-			"minDuration": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "cupDepth",
-				"min": 0.05,
-				"max": 0.3,
-				"step": 0.01
-			},
-			{
-				"param_name": "handleRetracement",
-				"min": 0.1,
-				"max": 0.5,
-				"step": 0.05
-			},
-			{
-				"param_name": "minDuration",
-				"min": 10,
-				"max": 50,
-				"step": 5
-			}
-		]
-	})
 }

@@ -1,16 +1,23 @@
 use crate::types::configs::ObvConfirmationConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// OBV Confirmation Strategy
 ///
 /// Generates buy signals when OBV crosses above its SMA
 /// Generates sell signals when OBV crosses below its SMA
-///
-/// @strategy_id obv-confirmation
-/// @strategy_name OBV Confirmation
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "obv-confirmation",
+	name = "OBV Confirmation",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when OBV crosses above its SMA, sell signals when OBV crosses below its SMA",
+	opt_params = r#"[
+		{"param_name": "obv_period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "price_period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn obv_confirmation_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -66,39 +73,4 @@ pub fn obv_confirmation_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get OBV Confirmation strategy metadata for registry
-pub fn obv_confirmation_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "obv-confirmation",
-		"name": "OBV Confirmation",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when OBV crosses above its SMA, sell signals when OBV crosses below its SMA"
-	})
-}
-
-/// Get OBV Confirmation strategy default parameters
-pub fn obv_confirmation_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"obv_period": 10,
-			"price_period": 10
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "obv_period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "price_period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

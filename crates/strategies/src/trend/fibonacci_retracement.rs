@@ -1,15 +1,22 @@
 use crate::types::configs::FibonacciRetracementConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Fibonacci Retracement Trend Strategy
 ///
 /// Generates buy signals when price is above Fibonacci level
 /// Generates sell signals when price is below Fibonacci level
-///
-/// @strategy_id fibonacciRetracement
-/// @strategy_name Fibonacci Retracement Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "fibonacciRetracement",
+	name = "Fibonacci Retracement Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price is above Fibonacci level and sell signals when price is below Fibonacci level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 20.0, "max": 100.0, "step": 5.0},
+		{"param_name": "fib_level", "min": 0.236, "max": 0.786, "step": 0.05}
+	]"#
+)]
 pub fn fibonacci_retracement_strategy(
 	closes: &[f64],
 	config: Option<FibonacciRetracementConfig>,
@@ -57,39 +64,4 @@ pub fn fibonacci_retracement_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Fibonacci Retracement strategy metadata for registry
-pub fn fibonacci_retracement_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "fibonacciRetracement",
-		"name": "Fibonacci Retracement Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price is above Fibonacci level and sell signals when price is below Fibonacci level"
-	})
-}
-
-/// Get Fibonacci Retracement strategy default parameters
-pub fn fibonacci_retracement_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 50,
-			"fib_level": 0.618
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 20.0,
-				"max": 100.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "fib_level",
-				"min": 0.236,
-				"max": 0.786,
-				"step": 0.05
-			}
-		]
-	})
 }

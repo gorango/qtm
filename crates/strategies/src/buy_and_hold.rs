@@ -1,14 +1,17 @@
 use crate::types::configs::BuyAndHoldConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Buy and Hold Strategy
 ///
 /// Buy on first bar, hold forever
-///
-/// @strategy_id buyAndHold
-/// @strategy_name Buy and Hold
-/// @category special
-/// @default_timeframes 1d,1w,1M
+#[strategy(
+	id = "buyAndHold",
+	name = "Buy and Hold",
+	category = "special",
+	default_timeframes = ["1d", "1w", "1M"],
+	description = "Buy on first bar and hold position forever"
+)]
 pub fn buy_and_hold_strategy(
 	closes: &[f64],
 	config: Option<BuyAndHoldConfig>,
@@ -29,25 +32,6 @@ pub fn buy_and_hold_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Buy and Hold strategy metadata for registry
-pub fn buy_and_hold_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "buyAndHold",
-		"name": "Buy and Hold",
-		"category": "special",
-		"default_timeframes": ["1d", "1w", "1M"],
-		"description": "Buy on first bar and hold position forever"
-	})
-}
-
-/// Get Buy and Hold strategy default parameters
-pub fn buy_and_hold_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {},
-		"optimization_bounds": []
-	})
 }
 
 #[cfg(test)]

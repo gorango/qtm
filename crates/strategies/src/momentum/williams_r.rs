@@ -1,16 +1,24 @@
 use crate::types::configs::WilliamsRConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Williams %R Momentum Strategy
 ///
 /// Generates buy signals when Williams %R crosses above oversold level
 /// Generates sell signals when Williams %R crosses below overbought level
-///
-/// @strategy_id williamsR
-/// @strategy_name Williams %R Momentum Strategy
-/// @category momentum
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "williamsR",
+	name = "Williams %R Momentum Strategy",
+	category = "momentum",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when Williams %R crosses above oversold level and sell signals when Williams %R crosses below overbought level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "oversold", "min": -90.0, "max": -70.0, "step": 1.0},
+		{"param_name": "overbought", "min": -30.0, "max": -10.0, "step": 1.0}
+	]"#
+)]
 pub fn williams_r_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -72,46 +80,4 @@ pub fn williams_r_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Williams %R strategy metadata for registry
-pub fn williams_r_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "williamsR",
-		"name": "Williams %R Momentum Strategy",
-		"category": "momentum",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when Williams %R crosses above oversold level and sell signals when Williams %R crosses below overbought level"
-	})
-}
-
-/// Get Williams %R strategy default parameters
-pub fn williams_r_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"oversold": -80.0,
-			"overbought": -20.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": -90.0,
-				"max": -70.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": -30.0,
-				"max": -10.0,
-				"step": 1.0
-			}
-		]
-	})
 }

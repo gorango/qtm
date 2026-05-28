@@ -1,9 +1,21 @@
 use crate::types::configs::ProjectionOscillatorConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Projection Oscillator
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "projectionOscillator",
+	name = "Projection Oscillator Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "smooth", "min": 2.0, "max": 10.0, "step": 1.0}
+	]"#
+)]
 pub fn projection_oscillator_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -48,37 +60,4 @@ pub fn projection_oscillator_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn projection_oscillator_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "projectionOscillator",
-		"name": "Projection Oscillator Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level"
-	})
-}
-
-pub fn projection_oscillator_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"smooth": 3
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "smooth",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			}
-		]
-	})
 }

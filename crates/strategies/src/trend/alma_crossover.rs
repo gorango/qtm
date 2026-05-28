@@ -1,16 +1,24 @@
 use crate::types::configs::AlmacrossoverConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// ALMA Crossover Trend Strategy
 ///
 /// Generates buy signals when fast ALMA crosses above slow ALMA
 /// Generates sell signals when fast ALMA crosses below slow ALMA
-///
-/// @strategy_id almaCrossover
-/// @strategy_name ALMA Crossover Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "almaCrossover",
+	name = "ALMA Crossover Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when fast ALMA crosses above slow ALMA and sell signals when fast ALMA crosses below slow ALMA",
+	opt_params = r#"[
+		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slow_period", "min": 15.0, "max": 50.0, "step": 1.0},
+		{"param_name": "offset", "min": 0.5, "max": 1.0, "step": 0.05}
+	]"#
+)]
 pub fn alma_crossover_strategy(
 	closes: &[f64],
 	config: Option<AlmacrossoverConfig>,
@@ -72,46 +80,4 @@ pub fn alma_crossover_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get ALMA Crossover strategy metadata for registry
-pub fn alma_crossover_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "almaCrossover",
-		"name": "ALMA Crossover Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when fast ALMA crosses above slow ALMA and sell signals when fast ALMA crosses below slow ALMA"
-	})
-}
-
-/// Get ALMA Crossover strategy default parameters
-pub fn alma_crossover_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 9,
-			"slow_period": 21,
-			"offset": 0.85
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 15.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "offset",
-				"min": 0.5,
-				"max": 1.0,
-				"step": 0.05
-			}
-		]
-	})
 }

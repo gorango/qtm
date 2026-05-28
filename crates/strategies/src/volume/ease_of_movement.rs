@@ -1,16 +1,22 @@
 use crate::types::configs::EaseOfMovementConfig;
 use crate::utils::signals::{crossed_over, crossed_under};
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Ease of Movement Strategy
 ///
 /// Generates buy signals when EOM crosses above zero
 /// Generates sell signals when EOM crosses below zero
-///
-/// @strategy_id ease-of-movement
-/// @strategy_name Ease of Movement
-/// @category volume
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "ease-of-movement",
+	name = "Ease of Movement",
+	category = "volume",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when EOM crosses above zero, sell signals when EOM crosses below zero",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn ease_of_movement_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -59,32 +65,4 @@ pub fn ease_of_movement_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Ease of Movement strategy metadata for registry
-pub fn ease_of_movement_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "ease-of-movement",
-		"name": "Ease of Movement",
-		"category": "volume",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when EOM crosses above zero, sell signals when EOM crosses below zero"
-	})
-}
-
-/// Get Ease of Movement strategy default parameters
-pub fn ease_of_movement_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

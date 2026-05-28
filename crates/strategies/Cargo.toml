@@ -10,6 +10,8 @@ rayon.workspace = true
 thiserror.workspace = true
 indicators-core = { path = "../indicators" }
 factors-core = { path = "../factors" }
+inventory = "0.3"
+strategies-proc-macro = { path = "proc-macro" }
 napi = { workspace = true, optional = true }
 napi-derive = { workspace = true, optional = true }
 

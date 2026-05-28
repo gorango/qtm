@@ -1,9 +1,21 @@
 use crate::types::configs::MadReversionConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Mad Reversion
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "madReversion",
+	name = "MAD Reversion Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when price falls below mean minus deviation and sell signals when price exceeds mean plus deviation",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "deviationMultiplier", "min": 1.0, "max": 3.0, "step": 0.1}
+	]"#
+)]
 pub fn mad_reversion_strategy(
 	closes: &[f64],
 	config: Option<MadReversionConfig>,
@@ -54,37 +66,4 @@ pub fn mad_reversion_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn mad_reversion_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "madReversion",
-		"name": "MAD Reversion Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when price falls below mean minus deviation and sell signals when price exceeds mean plus deviation"
-	})
-}
-
-pub fn mad_reversion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"deviationMultiplier": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "deviationMultiplier",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			}
-		]
-	})
 }

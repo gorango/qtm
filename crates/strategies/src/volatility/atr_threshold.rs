@@ -1,9 +1,21 @@
 use crate::types::configs::AtrThresholdConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Atr Threshold
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "atrThreshold",
+	name = "ATR Threshold Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates signals based on ATR threshold comparison with price range",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "multiplier", "min": 1.0, "max": 5.0, "step": 0.1}
+	]"#
+)]
 pub fn atr_threshold_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -54,37 +66,4 @@ pub fn atr_threshold_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn atr_threshold_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "atrThreshold",
-		"name": "ATR Threshold Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates signals based on ATR threshold comparison with price range"
-	})
-}
-
-pub fn atr_threshold_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"multiplier": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "multiplier",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 0.1
-			}
-		]
-	})
 }

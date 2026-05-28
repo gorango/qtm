@@ -1,15 +1,22 @@
 use crate::types::configs::SuperTrendConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Super Trend Trend Strategy
 ///
 /// Generates signals on trend direction changes
 /// Buy when trend changes to up, sell when trend changes to down
-///
-/// @strategy_id superTrend
-/// @strategy_name Super Trend Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "superTrend",
+	name = "Super Trend Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when trend changes to up and sell signals when trend changes to down",
+	opt_params = r#"[
+		{"param_name": "period", "min": 2.0, "max": 20.0, "step": 1.0},
+		{"param_name": "multiplier", "min": 1.0, "max": 5.0, "step": 0.5}
+	]"#
+)]
 pub fn super_trend_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -58,39 +65,4 @@ pub fn super_trend_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Super Trend strategy metadata for registry
-pub fn super_trend_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "superTrend",
-		"name": "Super Trend Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when trend changes to up and sell signals when trend changes to down"
-	})
-}
-
-/// Get Super Trend strategy default parameters
-pub fn super_trend_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 3,
-			"multiplier": 3.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 2.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "multiplier",
-				"min": 1.0,
-				"max": 5.0,
-				"step": 0.5
-			}
-		]
-	})
 }

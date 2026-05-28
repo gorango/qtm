@@ -1,15 +1,21 @@
 use crate::types::configs::PivotPointsConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Pivot Points Trend Strategy
 ///
 /// Generates signals based on price vs pivot levels
 /// Buy when price breaks above pivot, sell when price breaks below pivot
-///
-/// @strategy_id pivotPoints
-/// @strategy_name Pivot Points Trend
-/// @category trend
-/// @default_timeframes 1h,4h,1d
+#[strategy(
+	id = "pivotPoints",
+	name = "Pivot Points Trend",
+	category = "trend",
+	default_timeframes = ["1h", "4h", "1d"],
+	description = "Generates signals based on price position relative to pivot levels",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0}
+	]"#
+)]
 pub fn pivot_points_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -58,34 +64,4 @@ pub fn pivot_points_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get Pivot Points strategy metadata for registry
-pub fn pivot_points_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "pivotPoints",
-		"name": "Pivot Points Trend",
-		"category": "trend",
-		"default_timeframes": ["1h", "4h", "1d"],
-		"description": "Generates signals based on price position relative to pivot levels"
-	})
-}
-
-/// Get Pivot Points strategy default parameters
-pub fn pivot_points_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"period_high": 20,
-			"period_low": 20
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			}
-		]
-	})
 }

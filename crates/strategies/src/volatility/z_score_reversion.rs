@@ -1,9 +1,21 @@
 use crate::types::configs::ZScoreReversionConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Z Score Reversion
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
+#[strategy(
+	id = "zScoreReversion",
+	name = "Z-Score Reversion Strategy",
+	category = "volatility",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when z-score is below negative threshold and sell signals when it exceeds positive threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "threshold", "min": 0.1, "max": 5.0, "step": 0.1}
+	]"#
+)]
 pub fn z_score_reversion_strategy(
 	closes: &[f64],
 	config: Option<ZScoreReversionConfig>,
@@ -44,37 +56,4 @@ pub fn z_score_reversion_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn z_score_reversion_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "zScoreReversion",
-		"name": "Z-Score Reversion Strategy",
-		"category": "volatility",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when z-score is below negative threshold and sell signals when it exceeds positive threshold"
-	})
-}
-
-pub fn z_score_reversion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"threshold": 2.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "threshold",
-				"min": 0.1,
-				"max": 5.0,
-				"step": 0.1
-			}
-		]
-	})
 }

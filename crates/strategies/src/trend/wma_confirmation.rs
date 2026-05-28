@@ -1,15 +1,22 @@
 use crate::types::configs::WmaConfirmationConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// WMA Confirmation Trend Strategy
 ///
 /// Generates buy signals when WMA slope is above threshold
 /// Generates sell signals when WMA slope is below negative threshold
-///
-/// @strategy_id wmaConfirmation
-/// @strategy_name WMA Confirmation Trend
-/// @category trend
-/// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "wmaConfirmation",
+	name = "WMA Confirmation Trend",
+	category = "trend",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Generates buy signals when WMA slope is above threshold and sell signals when WMA slope is below negative threshold",
+	opt_params = r#"[
+		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "threshold", "min": 0.0001, "max": 0.01, "step": 0.0001}
+	]"#
+)]
 pub fn wma_confirmation_strategy(
 	closes: &[f64],
 	config: Option<WmaConfirmationConfig>,
@@ -60,39 +67,4 @@ pub fn wma_confirmation_strategy(
 	}
 
 	Ok(signals)
-}
-
-/// Get WMA Confirmation strategy metadata for registry
-pub fn wma_confirmation_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "wmaConfirmation",
-		"name": "WMA Confirmation Trend",
-		"category": "trend",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Generates buy signals when WMA slope is above threshold and sell signals when WMA slope is below negative threshold"
-	})
-}
-
-/// Get WMA Confirmation strategy default parameters
-pub fn wma_confirmation_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 20,
-			"threshold": 0.001
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "threshold",
-				"min": 0.0001,
-				"max": 0.01,
-				"step": 0.0001
-			}
-		]
-	})
 }

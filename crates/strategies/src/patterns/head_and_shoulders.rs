@@ -1,5 +1,6 @@
 use crate::types::configs::HeadAndShouldersConfig;
 use crate::StrategyResult;
+use strategies_proc_macro::strategy;
 
 /// Head and Shoulders Reversal Strategy
 ///
@@ -11,6 +12,19 @@ use crate::StrategyResult;
 /// @strategy_name Head and Shoulders Reversal Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
+#[strategy(
+	id = "head-and-shoulders-reversal",
+	name = "Head and Shoulders Reversal Strategy",
+	category = "patterns",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "Detects head and shoulders (bearish) and inverse head and shoulders (bullish) patterns",
+	opt_params = r#"[
+		{"param_name": "minDistance", "min": 3, "max": 20, "step": 1},
+		{"param_name": "tolerance", "min": 0.0, "max": 0.1, "step": 0.005},
+		{"param_name": "deviation", "min": 0.0, "max": 0.1, "step": 0.005},
+		{"param_name": "minDataLength", "min": 10, "max": 50, "step": 5}
+	]"#
+)]
 pub fn head_and_shoulders_strategy(
 	opens: &[f64],
 	highs: &[f64],
@@ -53,53 +67,4 @@ pub fn head_and_shoulders_strategy(
 	}
 
 	Ok(result)
-}
-
-/// Get Head and Shoulders strategy metadata for registry
-pub fn head_and_shoulders_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "head-and-shoulders-reversal",
-		"name": "Head and Shoulders Reversal Strategy",
-		"category": "patterns",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Detects head and shoulders (bearish) and inverse head and shoulders (bullish) patterns"
-	})
-}
-
-/// Get Head and Shoulders strategy default parameters
-pub fn head_and_shoulders_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"minDistance": 5,
-			"tolerance": 0.02,
-			"deviation": 0.005,
-			"minDataLength": 15
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "minDistance",
-				"min": 3,
-				"max": 20,
-				"step": 1
-			},
-			{
-				"param_name": "tolerance",
-				"min": 0.0,
-				"max": 0.1,
-				"step": 0.005
-			},
-			{
-				"param_name": "deviation",
-				"min": 0.0,
-				"max": 0.1,
-				"step": 0.005
-			},
-			{
-				"param_name": "minDataLength",
-				"min": 10,
-				"max": 50,
-				"step": 5
-			}
-		]
-	})
 }
