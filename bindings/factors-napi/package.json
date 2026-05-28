@@ -1,16 +1,40 @@
 {
 	"name": "@quantamental/factors",
 	"version": "0.1.0",
+	"description": "Native Rust fundamental factors for quantitative analysis",
+	"type": "module",
 	"main": "index.js",
 	"types": "index.d.ts",
-	"napi": {
-		"name": "factors",
-		"triples": {
-			"defaults": true
-		}
-	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
 	"scripts": {
 		"build": "napi build --platform --release",
-		"build:debug": "napi build --platform"
+		"build:debug": "napi build --platform",
+		"test": "cargo test",
+		"lint": "cargo clippy",
+		"artifacts": "napi artifacts",
+		"prepublishOnly": "napi prepublish -t npm",
+		"bump": "npm version patch --no-git-tag-version",
+		"postversion": "npx napi create-npm-dirs && npm run build && npm run prepublishOnly && npm install"
+	},
+	"devDependencies": {
+		"@napi-rs/cli": "^3.0.0",
+		"@types/node": "^25.0.3",
+		"typescript": "^5.9.3",
+		"@biomejs/biome": "^1.9.0",
+		"bun-types": "latest"
+	},
+	"napi": {
+		"binaryName": "factors",
+		"targets": [
+			"x86_64-unknown-linux-gnu",
+			"aarch64-unknown-linux-gnu",
+			"x86_64-apple-darwin",
+			"aarch64-apple-darwin",
+			"x86_64-pc-windows-msvc",
+			"aarch64-pc-windows-msvc"
+		]
 	}
 }

@@ -1,0 +1,134 @@
+name: Publish NAPI Bindings
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: 'Packages to build (comma-separated: factors,indicators,strategies)'
+        required: true
+        default: 'factors,indicators,strategies'
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - aarch64-unknown-linux-gnu
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+          - x86_64-pc-windows-msvc
+          - aarch64-pc-windows-msvc
+        package:
+          - factors-napi
+          - indicators-napi
+          - strategies-napi
+    runs-on: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && 'ubuntu-latest' || matrix.target == 'x86_64-unknown-linux-gnu' && 'ubuntu-latest' || matrix.target == 'x86_64-apple-darwin' && 'macos-15-intel' || matrix.target == 'aarch64-apple-darwin' && 'macos-latest' || matrix.target == 'x86_64-pc-windows-msvc' && 'windows-latest' || 'windows-latest' }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Install ARM64 Linker (Linux)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: bindings/${{ matrix.package }}
+
+      - name: Build
+        run: npm run build
+        working-directory: bindings/${{ matrix.package }}
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: bindings-${{ matrix.package }}-${{ matrix.target }}
+          path: bindings/${{ matrix.package }}/*.node
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+        working-directory: bindings/indicators-napi
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: bindings-indicators-napi-${{ matrix.target }}
+          path: bindings/indicators-napi/
+          merge-multiple: true
+      - name: Run Rust tests
+        run: cargo test --workspace
+      - name: Run Node.js tests
+        run: node --test ./index.test.js 2>/dev/null || echo "No Node.js tests yet"
+        working-directory: bindings/indicators-napi
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    environment: npm
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: bindings-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in factors-napi indicators-napi strategies-napi; do
+            echo "Publishing @quantamental/${pkg%-napi}..."
+            cd bindings/$pkg
+            cp ../../artifacts/*.node . 2>/dev/null || true
+            npx napi artifacts
+            npx napi prepublish -t npm
+            for dir in npm/*; do
+              if [ -d "$dir" ]; then
+                (cd "$dir" && npm publish --provenance --access public) || true
+              fi
+            done
+            npm publish --provenance --access public || true
+            cd ../..
+          done

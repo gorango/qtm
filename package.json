@@ -1,0 +1,12 @@
+{
+	"private": true,
+	"description": "Quantamental — native Rust quantitative analysis library",
+	"workspaces": [
+		"bindings/*"
+	],
+	"scripts": {
+		"build": "npm run build --workspaces --if-present",
+		"test": "cargo test --workspace",
+		"lint": "cargo clippy --workspace"
+	}
+}
