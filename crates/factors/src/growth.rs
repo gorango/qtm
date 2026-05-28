@@ -2,11 +2,13 @@ use crate::types::data::{FactorPoint, FundamentalPoint};
 use crate::utils::growth::create_growth_factor;
 
 /// Year-over-Year Revenue Growth: `(currentRevenue - previousRevenue) / |previousRevenue|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn revenue_growth_yo_y(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	create_growth_factor(&fundamentals, "revenue")
 }
 
 /// Revenue CAGR: `(endValue / startValue)^(1/period) - 1` over `period` filings.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn revenue_growth_cagr(
 	fundamentals: Vec<FundamentalPoint>,
 	period: Option<u32>,
@@ -47,6 +49,7 @@ pub fn revenue_growth_cagr(
 }
 
 /// Revenue Seasonality Index: `(maxQuarterRevenue - minQuarterRevenue) / annualAvgRevenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn revenue_seasonality(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -106,6 +109,7 @@ pub fn revenue_seasonality(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoi
 }
 
 /// 5-Year Revenue Per Share Growth: `(rpsEnd / rpsStart)^(1/5) - 1`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn five_y_revenue_growth_per_share(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	let mut symbol_groups: std::collections::HashMap<String, Vec<&FundamentalPoint>> =
@@ -144,11 +148,13 @@ pub fn five_y_revenue_growth_per_share(fundamentals: Vec<FundamentalPoint>) -> V
 }
 
 /// Year-over-Year EPS Growth: `(currentEPS - previousEPS) / |previousEPS|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn epsgrowth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	create_growth_factor(&fundamentals, "eps")
 }
 
 /// Quarter-over-Quarter EPS Growth: sequential `(currentEPS - previousEPS) / |previousEPS|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn eps_growth_qo_q(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -177,6 +183,7 @@ pub fn eps_growth_qo_q(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> 
 }
 
 /// 10-Year EPS Growth: point-to-point `(epsLast / epsFirst)^(1/years) - 1`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn eps_growth_10_year(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -211,6 +218,7 @@ pub fn eps_growth_10_year(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 }
 
 /// EPS CAGR: `(endEPS / startEPS)^(1/period) - 1` over `period` filings.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn eps_growth_cagr(
 	fundamentals: Vec<FundamentalPoint>,
 	period: Option<u32>,
@@ -247,6 +255,7 @@ pub fn eps_growth_cagr(
 }
 
 /// Rolling Average EPS: mean EPS over last `periods` filings.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn eps_avg(fundamentals: Vec<FundamentalPoint>, periods: Option<u32>) -> Vec<FactorPoint> {
 	let p = periods.unwrap_or(4) as usize;
 	let mut results = Vec::new();
@@ -283,6 +292,7 @@ pub fn eps_avg(fundamentals: Vec<FundamentalPoint>, periods: Option<u32>) -> Vec
 }
 
 /// Count of quarters with positive EPS over last `periods` filings.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn eps_positive_count(
 	fundamentals: Vec<FundamentalPoint>,
 	periods: Option<u32>,
@@ -315,6 +325,7 @@ pub fn eps_positive_count(
 }
 
 /// Sequential EPS Growth: `(currentEPS - previousEPS) / |previousEPS|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn growth_eps(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -343,6 +354,7 @@ pub fn growth_eps(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Sequential Free Cash Flow Growth: `(fcfCurrent - fcfPrevious) / |fcfPrevious|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn free_cash_flow_growth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -383,11 +395,13 @@ pub fn free_cash_flow_growth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 }
 
 /// Year-over-Year Cost Growth: `(currentCost - previousCost) / |previousCost|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn cost_growth_yo_y(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	create_growth_factor(&fundamentals, "cost_and_expenses")
 }
 
 /// Share Count CAGR: `(sharesLast / sharesFirst)^(1/years) - 1`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn share_count_growth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 

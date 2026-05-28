@@ -1,6 +1,7 @@
 use crate::types::data::{FactorPoint, FundamentalPoint};
 
 /// Return on Equity: `netIncome / shareholdersEquity`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn return_on_equity(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -21,6 +22,7 @@ pub fn return_on_equity(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint>
 }
 
 /// Return on Assets: `netIncome / totalAssets`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn return_on_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -41,6 +43,7 @@ pub fn return_on_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint>
 }
 
 /// Return on Invested Capital: `(netIncome - totalDividends) / (totalLiabilities + shareholdersEquity)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn return_on_invested_capital(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -75,6 +78,7 @@ pub fn return_on_invested_capital(fundamentals: Vec<FundamentalPoint>) -> Vec<Fa
 }
 
 /// Gross Margin: `(revenue - costOfRevenue) / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn gross_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -92,6 +96,7 @@ pub fn gross_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Net Profit Margin: `netIncome / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn net_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -112,6 +117,7 @@ pub fn net_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Operating Profit Margin: `operatingIncome / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn operating_profit_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -132,6 +138,7 @@ pub fn operating_profit_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 }
 
 /// EBITDA Margin: `ebitda / revenue`. Falls back to `operatingIncome / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn ebitda_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -155,6 +162,7 @@ pub fn ebitda_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Asset Turnover: `revenue / totalAssets`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn asset_turnover(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -175,6 +183,7 @@ pub fn asset_turnover(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Working Capital: `currentAssets - currentLiabilities`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn working_capital(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -195,6 +204,7 @@ pub fn working_capital(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> 
 }
 
 /// Working Capital Turnover: `revenue / (currentAssets - currentLiabilities)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn working_capital_turnover(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -224,6 +234,7 @@ pub fn working_capital_turnover(fundamentals: Vec<FundamentalPoint>) -> Vec<Fact
 
 /// Quality of Earnings Index (0-1): composite of accruals, cash flow consistency,
 /// revenue quality, and balance sheet strength.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn quality_of_earnings_index(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -294,6 +305,7 @@ pub fn quality_of_earnings_index(fundamentals: Vec<FundamentalPoint>) -> Vec<Fac
 }
 
 /// Retained Earnings Per Share: `retainedEarnings / sharesOutstanding`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn retained_earnings(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -314,6 +326,7 @@ pub fn retained_earnings(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 }
 
 /// R&D-to-Revenue ratio: `researchAndDevelopmentExpenses / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn r_and_d_to_revenue(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -334,11 +347,13 @@ pub fn r_and_d_to_revenue(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 }
 
 /// Placeholder — requires price data not available in current IFundamentalPoint.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn historical_volatility_vs_beta(_fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	Vec::new()
 }
 
 /// Debt-to-Equity ratio: `totalLiabilities / shareholdersEquity`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn debt_to_equity(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -359,6 +374,7 @@ pub fn debt_to_equity(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// EBITDAR: `operatingIncome + depreciationAndAmortization` (adds back rent proxy).
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn ebitdar(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {

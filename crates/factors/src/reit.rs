@@ -3,6 +3,7 @@ use crate::utils::pricing::find_price_on_or_after;
 
 /// Price to AFFO (Adjusted Funds From Operations): `price / affoPerShare`.
 /// Uses closest price on/after filing date.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_affo(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
 	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
@@ -27,6 +28,7 @@ pub fn price_to_affo(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> V
 
 /// REIT Dividend Safety: `forwardAnnualDividendRate / (affoPerShare * 4)`.
 /// Lower ratio indicates safer dividend coverage.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn reit_dividend_safety(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {

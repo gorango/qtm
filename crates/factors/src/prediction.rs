@@ -1,6 +1,7 @@
 use crate::types::data::{FactorPoint, PredictionMarketPoint};
 
 /// Prediction Market Odds: extracts implied probability `price` from each prediction market point.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn prediction_market_odds(prediction_data: Vec<PredictionMarketPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -26,6 +27,7 @@ pub fn prediction_market_odds(prediction_data: Vec<PredictionMarketPoint>) -> Ve
 }
 
 /// Prediction Market Odds Momentum: `(currentPrice - priceNPeriodsBack) / priceNPeriodsBack`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn odds_momentum(
 	prediction_data: Vec<PredictionMarketPoint>,
 	period: Option<u32>,

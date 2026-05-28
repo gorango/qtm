@@ -3,6 +3,7 @@ use crate::types::data::{FactorPoint, FundamentalPoint};
 /// Altman Z-Score (simplified): predicts bankruptcy risk.
 /// Z = 1.2*(0.1) + 1.4*(0.2) + 3.3*(NI/TA) + 0.6*(MktCap/Liab) + 0.999*(Sales/TA).
 /// >3 safe, 1.8-3 grey, <1.8 distress.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn altman_z_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -48,6 +49,7 @@ pub fn altman_z_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 
 /// Greenblatt Magic Formula score: `earningsYield + returnOnCapital`.
 /// Higher scores indicate more attractive value+quality combination.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn magic_formula(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -90,6 +92,7 @@ pub fn magic_formula(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 
 /// Piotroski F-Score (0-6): scores profitability, leverage, and efficiency criteria
 /// by comparing current vs prior period for each symbol.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn piotroski_f_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 

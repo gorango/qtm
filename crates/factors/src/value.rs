@@ -20,6 +20,7 @@ use crate::utils::pricing::find_price_on_or_after;
 /// assert_eq!(result.len(), 1);
 /// assert!((result[0].value - 75.0).abs() < 1e-6);
 /// ```
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_earnings(
 	fundamentals: Vec<FundamentalPoint>,
 	prices: Vec<Bar>,
@@ -50,6 +51,7 @@ pub fn price_to_earnings(
 }
 
 /// Price-to-Book ratio: `marketCap / shareholdersEquity`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_book(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -70,6 +72,7 @@ pub fn price_to_book(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Price-to-Sales ratio: `marketCap / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_sales(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -90,6 +93,7 @@ pub fn price_to_sales(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Price-to-Free-Cash-Flow ratio: `marketCap / (operatingCashFlow - capitalExpenditure)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_free_cash_flow(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -115,6 +119,7 @@ pub fn price_to_free_cash_flow(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 }
 
 /// Enterprise-Value-to-EBITDA ratio: `enterpriseValue / ebitda`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn enterprise_value_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -135,6 +140,7 @@ pub fn enterprise_value_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<Fa
 }
 
 /// Earnings Yield: `eps / (marketCap / sharesOutstanding)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn earnings_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -163,6 +169,7 @@ pub fn earnings_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Dividend Yield: `dividendsPerShare / price`. Uses closest price on/after filing date.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
 	prices_sorted.sort_by(|a, b| {
@@ -193,6 +200,7 @@ pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> 
 }
 
 /// Free Cash Flow Yield: `freeCashFlow / marketCap`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn free_cash_flow_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -218,6 +226,7 @@ pub fn free_cash_flow_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 }
 
 /// Free Cash Flow Margin: `(operatingCashFlow - capitalExpenditure) / revenue`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn free_cash_flow_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -240,6 +249,7 @@ pub fn free_cash_flow_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 }
 
 /// Margin of Safety: `dcfValue / price - 1`. Positive means undervalued per DCF.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
 	prices_sorted.sort_by(|a, b| {
@@ -267,6 +277,7 @@ pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -
 }
 
 /// Owner Earnings: `operatingCashFlow - capitalExpenditure` (Buffett's metric).
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn owner_earnings(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -284,6 +295,7 @@ pub fn owner_earnings(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Weighted Average Cost of Capital (simplified): `E/V*0.08 + D/V*0.04*(1-0.21)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn wacc(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -314,6 +326,7 @@ pub fn wacc(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Cash-to-Market-Cap ratio: `cashAndEquivalents / marketCap`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn cash_to_market_cap(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -334,6 +347,7 @@ pub fn cash_to_market_cap(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 }
 
 /// Extracts raw market capitalization value.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn market_cap_value(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -348,6 +362,7 @@ pub fn market_cap_value(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint>
 }
 
 /// Net Debt to EBITDA: `(totalDebt - cashAndEquivalents) / ebitda`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn net_debt_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -369,6 +384,7 @@ pub fn net_debt_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 }
 
 /// Net Debt to EBITDAR: `(totalDebt - cash) / (operatingIncome + depreciation)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn net_debt_to_ebitdar(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -395,6 +411,7 @@ pub fn net_debt_to_ebitdar(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoi
 }
 
 /// Debt Service Coverage Ratio: `operatingIncome / interestExpense`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn debt_service_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -415,6 +432,7 @@ pub fn debt_service_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<F
 }
 
 /// Book Value Per Share: `shareholdersEquity / sharesOutstanding`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn book_value_per_share(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -435,6 +453,7 @@ pub fn book_value_per_share(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 }
 
 /// Price-to-Book ratio (alternate): `marketCap / shareholdersEquity`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_book_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -455,6 +474,7 @@ pub fn price_to_book_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoi
 }
 
 /// Price-to-Earnings ratio (alternate): `(marketCap / sharesOutstanding) / eps`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_earnings_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {

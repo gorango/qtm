@@ -1,6 +1,7 @@
 use crate::types::data::{EarningsReportPoint, FactorPoint};
 
 /// Earnings Surprise: `(actualEPS - estimatedEPS) / |estimatedEPS|`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn earnings_surprise(reports: Vec<EarningsReportPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for r in &reports {

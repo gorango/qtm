@@ -3,6 +3,7 @@ use crate::utils::pricing::find_price_on_or_after;
 
 /// Analyst Rating Momentum: `currentRating - avgPastRating` over `period` filings.
 /// Positive values indicate improving analyst sentiment.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn analyst_rating_momentum(
 	fundamentals: Vec<FundamentalPoint>,
 	period: Option<u32>,
@@ -44,6 +45,7 @@ pub fn analyst_rating_momentum(
 
 /// Analyst Target Upside: `(targetPrice - price) / price`.
 /// Uses closest price on/after filing date.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn analyst_target_upside(
 	fundamentals: Vec<FundamentalPoint>,
 	prices: Vec<Bar>,

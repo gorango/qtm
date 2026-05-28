@@ -2,6 +2,7 @@ use crate::types::data::{FactorPoint, FundamentalPoint};
 
 /// Shareholder Yield: `(dividendsPerShare * sharesOutstanding) / marketCap`.
 /// Captures dividend component of total shareholder return.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn shareholder_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -30,6 +31,7 @@ pub fn shareholder_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 }
 
 /// Dividend Payout Ratio: `dividendsPerShare / eps`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn dividend_payout_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -50,6 +52,7 @@ pub fn dividend_payout_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 }
 
 /// Dividend Coverage Ratio: `netIncome / (dividendsPerShare * sharesOutstanding)`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn dividend_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -78,6 +81,7 @@ pub fn dividend_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 }
 
 /// Dividend Positive for 10 Years (binary): 1 if all 40 trailing quarters had positive dividends.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn dividend_positive_10_years(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 

@@ -2,6 +2,7 @@ use crate::types::data::{FactorPoint, OnChainDataPoint};
 
 /// Active Address Growth: `(current - previous) / previous` over `period` days.
 /// Measures blockchain network adoption growth.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn active_address_growth(
 	on_chain_data: Vec<OnChainDataPoint>,
 	period: Option<f64>,
@@ -46,6 +47,7 @@ pub fn active_address_growth(
 
 /// Exchange Flow Momentum: `(currentFlow - previousFlow) / |previousFlow|` over `period` days.
 /// Positive = inflow (accumulation), negative = outflow (distribution).
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn exchange_flow_momentum(
 	on_chain_data: Vec<OnChainDataPoint>,
 	period: Option<f64>,
@@ -90,6 +92,7 @@ pub fn exchange_flow_momentum(
 
 /// Network Value to Transactions (NVT) Ratio: `marketCap / transactionVolume`.
 /// Lower values may indicate undervaluation relative to economic activity.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn nvt_ratio(on_chain_data: Vec<OnChainDataPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 
@@ -132,6 +135,7 @@ pub fn nvt_ratio(on_chain_data: Vec<OnChainDataPoint>) -> Vec<FactorPoint> {
 
 /// Staking Ratio: `stakedSupply / totalSupply`.
 /// Measures network security and participant commitment.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn staking_ratio(on_chain_data: Vec<OnChainDataPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 

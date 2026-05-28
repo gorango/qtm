@@ -1,6 +1,7 @@
 use crate::types::data::{FactorPoint, FundamentalPoint};
 
 /// Debt-to-Assets ratio: `totalLiabilities / totalAssets`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn debt_to_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -21,6 +22,7 @@ pub fn debt_to_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 }
 
 /// Current Ratio: `currentAssets / currentLiabilities`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn current_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -42,6 +44,7 @@ pub fn current_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 
 /// Interest Coverage Ratio: `operatingIncome / interestExpense`.
 /// Falls back to `netIncome / interestExpense` if operating income unavailable.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn interest_coverage(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
@@ -62,6 +65,7 @@ pub fn interest_coverage(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 }
 
 /// Tangible Asset Ratio: `propertyPlantEquipment / totalAssets`.
+#[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn tangible_asset_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
