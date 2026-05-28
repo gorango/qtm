@@ -2,9 +2,6 @@ target
 
 # Node.js
 node_modules/
-package-lock.json
-pnpm-lock.yaml
-bun.lock
 
 # NAPI-rs generated files
 *.node

@@ -2,7 +2,8 @@
 	"private": true,
 	"description": "Quantamental — native Rust quantitative analysis library",
 	"workspaces": [
-		"bindings/*"
+		"bindings/*",
+		"packages/*"
 	],
 	"scripts": {
 		"build": "npm run build --workspaces --if-present",
