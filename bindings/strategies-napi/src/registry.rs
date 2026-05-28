@@ -117,7 +117,7 @@ pub fn get_strategy_registry() -> StrategyRegistry {
 	insert_composite(
 		&mut strategies,
 		"elliott-wave-pattern",
-		crate::patterns::elliott_wave::elliott_wave_strategy_metadata(),
+		strategies_core::elliott_wave_strategy_metadata(),
 	);
 
 	StrategyRegistry { strategies }
@@ -267,7 +267,7 @@ pub fn get_strategy_defaults() -> serde_json::Value {
 	insert_default(
 		&mut defaults,
 		"elliott-wave-pattern",
-		crate::patterns::elliott_wave::elliott_wave_strategy_defaults(),
+		strategies_core::elliott_wave_strategy_defaults(),
 	);
 
 	serde_json::Value::Object(defaults)

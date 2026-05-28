@@ -161,6 +161,63 @@ fn ohlcv_accessor(name: &str) -> proc_macro2::TokenStream {
 	}
 }
 
+fn snake_to_camel(s: &str) -> String {
+	let mut result = String::new();
+	let mut capitalize_next = false;
+	for c in s.chars() {
+		if c == '_' {
+			capitalize_next = true;
+		} else if capitalize_next {
+			result.push(c.to_ascii_uppercase());
+			capitalize_next = false;
+		} else {
+			result.push(c);
+		}
+	}
+	result
+}
+
+fn generate_napi_binding(
+	fn_name: &Ident,
+	fn_name_str: &str,
+	ohlcv_params: &[String],
+	config_type: &Type,
+) -> proc_macro2::TokenStream {
+	let napi_fn_name = Ident::new(&format!("{}_napi_binding", fn_name_str), fn_name.span());
+	let js_name = snake_to_camel(fn_name_str);
+
+	let napi_params: Vec<_> = ohlcv_params
+		.iter()
+		.map(|name| {
+			let ident = Ident::new(name, fn_name.span());
+			quote! { #ident: Vec<f64> }
+		})
+		.collect();
+
+	let param_refs: Vec<_> = ohlcv_params
+		.iter()
+		.map(|name| {
+			let ident = Ident::new(name, fn_name.span());
+			quote! { &#ident }
+		})
+		.collect();
+
+	quote! {
+		#[cfg(feature = "napi")]
+		#[::napi_derive::napi(js_name = #js_name)]
+		pub fn #napi_fn_name(
+			#(#napi_params),*,
+			config: Option<#config_type>,
+		) -> ::napi::Result<Vec<i8>> {
+			#fn_name(#(#param_refs),*, config)
+				.map_err(|e| ::napi::Error::new(
+					::napi::Status::InvalidArg,
+					e.to_string(),
+				))
+		}
+	}
+}
+
 /// Marks a function as a strategy, auto-registering it in the strategy registry.
 ///
 /// # Attributes
@@ -212,6 +269,9 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 		}
 	};
 
+	// NAPI binding (auto-generated #[napi] wrapper)
+	let napi_binding = generate_napi_binding(&fn_name, &fn_name_str, &ohlcv_params, &config_type);
+
 	// Optimization bounds JSON string (or empty array)
 	let opt_bounds = match &attr.opt_params {
 		Some(json) => {
@@ -254,6 +314,8 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 				.map(|c| serde_json::from_value::<#config_type>(c).unwrap_or_default());
 			#fn_name(#(#ohlcv_args),*, config)
 		}
+
+		#napi_binding
 
 		inventory::submit! {
 			crate::registry::StrategyDescriptor {
