@@ -1,7 +1,5 @@
 use napi_derive::napi;
 
-mod utils;
-
 pub mod market;
 pub mod momentum;
 pub mod patterns;
