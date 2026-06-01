@@ -2,6 +2,7 @@ target
 
 # Node.js
 node_modules/
+dist/
 
 # NAPI-rs generated files
 *.node

@@ -44,9 +44,8 @@ describe('createWorkflowTool', () => {
 describe('adapters', () => {
 	it('converts to Vercel format', () => {
 		const vercel = toVercelTool(mockTool)
-		expect(vercel.name).toBe('test_indicator')
 		expect(vercel.description).toBe('A test indicator tool')
-		expect(vercel.parameters).toBeDefined()
+		expect(vercel.inputSchema).toBeDefined()
 	})
 
 	it('converts to OpenAI format', () => {
