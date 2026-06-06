@@ -1,17 +1,16 @@
-// ── Unified NAPI bindings ───────────────────────────
-//
-// This crate re-exports all bindings from the individual NAPI crates
-// so that consumers can import a single `@quantamental/core` package.
-//
-// NAPI-rs 3.x discovers `#[napi]` annotations via linker sections, so
-// functions in dependency crates are automatically registered when
-// linked into this cdylib. The `pub use` below also prevents dead-code
-// elimination from stripping the symbols.
+pub mod factors_registry;
+pub mod fundamentals;
+pub mod indicators;
+pub mod indicators_registry;
+pub mod quantamentals;
+pub mod strategies_registry;
 
-extern crate factors;
-extern crate indicators;
-extern crate strategies;
-
-pub use factors::*;
+pub use factors_registry::*;
+pub use fundamentals::*;
 pub use indicators::*;
-pub use strategies::*;
+pub use indicators_registry::*;
+pub use quantamentals::*;
+pub use strategies_registry::*;
+
+// Re-export core types needed for NAPI
+pub use strategies_core::registry::{get_strategy_registry_impl, StrategyInput};

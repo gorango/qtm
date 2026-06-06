@@ -3,24 +3,8 @@
   "configVersion": 1,
   "workspaces": {
     "": {},
-    "bindings/factors-napi": {
-      "name": "@quantamental/factors",
-      "version": "0.1.0",
-      "devDependencies": {
-        "@napi-rs/cli": "^3.7.0",
-        "typescript": "^6.0.3",
-      },
-    },
-    "bindings/indicators-napi": {
-      "name": "@quantamental/indicators",
-      "version": "0.1.0",
-      "devDependencies": {
-        "@napi-rs/cli": "^3.7.0",
-        "typescript": "^6.0.3",
-      },
-    },
-    "bindings/strategies-napi": {
-      "name": "@quantamental/strategies",
+    "bindings/napi": {
+      "name": "@quantamental/bindings",
       "version": "0.1.0",
       "devDependencies": {
         "@napi-rs/cli": "^3.7.0",
@@ -31,14 +15,12 @@
       "name": "@quantamental/tools",
       "version": "0.1.0",
       "dependencies": {
+        "@quantamental/bindings": "workspace:*",
         "zod": "^4.4.3",
       },
       "devDependencies": {
         "@anthropic-ai/sdk": "^0.101.0",
         "@langchain/core": "^1.1.48",
-        "@quantamental/factors": "workspace:*",
-        "@quantamental/indicators": "workspace:*",
-        "@quantamental/strategies": "workspace:*",
         "@types/node": "^25.9.2",
         "@vitest/coverage-v8": "^4.1.8",
         "ai": "^6.0.197",
@@ -50,18 +32,14 @@
       "peerDependencies": {
         "@anthropic-ai/sdk": ">=0.30.0",
         "@langchain/core": ">=0.3.0",
-        "@quantamental/factors": ">=0.1.0",
-        "@quantamental/indicators": ">=0.1.0",
-        "@quantamental/strategies": ">=0.1.0",
+        "@quantamental/bindings": ">=0.1.0",
         "ai": ">=4.0.0",
         "openai": ">=4.0.0",
       },
       "optionalPeers": [
         "@anthropic-ai/sdk",
         "@langchain/core",
-        "@quantamental/factors",
-        "@quantamental/indicators",
-        "@quantamental/strategies",
+        "@quantamental/bindings",
         "ai",
         "openai",
       ],
@@ -274,11 +252,7 @@
 
     "@quansync/fs": ["@quansync/fs@1.0.0", "", { "dependencies": { "quansync": "^1.0.0" } }, "sha512-4TJ3DFtlf1L5LDMaM6CanJ/0lckGNtJcMjQ1NAV6zDmA0tEHKZtxNKin8EgPaVX1YzljbxckyT2tJrpQKAtngQ=="],
 
-    "@quantamental/factors": ["@quantamental/factors@workspace:bindings/factors-napi"],
-
-    "@quantamental/indicators": ["@quantamental/indicators@workspace:bindings/indicators-napi"],
-
-    "@quantamental/strategies": ["@quantamental/strategies@workspace:bindings/strategies-napi"],
+    "@quantamental/bindings": ["@quantamental/bindings@workspace:bindings/napi"],
 
     "@quantamental/tools": ["@quantamental/tools@workspace:packages/tools"],
 

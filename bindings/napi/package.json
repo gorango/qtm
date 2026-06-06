@@ -1,5 +1,5 @@
 {
-	"name": "@quantamental/core",
+	"name": "@quantamental/bindings",
 	"version": "0.1.0",
 	"description": "Unified native Rust quantamental analysis — factors, indicators, and strategies",
 	"type": "module",
@@ -10,8 +10,8 @@
 		"index.d.ts"
 	],
 	"scripts": {
-		"build": "napi build --platform --release",
-		"build:debug": "napi build --platform",
+		"build": "napi build --platform --release --esm",
+		"build:debug": "napi build --platform --esm",
 		"test": "cargo test",
 		"lint": "cargo clippy",
 		"artifacts": "napi artifacts",

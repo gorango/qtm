@@ -7,9 +7,6 @@ members = [
     "crates/strategies/proc-macro",
     "crates/codegen",
     "bindings/napi",
-    "bindings/factors-napi",
-    "bindings/indicators-napi",
-    "bindings/strategies-napi",
 ]
 
 [workspace.dependencies]

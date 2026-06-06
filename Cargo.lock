@@ -211,19 +211,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "91622ff5e7162018101f2fea40d6ebf4a78bbe5a49736a2020649edf9693679e"
 
 [[package]]
-name = "factors"
-version = "0.1.0"
-dependencies = [
- "factors",
- "factors-core",
- "napi",
- "napi-build",
- "napi-derive",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "factors-core"
 version = "0.1.0"
 dependencies = [
@@ -351,20 +338,6 @@ name = "hermit-abi"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c"
-
-[[package]]
-name = "indicators"
-version = "0.1.0"
-dependencies = [
- "indicators",
- "indicators-core",
- "napi",
- "napi-build",
- "napi-derive",
- "rayon",
- "serde",
- "serde_json",
-]
 
 [[package]]
 name = "indicators-core"
@@ -604,15 +577,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "quantamental"
+name = "quantamental-bindings"
 version = "0.1.0"
 dependencies = [
- "factors",
- "indicators",
+ "factors-core",
+ "indicators-core",
  "napi",
  "napi-build",
  "napi-derive",
- "strategies",
+ "rayon",
+ "serde",
+ "serde_json",
+ "strategies-core",
 ]
 
 [[package]]
@@ -827,22 +803,6 @@ name = "slab"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
-
-[[package]]
-name = "strategies"
-version = "0.1.0"
-dependencies = [
- "factors-core",
- "indicators-core",
- "napi",
- "napi-build",
- "napi-derive",
- "rayon",
- "serde",
- "serde_json",
- "strategies",
- "strategies-core",
-]
 
 [[package]]
 name = "strategies-core"

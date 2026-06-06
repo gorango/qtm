@@ -1,5 +1,5 @@
 [package]
-name = "quantamental"
+name = "quantamental-bindings"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,11 +7,14 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-factors = { path = "../factors-napi" }
-indicators = { path = "../indicators-napi" }
-strategies = { path = "../strategies-napi" }
+strategies-core = { path = "../../crates/strategies", features = ["napi"] }
+factors-core = { path = "../../crates/factors", features = ["napi"] }
+indicators-core = { path = "../../crates/indicators", features = ["napi"] }
 napi.workspace = true
 napi-derive.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rayon.workspace = true
 
 [build-dependencies]
 napi-build.workspace = true

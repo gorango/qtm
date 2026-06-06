@@ -1,9 +1,6 @@
-use napi_derive::napi;
-
 pub mod market;
 pub mod momentum;
 pub mod patterns;
-pub mod registry;
 pub mod shared;
 pub mod trend;
 pub mod volatility;
@@ -18,11 +15,3 @@ pub use trend::*;
 pub use volatility::*;
 pub use volume::*;
 pub use warmup::*;
-
-#[napi]
-pub fn init() {}
-
-#[napi]
-pub fn test_function() -> f64 {
-	42.0
-}
