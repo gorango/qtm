@@ -1715,7 +1715,7 @@
         "fast_period": 10,
         "slow_period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AbsolutePriceOscillatorConfig\",\"description\":\"Absolute Price Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "accelerationBands": {
@@ -1732,7 +1732,7 @@
         "multiplier": 4.0,
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AccelerationBandsConfig\",\"description\":\"Acceleration Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "accumulation-distribution": {
@@ -1748,7 +1748,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AccumulationDistributionConfig\",\"description\":\"Accumulation Distribution Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "adx": {
@@ -1765,7 +1765,7 @@
         "period": 14,
         "trend_threshold": 25.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ADXConfig\",\"description\":\"ADX Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"trend_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "adx-rsi-trend-momentum": {
@@ -1785,7 +1785,7 @@
         "rsi_period": 14,
         "trend_threshold": 25.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AdxRsiConfig\",\"description\":\"ADX RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"adx_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"trend_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "almaCrossover": {
@@ -1803,7 +1803,7 @@
         "offset": 0.85,
         "slow_period": 21
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AlmacrossoverConfig\",\"description\":\"ALMA Crossover Strategy configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"offset\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "almaHmaDivergence": {
@@ -1822,7 +1822,7 @@
         "offset": 0.85,
         "slow_period": 21
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AlmahmaDivergenceConfig\",\"description\":\"ALMA HMA Divergence Strategy configuration\",\"type\":\"object\",\"properties\":{\"divergence_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"offset\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "aroon": {
@@ -1840,7 +1840,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AroonConfig\",\"description\":\"Aroon Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "atrThreshold": {
@@ -1857,7 +1857,7 @@
         "multiplier": 2.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AtrThresholdConfig\",\"description\":\"ATR Threshold Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "atrVolatilityThreshold": {
@@ -1874,7 +1874,7 @@
         "period": 14,
         "volatility_threshold": 1.2
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AtrVolatilityThresholdConfig\",\"description\":\"ATR Volatility Threshold Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"volatility_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "awesomeOscillator": {
@@ -1891,7 +1891,7 @@
         "fast_period": 5,
         "slow_period": 34
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"AwesomeOscillatorConfig\",\"description\":\"Awesome Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "balanceOfPower": {
@@ -1907,7 +1907,7 @@
       "defaults": {
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BalanceOfPowerConfig\",\"description\":\"Balance of Power Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "bb-rsi-breakout": {
@@ -1927,7 +1927,7 @@
         "rsi_oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BbRsiConfig\",\"description\":\"BB RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"bb_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"bb_std_dev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "bollingerBands": {
@@ -1944,7 +1944,7 @@
         "period": 20,
         "std_dev": 2.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"std_dev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "bollingerBandsMeanReversion": {
@@ -1961,7 +1961,7 @@
         "period": 20,
         "std_dev": 2.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"std_dev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "buyAndHold": {
@@ -1975,7 +1975,7 @@
       ],
       "description": "Buy on first bar and hold position forever",
       "defaults": {},
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BuyAndHoldConfig\",\"description\":\"Buy and Hold Strategy configuration\",\"type\":\"object\"}",
       "output_type": "signal"
     },
     "cci": {
@@ -1993,7 +1993,7 @@
         "oversold": -100.0,
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CciConfig\",\"description\":\"CCI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "chaikin-money-flow": {
@@ -2009,7 +2009,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChaikinMoneyFlowConfig\",\"description\":\"Chaikin Money Flow Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "chandeForecastOscillator": {
@@ -2027,7 +2027,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChandeForecastOscillatorConfig\",\"description\":\"Chande Forecast Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "cointegration-pair-trading": {
@@ -2046,7 +2046,7 @@
         "period": 20,
         "second_closes": []
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CointegrationConfig\",\"description\":\"Cointegration Strategy configuration\",\"type\":\"object\",\"properties\":{\"beta_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"entry_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"second_closes\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}}}}",
       "output_type": "signal"
     },
     "correlation-mean-reversion": {
@@ -2065,7 +2065,7 @@
         "reversion_threshold": 0.2,
         "second_closes": []
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CorrelationReversionConfig\",\"description\":\"Correlation Reversion Strategy configuration\",\"type\":\"object\",\"properties\":{\"holding_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"reversion_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"second_closes\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}}}}",
       "output_type": "signal"
     },
     "correlation-pair-trading": {
@@ -2085,7 +2085,7 @@
         "second_closes": [],
         "spread_method": "ratio"
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CorrelationPairConfig\",\"description\":\"Correlation Pair Strategy configuration\",\"type\":\"object\",\"properties\":{\"entry_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exit_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"second_closes\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}},\"spread_method\":{\"type\":[\"string\",\"null\"]}}}",
       "output_type": "signal"
     },
     "cup-and-handle-breakout": {
@@ -2103,7 +2103,7 @@
         "handle_retracement": 0.3,
         "min_duration": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CupAndHandleConfig\",\"description\":\"Cup and Handle Strategy configuration\",\"type\":\"object\",\"properties\":{\"cup_depth\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"handle_retracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"min_duration\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "dmi": {
@@ -2121,7 +2121,7 @@
         "period_adx": 14,
         "period_di": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DmiConfig\",\"description\":\"DMI Strategy configuration\",\"type\":\"object\",\"properties\":{\"adx_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period_adx\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period_di\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "donchianBreakout": {
@@ -2137,7 +2137,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DonchianTurtleConfig\",\"description\":\"Donchian Turtle Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "donchianReversion": {
@@ -2153,7 +2153,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DonchianTurtleConfig\",\"description\":\"Donchian Turtle Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "double-top-bottom-reversal": {
@@ -2171,7 +2171,7 @@
         "min_distance": 10,
         "tolerance": 0.03
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DoubleTopBottomConfig\",\"description\":\"Double Top/Bottom Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_distance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "double-top-stochastic-reversal": {
@@ -2192,7 +2192,7 @@
         "oversold": 20.0,
         "tolerance": 0.03
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DoubleTopStochasticConfig\",\"description\":\"Double Top Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"d_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"k_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_distance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "ease-of-movement": {
@@ -2208,7 +2208,7 @@
       "defaults": {
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"EaseOfMovementConfig\",\"description\":\"Ease of Movement Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "elliott-wave-pattern": {
@@ -2229,7 +2229,7 @@
         "wave3_min_extension": 1.618,
         "wave4_retracement": 0.382
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ElliottWaveConfig\",\"description\":\"Elliott Wave Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_wave_separation\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"retracement_tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave2_retracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave3_min_extension\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave4_retracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "fibonacciRetracement": {
@@ -2246,7 +2246,7 @@
         "fib_level": 0.618,
         "period": 50
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"FibonacciRetracementConfig\",\"description\":\"Fibonacci Retracement Strategy configuration\",\"type\":\"object\",\"properties\":{\"fib_level\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "flag-pennant-macd-continuation": {
@@ -2268,7 +2268,7 @@
         "macd_slow_period": 26,
         "pole_length": 10
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"FlagsPennantsMacdConfig\",\"description\":\"Flag/Pennant + MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"additional_buffer\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"breakout_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"consolidation_bars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"pole_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "flags-pennants-continuation": {
@@ -2287,7 +2287,7 @@
         "consolidation_bars": 10,
         "pole_length": 10
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"FlagsPennantsConfig\",\"description\":\"Flags and Pennants Strategy configuration\",\"type\":\"object\",\"properties\":{\"additional_buffer\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"breakout_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"consolidation_bars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"pole_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "force-index": {
@@ -2305,7 +2305,7 @@
         "oversold": -0.1,
         "period": 13
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ForceIndexConfig\",\"description\":\"Force Index Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "head-and-shoulders-reversal": {
@@ -2324,7 +2324,7 @@
         "min_distance": 5,
         "tolerance": 0.02
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"HeadAndShouldersConfig\",\"description\":\"Head and Shoulders Strategy configuration\",\"type\":\"object\",\"properties\":{\"deviation\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"min_data_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_distance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "hmaTrend": {
@@ -2340,7 +2340,7 @@
       "defaults": {
         "period": 21
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"HmaTrendConfig\",\"description\":\"HMA Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "ichimoku": {
@@ -2359,7 +2359,7 @@
         "medium": 26,
         "short": 9
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IchimokuCloudConfig\",\"description\":\"Ichimoku Cloud Strategy configuration\",\"type\":\"object\",\"properties\":{\"close\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"long\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"medium\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"short\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "kdj": {
@@ -2379,7 +2379,7 @@
         "period1": 3,
         "period2": 3
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KdjConfig\",\"description\":\"KDJ Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period1\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period2\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "keltnerChannelBreakout": {
@@ -2395,7 +2395,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "keltnerChannelReversion": {
@@ -2411,7 +2411,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "keltnerVolatilityBreakout": {
@@ -2427,7 +2427,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerVolatilityBreakoutConfig\",\"description\":\"Keltner Volatility Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "kst": {
@@ -2447,7 +2447,7 @@
         "roc4_period": 30,
         "signal_period": 9
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KSTConfig\",\"description\":\"KST Strategy configuration\",\"type\":\"object\",\"properties\":{\"roc1_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"roc2_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"roc3_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"roc4_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "larsson": {
@@ -2465,7 +2465,7 @@
         "signal_offset": 0,
         "use_consolidating_filter": 1
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"LarssonConfig\",\"description\":\"Larsson Strategy configuration\",\"type\":\"object\",\"properties\":{\"consolidating_lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"int32\"},\"consolidating_threshold_pct\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"signal_offset\":{\"type\":[\"integer\",\"null\"],\"format\":\"int32\"},\"use_consolidating_filter\":{\"type\":[\"integer\",\"null\"],\"format\":\"int32\"}}}",
       "output_type": "signal"
     },
     "linRegChannel": {
@@ -2482,7 +2482,7 @@
         "offset": 0.0,
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"LinRegChannelConfig\",\"description\":\"LinRegChannelConfig is used for Linear Regression Channel trend strategy\",\"type\":\"object\",\"properties\":{\"offset\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "linRegSlope": {
@@ -2501,7 +2501,7 @@
         "period_adx": 14,
         "slope_period": 10
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"LinregSlopeConfig\",\"description\":\"Linear Regression Slope Strategy configuration\",\"type\":\"object\",\"properties\":{\"adx_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period_adx\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slope_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "ma-crossover": {
@@ -2518,7 +2518,7 @@
         "fast_period": 5,
         "slow_period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MaCrossoverConfig\",\"description\":\"Moving Average Crossover configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "ma-rsi-trend-following": {
@@ -2537,7 +2537,7 @@
         "oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MaRsiConfig\",\"description\":\"MA RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"ma_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "macd": {
@@ -2555,7 +2555,7 @@
         "signal_period": 9,
         "slow_period": 26
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MACDConfig\",\"description\":\"MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "macd-rsi-momentum": {
@@ -2576,7 +2576,7 @@
         "rsi_oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RsiMacdConfig\",\"description\":\"RSI MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"macd_fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "macd-stochastic-confirmation": {
@@ -2598,7 +2598,7 @@
         "signal_period": 9,
         "slow_period": 26
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MacdStochasticConfig\",\"description\":\"MACD Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"d_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"k_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "macdCrossover": {
@@ -2616,7 +2616,7 @@
         "signal_period": 9,
         "slow_period": 26
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MacdCrossoverConfig\",\"description\":\"MACD Crossover Strategy configuration\",\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "madReversion": {
@@ -2633,7 +2633,7 @@
         "deviation_multiplier": 2.0,
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MadReversionConfig\",\"description\":\"MAD Reversion Strategy configuration\",\"type\":\"object\",\"properties\":{\"deviation_multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "mfi-obv-volume-flow": {
@@ -2651,7 +2651,7 @@
         "overbought": 80.0,
         "oversold": 20.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MfiObvConfig\",\"description\":\"MFI OBV Strategy configuration\",\"type\":\"object\",\"properties\":{\"mfi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "momentum": {
@@ -2669,7 +2669,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MomentumConfig\",\"description\":\"Momentum Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "money-flow-index": {
@@ -2687,7 +2687,7 @@
         "oversold": 20.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"MoneyFlowIndexConfig\",\"description\":\"Money Flow Index Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "negative-volume-index": {
@@ -2704,7 +2704,7 @@
         "period": 14,
         "start": 1000.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"NegativeVolumeIndexConfig\",\"description\":\"Negative Volume Index Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"start\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "obv": {
@@ -2720,7 +2720,7 @@
       "defaults": {
         "lookback_period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"OBVConfig\",\"description\":\"OBV Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "obv-confirmation": {
@@ -2737,7 +2737,7 @@
         "obv_period": 10,
         "price_period": 10
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ObvConfirmationConfig\",\"description\":\"OBV Confirmation Strategy configuration\",\"type\":\"object\",\"properties\":{\"obv_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"price_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "obv-rsi-volume-confirmation": {
@@ -2755,7 +2755,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RSIConfig\",\"description\":\"RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "openingRangeBreakout": {
@@ -2772,7 +2772,7 @@
         "lookback": 10,
         "threshold_pct": 0.02
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"OpeningRangeBreakoutConfig\",\"description\":\"Opening Range Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold_pct\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "pairsTrading": {
@@ -2790,7 +2790,7 @@
         "exit_threshold": 0.5,
         "period": 100
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PairsTradingConfig\",\"description\":\"Pairs Trading Strategy configuration\",\"type\":\"object\",\"properties\":{\"entry_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exit_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "parabolicSar": {
@@ -2807,7 +2807,7 @@
         "max_step": 0.02,
         "step": 0.02
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ParabolicSarConfig\",\"description\":\"Parabolic SAR Strategy configuration\",\"type\":\"object\",\"properties\":{\"max_step\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"step\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "percentRank-ranking": {
@@ -2825,7 +2825,7 @@
         "exit_percentile": 50.0,
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PercentRankConfig\",\"description\":\"Percent Rank Strategy configuration\",\"type\":\"object\",\"properties\":{\"entry_percentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exit_percentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "pivotPoints": {
@@ -2843,7 +2843,7 @@
         "period_high": 20,
         "period_low": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PivotPointsConfig\",\"description\":\"Pivot Points Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period_high\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period_low\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "projectionOscillator": {
@@ -2860,7 +2860,7 @@
         "period": 14,
         "smooth": 3
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ProjectionOscillatorConfig\",\"description\":\"Projection Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"smooth\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "roc": {
@@ -2878,7 +2878,7 @@
         "oversold": -10.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocConfig\",\"description\":\"ROC Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "roc-obv-rsi-momentum": {
@@ -2897,7 +2897,7 @@
         "rsi_oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocObvRsiConfig\",\"description\":\"ROC OBV RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"obv_roc_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "rsi": {
@@ -2915,7 +2915,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RSIConfig\",\"description\":\"RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "rsi-macd-confirmation": {
@@ -2936,7 +2936,7 @@
         "rsi_oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RsiMacdConfig\",\"description\":\"RSI MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"macd_fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "rsi2": {
@@ -2954,7 +2954,7 @@
         "oversold": 30.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"Rsi2Config\",\"description\":\"RSI2 Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "smaVwapCrossover": {
@@ -2974,7 +2974,7 @@
         "sma_period": 3,
         "vwap_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"SmaVwapCrossoverConfig\",\"description\":\"SMA-VWAP Crossover configuration\",\"type\":\"object\",\"properties\":{\"anchored\":{\"type\":[\"boolean\",\"null\"]},\"price_source\":{\"type\":[\"string\",\"null\"]},\"session_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"sma_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"vwap_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "standardDeviation": {
@@ -2991,7 +2991,7 @@
         "period": 14,
         "threshold": 2.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"StandardDeviationConfig\",\"description\":\"Standard Deviation Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "stochastic": {
@@ -3010,7 +3010,7 @@
         "overbought": 80.0,
         "oversold": 20.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"StochasticConfig\",\"description\":\"Stochastic Oscillator configuration\",\"type\":\"object\",\"properties\":{\"d_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"k_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "superTrend": {
@@ -3027,7 +3027,7 @@
         "multiplier": 3.0,
         "period": 3
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"SuperTrendConfig\",\"description\":\"Super Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "triangle-breakout": {
@@ -3046,7 +3046,7 @@
         "min_points": 4,
         "slope_tolerance": 0.01
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TriangleConfig\",\"description\":\"Triangle Strategy configuration\",\"type\":\"object\",\"properties\":{\"angle_tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"min_data_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_points\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slope_tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "triangle-rsi-breakout": {
@@ -3066,7 +3066,7 @@
         "rsi_period": 14,
         "slope_tolerance": 0.01
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TriangleRsiConfig\",\"description\":\"Triangle RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"min_points\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slope_tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "typicalPrice": {
@@ -3080,7 +3080,7 @@
       ],
       "description": "Generates buy signals when close is above typical price and sell signals when close is below typical price",
       "defaults": {},
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TypicalPriceConfig\",\"description\":\"Typical Price Strategy configuration\",\"type\":\"object\"}",
       "output_type": "signal"
     },
     "ultimateOscillator": {
@@ -3100,7 +3100,7 @@
         "period2": 14,
         "period3": 28
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"UltimateOscillatorConfig\",\"description\":\"Ultimate Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period1\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period2\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period3\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "varianceStop": {
@@ -3117,7 +3117,7 @@
         "multiplier": 2.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VarianceStopConfig\",\"description\":\"Variance Stop Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "volatilityAdjusted": {
@@ -3134,7 +3134,7 @@
         "period": 20,
         "target_volatility": 0.15
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VolatilityAdjustedConfig\",\"description\":\"Volatility Adjusted Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"target_volatility\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "volume-price-trend": {
@@ -3151,7 +3151,7 @@
         "min_criteria_met": 1,
         "vpt_threshold": 0.1
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VolumePriceTrendConfig\",\"description\":\"Volume Price Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"min_criteria_met\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"vpt_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "volume-profile-rsi": {
@@ -3170,7 +3170,7 @@
         "rsi_period": 14,
         "volume_profile_bins": 50
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VolumeProfileRsiConfig\",\"description\":\"Volume Profile RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"volume_profile_bins\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "volumeWeightedAveragePrice": {
@@ -3186,7 +3186,7 @@
       "defaults": {
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VolumeWeightedAveragePriceConfig\",\"description\":\"Volume Weighted Average Price Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vortex": {
@@ -3202,7 +3202,7 @@
       "defaults": {
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VortexConfig\",\"description\":\"Vortex Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-breakout": {
@@ -3219,7 +3219,7 @@
         "breakout_threshold": 0.01,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapBreakoutConfig\",\"description\":\"VWAP Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"breakout_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-ema-rsi-trend": {
@@ -3239,7 +3239,7 @@
         "rsi_oversold": 30.0,
         "rsi_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapEmaRsiConfig\",\"description\":\"VWAP EMA RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"ema_fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"ema_slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsi_overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-macd-momentum": {
@@ -3257,7 +3257,7 @@
         "macd_signal_period": 9,
         "macd_slow_period": 26
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapMacdConfig\",\"description\":\"VWAP MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"macd_fast_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_signal_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macd_slow_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-reversion": {
@@ -3274,7 +3274,7 @@
         "deviation_threshold": 0.02,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapReversionConfig\",\"description\":\"VWAP Reversion Strategy configuration\",\"type\":\"object\",\"properties\":{\"deviation_threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-rsi-breakout": {
@@ -3293,7 +3293,7 @@
         "rsi_period": 14,
         "vwap_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapRsiConfig\",\"description\":\"VWAP RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsi_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"vwap_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwap-stochastic-confirmation": {
@@ -3313,7 +3313,7 @@
         "oversold": 20.0,
         "vwap_period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapStochasticConfig\",\"description\":\"VWAP Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"d_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"k_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"vwap_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "vwma": {
@@ -3329,7 +3329,7 @@
       "defaults": {
         "period": 20
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwmaConfig\",\"description\":\"VWMA Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "wedge-breakout": {
@@ -3347,7 +3347,7 @@
         "min_points": 4,
         "slope_tolerance": 0.0001
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WedgeConfig\",\"description\":\"Wedge Strategy configuration\",\"type\":\"object\",\"properties\":{\"min_data_length\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"min_points\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slope_tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "williamsR": {
@@ -3365,7 +3365,7 @@
         "oversold": -80.0,
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WilliamsRConfig\",\"description\":\"Williams R Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "wmaConfirmation": {
@@ -3382,7 +3382,7 @@
         "period": 14,
         "threshold": 0.02
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WmaConfirmationConfig\",\"description\":\"WMA Confirmation Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "wmaMomentum": {
@@ -3398,7 +3398,7 @@
       "defaults": {
         "period": 14
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WmaMomentumConfig\",\"description\":\"WMA Momentum Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}}}",
       "output_type": "signal"
     },
     "zScoreBreakout": {
@@ -3416,7 +3416,7 @@
         "std_period": 20,
         "threshold": 2.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ZScoreConfig\",\"description\":\"Z-Score Strategy configuration\",\"type\":\"object\",\"properties\":{\"mean_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"std_period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     },
     "zScoreReversion": {
@@ -3433,7 +3433,7 @@
         "period": 20,
         "threshold": 2.0
       },
-      "params_schema": "",
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ZScoreReversionConfig\",\"description\":\"Z-Score Reversion Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}}}",
       "output_type": "signal"
     }
   }

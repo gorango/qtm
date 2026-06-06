@@ -90,6 +90,7 @@ fn build_registry() -> String {
 	for desc in get_strategy_descriptors() {
 		let defaults = (desc.defaults_fn)();
 		let params = defaults.get("params").cloned().unwrap_or_default();
+		let params_schema_str = (desc.params_schema_fn)();
 		registry.strategies.insert(
 			desc.id.to_string(),
 			StrategyEntry {
@@ -99,7 +100,7 @@ fn build_registry() -> String {
 				default_timeframes: desc.default_timeframes.iter().map(|s| s.to_string()).collect(),
 				description: desc.description.to_string(),
 				defaults: params,
-				params_schema: desc.params_schema.to_string(),
+				params_schema: params_schema_str.to_string(),
 				output_type: desc.output_type.to_string(),
 			},
 		);

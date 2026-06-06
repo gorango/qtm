@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::sync::OnceLock;
 
 use crate::StrategyResult;
-use crate::*;
 
 #[derive(Clone)]
 pub struct StrategyInput {
@@ -23,9 +22,8 @@ pub struct StrategyDescriptor {
 	pub description: &'static str,
 	pub handler: fn(&StrategyInput, Option<serde_json::Value>) -> StrategyResult<Vec<i8>>,
 	pub defaults_fn: fn() -> serde_json::Value,
-	/// JSON Schema describing the config parameters for this strategy.
-	/// Empty string `""` means no config parameters.
-	pub params_schema: &'static str,
+	/// Returns JSON Schema describing the config parameters for this strategy.
+	pub params_schema_fn: fn() -> &'static str,
 	/// Output type: "signal" (Vec<i8>), "factor" (Vec<f64>), "indicator" (Vec<f64>)
 	pub output_type: &'static str,
 }

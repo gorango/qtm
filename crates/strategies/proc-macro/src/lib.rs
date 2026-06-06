@@ -241,6 +241,7 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 	let wrapped_fn_name = Ident::new(&format!("{}_wrapped", fn_name_str), fn_name.span());
 	let metadata_fn_name = Ident::new(&format!("{}_metadata", fn_name_str), fn_name.span());
 	let defaults_fn_name = Ident::new(&format!("{}_defaults", fn_name_str), fn_name.span());
+	let params_schema_fn_name = Ident::new(&format!("{}_params_schema", fn_name_str), fn_name.span());
 
 	let id = &attr.id;
 	let name = &attr.name;
@@ -315,6 +316,16 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 			#fn_name(#(#ohlcv_args),*, config)
 		}
 
+		pub fn #params_schema_fn_name() -> &'static str {
+			use ::std::sync::OnceLock;
+			static SCHEMA: OnceLock<String> = OnceLock::new();
+			SCHEMA.get_or_init(|| {
+				::serde_json::to_string(
+					&::schemars::schema_for!(#config_type)
+				).expect("valid JSON Schema")
+			})
+		}
+
 		#napi_binding
 
 		inventory::submit! {
@@ -326,7 +337,7 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 				description: #description,
 				handler: #wrapped_fn_name,
 				defaults_fn: #defaults_fn_name,
-				params_schema: "",
+				params_schema_fn: #params_schema_fn_name,
 				output_type: "signal",
 			}
 		}

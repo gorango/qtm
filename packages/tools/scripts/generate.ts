@@ -14,6 +14,7 @@ interface FactorEntry {
 	category: string
 	description: string
 	needs_prices: boolean
+	params_schema: string
 	output_type: string
 }
 
@@ -22,6 +23,7 @@ interface IndicatorEntry {
 	name: string
 	category: string
 	description: string
+	params_schema: string
 	output_type: string
 }
 
@@ -32,47 +34,81 @@ interface StrategyEntry {
 	default_timeframes: string[]
 	description: string
 	defaults: Record<string, unknown>
+	params_schema: string
 	output_type: string
 }
 
-function inferZodType(value: unknown): string {
-	if (value === null || value === undefined) return 'z.unknown()'
-	if (typeof value === 'number') {
-		return Number.isInteger(value) ? 'z.number().int()' : 'z.number()'
-	}
-	if (typeof value === 'boolean') return 'z.boolean()'
-	if (typeof value === 'string') return 'z.string()'
-	if (Array.isArray(value)) {
-		if (value.length === 0) return 'z.array(z.unknown())'
-		const elemTypes = new Set(value.map(inferZodType))
-		const elemType = elemTypes.size === 1 ? [...elemTypes][0] : 'z.unknown()'
-		return `z.array(${elemType})`
-	}
-	if (typeof value === 'object' && value !== null) {
-		const entries = Object.entries(value as Record<string, unknown>)
-		if (entries.length > 0) {
-			const fields = entries.map(([k, v]) => `${k}: ${inferZodType(v)}`)
-			const joined = fields.join(', ')
-			return `z.object({ ${joined} })`
+function resolveJsonSchemaType(prop: Record<string, unknown>): { type: string; nullable: boolean } {
+	const raw = prop.type
+	if (typeof raw === 'string') return { type: raw, nullable: prop.nullable === true }
+	if (Array.isArray(raw)) {
+		const nonNull = raw.filter((t: unknown) => t !== 'null')
+		return {
+			type: nonNull.length === 1 ? (nonNull[0] as string) : 'unknown',
+			nullable: raw.includes('null'),
 		}
-		return 'z.record(z.string(), z.unknown())'
 	}
-	return 'z.unknown()'
+	return { type: 'unknown', nullable: false }
 }
 
-function generateConfigSchema(defaults: Record<string, unknown>): string {
-	const keys = Object.keys(defaults)
-	if (keys.length === 0) return 'z.object({}).optional()'
+function jsonSchemaTypeToZod(prop: Record<string, unknown>): string {
+	const { type, nullable } = resolveJsonSchemaType(prop)
+	let result: string
+	switch (type) {
+		case 'integer':
+			result = 'z.number().int()'
+			break
+		case 'number':
+			result = 'z.number()'
+			break
+		case 'boolean':
+			result = 'z.boolean()'
+			break
+		case 'string':
+			result = 'z.string()'
+			break
+		case 'array':
+			if (prop.items) {
+				result = `z.array(${jsonSchemaTypeToZod(prop.items as Record<string, unknown>)})`
+			} else {
+				result = 'z.array(z.unknown())'
+			}
+			break
+		default:
+			result = 'z.unknown()'
+	}
+	if (nullable) result += '.nullable()'
+	if (prop.description) {
+		result += `.describe(${JSON.stringify(prop.description)})`
+	}
+	return result
+}
 
-	const fields = keys.map((key) => {
-		const value = defaults[key]
-		const zodType = inferZodType(value)
-		const jsonValue = JSON.stringify(value)
-		return `${key.replace(/[^a-zA-Z0-9_$]/g, '_')}: ${zodType}.optional().default(${jsonValue})`
+function jsonSchemaToZod(schema: Record<string, unknown>, defaults: Record<string, unknown>): string {
+	if (!schema || schema.type !== 'object') return 'z.object({}).optional()'
+	const props = schema.properties as Record<string, Record<string, unknown>> | undefined
+	if (!props) return 'z.object({}).optional()'
+	const required = new Set<string>((schema.required as string[]) || [])
+	const fields = Object.entries(props).map(([key, prop]) => {
+		const zodType = jsonSchemaTypeToZod(prop)
+		const defaultVal = key in defaults ? defaults[key] : prop.default
+		if (!required.has(key)) {
+			return `${key}: ${zodType}.optional()${defaultVal !== undefined ? `.default(${JSON.stringify(defaultVal)})` : ''}`
+		}
+		return `${key}: ${zodType}${defaultVal !== undefined ? `.default(${JSON.stringify(defaultVal)})` : ''}`
 	})
+	if (fields.length === 0) return 'z.object({}).optional()'
+	return `z.object({ ${fields.join(', ')} }).optional()`
+}
 
-	const joined = fields.join(', ')
-	return `z.object({ ${joined} }).optional()`
+function generateConfigSchema(paramsSchema: string, defaults: Record<string, unknown>): string {
+	if (!paramsSchema) return 'z.object({}).optional()'
+	try {
+		const schema = JSON.parse(paramsSchema)
+		return jsonSchemaToZod(schema, defaults)
+	} catch {
+		return 'z.object({}).optional()'
+	}
 }
 
 function capitalize(s: string): string {
@@ -135,7 +171,7 @@ function main() {
 	// Generate strategy tools
 	for (const [id, entry] of Object.entries(registry.strategies)) {
 		const safeName = entry.id.replace(/[^a-zA-Z0-9_$]/g, '_')
-		const configSchema = generateConfigSchema(entry.defaults as Record<string, unknown>)
+		const configSchema = generateConfigSchema(entry.params_schema, entry.defaults as Record<string, unknown>)
 		lines.push(`  // ${entry.name} (${entry.category})`)
 		lines.push(`  tools.push(createWorkflowTool({`)
 		lines.push(`    name: "${safeName}",`)

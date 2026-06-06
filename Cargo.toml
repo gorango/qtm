@@ -22,6 +22,7 @@ rayon = "1.8"
 thiserror = "2"
 proptest = { version = "1", default-features = false, features = ["std"] }
 inventory = "0.3"
+schemars = { version = "0.8", features = ["derive"] }
 
 [profile.release]
 lto = true
