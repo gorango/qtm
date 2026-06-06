@@ -218,19 +218,97 @@ fn generate_napi_binding(
 	}
 }
 
-/// Marks a function as a strategy, auto-registering it in the strategy registry.
+/// Annotates a function as a trading strategy, auto-registering it in the strategy
+/// registry and generating NAPI bindings, metadata, defaults, and JSON Schema.
+///
+/// This is the primary extension point for adding new strategies. A single
+/// `#[strategy(...)]` annotation replaces what previously required manual
+/// registry entries, binding wrappers, and schema maintenance.
+///
+/// # Generated infrastructure
+///
+/// For a function `fn my_strategy(...)` annotated with `#[strategy(...)]`, this
+/// macro generates:
+///
+/// | Generated item | Purpose |
+/// |---|---|
+/// | `my_strategy_metadata()` | Returns `{ id, name, category, default_timeframes, description }` as JSON |
+/// | `my_strategy_defaults()` | Returns `{ params: <ConfigType::default()>, optimization_bounds: [...] }` as JSON |
+/// | `my_strategy_params_schema()` | Lazily returns JSON Schema for `ConfigType` via `schemars` |
+/// | `my_strategy_wrapped()` | Adapter that converts `StrategyInput` + `Option<serde_json::Value>` into the native function signature |
+/// | `my_strategy_napi_binding()` | `#[napi]`-exported JS binding (behind `feature = "napi"`) |
+/// | `inventory::submit!` | Registers a `StrategyDescriptor` into the global registry |
+///
+/// All generated items are `pub` in the defining module and collected at
+/// link time by `inventory`.
 ///
 /// # Attributes
-/// - `id` — unique strategy identifier (e.g. `"rsi"`)
-/// - `name` — human-readable name
-/// - `category` — strategy category (e.g. `"momentum"`, `"trend"`)
-/// - `default_timeframes` — array of default timeframe strings
-/// - `description` — brief description
-/// - `opt_params` — optional JSON string for optimization bounds
 ///
-/// The annotated function must have OHLCV `&[f64]` params followed by
-/// `config: Option<ConfigType>`. Recognized OHLCV names: `opens`, `highs`,
-/// `lows`, `closes`, `volumes`.
+/// | Attribute | Required | Description |
+/// |---|---|---|
+/// | `id` | ✅ | Unique strategy identifier (e.g. `"rsi"`, `"macd-crossover"`). Used as key in registries and LLM tool names. |
+/// | `name` | ✅ | Human-readable display name (e.g. `"RSI Momentum Strategy"`) |
+/// | `category` | ✅ | Grouping category (`"momentum"`, `"trend"`, `"volatility"`, `"volume"`, `"patterns"`, `"composite"`, `"statistics"`, `"special"`) |
+/// | `default_timeframes` | ✅ | Default timeframes as a string array (e.g. `["15m", "1h", "4h"]`) |
+/// | `description` | ✅ | Brief description of what the strategy does. This is passed directly to LLM tool definitions, so be descriptive. |
+/// | `opt_params` | ❌ | JSON array of optimization parameter bounds for hyperparameter tuning. Each entry: `{"param_name": "...", "min": ..., "max": ..., "step": ...}` |
+///
+/// # Function signature requirements
+///
+/// The annotated function **must** follow this pattern:
+///
+/// ```ignore
+/// #[strategy(
+///     id = "my-strategy",
+///     name = "My Strategy",
+///     category = "momentum",
+///     default_timeframes = ["15m", "1h", "4h"],
+///     description = "Brief description for LLM tool definitions",
+/// )]
+/// pub fn my_strategy(
+///     closes: &[f64],           // required — closing prices
+///     highs: Option<&[f64]>,    // optional — high prices
+///     lows: Option<&[f64]>,     // optional — low prices
+///     opens: Option<&[f64]>,    // optional — open prices
+///     volumes: Option<&[f64]>,  // optional — volume data
+///     config: Option<MyConfig>, // required — config type, must impl Default + Serialize + schemars::JsonSchema
+/// ) -> StrategyResult<Vec<i8>> // returns signals: 1=buy, -1=sell, 0=hold
+/// ```
+///
+/// Recognized OHLCV parameter names: `opens`, `highs`, `lows`, `closes`,
+/// `volumes`. Include only the ones your strategy needs — unused ones can be
+/// omitted. The `wrapped` adapter fills missing data with `closes` as fallback.
+///
+/// # Config type requirements
+///
+/// The `ConfigType` (last `Option<...>` parameter) must:
+/// - Derive `Default`, `Serialize`, `Deserialize`, `schemars::JsonSchema`
+/// - Use `Option<...>` for all fields so that `Default::default()` produces
+///   a valid "unset" state
+///
+/// See `crates/strategies/src/types/configs.rs` for examples.
+///
+/// # Example
+///
+/// ```ignore
+/// use strategies_proc_macro::strategy;
+///
+/// #[strategy(
+///     id = "rsi",
+///     name = "RSI Momentum Strategy",
+///     category = "momentum",
+///     default_timeframes = ["15m", "1h", "4h"],
+///     description = "Generates buy signals when RSI crosses above oversold and sell when RSI crosses below overbought",
+///     opt_params = r#"[
+///         {"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
+///         {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0},
+///         {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}
+///     ]"#
+/// )]
+/// pub fn rsi_strategy(closes: &[f64], config: Option<RSIConfig>) -> StrategyResult<Vec<i8>> {
+///     // ... implementation ...
+/// }
+/// ```
 #[proc_macro_attribute]
 pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 	let attr = parse_macro_input!(attr as StrategyAttr);
