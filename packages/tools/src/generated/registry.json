@@ -1,0 +1,3440 @@
+{
+  "version": 1,
+  "factors": {
+    "active_address_growth": {
+      "id": "active_address_growth",
+      "name": "Active Address Growth",
+      "category": "onchain",
+      "description": "Active Address Growth over period days. Measures blockchain network adoption growth",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"number\",\"description\":\"Number of days for growth comparison\",\"default\":30}}}",
+      "output_type": "factor"
+    },
+    "altman_z_score": {
+      "id": "altman_z_score",
+      "name": "Altman Z-Score",
+      "category": "composite",
+      "description": "Altman Z-Score (simplified): predicts bankruptcy risk",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "analyst_rating_momentum": {
+      "id": "analyst_rating_momentum",
+      "name": "Analyst Rating Momentum",
+      "category": "expectations",
+      "description": "Analyst Rating Momentum: currentRating - avgPastRating over period filings",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Number of days for rating momentum window\",\"default\":90}}}",
+      "output_type": "factor"
+    },
+    "analyst_target_upside": {
+      "id": "analyst_target_upside",
+      "name": "Analyst Target Upside",
+      "category": "expectations",
+      "description": "Analyst Target Upside: (targetPrice - price) / price",
+      "needs_prices": true,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "asset_turnover": {
+      "id": "asset_turnover",
+      "name": "Asset Turnover",
+      "category": "quality",
+      "description": "Asset Turnover: revenue / totalAssets",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "book_value_per_share": {
+      "id": "book_value_per_share",
+      "name": "Book Value Per Share",
+      "category": "value",
+      "description": "Book Value Per Share: shareholdersEquity / sharesOutstanding",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "cash_to_market_cap": {
+      "id": "cash_to_market_cap",
+      "name": "Cash to Market Cap",
+      "category": "value",
+      "description": "Cash-to-Market-Cap ratio: cashAndEquivalents / marketCap",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "cost_growth_yo_y": {
+      "id": "cost_growth_yo_y",
+      "name": "Cost Growth YoY",
+      "category": "growth",
+      "description": "Year-over-Year Cost Growth",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "current_ratio": {
+      "id": "current_ratio",
+      "name": "Current Ratio",
+      "category": "solvency",
+      "description": "Current Ratio: currentAssets / currentLiabilities",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "debt_service_coverage_ratio": {
+      "id": "debt_service_coverage_ratio",
+      "name": "Debt Service Coverage Ratio",
+      "category": "value",
+      "description": "Debt Service Coverage Ratio: operatingIncome / interestExpense",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "debt_to_assets": {
+      "id": "debt_to_assets",
+      "name": "Debt to Assets",
+      "category": "solvency",
+      "description": "Debt-to-Assets ratio: totalLiabilities / totalAssets",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "debt_to_equity": {
+      "id": "debt_to_equity",
+      "name": "Debt to Equity",
+      "category": "quality",
+      "description": "Debt-to-Equity ratio: totalLiabilities / shareholdersEquity",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "dividend_coverage_ratio": {
+      "id": "dividend_coverage_ratio",
+      "name": "Dividend Coverage Ratio",
+      "category": "shareholder",
+      "description": "Dividend Coverage Ratio: netIncome / (dividendsPerShare * sharesOutstanding)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "dividend_payout_ratio": {
+      "id": "dividend_payout_ratio",
+      "name": "Dividend Payout Ratio",
+      "category": "shareholder",
+      "description": "Dividend Payout Ratio: dividendsPerShare / eps",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "dividend_positive_10_years": {
+      "id": "dividend_positive_10_years",
+      "name": "Dividend Positive 10 Years",
+      "category": "shareholder",
+      "description": "Dividend Positive for 10 Years (binary): 1 if all 40 trailing quarters had positive dividends",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "dividend_yield": {
+      "id": "dividend_yield",
+      "name": "Dividend Yield",
+      "category": "value",
+      "description": "Dividend Yield: dividendsPerShare / price",
+      "needs_prices": true,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "earnings_surprise": {
+      "id": "earnings_surprise",
+      "name": "Earnings Surprise",
+      "category": "event",
+      "description": "Earnings Surprise: (actualEPS - estimatedEPS) / |estimatedEPS|",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "earnings_yield": {
+      "id": "earnings_yield",
+      "name": "Earnings Yield",
+      "category": "value",
+      "description": "Earnings Yield: eps / (marketCap / sharesOutstanding)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "ebitda_margin": {
+      "id": "ebitda_margin",
+      "name": "EBITDA Margin",
+      "category": "quality",
+      "description": "EBITDA Margin: ebitda / revenue. Falls back to operatingIncome / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "ebitdar": {
+      "id": "ebitdar",
+      "name": "EBITDAR",
+      "category": "quality",
+      "description": "EBITDAR: operatingIncome + depreciationAndAmortization (adds back rent proxy)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "enterprise_value_to_ebitda": {
+      "id": "enterprise_value_to_ebitda",
+      "name": "Enterprise Value to EBITDA",
+      "category": "value",
+      "description": "Enterprise-Value-to-EBITDA ratio: enterpriseValue / ebitda",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "eps_avg": {
+      "id": "eps_avg",
+      "name": "EPS Average",
+      "category": "growth",
+      "description": "Rolling Average EPS over a specified number of filings",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"periods\":{\"type\":\"integer\",\"description\":\"Number of filings for rolling average\",\"default\":4}}}",
+      "output_type": "factor"
+    },
+    "eps_growth_10_year": {
+      "id": "eps_growth_10_year",
+      "name": "EPS Growth 10 Year",
+      "category": "growth",
+      "description": "10-Year EPS Growth: point-to-point CAGR",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "eps_growth_cagr": {
+      "id": "eps_growth_cagr",
+      "name": "EPS Growth CAGR",
+      "category": "growth",
+      "description": "EPS CAGR over a specified number of filings",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Number of periods for CAGR calculation\",\"default\":5}}}",
+      "output_type": "factor"
+    },
+    "eps_growth_qo_q": {
+      "id": "eps_growth_qo_q",
+      "name": "EPS Growth QoQ",
+      "category": "growth",
+      "description": "Quarter-over-Quarter EPS Growth",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "eps_positive_count": {
+      "id": "eps_positive_count",
+      "name": "EPS Positive Count",
+      "category": "growth",
+      "description": "Count of quarters with positive EPS over a specified number of filings",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"periods\":{\"type\":\"integer\",\"description\":\"Number of filings to check for positive EPS\",\"default\":10}}}",
+      "output_type": "factor"
+    },
+    "epsgrowth": {
+      "id": "epsgrowth",
+      "name": "EPS Growth",
+      "category": "growth",
+      "description": "Year-over-Year EPS Growth",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "exchange_flow_momentum": {
+      "id": "exchange_flow_momentum",
+      "name": "Exchange Flow Momentum",
+      "category": "onchain",
+      "description": "Exchange Flow Momentum. Positive = inflow (accumulation), negative = outflow (distribution)",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"number\",\"description\":\"Number of days for flow momentum window\",\"default\":30}}}",
+      "output_type": "factor"
+    },
+    "five_y_revenue_growth_per_share": {
+      "id": "five_y_revenue_growth_per_share",
+      "name": "5Y Revenue Growth per Share",
+      "category": "growth",
+      "description": "5-Year Revenue Per Share Growth: (rpsEnd / rpsStart)^(1/5) - 1",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "free_cash_flow_growth": {
+      "id": "free_cash_flow_growth",
+      "name": "Free Cash Flow Growth",
+      "category": "growth",
+      "description": "Sequential Free Cash Flow Growth",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "free_cash_flow_margin": {
+      "id": "free_cash_flow_margin",
+      "name": "Free Cash Flow Margin",
+      "category": "value",
+      "description": "Free Cash Flow Margin: (operatingCashFlow - capitalExpenditure) / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "free_cash_flow_yield": {
+      "id": "free_cash_flow_yield",
+      "name": "Free Cash Flow Yield",
+      "category": "value",
+      "description": "Free Cash Flow Yield: freeCashFlow / marketCap",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "gross_margin": {
+      "id": "gross_margin",
+      "name": "Gross Margin",
+      "category": "quality",
+      "description": "Gross Margin: (revenue - costOfRevenue) / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "growth_eps": {
+      "id": "growth_eps",
+      "name": "Growth EPS",
+      "category": "growth",
+      "description": "Sequential EPS Growth: (currentEPS - previousEPS) / |previousEPS|",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "historical_volatility_vs_beta": {
+      "id": "historical_volatility_vs_beta",
+      "name": "Historical Volatility vs Beta",
+      "category": "quality",
+      "description": "Placeholder — requires price data not available in current data",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "interest_coverage": {
+      "id": "interest_coverage",
+      "name": "Interest Coverage",
+      "category": "solvency",
+      "description": "Interest Coverage Ratio: operatingIncome / interestExpense. Falls back to netIncome / interestExpense",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "magic_formula": {
+      "id": "magic_formula",
+      "name": "Magic Formula",
+      "category": "composite",
+      "description": "Greenblatt Magic Formula score: earningsYield + returnOnCapital",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "margin_of_safety": {
+      "id": "margin_of_safety",
+      "name": "Margin of Safety",
+      "category": "value",
+      "description": "Margin of Safety: dcfValue / price - 1. Positive means undervalued per DCF",
+      "needs_prices": true,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "market_cap_value": {
+      "id": "market_cap_value",
+      "name": "Market Cap Value",
+      "category": "value",
+      "description": "Extracts raw market capitalization value",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "net_debt_to_ebitda": {
+      "id": "net_debt_to_ebitda",
+      "name": "Net Debt to EBITDA",
+      "category": "value",
+      "description": "Net Debt to EBITDA: (totalDebt - cashAndEquivalents) / ebitda",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "net_debt_to_ebitdar": {
+      "id": "net_debt_to_ebitdar",
+      "name": "Net Debt to EBITDAR",
+      "category": "value",
+      "description": "Net Debt to EBITDAR: (totalDebt - cash) / (operatingIncome + depreciation)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "net_margin": {
+      "id": "net_margin",
+      "name": "Net Profit Margin",
+      "category": "quality",
+      "description": "Net Profit Margin: netIncome / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "nvt_ratio": {
+      "id": "nvt_ratio",
+      "name": "NVT Ratio",
+      "category": "onchain",
+      "description": "Network Value to Transactions (NVT) Ratio: marketCap / transactionVolume",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "odds_momentum": {
+      "id": "odds_momentum",
+      "name": "Odds Momentum",
+      "category": "prediction",
+      "description": "Prediction Market Odds Momentum: (currentPrice - priceNPeriodsBack) / priceNPeriodsBack",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Number of periods back for odds change\",\"default\":1}}}",
+      "output_type": "factor"
+    },
+    "operating_profit_margin": {
+      "id": "operating_profit_margin",
+      "name": "Operating Profit Margin",
+      "category": "quality",
+      "description": "Operating Profit Margin: operatingIncome / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "owner_earnings": {
+      "id": "owner_earnings",
+      "name": "Owner Earnings",
+      "category": "value",
+      "description": "Owner Earnings: operatingCashFlow - capitalExpenditure (Buffett's metric)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "piotroski_f_score": {
+      "id": "piotroski_f_score",
+      "name": "Piotroski F-Score",
+      "category": "composite",
+      "description": "Piotroski F-Score (0-6): scores profitability, leverage, and efficiency criteria",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "prediction_market_odds": {
+      "id": "prediction_market_odds",
+      "name": "Prediction Market Odds",
+      "category": "prediction",
+      "description": "Prediction Market Odds: extracts implied probability price from each prediction market point",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_affo": {
+      "id": "price_to_affo",
+      "name": "Price to AFFO",
+      "category": "reit",
+      "description": "Price to AFFO (Adjusted Funds From Operations): price / affoPerShare",
+      "needs_prices": true,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_book": {
+      "id": "price_to_book",
+      "name": "Price to Book",
+      "category": "value",
+      "description": "Price-to-Book ratio: marketCap / shareholdersEquity",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_book_ratio": {
+      "id": "price_to_book_ratio",
+      "name": "Price to Book Ratio",
+      "category": "value",
+      "description": "Price-to-Book ratio (alternate): marketCap / shareholdersEquity",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_earnings": {
+      "id": "price_to_earnings",
+      "name": "Price to Earnings",
+      "category": "value",
+      "description": "Price-to-Earnings (P/E) ratio",
+      "needs_prices": true,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_earnings_ratio": {
+      "id": "price_to_earnings_ratio",
+      "name": "Price to Earnings Ratio",
+      "category": "value",
+      "description": "Price-to-Earnings ratio (alternate): (marketCap / sharesOutstanding) / eps",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_free_cash_flow": {
+      "id": "price_to_free_cash_flow",
+      "name": "Price to Free Cash Flow",
+      "category": "value",
+      "description": "Price-to-Free-Cash-Flow ratio: marketCap / (operatingCashFlow - capitalExpenditure)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "price_to_sales": {
+      "id": "price_to_sales",
+      "name": "Price to Sales",
+      "category": "value",
+      "description": "Price-to-Sales ratio: marketCap / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "quality_of_earnings_index": {
+      "id": "quality_of_earnings_index",
+      "name": "Quality of Earnings Index",
+      "category": "quality",
+      "description": "Quality of Earnings Index (0-1): composite of accruals, cash flow consistency, revenue quality, and balance sheet strength",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "r_and_d_to_revenue": {
+      "id": "r_and_d_to_revenue",
+      "name": "R&D to Revenue",
+      "category": "quality",
+      "description": "R&D-to-Revenue ratio: researchAndDevelopmentExpenses / revenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "reit_dividend_safety": {
+      "id": "reit_dividend_safety",
+      "name": "REIT Dividend Safety",
+      "category": "reit",
+      "description": "REIT Dividend Safety: forwardAnnualDividendRate / (affoPerShare * 4)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "retained_earnings": {
+      "id": "retained_earnings",
+      "name": "Retained Earnings",
+      "category": "quality",
+      "description": "Retained Earnings Per Share: retainedEarnings / sharesOutstanding",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "return_on_assets": {
+      "id": "return_on_assets",
+      "name": "Return on Assets",
+      "category": "quality",
+      "description": "Return on Assets: netIncome / totalAssets",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "return_on_equity": {
+      "id": "return_on_equity",
+      "name": "Return on Equity",
+      "category": "quality",
+      "description": "Return on Equity: netIncome / shareholdersEquity",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "return_on_invested_capital": {
+      "id": "return_on_invested_capital",
+      "name": "Return on Invested Capital",
+      "category": "quality",
+      "description": "Return on Invested Capital: (netIncome - totalDividends) / (totalLiabilities + shareholdersEquity)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "revenue_growth_cagr": {
+      "id": "revenue_growth_cagr",
+      "name": "Revenue Growth CAGR",
+      "category": "growth",
+      "description": "Revenue CAGR over a specified number of filings",
+      "needs_prices": false,
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Number of periods for CAGR calculation\",\"default\":5}}}",
+      "output_type": "factor"
+    },
+    "revenue_growth_yo_y": {
+      "id": "revenue_growth_yo_y",
+      "name": "Revenue Growth YoY",
+      "category": "growth",
+      "description": "Year-over-Year Revenue Growth: (currentRevenue - previousRevenue) / |previousRevenue|",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "revenue_seasonality": {
+      "id": "revenue_seasonality",
+      "name": "Revenue Seasonality",
+      "category": "growth",
+      "description": "Revenue Seasonality Index: (maxQuarterRevenue - minQuarterRevenue) / annualAvgRevenue",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "share_count_growth": {
+      "id": "share_count_growth",
+      "name": "Share Count Growth",
+      "category": "growth",
+      "description": "Share Count CAGR: (sharesLast / sharesFirst)^(1/years) - 1",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "shareholder_yield": {
+      "id": "shareholder_yield",
+      "name": "Shareholder Yield",
+      "category": "shareholder",
+      "description": "Shareholder Yield: (dividendsPerShare * sharesOutstanding) / marketCap",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "staking_ratio": {
+      "id": "staking_ratio",
+      "name": "Staking Ratio",
+      "category": "onchain",
+      "description": "Staking Ratio: stakedSupply / totalSupply. Measures network security and participant commitment",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "tangible_asset_ratio": {
+      "id": "tangible_asset_ratio",
+      "name": "Tangible Asset Ratio",
+      "category": "solvency",
+      "description": "Tangible Asset Ratio: propertyPlantEquipment / totalAssets",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "wacc": {
+      "id": "wacc",
+      "name": "WACC",
+      "category": "value",
+      "description": "Weighted Average Cost of Capital (simplified): E/V*0.08 + D/V*0.04*(1-0.21)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "working_capital": {
+      "id": "working_capital",
+      "name": "Working Capital",
+      "category": "quality",
+      "description": "Working Capital: currentAssets - currentLiabilities",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    },
+    "working_capital_turnover": {
+      "id": "working_capital_turnover",
+      "name": "Working Capital Turnover",
+      "category": "quality",
+      "description": "Working Capital Turnover: revenue / (currentAssets - currentLiabilities)",
+      "needs_prices": false,
+      "params_schema": "",
+      "output_type": "factor"
+    }
+  },
+  "indicators": {
+    "ab": {
+      "id": "ab",
+      "name": "Acceleration Bands",
+      "category": "volatility",
+      "description": "Alias for Acceleration Bands",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "absolute_price_oscillator": {
+      "id": "absolute_price_oscillator",
+      "name": "Absolute Price Oscillator",
+      "category": "trend",
+      "description": "Absolute difference between fast and slow EMA",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":14},\"slow_period\":{\"type\":\"integer\",\"default\":30}}}",
+      "output_type": "indicator"
+    },
+    "acceleration_bands": {
+      "id": "acceleration_bands",
+      "name": "Acceleration Bands",
+      "category": "volatility",
+      "description": "Volatility bands based on price acceleration",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "accumulation_distribution": {
+      "id": "accumulation_distribution",
+      "name": "Accumulation Distribution",
+      "category": "volume",
+      "description": "Accumulation/distribution line",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "ad": {
+      "id": "ad",
+      "name": "Accumulation Distribution",
+      "category": "volume",
+      "description": "Alias for Accumulation Distribution",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "advance_decline_line": {
+      "id": "advance_decline_line",
+      "name": "Advance-Decline Line",
+      "category": "market",
+      "description": "Cumulative breadth indicator",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "adx": {
+      "id": "adx",
+      "name": "ADX",
+      "category": "trend",
+      "description": "Average Directional Index for trend strength",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "alma": {
+      "id": "alma",
+      "name": "ALMA",
+      "category": "trend",
+      "description": "Arnaud Legoux Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":9},\"offset\":{\"type\":\"number\",\"default\":0.85},\"sigma\":{\"type\":\"number\",\"default\":6}}}",
+      "output_type": "indicator"
+    },
+    "anchored_vwap": {
+      "id": "anchored_vwap",
+      "name": "Anchored VWAP",
+      "category": "volume",
+      "description": "VWAP from a specified start point",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"anchor_index\":{\"type\":\"integer\",\"description\":\"Index from which to start VWAP calculation\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "annualized_volatility": {
+      "id": "annualized_volatility",
+      "name": "Annualized Volatility",
+      "category": "volatility",
+      "description": "Annualized standard deviation of returns",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"trading_days\":{\"type\":\"integer\",\"description\":\"Trading days per year\",\"default\":252}}}",
+      "output_type": "indicator"
+    },
+    "aroon": {
+      "id": "aroon",
+      "name": "Aroon",
+      "category": "trend",
+      "description": "Aroon indicator for trend direction and strength",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":25}}}",
+      "output_type": "indicator"
+    },
+    "atr": {
+      "id": "atr",
+      "name": "ATR",
+      "category": "volatility",
+      "description": "Alias for Average True Range",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"RMA lookback period\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "average_true_range": {
+      "id": "average_true_range",
+      "name": "Average True Range",
+      "category": "volatility",
+      "description": "Average True Range",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"RMA lookback period\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "awesome_oscillator": {
+      "id": "awesome_oscillator",
+      "name": "Awesome Oscillator",
+      "category": "momentum",
+      "description": "Measures market momentum by comparing SMA of median price over two periods",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":5},\"slow_period\":{\"type\":\"integer\",\"default\":34}}}",
+      "output_type": "indicator"
+    },
+    "balance_of_power": {
+      "id": "balance_of_power",
+      "name": "Balance of Power",
+      "category": "trend",
+      "description": "Measures the strength of buyers vs sellers",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "bb": {
+      "id": "bb",
+      "name": "Bollinger Bands",
+      "category": "volatility",
+      "description": "Bollinger Bands",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"std_dev\":{\"type\":\"number\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "bbw": {
+      "id": "bbw",
+      "name": "Bollinger Bands Width",
+      "category": "volatility",
+      "description": "Alias for Bollinger Bands Width",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}",
+      "output_type": "indicator"
+    },
+    "bearish_engulfing": {
+      "id": "bearish_engulfing",
+      "name": "Bearish Engulfing",
+      "category": "patterns",
+      "description": "Bearish engulfing candlestick pattern",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "bollinger_bands": {
+      "id": "bollinger_bands",
+      "name": "Bollinger Bands",
+      "category": "volatility",
+      "description": "Bollinger Bands",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"std_dev\":{\"type\":\"number\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "bollinger_bands_width": {
+      "id": "bollinger_bands_width",
+      "name": "Bollinger Bands Width",
+      "category": "volatility",
+      "description": "Normalized width of Bollinger Bands",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}",
+      "output_type": "indicator"
+    },
+    "bullish_engulfing": {
+      "id": "bullish_engulfing",
+      "name": "Bullish Engulfing",
+      "category": "patterns",
+      "description": "Bullish engulfing candlestick pattern",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "camarilla_pivot_points": {
+      "id": "camarilla_pivot_points",
+      "name": "Camarilla Pivot Points",
+      "category": "trend",
+      "description": "Camarilla-style pivot point levels",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "cci": {
+      "id": "cci",
+      "name": "CCI",
+      "category": "trend",
+      "description": "Commodity Channel Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "ce": {
+      "id": "ce",
+      "name": "Chandelier Exit",
+      "category": "volatility",
+      "description": "Alias for Chandelier Exit",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"ATR and lookback period\",\"default\":22}}}",
+      "output_type": "indicator"
+    },
+    "chaikin_money_flow": {
+      "id": "chaikin_money_flow",
+      "name": "Chaikin Money Flow",
+      "category": "volume",
+      "description": "Money flow volume over a period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "chaikin_oscillator": {
+      "id": "chaikin_oscillator",
+      "name": "Chaikin Oscillator",
+      "category": "momentum",
+      "description": "Measures accumulation/distribution momentum as EMA difference of ADL",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":3},\"slow_period\":{\"type\":\"integer\",\"default\":10}}}",
+      "output_type": "indicator"
+    },
+    "chande_forecast_oscillator": {
+      "id": "chande_forecast_oscillator",
+      "name": "Chande Forecast Oscillator",
+      "category": "trend",
+      "description": "Forecast oscillator using linear regression",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "chandelier_exit": {
+      "id": "chandelier_exit",
+      "name": "Chandelier Exit",
+      "category": "volatility",
+      "description": "ATR-based trailing stop",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"ATR and lookback period\",\"default\":22}}}",
+      "output_type": "indicator"
+    },
+    "classify_market_trend": {
+      "id": "classify_market_trend",
+      "name": "Classify Market Trend",
+      "category": "trend",
+      "description": "Classifies market as trending, ranging, or volatile",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"trailing_period_length\":{\"type\":\"integer\",\"description\":\"Trailing period length\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "cmf": {
+      "id": "cmf",
+      "name": "Chaikin Money Flow",
+      "category": "volume",
+      "description": "Alias for Chaikin Money Flow",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "cmo": {
+      "id": "cmo",
+      "name": "Chaikin Oscillator",
+      "category": "momentum",
+      "description": "Alias for Chaikin Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":3},\"slow_period\":{\"type\":\"integer\",\"default\":10}}}",
+      "output_type": "indicator"
+    },
+    "cointegration": {
+      "id": "cointegration",
+      "name": "Cointegration",
+      "category": "shared",
+      "description": "Cointegration test between two series",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"beta_period\":{\"type\":\"integer\",\"default\":60}}}",
+      "output_type": "indicator"
+    },
+    "correlation": {
+      "id": "correlation",
+      "name": "Correlation",
+      "category": "shared",
+      "description": "Correlation coefficient between two series",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Rolling window for correlation\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "cup_and_handle": {
+      "id": "cup_and_handle",
+      "name": "Cup and Handle",
+      "category": "patterns",
+      "description": "Cup and handle pattern recognition",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"cup_depth\":{\"type\":\"number\",\"default\":0.15},\"handle_retracement\":{\"type\":\"number\",\"default\":0.3},\"min_duration\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "dc": {
+      "id": "dc",
+      "name": "Donchian Channel",
+      "category": "volatility",
+      "description": "Alias for Donchian Channel",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "dema": {
+      "id": "dema",
+      "name": "DEMA",
+      "category": "trend",
+      "description": "Double Exponential Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}",
+      "output_type": "indicator"
+    },
+    "dev": {
+      "id": "dev",
+      "name": "Mean Absolute Deviation",
+      "category": "volatility",
+      "description": "Alias for Mean Absolute Deviation",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "donchian_channel": {
+      "id": "donchian_channel",
+      "name": "Donchian Channel",
+      "category": "volatility",
+      "description": "Channel based on highest high and lowest low",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "double_bottom": {
+      "id": "double_bottom",
+      "name": "Double Bottom",
+      "category": "patterns",
+      "description": "Double bottom reversal pattern",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"min_separation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "double_top": {
+      "id": "double_top",
+      "name": "Double Top",
+      "category": "patterns",
+      "description": "Double top reversal pattern",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"min_separation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "ease_of_movement": {
+      "id": "ease_of_movement",
+      "name": "Ease of Movement",
+      "category": "volume",
+      "description": "Relates price movement to volume",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA smoothing period\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "elliott_wave": {
+      "id": "elliott_wave",
+      "name": "Elliott Wave",
+      "category": "patterns",
+      "description": "Elliott Wave pattern detection",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"wave2_retracement\":{\"type\":\"number\",\"default\":0.618},\"wave4_retracement\":{\"type\":\"number\",\"default\":0.382},\"wave3_min_extension\":{\"type\":\"number\",\"default\":1.618},\"min_wave_separation\":{\"type\":\"integer\",\"default\":5},\"lookaround\":{\"type\":\"integer\",\"default\":2},\"retracement_tolerance\":{\"type\":\"number\",\"default\":0.1}}}",
+      "output_type": "indicator"
+    },
+    "ema": {
+      "id": "ema",
+      "name": "EMA",
+      "category": "trend",
+      "description": "Exponential Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}",
+      "output_type": "indicator"
+    },
+    "emv": {
+      "id": "emv",
+      "name": "Ease of Movement",
+      "category": "volume",
+      "description": "Alias for Ease of Movement",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA smoothing period\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "fi": {
+      "id": "fi",
+      "name": "Force Index",
+      "category": "volume",
+      "description": "Alias for Force Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}",
+      "output_type": "indicator"
+    },
+    "fibonacci_pivot_points": {
+      "id": "fibonacci_pivot_points",
+      "name": "Fibonacci Pivot Points",
+      "category": "trend",
+      "description": "Fibonacci-based pivot point levels",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "find_peaks": {
+      "id": "find_peaks",
+      "name": "Find Peaks",
+      "category": "patterns",
+      "description": "Locates local maxima in price data",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"description\":\"Bars on each side to confirm peak\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "find_troughs": {
+      "id": "find_troughs",
+      "name": "Find Troughs",
+      "category": "patterns",
+      "description": "Locates local minima in price data",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"description\":\"Bars on each side to confirm trough\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "flags_pennants": {
+      "id": "flags_pennants",
+      "name": "Flags and Pennants",
+      "category": "patterns",
+      "description": "Flag and pennant pattern recognition",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"pole_length\":{\"type\":\"integer\",\"default\":10},\"consolidation_bars\":{\"type\":\"integer\",\"default\":10},\"breakout_threshold\":{\"type\":\"number\",\"default\":0.02}}}",
+      "output_type": "indicator"
+    },
+    "force_index": {
+      "id": "force_index",
+      "name": "Force Index",
+      "category": "volume",
+      "description": "Price change multiplied by volume",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}",
+      "output_type": "indicator"
+    },
+    "head_and_shoulders": {
+      "id": "head_and_shoulders",
+      "name": "Head and Shoulders",
+      "category": "patterns",
+      "description": "Head and shoulders pattern recognition",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"min_distance\":{\"type\":\"integer\",\"default\":5},\"tolerance\":{\"type\":\"number\",\"default\":0.02},\"deviation\":{\"type\":\"number\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "hma": {
+      "id": "hma",
+      "name": "HMA",
+      "category": "trend",
+      "description": "Hull Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":16}}}",
+      "output_type": "indicator"
+    },
+    "ichimoku": {
+      "id": "ichimoku",
+      "name": "Ichimoku",
+      "category": "momentum",
+      "description": "Alias for Ichimoku Cloud",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}",
+      "output_type": "indicator"
+    },
+    "ichimoku_cloud": {
+      "id": "ichimoku_cloud",
+      "name": "Ichimoku Cloud",
+      "category": "momentum",
+      "description": "Comprehensive indicator showing support, resistance, and momentum",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}",
+      "output_type": "indicator"
+    },
+    "kc": {
+      "id": "kc",
+      "name": "Keltner Channel",
+      "category": "volatility",
+      "description": "Alias for Keltner Channel",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "keltner_channel": {
+      "id": "keltner_channel",
+      "name": "Keltner Channel",
+      "category": "volatility",
+      "description": "ATR-based volatility channel",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "kst": {
+      "id": "kst",
+      "name": "Know Sure Thing",
+      "category": "momentum",
+      "description": "KST oscillator based on four rate-of-change periods",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"roc1_period\":{\"type\":\"integer\",\"default\":10},\"roc2_period\":{\"type\":\"integer\",\"default\":15},\"roc3_period\":{\"type\":\"integer\",\"default\":20},\"roc4_period\":{\"type\":\"integer\",\"default\":30},\"sma1_period\":{\"type\":\"integer\",\"default\":10},\"sma2_period\":{\"type\":\"integer\",\"default\":10},\"sma3_period\":{\"type\":\"integer\",\"default\":10},\"sma4_period\":{\"type\":\"integer\",\"default\":15},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}",
+      "output_type": "indicator"
+    },
+    "larsson": {
+      "id": "larsson",
+      "name": "Larsson",
+      "category": "momentum",
+      "description": "Larsson signal indicator using SMMA crossovers",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "linear_regression": {
+      "id": "linear_regression",
+      "name": "Linear Regression",
+      "category": "patterns",
+      "description": "Linear regression slope and intercept",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "linreg": {
+      "id": "linreg",
+      "name": "Linear Regression",
+      "category": "trend",
+      "description": "Linear regression line over a period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"offset\":{\"type\":\"integer\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "macd": {
+      "id": "macd",
+      "name": "MACD",
+      "category": "momentum",
+      "description": "Moving Average Convergence Divergence",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}",
+      "output_type": "indicator"
+    },
+    "mass_index": {
+      "id": "mass_index",
+      "name": "Mass Index",
+      "category": "trend",
+      "description": "Mass Index for trend reversal detection",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"ema_period\":{\"type\":\"integer\",\"default\":9},\"mi_period\":{\"type\":\"integer\",\"default\":25}}}",
+      "output_type": "indicator"
+    },
+    "max_drawdown": {
+      "id": "max_drawdown",
+      "name": "Max Drawdown",
+      "category": "volatility",
+      "description": "Maximum peak-to-trough decline",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback window period\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "mcclellan_oscillator": {
+      "id": "mcclellan_oscillator",
+      "name": "McClellan Oscillator",
+      "category": "market",
+      "description": "Market breadth oscillator from advance-decline data",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "mean_absolute_deviation": {
+      "id": "mean_absolute_deviation",
+      "name": "Mean Absolute Deviation",
+      "category": "volatility",
+      "description": "Mean absolute deviation from the mean",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "mfi": {
+      "id": "mfi",
+      "name": "Money Flow Index",
+      "category": "volume",
+      "description": "Alias for Money Flow Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}",
+      "output_type": "indicator"
+    },
+    "momentum_index": {
+      "id": "momentum_index",
+      "name": "Momentum Index",
+      "category": "momentum",
+      "description": "Simple price momentum over a lookback period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "money_flow_index": {
+      "id": "money_flow_index",
+      "name": "Money Flow Index",
+      "category": "volume",
+      "description": "Volume-weighted RSI variant",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}",
+      "output_type": "indicator"
+    },
+    "moving_chande_forecast_oscillator": {
+      "id": "moving_chande_forecast_oscillator",
+      "name": "Moving Chande Forecast Oscillator",
+      "category": "trend",
+      "description": "Moving variant of the Chande Forecast Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "moving_max": {
+      "id": "moving_max",
+      "name": "Moving Max",
+      "category": "trend",
+      "description": "Rolling maximum over a window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "moving_min": {
+      "id": "moving_min",
+      "name": "Moving Min",
+      "category": "trend",
+      "description": "Rolling minimum over a window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "moving_standard_deviation": {
+      "id": "moving_standard_deviation",
+      "name": "Moving Standard Deviation",
+      "category": "volatility",
+      "description": "Rolling standard deviation over a window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "moving_sum": {
+      "id": "moving_sum",
+      "name": "Moving Sum",
+      "category": "trend",
+      "description": "Rolling sum over a window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "mstd": {
+      "id": "mstd",
+      "name": "Moving Standard Deviation",
+      "category": "volatility",
+      "description": "Alias for Moving Standard Deviation",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "negative_volume_index": {
+      "id": "negative_volume_index",
+      "name": "Negative Volume Index",
+      "category": "volume",
+      "description": "Tracks price changes on lower volume days",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"start\":{\"type\":\"number\",\"description\":\"Starting value for the NVI\",\"default\":1000}}}",
+      "output_type": "indicator"
+    },
+    "nvi": {
+      "id": "nvi",
+      "name": "Negative Volume Index",
+      "category": "volume",
+      "description": "Alias for Negative Volume Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"start\":{\"type\":\"number\",\"description\":\"Starting value for the NVI\",\"default\":1000}}}",
+      "output_type": "indicator"
+    },
+    "obv": {
+      "id": "obv",
+      "name": "OBV",
+      "category": "volume",
+      "description": "On-Balance Volume",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "on_balance_volume": {
+      "id": "on_balance_volume",
+      "name": "On-Balance Volume",
+      "category": "volume",
+      "description": "On-Balance Volume",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "parabolic_sar": {
+      "id": "parabolic_sar",
+      "name": "Parabolic SAR",
+      "category": "trend",
+      "description": "Parabolic Stop and Reverse",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"step\":{\"type\":\"number\",\"description\":\"Acceleration factor increment\",\"default\":0.02},\"max\":{\"type\":\"number\",\"description\":\"Maximum acceleration factor\",\"default\":0.2}}}",
+      "output_type": "indicator"
+    },
+    "pearson_correlation": {
+      "id": "pearson_correlation",
+      "name": "Pearson Correlation",
+      "category": "shared",
+      "description": "Pearson product-moment correlation",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Rolling window for correlation\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "percent_rank": {
+      "id": "percent_rank",
+      "name": "Percent Rank",
+      "category": "shared",
+      "description": "Percent rank of current value in lookback window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "percentage_price_oscillator": {
+      "id": "percentage_price_oscillator",
+      "name": "Percentage Price Oscillator",
+      "category": "momentum",
+      "description": "Percentage-based MACD variant",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}",
+      "output_type": "indicator"
+    },
+    "percentage_volume_oscillator": {
+      "id": "percentage_volume_oscillator",
+      "name": "Percentage Volume Oscillator",
+      "category": "momentum",
+      "description": "Percentage-based MACD applied to volume",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}",
+      "output_type": "indicator"
+    },
+    "percentile_linear_interpolation": {
+      "id": "percentile_linear_interpolation",
+      "name": "Percentile Linear Interpolation",
+      "category": "shared",
+      "description": "Percentile using linear interpolation",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"percentage\":{\"type\":\"number\",\"default\":50}}}",
+      "output_type": "indicator"
+    },
+    "percentile_nearest_rank": {
+      "id": "percentile_nearest_rank",
+      "name": "Percentile Nearest Rank",
+      "category": "shared",
+      "description": "Percentile using nearest rank",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"percentage\":{\"type\":\"number\",\"default\":50}}}",
+      "output_type": "indicator"
+    },
+    "pivot_points": {
+      "id": "pivot_points",
+      "name": "Pivot Points",
+      "category": "trend",
+      "description": "Standard pivot point levels",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "po": {
+      "id": "po",
+      "name": "Projection Oscillator",
+      "category": "volatility",
+      "description": "Alias for Projection Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "price_rate_of_change": {
+      "id": "price_rate_of_change",
+      "name": "Price Rate of Change",
+      "category": "momentum",
+      "description": "Percentage price change over a period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "projection_oscillator": {
+      "id": "projection_oscillator",
+      "name": "Projection Oscillator",
+      "category": "volatility",
+      "description": "Oscillator based on linear regression projection",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "pvo": {
+      "id": "pvo",
+      "name": "Percentage Volume Oscillator",
+      "category": "momentum",
+      "description": "Alias for Percentage Volume Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}",
+      "output_type": "indicator"
+    },
+    "qstick": {
+      "id": "qstick",
+      "name": "Qstick",
+      "category": "momentum",
+      "description": "SMA of the close-open differential",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "random_index": {
+      "id": "random_index",
+      "name": "Random Index",
+      "category": "trend",
+      "description": "Random walk index for mean reversion",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"r_period\":{\"type\":\"integer\",\"default\":9},\"k_period\":{\"type\":\"integer\",\"default\":3},\"d_period\":{\"type\":\"integer\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "rma": {
+      "id": "rma",
+      "name": "RMA",
+      "category": "trend",
+      "description": "Rolling Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "rolling_moving_average": {
+      "id": "rolling_moving_average",
+      "name": "Rolling Moving Average",
+      "category": "trend",
+      "description": "Alias for RMA",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "rolling_variance": {
+      "id": "rolling_variance",
+      "name": "Rolling Variance",
+      "category": "volatility",
+      "description": "Rolling variance over a window",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "rsi": {
+      "id": "rsi",
+      "name": "RSI",
+      "category": "momentum",
+      "description": "Relative Strength Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "since": {
+      "id": "since",
+      "name": "Since",
+      "category": "trend",
+      "description": "Counts periods since last condition",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "sma": {
+      "id": "sma",
+      "name": "SMA",
+      "category": "trend",
+      "description": "Simple Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "smoothed_moving_average": {
+      "id": "smoothed_moving_average",
+      "name": "Smoothed Moving Average",
+      "category": "trend",
+      "description": "Smoothed variant of SMMA",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "stars": {
+      "id": "stars",
+      "name": "Stars",
+      "category": "patterns",
+      "description": "Morning star and evening star patterns",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"body_ratio_threshold\":{\"type\":\"number\",\"default\":0.3},\"gap_threshold\":{\"type\":\"number\",\"default\":0.001}}}",
+      "output_type": "indicator"
+    },
+    "stochastic_oscillator": {
+      "id": "stochastic_oscillator",
+      "name": "Stochastic Oscillator",
+      "category": "momentum",
+      "description": "Compares close to the high-low range over a period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"k_period\":{\"type\":\"integer\",\"default\":14},\"d_period\":{\"type\":\"integer\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "super_trend": {
+      "id": "super_trend",
+      "name": "Super Trend",
+      "category": "trend",
+      "description": "Super Trend for trend direction and stop levels",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"multiplier\":{\"type\":\"number\",\"description\":\"ATR multiplier for band width\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "tema": {
+      "id": "tema",
+      "name": "TEMA",
+      "category": "trend",
+      "description": "Triple Exponential Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "tma": {
+      "id": "tma",
+      "name": "TMA",
+      "category": "trend",
+      "description": "Triangular Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "tr": {
+      "id": "tr",
+      "name": "True Range",
+      "category": "volatility",
+      "description": "Alias for True Range",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "triangles": {
+      "id": "triangles",
+      "name": "Triangles",
+      "category": "patterns",
+      "description": "Triangle pattern recognition",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"min_points\":{\"type\":\"integer\",\"default\":4},\"tolerance\":{\"type\":\"number\",\"default\":0.01},\"convergence_tolerance\":{\"type\":\"number\",\"default\":0.001}}}",
+      "output_type": "indicator"
+    },
+    "trix": {
+      "id": "trix",
+      "name": "TRIX",
+      "category": "trend",
+      "description": "Triple-smoothed EMA oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "true_range": {
+      "id": "true_range",
+      "name": "True Range",
+      "category": "volatility",
+      "description": "True Range",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "ttm_squeeze": {
+      "id": "ttm_squeeze",
+      "name": "TTM Squeeze",
+      "category": "volatility",
+      "description": "Detects Bollinger/Keltner squeeze setups",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bb_period\":{\"type\":\"integer\",\"default\":20},\"bb_std_dev\":{\"type\":\"number\",\"default\":2},\"kc_period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "typical_price": {
+      "id": "typical_price",
+      "name": "Typical Price",
+      "category": "trend",
+      "description": "Average of high, low, and close",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "ui": {
+      "id": "ui",
+      "name": "Ulcer Index",
+      "category": "volatility",
+      "description": "Alias for Ulcer Index",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "ulcer_index": {
+      "id": "ulcer_index",
+      "name": "Ulcer Index",
+      "category": "volatility",
+      "description": "Drawdown-based volatility measure",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "ultimate_oscillator": {
+      "id": "ultimate_oscillator",
+      "name": "Ultimate Oscillator",
+      "category": "momentum",
+      "description": "Multi-timeframe momentum oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period1\":{\"type\":\"integer\",\"default\":7},\"period2\":{\"type\":\"integer\",\"default\":14},\"period3\":{\"type\":\"integer\",\"default\":28}}}",
+      "output_type": "indicator"
+    },
+    "uo": {
+      "id": "uo",
+      "name": "Ultimate Oscillator",
+      "category": "momentum",
+      "description": "Alias for Ultimate Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period1\":{\"type\":\"integer\",\"default\":7},\"period2\":{\"type\":\"integer\",\"default\":14},\"period3\":{\"type\":\"integer\",\"default\":28}}}",
+      "output_type": "indicator"
+    },
+    "value_when": {
+      "id": "value_when",
+      "name": "Value When",
+      "category": "shared",
+      "description": "Returns value from one series when a condition is met in another",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"occurrence\":{\"type\":\"integer\",\"default\":1}}}",
+      "output_type": "indicator"
+    },
+    "variance": {
+      "id": "variance",
+      "name": "Variance",
+      "category": "volatility",
+      "description": "Variance over a period",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "volume_price_trend": {
+      "id": "volume_price_trend",
+      "name": "Volume Price Trend",
+      "category": "volume",
+      "description": "Cumulative volume-weighted price trend",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "volume_profile": {
+      "id": "volume_profile",
+      "name": "Volume Profile",
+      "category": "volume",
+      "description": "Volume distribution by price level",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bins\":{\"type\":\"integer\",\"description\":\"Number of price bins for volume distribution\",\"default\":50}}}",
+      "output_type": "indicator"
+    },
+    "volume_surge": {
+      "id": "volume_surge",
+      "name": "Volume Surge",
+      "category": "volume",
+      "description": "Detects abnormal volume spikes",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA period for volume baseline\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"description\":\"Threshold multiplier\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "volume_weighted_average_price": {
+      "id": "volume_weighted_average_price",
+      "name": "Volume Weighted Average Price",
+      "category": "volume",
+      "description": "VWAP",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"session_length\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "vortex": {
+      "id": "vortex",
+      "name": "Vortex",
+      "category": "trend",
+      "description": "Vortex indicator for trend direction",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "vpt": {
+      "id": "vpt",
+      "name": "Volume Price Trend",
+      "category": "volume",
+      "description": "Alias for Volume Price Trend",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
+    "vs": {
+      "id": "vs",
+      "name": "Volume Surge",
+      "category": "volume",
+      "description": "Alias for Volume Surge",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA period for volume baseline\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"description\":\"Threshold multiplier\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "vwap": {
+      "id": "vwap",
+      "name": "VWAP",
+      "category": "volume",
+      "description": "Volume-Weighted Average Price",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"session_length\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "vwma": {
+      "id": "vwma",
+      "name": "VWMA",
+      "category": "trend",
+      "description": "Volume Weighted Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "wedges": {
+      "id": "wedges",
+      "name": "Wedges",
+      "category": "patterns",
+      "description": "Wedge pattern recognition",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"min_points\":{\"type\":\"integer\",\"default\":4},\"slope_tolerance\":{\"type\":\"number\",\"default\":0.0001}}}",
+      "output_type": "indicator"
+    },
+    "williams_r": {
+      "id": "williams_r",
+      "name": "Williams %R",
+      "category": "momentum",
+      "description": "Overbought/oversold indicator based on highest high",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "wma": {
+      "id": "wma",
+      "name": "WMA",
+      "category": "trend",
+      "description": "Weighted Moving Average",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "z_score": {
+      "id": "z_score",
+      "name": "Z-Score",
+      "category": "volatility",
+      "description": "Number of standard deviations from the mean",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "zig_zag_filter": {
+      "id": "zig_zag_filter",
+      "name": "Zig Zag Filter",
+      "category": "patterns",
+      "description": "Filters out noise by percentage deviation",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"deviation\":{\"type\":\"number\",\"description\":\"Minimum deviation to register a pivot\",\"default\":0.01}}}",
+      "output_type": "indicator"
+    },
+    "zs": {
+      "id": "zs",
+      "name": "Z-Score",
+      "category": "volatility",
+      "description": "Alias for Z-Score",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    }
+  },
+  "strategies": {
+    "absolutePriceOscillator": {
+      "id": "absolutePriceOscillator",
+      "name": "Absolute Price Oscillator Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when APO crosses above zero and sell signals when APO crosses below zero",
+      "defaults": {
+        "fast_period": 10,
+        "slow_period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "accelerationBands": {
+      "id": "accelerationBands",
+      "name": "Acceleration Bands Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses under lower band and sell signals when price crosses over upper band",
+      "defaults": {
+        "multiplier": 4.0,
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "accumulation-distribution": {
+      "id": "accumulation-distribution",
+      "name": "Accumulation/Distribution Line",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when AD line and price are both increasing, sell signals on divergence between AD and price",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "adx": {
+      "id": "adx",
+      "name": "ADX Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when ADX crosses above trend threshold in bullish trends (+DI > -DI), sell signals in bearish trends (-DI > +DI) or ranging markets",
+      "defaults": {
+        "period": 14,
+        "trend_threshold": 25.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "adx-rsi-trend-momentum": {
+      "id": "adx-rsi-trend-momentum",
+      "name": "ADX + RSI Trend Momentum",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Combine ADX trend + RSI momentum",
+      "defaults": {
+        "adx_period": 14,
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "rsi_period": 14,
+        "trend_threshold": 25.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "almaCrossover": {
+      "id": "almaCrossover",
+      "name": "ALMA Crossover Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when fast ALMA crosses above slow ALMA and sell signals when fast ALMA crosses below slow ALMA",
+      "defaults": {
+        "fast_period": 9,
+        "offset": 0.85,
+        "slow_period": 21
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "almaHmaDivergence": {
+      "id": "almaHmaDivergence",
+      "name": "ALMA HMA Divergence Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when ALMA diverges above HMA by threshold and sell signals when ALMA diverges below HMA by threshold",
+      "defaults": {
+        "divergence_threshold": 0.01,
+        "fast_period": 9,
+        "offset": 0.85,
+        "slow_period": 21
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "aroon": {
+      "id": "aroon",
+      "name": "Aroon Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when Aroon Up crosses over overbought level and sell signals when Aroon Down crosses under oversold level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "atrThreshold": {
+      "id": "atrThreshold",
+      "name": "ATR Threshold Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates signals based on ATR threshold comparison with price range",
+      "defaults": {
+        "multiplier": 2.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "atrVolatilityThreshold": {
+      "id": "atrVolatilityThreshold",
+      "name": "ATR Volatility Threshold Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when ATR is below threshold and sell signals when ATR exceeds threshold",
+      "defaults": {
+        "period": 14,
+        "volatility_threshold": 1.2
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "awesomeOscillator": {
+      "id": "awesomeOscillator",
+      "name": "Awesome Oscillator Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when AO crosses above zero and sell signals when AO crosses below zero",
+      "defaults": {
+        "fast_period": 5,
+        "slow_period": 34
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "balanceOfPower": {
+      "id": "balanceOfPower",
+      "name": "Balance of Power Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when Balance of Power crosses over zero and sell signals when Balance of Power crosses under zero",
+      "defaults": {
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "bb-rsi-breakout": {
+      "id": "bb-rsi-breakout",
+      "name": "Bollinger Bands + RSI Breakout",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Bollinger Bands + RSI breakout confirmation",
+      "defaults": {
+        "bb_period": 20,
+        "bb_std_dev": 2.0,
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "bollingerBands": {
+      "id": "bollingerBands",
+      "name": "Bollinger Bands Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses above upper band and sell signals when price crosses below lower band",
+      "defaults": {
+        "period": 20,
+        "std_dev": 2.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "bollingerBandsMeanReversion": {
+      "id": "bollingerBandsMeanReversion",
+      "name": "Bollinger Bands Mean Reversion Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price falls below lower band and sell signals when price rises above upper band",
+      "defaults": {
+        "period": 20,
+        "std_dev": 2.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "buyAndHold": {
+      "id": "buyAndHold",
+      "name": "Buy and Hold",
+      "category": "special",
+      "default_timeframes": [
+        "1d",
+        "1w",
+        "1M"
+      ],
+      "description": "Buy on first bar and hold position forever",
+      "defaults": {},
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "cci": {
+      "id": "cci",
+      "name": "CCI Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when CCI crosses below oversold level and sell signals when CCI crosses above overbought level",
+      "defaults": {
+        "overbought": 100.0,
+        "oversold": -100.0,
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "chaikin-money-flow": {
+      "id": "chaikin-money-flow",
+      "name": "Chaikin Money Flow",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when CMF crosses above zero, sell signals when CMF crosses below zero",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "chandeForecastOscillator": {
+      "id": "chandeForecastOscillator",
+      "name": "Chande Forecast Oscillator Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when CFO crosses under oversold level and sell signals when CFO crosses over overbought level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "cointegration-pair-trading": {
+      "id": "cointegration-pair-trading",
+      "name": "Cointegration Pair Trading Strategy",
+      "category": "statistics",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when spread z-score crosses under negative entry threshold and sell signals when spread z-score crosses over entry threshold",
+      "defaults": {
+        "beta_period": 60,
+        "entry_threshold": 2.0,
+        "period": 20,
+        "second_closes": []
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "correlation-mean-reversion": {
+      "id": "correlation-mean-reversion",
+      "name": "Correlation Mean Reversion Strategy",
+      "category": "statistics",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when correlation drops below reversion threshold and sell signals when correlation exceeds 1.5x reversion threshold",
+      "defaults": {
+        "holding_period": 5,
+        "period": 20,
+        "reversion_threshold": 0.2,
+        "second_closes": []
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "correlation-pair-trading": {
+      "id": "correlation-pair-trading",
+      "name": "Correlation Pair Trading Strategy",
+      "category": "statistics",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when correlation between two assets crosses over entry threshold and sell signals when correlation crosses under exit threshold",
+      "defaults": {
+        "entry_threshold": 0.7,
+        "exit_threshold": 0.3,
+        "period": 20,
+        "second_closes": [],
+        "spread_method": "ratio"
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "cup-and-handle-breakout": {
+      "id": "cup-and-handle-breakout",
+      "name": "Cup and Handle Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects bullish continuation cup and handle pattern",
+      "defaults": {
+        "cup_depth": 0.15,
+        "handle_retracement": 0.3,
+        "min_duration": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "dmi": {
+      "id": "dmi",
+      "name": "DMI Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Uses ADX and Directional Indicators for trend signals when ADX crosses over threshold with directional bias",
+      "defaults": {
+        "adx_threshold": 25.0,
+        "period_adx": 14,
+        "period_di": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "donchianBreakout": {
+      "id": "donchianBreakout",
+      "name": "Donchian Breakout Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "True Turtle Trading strategy: generates buy signals when price crosses over upper channel and sell signals when price crosses under lower channel",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "donchianReversion": {
+      "id": "donchianReversion",
+      "name": "Donchian Mean Reversion Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Counter-trend strategy: generates buy signals when price crosses over lower channel and sell signals when price crosses under upper channel",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "double-top-bottom-reversal": {
+      "id": "double-top-bottom-reversal",
+      "name": "Double Top/Bottom Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects double top (bearish) and double bottom (bullish) reversal patterns",
+      "defaults": {
+        "lookaround": 2,
+        "min_distance": 10,
+        "tolerance": 0.03
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "double-top-stochastic-reversal": {
+      "id": "double-top-stochastic-reversal",
+      "name": "Double Top/Bottom + Stochastic Reversal",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Double Top/Bottom pattern + Stochastic confirmation",
+      "defaults": {
+        "d_period": 3,
+        "k_period": 14,
+        "min_distance": 10,
+        "overbought": 80.0,
+        "oversold": 20.0,
+        "tolerance": 0.03
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "ease-of-movement": {
+      "id": "ease-of-movement",
+      "name": "Ease of Movement",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when EOM crosses above zero, sell signals when EOM crosses below zero",
+      "defaults": {
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "elliott-wave-pattern": {
+      "id": "elliott-wave-pattern",
+      "name": "Elliott Wave Pattern Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals for impulse waves and sell signals for corrective waves",
+      "defaults": {
+        "lookaround": 2,
+        "min_wave_separation": 5,
+        "retracement_tolerance": 0.1,
+        "wave2_retracement": 0.618,
+        "wave3_min_extension": 1.618,
+        "wave4_retracement": 0.382
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "fibonacciRetracement": {
+      "id": "fibonacciRetracement",
+      "name": "Fibonacci Retracement Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price is above Fibonacci level and sell signals when price is below Fibonacci level",
+      "defaults": {
+        "fib_level": 0.618,
+        "period": 50
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "flag-pennant-macd-continuation": {
+      "id": "flag-pennant-macd-continuation",
+      "name": "Flag/Pennant + MACD Continuation",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Flag/Pennant + MACD continuation",
+      "defaults": {
+        "additional_buffer": 5,
+        "breakout_threshold": 0.02,
+        "consolidation_bars": 10,
+        "macd_fast_period": 12,
+        "macd_signal_period": 9,
+        "macd_slow_period": 26,
+        "pole_length": 10
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "flags-pennants-continuation": {
+      "id": "flags-pennants-continuation",
+      "name": "Flags and Pennants Continuation Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects flag and pennant continuation patterns",
+      "defaults": {
+        "additional_buffer": 5,
+        "breakout_threshold": 0.02,
+        "consolidation_bars": 10,
+        "pole_length": 10
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "force-index": {
+      "id": "force-index",
+      "name": "Force Index",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when Force Index crosses above oversold threshold, sell signals when Force Index crosses below overbought threshold",
+      "defaults": {
+        "overbought": 0.1,
+        "oversold": -0.1,
+        "period": 13
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "head-and-shoulders-reversal": {
+      "id": "head-and-shoulders-reversal",
+      "name": "Head and Shoulders Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects head and shoulders (bearish) and inverse head and shoulders (bullish) patterns",
+      "defaults": {
+        "deviation": 0.005,
+        "min_data_length": 15,
+        "min_distance": 5,
+        "tolerance": 0.02
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "hmaTrend": {
+      "id": "hmaTrend",
+      "name": "HMA Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when HMA is rising and sell signals when HMA is falling",
+      "defaults": {
+        "period": 21
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "ichimoku": {
+      "id": "ichimoku",
+      "name": "Ichimoku Cloud Trend",
+      "category": "momentum",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when price crosses above cloud top and sell signals when price crosses below cloud bottom",
+      "defaults": {
+        "close": 26,
+        "long": 52,
+        "medium": 26,
+        "short": 9
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "kdj": {
+      "id": "kdj",
+      "name": "KDJ Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when J crosses above oversold level and sell signals when J crosses below overbought level",
+      "defaults": {
+        "overbought": 80.0,
+        "oversold": 20.0,
+        "period": 14,
+        "period1": 3,
+        "period2": 3
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "keltnerChannelBreakout": {
+      "id": "keltnerChannelBreakout",
+      "name": "Keltner Channel Breakout Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses over upper Keltner channel and sell signals when price crosses under lower channel",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "keltnerChannelReversion": {
+      "id": "keltnerChannelReversion",
+      "name": "Keltner Channel Mean Reversion Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses over lower Keltner channel and sell signals when price crosses under upper channel",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "keltnerVolatilityBreakout": {
+      "id": "keltnerVolatilityBreakout",
+      "name": "Keltner Volatility Breakout Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates sell signals when close exceeds upper channel and buy signals when close falls below lower channel",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "kst": {
+      "id": "kst",
+      "name": "KST Trend",
+      "category": "momentum",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when KST crosses above signal line and sell signals when KST crosses below signal line",
+      "defaults": {
+        "roc1_period": 10,
+        "roc2_period": 15,
+        "roc3_period": 20,
+        "roc4_period": 30,
+        "signal_period": 9
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "larsson": {
+      "id": "larsson",
+      "name": "Larsson Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals for impulse waves and sell signals for corrective waves using Larsson indicator with consolidating filter",
+      "defaults": {
+        "consolidating_lookback": 10,
+        "consolidating_threshold_pct": 0.02,
+        "signal_offset": 0,
+        "use_consolidating_filter": 1
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "linRegChannel": {
+      "id": "linRegChannel",
+      "name": "Linear Regression Channel",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when price crosses above the linear regression line and sell signals when price crosses below",
+      "defaults": {
+        "offset": 0.0,
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "linRegSlope": {
+      "id": "linRegSlope",
+      "name": "Linear Regression Slope Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates signals based on slope direction with ADX confirmation for trending markets",
+      "defaults": {
+        "adx_threshold": 25.0,
+        "period": 20,
+        "period_adx": 14,
+        "slope_period": 10
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "ma-crossover": {
+      "id": "ma-crossover",
+      "name": "Moving Average Crossover Information",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when fast MA crosses above slow MA and sell signals when fast MA crosses below slow MA",
+      "defaults": {
+        "fast_period": 5,
+        "slow_period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "ma-rsi-trend-following": {
+      "id": "ma-rsi-trend-following",
+      "name": "MA + RSI Trend Following",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Combine MA trend + RSI momentum",
+      "defaults": {
+        "ma_period": 20,
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "macd": {
+      "id": "macd",
+      "name": "MACD Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when MACD line crosses above signal line and sell signals when MACD line crosses below signal line",
+      "defaults": {
+        "fast_period": 12,
+        "signal_period": 9,
+        "slow_period": 26
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "macd-rsi-momentum": {
+      "id": "macd-rsi-momentum",
+      "name": "MACD + RSI Momentum",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "MACD + RSI momentum confirmation",
+      "defaults": {
+        "macd_fast_period": 12,
+        "macd_signal_period": 9,
+        "macd_slow_period": 26,
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "macd-stochastic-confirmation": {
+      "id": "macd-stochastic-confirmation",
+      "name": "MACD + Stochastic Confirmation",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "MACD + Stochastic confirmation",
+      "defaults": {
+        "d_period": 3,
+        "fast_period": 12,
+        "k_period": 14,
+        "overbought": 80.0,
+        "oversold": 20.0,
+        "signal_period": 9,
+        "slow_period": 26
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "macdCrossover": {
+      "id": "macdCrossover",
+      "name": "MACD Crossover Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when MACD line crosses above signal line and sell signals when MACD line crosses below signal line",
+      "defaults": {
+        "fast_period": 12,
+        "signal_period": 9,
+        "slow_period": 26
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "madReversion": {
+      "id": "madReversion",
+      "name": "MAD Reversion Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price falls below mean minus deviation and sell signals when price exceeds mean plus deviation",
+      "defaults": {
+        "deviation_multiplier": 2.0,
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "mfi-obv-volume-flow": {
+      "id": "mfi-obv-volume-flow",
+      "name": "MFI + OBV Volume Flow",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Combines MFI (Money Flow Index) + OBV volume confirmation",
+      "defaults": {
+        "mfi_period": 14,
+        "overbought": 80.0,
+        "oversold": 20.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "momentum": {
+      "id": "momentum",
+      "name": "Momentum Trend",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when momentum crosses below oversold level and sell signals when momentum crosses above overbought level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "money-flow-index": {
+      "id": "money-flow-index",
+      "name": "Money Flow Index",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when MFI crosses below oversold level, sell signals when MFI crosses above overbought level",
+      "defaults": {
+        "overbought": 80.0,
+        "oversold": 20.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "negative-volume-index": {
+      "id": "negative-volume-index",
+      "name": "Negative Volume Index",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when NVI crosses above start level, sell signals when NVI crosses below start level",
+      "defaults": {
+        "period": 14,
+        "start": 1000.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "obv": {
+      "id": "obv",
+      "name": "OBV Divergence",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals on bullish divergence (price lower low, OBV higher low) and sell signals on bearish divergence (price higher high, OBV lower high)",
+      "defaults": {
+        "lookback_period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "obv-confirmation": {
+      "id": "obv-confirmation",
+      "name": "OBV Confirmation",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when OBV crosses above its SMA, sell signals when OBV crosses below its SMA",
+      "defaults": {
+        "obv_period": 10,
+        "price_period": 10
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "obv-rsi-volume-confirmation": {
+      "id": "obv-rsi-volume-confirmation",
+      "name": "OBV + RSI Volume Confirmation",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Combine OBV + RSI confirmation",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "openingRangeBreakout": {
+      "id": "openingRangeBreakout",
+      "name": "Opening Range Breakout Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals on breakout from consolidation and sell signals during consolidation",
+      "defaults": {
+        "lookback": 10,
+        "threshold_pct": 0.02
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "pairsTrading": {
+      "id": "pairsTrading",
+      "name": "Pairs Trading Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Stateful strategy that enters positions based on z-score entry thresholds and exits on exit thresholds",
+      "defaults": {
+        "entry_threshold": 2.0,
+        "exit_threshold": 0.5,
+        "period": 100
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "parabolicSar": {
+      "id": "parabolicSar",
+      "name": "Parabolic SAR Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price is above SAR and sell signals when price is below SAR",
+      "defaults": {
+        "max_step": 0.02,
+        "step": 0.02
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "percentRank-ranking": {
+      "id": "percentRank-ranking",
+      "name": "Percent Rank Strategy",
+      "category": "statistics",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when percent rank crosses over entry percentile and sell signals when percent rank crosses under exit percentile",
+      "defaults": {
+        "entry_percentile": 80.0,
+        "exit_percentile": 50.0,
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "pivotPoints": {
+      "id": "pivotPoints",
+      "name": "Pivot Points Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates signals based on price position relative to pivot levels",
+      "defaults": {
+        "period": 20,
+        "period_high": 20,
+        "period_low": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "projectionOscillator": {
+      "id": "projectionOscillator",
+      "name": "Projection Oscillator Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level",
+      "defaults": {
+        "period": 14,
+        "smooth": 3
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "roc": {
+      "id": "roc",
+      "name": "ROC Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when ROC crosses above oversold level and sell signals when ROC crosses below overbought level",
+      "defaults": {
+        "overbought": 10.0,
+        "oversold": -10.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "roc-obv-rsi-momentum": {
+      "id": "roc-obv-rsi-momentum",
+      "name": "ROC OBV + RSI Momentum",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Complex: ROC of OBV + RSI",
+      "defaults": {
+        "obv_roc_period": 3,
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "rsi": {
+      "id": "rsi",
+      "name": "RSI Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "rsi-macd-confirmation": {
+      "id": "rsi-macd-confirmation",
+      "name": "RSI + MACD Confirmation",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "RSI + MACD confirmation",
+      "defaults": {
+        "macd_fast_period": 12,
+        "macd_signal_period": 9,
+        "macd_slow_period": 26,
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "rsi2": {
+      "id": "rsi2",
+      "name": "RSI2 Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "smaVwapCrossover": {
+      "id": "smaVwapCrossover",
+      "name": "Sma Vwap Crossover",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when SMA crosses above VWAP and sell signals when SMA crosses below VWAP",
+      "defaults": {
+        "anchored": true,
+        "price_source": "hlc3",
+        "session_length": 1440,
+        "sma_period": 3,
+        "vwap_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "standardDeviation": {
+      "id": "standardDeviation",
+      "name": "Standard Deviation Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when standard deviation is below threshold and sell signals when it exceeds threshold",
+      "defaults": {
+        "period": 14,
+        "threshold": 2.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "stochastic": {
+      "id": "stochastic",
+      "name": "Stochastic Oscillator Momentum",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when %K crosses above oversold level and sell signals when %K crosses below overbought level",
+      "defaults": {
+        "d_period": 3,
+        "k_period": 14,
+        "overbought": 80.0,
+        "oversold": 20.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "superTrend": {
+      "id": "superTrend",
+      "name": "Super Trend Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when trend changes to up and sell signals when trend changes to down",
+      "defaults": {
+        "multiplier": 3.0,
+        "period": 3
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "triangle-breakout": {
+      "id": "triangle-breakout",
+      "name": "Triangle Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects triangle patterns and generates breakout signals",
+      "defaults": {
+        "angle_tolerance": 0.001,
+        "min_data_length": 20,
+        "min_points": 4,
+        "slope_tolerance": 0.01
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "triangle-rsi-breakout": {
+      "id": "triangle-rsi-breakout",
+      "name": "Triangle + RSI Breakout",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Triangle pattern + RSI breakout",
+      "defaults": {
+        "min_points": 4,
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "rsi_period": 14,
+        "slope_tolerance": 0.01
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "typicalPrice": {
+      "id": "typicalPrice",
+      "name": "Typical Price Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when close is above typical price and sell signals when close is below typical price",
+      "defaults": {},
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "ultimateOscillator": {
+      "id": "ultimateOscillator",
+      "name": "Ultimate Oscillator Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when UO crosses above oversold level and sell signals when UO crosses below overbought level",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "period1": 7,
+        "period2": 14,
+        "period3": 28
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "varianceStop": {
+      "id": "varianceStop",
+      "name": "Variance Stop Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when variance is below multiplier and sell signals when it exceeds multiplier",
+      "defaults": {
+        "multiplier": 2.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "volatilityAdjusted": {
+      "id": "volatilityAdjusted",
+      "name": "Volatility Adjusted Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when annualized volatility is below target and sell signals when it exceeds target",
+      "defaults": {
+        "period": 20,
+        "target_volatility": 0.15
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "volume-price-trend": {
+      "id": "volume-price-trend",
+      "name": "Volume Price Trend",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when VPT crosses above positive threshold with volume confirmation, sell signals when VPT crosses below negative threshold with volume confirmation",
+      "defaults": {
+        "min_criteria_met": 1,
+        "vpt_threshold": 0.1
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "volume-profile-rsi": {
+      "id": "volume-profile-rsi",
+      "name": "Volume Profile + RSI",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Volume Profile + RSI",
+      "defaults": {
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14,
+        "volume_profile_bins": 50
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "volumeWeightedAveragePrice": {
+      "id": "volumeWeightedAveragePrice",
+      "name": "Volume Weighted Average Price Trend",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses above VWAP and sell signals when price crosses below VWAP",
+      "defaults": {
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vortex": {
+      "id": "vortex",
+      "name": "Vortex Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when VI+ crosses above VI- and sell signals when VI+ crosses below VI-",
+      "defaults": {
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-breakout": {
+      "id": "vwap-breakout",
+      "name": "VWAP Breakout",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses above VWAP + breakout threshold, sell signals when price crosses below VWAP",
+      "defaults": {
+        "breakout_threshold": 0.01,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-ema-rsi-trend": {
+      "id": "vwap-ema-rsi-trend",
+      "name": "VWAP + EMA + RSI Trend",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "VWAP + EMA crossover + RSI (triple confluence)",
+      "defaults": {
+        "ema_fast_period": 5,
+        "ema_slow_period": 20,
+        "rsi_overbought": 70.0,
+        "rsi_oversold": 30.0,
+        "rsi_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-macd-momentum": {
+      "id": "vwap-macd-momentum",
+      "name": "VWAP + MACD Momentum",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "VWAP + MACD momentum",
+      "defaults": {
+        "macd_fast_period": 12,
+        "macd_signal_period": 9,
+        "macd_slow_period": 26
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-reversion": {
+      "id": "vwap-reversion",
+      "name": "VWAP Reversion",
+      "category": "volume",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses below VWAP - deviation threshold, sell signals when price crosses above VWAP + deviation threshold",
+      "defaults": {
+        "deviation_threshold": 0.02,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-rsi-breakout": {
+      "id": "vwap-rsi-breakout",
+      "name": "VWAP + RSI Breakout",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Combine VWAP + RSI breakout",
+      "defaults": {
+        "overbought": 70.0,
+        "oversold": 30.0,
+        "rsi_period": 14,
+        "vwap_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwap-stochastic-confirmation": {
+      "id": "vwap-stochastic-confirmation",
+      "name": "VWAP + Stochastic Confirmation",
+      "category": "composite",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "VWAP + Stochastic confirmation",
+      "defaults": {
+        "d_period": 3,
+        "k_period": 14,
+        "overbought": 80.0,
+        "oversold": 20.0,
+        "vwap_period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "vwma": {
+      "id": "vwma",
+      "name": "VWMA Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses above VWMA and sell signals when price crosses below VWMA",
+      "defaults": {
+        "period": 20
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "wedge-breakout": {
+      "id": "wedge-breakout",
+      "name": "Wedge Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects wedge patterns and generates breakout signals opposite to wedge direction",
+      "defaults": {
+        "min_data_length": 20,
+        "min_points": 4,
+        "slope_tolerance": 0.0001
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "williamsR": {
+      "id": "williamsR",
+      "name": "Williams %R Momentum Strategy",
+      "category": "momentum",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when Williams %R crosses above oversold level and sell signals when Williams %R crosses below overbought level",
+      "defaults": {
+        "overbought": -20.0,
+        "oversold": -80.0,
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "wmaConfirmation": {
+      "id": "wmaConfirmation",
+      "name": "WMA Confirmation Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when WMA slope is above threshold and sell signals when WMA slope is below negative threshold",
+      "defaults": {
+        "period": 14,
+        "threshold": 0.02
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "wmaMomentum": {
+      "id": "wmaMomentum",
+      "name": "WMA Momentum Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when WMA is increasing and sell signals when WMA is decreasing",
+      "defaults": {
+        "period": 14
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "zScoreBreakout": {
+      "id": "zScoreBreakout",
+      "name": "Z-Score Breakout Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Generates buy signals when z-score crosses over positive threshold and sell signals when z-score crosses under negative threshold",
+      "defaults": {
+        "mean_period": 20,
+        "std_period": 20,
+        "threshold": 2.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    },
+    "zScoreReversion": {
+      "id": "zScoreReversion",
+      "name": "Z-Score Reversion Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when z-score is below negative threshold and sell signals when it exceeds positive threshold",
+      "defaults": {
+        "period": 20,
+        "threshold": 2.0
+      },
+      "params_schema": "",
+      "output_type": "signal"
+    }
+  }
+}

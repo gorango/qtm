@@ -6,6 +6,7 @@ pub mod growth;
 pub mod onchain;
 pub mod prediction;
 pub mod quality;
+pub mod registry;
 pub mod reit;
 pub mod shareholder;
 pub mod solvency;

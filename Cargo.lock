@@ -106,6 +106,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
+name = "codegen"
+version = "0.1.0"
+dependencies = [
+ "factors-core",
+ "indicators-core",
+ "serde",
+ "serde_json",
+ "strategies-core",
+]
+
+[[package]]
 name = "convert_case"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -210,6 +221,7 @@ dependencies = [
 name = "factors-core"
 version = "0.1.0"
 dependencies = [
+ "inventory",
  "napi",
  "napi-derive",
  "serde",
@@ -353,6 +365,7 @@ name = "indicators-core"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "inventory",
  "napi",
  "napi-derive",
  "proptest",
@@ -582,6 +595,21 @@ dependencies = [
  "rand_xorshift",
  "regex-syntax",
  "unarray",
+]
+
+[[package]]
+name = "quantamental"
+version = "0.1.0"
+dependencies = [
+ "factors-core",
+ "indicators-core",
+ "napi",
+ "napi-build",
+ "napi-derive",
+ "rayon",
+ "serde",
+ "serde_json",
+ "strategies-core",
 ]
 
 [[package]]

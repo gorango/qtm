@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::DoubleTopStochasticConfig;
 use crate::StrategyResult;
 
-/// Double Top Stochastic
-///
-/// Sell on double-top pattern with stochastic overbought crossover.
+
+#[strategy(
+    id = "double-top-stochastic-reversal",
+    name = "Double Top/Bottom + Stochastic Reversal",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Double Top/Bottom pattern + Stochastic confirmation",
+    opt_params = r#"[{"param_name": "min_distance", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "tolerance", "min": 0.01, "max": 0.1, "step": 0.01}, {"param_name": "k_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
+)]
 pub fn double_top_stochastic_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -76,65 +83,4 @@ pub fn double_top_stochastic_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn double_top_stochastic_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "double-top-stochastic-reversal",
-		"name": "Double Top/Bottom + Stochastic Reversal",
-		"category": "composite",
-		"description": "Double Top/Bottom pattern + Stochastic confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn double_top_stochastic_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"min_distance": 10,
-			"tolerance": 0.03,
-			"k_period": 14,
-			"d_period": 3,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "min_distance",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "tolerance",
-				"min": 0.01,
-				"max": 0.1,
-				"step": 0.01
-			},
-			{
-				"param_name": "k_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "d_period",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

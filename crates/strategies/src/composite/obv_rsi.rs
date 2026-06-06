@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::RSIConfig;
 use crate::{StrategyError, StrategyResult};
 
-/// Obv Rsi
-///
-/// Buy when OBV/volume diverges bullishly with RSI oversold. Sell on bearish divergence.
+
+#[strategy(
+    id = "obv-rsi-volume-confirmation",
+    name = "OBV + RSI Volume Confirmation",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Combine OBV + RSI confirmation",
+    opt_params = r#"[{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+)]
 pub fn obv_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -59,44 +66,4 @@ pub fn obv_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn obv_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "obv-rsi-volume-confirmation",
-		"name": "OBV + RSI Volume Confirmation",
-		"category": "composite",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Combine OBV + RSI confirmation"
-	})
-}
-
-pub fn obv_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"period": 14,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

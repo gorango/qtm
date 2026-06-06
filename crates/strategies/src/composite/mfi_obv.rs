@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::MfiObvConfig;
 use crate::{StrategyError, StrategyResult};
 
-/// Mfi Obv
-///
-/// Buy when MFI oversold and OBV confirms accumulation. Sell on distribution.
+
+#[strategy(
+    id = "mfi-obv-volume-flow",
+    name = "MFI + OBV Volume Flow",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Combines MFI (Money Flow Index) + OBV volume confirmation",
+    opt_params = r#"[{"param_name": "mfi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
+)]
 pub fn mfi_obv_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -63,44 +70,4 @@ pub fn mfi_obv_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn mfi_obv_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "mfi-obv-volume-flow",
-		"name": "MFI + OBV Volume Flow",
-		"category": "composite",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Combines MFI (Money Flow Index) + OBV volume confirmation"
-	})
-}
-
-pub fn mfi_obv_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"mfi_period": 14,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "mfi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

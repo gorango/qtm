@@ -39,6 +39,8 @@
 		}
 	},
 	"scripts": {
+		"generate:ts": "bun scripts/generate.ts",
+		"generate": "cargo run -p codegen 2>&1 && bun scripts/generate.ts",
 		"dev": "tsdown --watch",
 		"build": "tsdown",
 		"typecheck": "tsc --noEmit",

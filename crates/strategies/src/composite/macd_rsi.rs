@@ -1,28 +1,34 @@
-use crate::types::configs::MACDConfig;
-use crate::types::configs::RSIConfig;
+use strategies_proc_macro::strategy;
+use crate::types::configs::RsiMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 
 /// Macd Rsi
 ///
 /// Buy when RSI is oversold and MACD confirms bullish crossover. Sell on bearish alignment.
+#[strategy(
+	id = "macd-rsi-momentum",
+	name = "MACD + RSI Momentum",
+	category = "composite",
+	default_timeframes = ["15m", "1h", "4h"],
+	description = "MACD + RSI momentum confirmation",
+	opt_params = r#"[{"param_name":"fast_period","min":5.0,"max":20.0,"step":1.0},{"param_name":"slow_period","min":20.0,"max":50.0,"step":1.0},{"param_name":"signal_period","min":5.0,"max":20.0,"step":1.0},{"param_name":"rsi_period","min":5.0,"max":30.0,"step":1.0},{"param_name":"oversold","min":10.0,"max":40.0,"step":5.0},{"param_name":"overbought","min":60.0,"max":90.0,"step":5.0}]"#
+)]
 pub fn macd_rsi_strategy(
 	closes: &[f64],
-	macd_config: Option<MACDConfig>,
-	rsi_config: Option<RSIConfig>,
+	config: Option<RsiMacdConfig>,
 ) -> StrategyResult<Vec<i8>> {
-	let macd_cfg = macd_config.unwrap_or_default();
-	let rsi_cfg = rsi_config.unwrap_or_default();
+	let cfg = config.unwrap_or_default();
 
-	let fast_period = macd_cfg.fast_period.unwrap_or(12);
-	let slow_period = macd_cfg.slow_period.unwrap_or(26);
-	let signal_period = macd_cfg.signal_period.unwrap_or(9);
-	let rsi_period = rsi_cfg.period.unwrap_or(14);
-	let oversold = rsi_cfg.oversold.unwrap_or(30.0);
-	let overbought = rsi_cfg.overbought.unwrap_or(70.0);
+	let fast_period = cfg.macd_fast_period.unwrap_or(12);
+	let slow_period = cfg.macd_slow_period.unwrap_or(26);
+	let signal_period = cfg.macd_signal_period.unwrap_or(9);
+	let rsi_period = cfg.rsi_period.unwrap_or(14) as usize;
+	let oversold = cfg.rsi_oversold.unwrap_or(30.0);
+	let overbought = cfg.rsi_overbought.unwrap_or(70.0);
 
 	let data_len = closes.len();
-	let min_data_length = (slow_period + signal_period).max(rsi_period + 1) as usize;
+	let min_data_length = (slow_period + signal_period).max(rsi_period as u32 + 1) as usize;
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
@@ -40,7 +46,7 @@ pub fn macd_rsi_strategy(
 	let macd_result = indicators_core::macd(&closes_vec, Some(macd_cfg_ind))?;
 
 	let rsi_cfg_ind = indicators_core::RSIConfig {
-		period: Some(rsi_period),
+		period: Some(rsi_period as u32),
 	};
 	let rsi_values = indicators_core::rsi(&closes_vec, Some(rsi_cfg_ind));
 
@@ -67,65 +73,4 @@ pub fn macd_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn macd_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "macd-rsi-momentum",
-		"name": "MACD + RSI Momentum",
-		"category": "composite",
-		"description": "MACD + RSI momentum confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn macd_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 12,
-			"slow_period": 26,
-			"signal_period": 9,
-			"rsi_period": 14,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 20.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "signal_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

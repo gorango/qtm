@@ -326,6 +326,8 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 				description: #description,
 				handler: #wrapped_fn_name,
 				defaults_fn: #defaults_fn_name,
+				params_schema: "",
+				output_type: "signal",
 			}
 		}
 	};

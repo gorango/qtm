@@ -16,6 +16,13 @@ export {
 export type { StrategyDefinition, StrategyRegistryData } from './registry'
 
 export {
+	createStrategyTools,
+	createIndicatorTools,
+	createFactorTools,
+	registryData,
+} from './generated/tools'
+
+export {
 	createErrorResult,
 	createSuccessResult,
 	createToolResult,

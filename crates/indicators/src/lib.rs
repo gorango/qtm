@@ -1,6 +1,7 @@
 pub mod error;
 pub mod internal;
 pub mod market;
+pub mod registry;
 pub mod momentum;
 pub mod patterns;
 pub mod shared;

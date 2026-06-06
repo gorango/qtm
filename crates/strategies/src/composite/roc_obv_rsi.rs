@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::RocObvRsiConfig;
 use crate::{StrategyError, StrategyResult};
 
-/// Roc Obv Rsi
-///
-/// Buy when OBV/volume diverges bullishly with RSI oversold. Sell on bearish divergence.
+
+#[strategy(
+    id = "roc-obv-rsi-momentum",
+    name = "ROC OBV + RSI Momentum",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Complex: ROC of OBV + RSI",
+    opt_params = r#"[{"param_name": "obv_roc_period", "min": 1.0, "max": 10.0, "step": 1.0}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}]"#
+)]
 pub fn roc_obv_rsi_strategy(
 	closes: &[f64],
 	volumes: &[f64],
@@ -65,51 +72,4 @@ pub fn roc_obv_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn roc_obv_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "roc-obv-rsi-momentum",
-		"name": "ROC OBV + RSI Momentum",
-		"category": "composite",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Complex: ROC of OBV + RSI"
-	})
-}
-
-pub fn roc_obv_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"obv_roc_period": 3,
-			"rsi_period": 14,
-			"rsi_overbought": 70.0,
-			"rsi_oversold": 30.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "obv_roc_period",
-				"min": 1.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "rsi_oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			}
-		]
-	})
 }

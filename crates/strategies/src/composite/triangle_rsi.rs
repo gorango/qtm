@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::TriangleRsiConfig;
 use crate::{StrategyError, StrategyResult};
 
-/// Triangle Rsi
-///
-/// Buy on triangle breakout with RSI momentum confirmation. Sell on breakdown.
+
+#[strategy(
+    id = "triangle-rsi-breakout",
+    name = "Triangle + RSI Breakout",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Triangle pattern + RSI breakout",
+    opt_params = r#"[{"param_name": "min_points", "min": 3.0, "max": 8.0, "step": 1.0}, {"param_name": "slope_tolerance", "min": 0.005, "max": 0.05, "step": 0.005}, {"param_name": "rsi_period", "min": 7.0, "max": 21.0, "step": 1.0}, {"param_name": "oversold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "overbought", "min": 60.0, "max": 80.0, "step": 1.0}]"#
+)]
 pub fn triangle_rsi_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -62,58 +69,4 @@ pub fn triangle_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn triangle_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "triangle-rsi-breakout",
-		"name": "Triangle + RSI Breakout",
-		"category": "composite",
-		"description": "Triangle pattern + RSI breakout",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn triangle_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"min_points": 4,
-			"slope_tolerance": 0.01,
-			"rsi_period": 14,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "min_points",
-				"min": 3.0,
-				"max": 8.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slope_tolerance",
-				"min": 0.005,
-				"max": 0.05,
-				"step": 0.005
-			},
-			{
-				"param_name": "rsi_period",
-				"min": 7.0,
-				"max": 21.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 20.0,
-				"max": 40.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 80.0,
-				"step": 1.0
-			}
-		]
-	})
 }

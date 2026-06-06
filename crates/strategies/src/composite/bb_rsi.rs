@@ -1,10 +1,17 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::BbRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 
-/// Bb Rsi
-///
-/// Buy when price is near lower Bollinger Band and RSI is oversold. Sell when price is near upper band and RSI is overbought.
+
+#[strategy(
+    id = "bb-rsi-breakout",
+    name = "Bollinger Bands + RSI Breakout",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Bollinger Bands + RSI breakout confirmation",
+    opt_params = r#"[{"param_name": "bb_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "bb_std_dev", "min": 1.0, "max": 3.0, "step": 0.1}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+)]
 pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let bb_period = config.bb_period.unwrap_or(20);
@@ -58,58 +65,4 @@ pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> StrategyR
 	}
 
 	Ok(signals)
-}
-
-pub fn bb_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "bb-rsi-breakout",
-		"name": "Bollinger Bands + RSI Breakout",
-		"category": "composite",
-		"description": "Bollinger Bands + RSI breakout confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn bb_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"bb_period": 20,
-			"bb_std_dev": 2.0,
-			"rsi_period": 14,
-			"rsi_oversold": 30.0,
-			"rsi_overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "bb_period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "bb_std_dev",
-				"min": 1.0,
-				"max": 3.0,
-				"step": 0.1
-			},
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "rsi_overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

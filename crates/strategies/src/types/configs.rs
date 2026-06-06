@@ -869,6 +869,33 @@ impl Default for RsiMacdConfig {
 	}
 }
 
+/// Flag/Pennant + MACD Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct FlagsPennantsMacdConfig {
+	pub pole_length: Option<u32>,
+	pub consolidation_bars: Option<u32>,
+	pub breakout_threshold: Option<f64>,
+	pub additional_buffer: Option<u32>,
+	pub macd_fast_period: Option<u32>,
+	pub macd_slow_period: Option<u32>,
+	pub macd_signal_period: Option<u32>,
+}
+
+impl Default for FlagsPennantsMacdConfig {
+	fn default() -> Self {
+		Self {
+			pole_length: Some(10),
+			consolidation_bars: Some(10),
+			breakout_threshold: Some(0.02),
+			additional_buffer: Some(5),
+			macd_fast_period: Some(12),
+			macd_slow_period: Some(26),
+			macd_signal_period: Some(9),
+		}
+	}
+}
+
 /// Acceleration Bands Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]

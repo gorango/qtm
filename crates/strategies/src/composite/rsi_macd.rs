@@ -1,12 +1,19 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::RsiMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::macd;
 use indicators_core::rsi;
 
-/// Rsi Macd
-///
-/// Buy when RSI is oversold and MACD confirms bullish crossover. Sell on bearish alignment.
+
+#[strategy(
+    id = "rsi-macd-confirmation",
+    name = "RSI + MACD Confirmation",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "RSI + MACD confirmation",
+    opt_params = r#"[{"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "macd_fast_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "macd_slow_period", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "macd_signal_period", "min": 5.0, "max": 20.0, "step": 1.0}]"#
+)]
 pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
 	let rsi_period = config.rsi_period.unwrap_or(14);
@@ -68,65 +75,4 @@ pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> Strat
 	}
 
 	Ok(signals)
-}
-
-pub fn rsi_macd_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "rsi-macd-confirmation",
-		"name": "RSI + MACD Confirmation",
-		"category": "composite",
-		"description": "RSI + MACD confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn rsi_macd_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"rsi_period": 14,
-			"rsi_oversold": 30.0,
-			"rsi_overbought": 70.0,
-			"macd_fast_period": 12,
-			"macd_slow_period": 26,
-			"macd_signal_period": 9
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "rsi_overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "macd_fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "macd_slow_period",
-				"min": 20.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "macd_signal_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			}
-		]
-	})
 }

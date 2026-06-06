@@ -1,9 +1,16 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::AdxRsiConfig;
 use crate::{StrategyError, StrategyResult};
 
-/// Adx Rsi
-///
-/// Buy when ADX is above trend threshold and RSI is oversold. Sell when ADX is strong and RSI is overbought.
+
+#[strategy(
+    id = "adx-rsi-trend-momentum",
+    name = "ADX + RSI Trend Momentum",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Combine ADX trend + RSI momentum",
+    opt_params = r#"[{"param_name": "adx_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "trend_threshold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+)]
 pub fn adx_rsi_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -68,58 +75,4 @@ pub fn adx_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn adx_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "adx-rsi-trend-momentum",
-		"name": "ADX + RSI Trend Momentum",
-		"category": "composite",
-		"description": "Combine ADX trend + RSI momentum",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn adx_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"adx_period": 14,
-			"trend_threshold": 25.0,
-			"rsi_period": 14,
-			"oversold": 30.0,
-			"overbought": 70.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "adx_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "trend_threshold",
-				"min": 20.0,
-				"max": 40.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			}
-		]
-	})
 }

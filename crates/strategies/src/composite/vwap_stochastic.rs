@@ -1,12 +1,19 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::VwapStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::stochastic_oscillator;
 use indicators_core::vwap;
 
-/// Vwap Stochastic
-///
-/// Buy when price above VWAP with stochastic bullish crossover. Sell on bearish crossover below VWAP.
+
+#[strategy(
+    id = "vwap-stochastic-confirmation",
+    name = "VWAP + Stochastic Confirmation",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "VWAP + Stochastic confirmation",
+    opt_params = r#"[{"param_name": "vwap_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
+)]
 pub fn vwap_stochastic_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -83,58 +90,4 @@ pub fn vwap_stochastic_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn vwap_stochastic_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "vwap-stochastic-confirmation",
-		"name": "VWAP + Stochastic Confirmation",
-		"category": "composite",
-		"description": "VWAP + Stochastic confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn vwap_stochastic_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"vwap_period": 14,
-			"k_period": 14,
-			"d_period": 3,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "vwap_period",
-				"min": 5.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "k_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "d_period",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 1.0
-			}
-		]
-	})
 }

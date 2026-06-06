@@ -1,10 +1,17 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::MacdStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 
-/// Macd Stochastic
-///
-/// Buy on MACD bullish crossover with stochastic confirmation. Sell on bearish crossover.
+
+#[strategy(
+    id = "macd-stochastic-confirmation",
+    name = "MACD + Stochastic Confirmation",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "MACD + Stochastic confirmation",
+    opt_params = r#"[{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "slow_period", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "signal_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
+)]
 pub fn macd_stochastic_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -74,72 +81,4 @@ pub fn macd_stochastic_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn macd_stochastic_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "macd-stochastic-confirmation",
-		"name": "MACD + Stochastic Confirmation",
-		"category": "composite",
-		"description": "MACD + Stochastic confirmation",
-		"default_timeframes": ["15m", "1h", "4h"]
-	})
-}
-
-pub fn macd_stochastic_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"fast_period": 12,
-			"slow_period": 26,
-			"signal_period": 9,
-			"k_period": 14,
-			"d_period": 3,
-			"oversold": 20.0,
-			"overbought": 80.0
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "fast_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "slow_period",
-				"min": 20.0,
-				"max": 50.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "signal_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "k_period",
-				"min": 5.0,
-				"max": 20.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "d_period",
-				"min": 2.0,
-				"max": 10.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "oversold",
-				"min": 10.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "overbought",
-				"min": 70.0,
-				"max": 90.0,
-				"step": 1.0
-			}
-		]
-	})
 }

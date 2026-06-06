@@ -1,0 +1,20 @@
+[package]
+name = "quantamental"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+strategies-core = { path = "../../crates/strategies", features = ["napi"] }
+factors-core = { path = "../../crates/factors", features = ["napi"] }
+indicators-core = { path = "../../crates/indicators", features = ["napi"] }
+napi.workspace = true
+napi-derive.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rayon.workspace = true
+
+[build-dependencies]
+napi-build.workspace = true

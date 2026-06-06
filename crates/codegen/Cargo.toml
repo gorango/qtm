@@ -1,0 +1,11 @@
+[package]
+name = "codegen"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+factors-core = { path = "../factors" }
+indicators-core = { path = "../indicators" }
+strategies-core = { path = "../strategies" }
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

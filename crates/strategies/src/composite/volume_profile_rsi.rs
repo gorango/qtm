@@ -1,11 +1,18 @@
+use strategies_proc_macro::strategy;
 use crate::types::configs::VolumeProfileRsiConfig;
 use crate::{StrategyError, StrategyResult};
 use indicators_core::rsi;
 use indicators_core::volume_profile;
 
-/// Volume Profile Rsi
-///
-/// Buy at high-volume support level with RSI oversold. Sell at resistance with RSI overbought.
+
+#[strategy(
+    id = "volume-profile-rsi",
+    name = "Volume Profile + RSI",
+    category = "composite",
+    default_timeframes = ["15m", "1h", "4h"],
+    description = "Volume Profile + RSI",
+    opt_params = r#"[{"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "volume_profile_bins", "min": 20.0, "max": 100.0, "step": 5.0}]"#
+)]
 pub fn volume_profile_rsi_strategy(
 	highs: &[f64],
 	lows: &[f64],
@@ -99,51 +106,4 @@ pub fn volume_profile_rsi_strategy(
 	}
 
 	Ok(signals)
-}
-
-pub fn volume_profile_rsi_strategy_metadata() -> serde_json::Value {
-	serde_json::json!({
-		"id": "volume-profile-rsi",
-		"name": "Volume Profile + RSI",
-		"category": "composite",
-		"default_timeframes": ["15m", "1h", "4h"],
-		"description": "Volume Profile + RSI"
-	})
-}
-
-pub fn volume_profile_rsi_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({
-		"params": {
-			"rsi_period": 14,
-			"rsi_oversold": 30.0,
-			"rsi_overbought": 70.0,
-			"volume_profile_bins": 50
-		},
-		"optimization_bounds": [
-			{
-				"param_name": "rsi_period",
-				"min": 5.0,
-				"max": 30.0,
-				"step": 1.0
-			},
-			{
-				"param_name": "rsi_oversold",
-				"min": 10.0,
-				"max": 40.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "rsi_overbought",
-				"min": 60.0,
-				"max": 90.0,
-				"step": 5.0
-			},
-			{
-				"param_name": "volume_profile_bins",
-				"min": 20.0,
-				"max": 100.0,
-				"step": 5.0
-			}
-		]
-	})
 }

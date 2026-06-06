@@ -3,6 +3,7 @@ use napi_derive::napi;
 pub mod market;
 pub mod momentum;
 pub mod patterns;
+pub mod registry;
 pub mod shared;
 pub mod trend;
 pub mod volatility;

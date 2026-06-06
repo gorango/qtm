@@ -7,12 +7,10 @@
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
-pub mod composite;
 pub mod fundamentals;
 pub mod quantamentals;
 pub mod registry;
 
-pub use composite::*;
 pub use fundamentals::*;
 pub use quantamentals::*;
 pub use registry::*;
