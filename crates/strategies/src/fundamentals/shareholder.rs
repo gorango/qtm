@@ -2,24 +2,9 @@
 use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
-use factors_core::{FundamentalPoint, FundamentalPointData};
-
-fn payout_ratio(d: &FundamentalPointData) -> Option<f64> {
-	let n = d.net_income?;
-	if n == 0.0 {
-		None
-	} else {
-		Some(d.dividends_paid? / n)
-	}
-}
-fn shareholder_yield(d: &FundamentalPointData) -> Option<f64> {
-	let m = d.market_cap?;
-	if m == 0.0 {
-		None
-	} else {
-		Some((d.dividends_paid.unwrap_or(0.0) + d.share_repurchases.unwrap_or(0.0)) / m)
-	}
-}
+use factors_core::{
+	dividend_payout_ratio_value, shareholder_yield_value, FundamentalPoint,
+};
 
 // ── Configs ──────────────────────────────────────────────
 
@@ -68,9 +53,8 @@ pub fn dividend_strategy(points: Vec<FundamentalPoint>, config: Option<DividendC
 	points
 		.iter()
 		.map(|p| {
-			let d = &p.data;
-			let payout_ok = payout_ratio(d).map(|v| v < payout_max).unwrap_or(false);
-			let yield_ok = shareholder_yield(d).map(|v| v > min_yield).unwrap_or(false);
+			let payout_ok = dividend_payout_ratio_value(&p.data).map(|v| v < payout_max).unwrap_or(false);
+			let yield_ok = shareholder_yield_value(&p.data).map(|v| v > min_yield).unwrap_or(false);
 			if payout_ok && yield_ok {
 				1
 			} else {

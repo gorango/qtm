@@ -35,6 +35,7 @@ pub fn analyst_rating_momentum(
 			}
 			let avg = past_ratings.iter().sum::<f64>() / past_ratings.len() as f64;
 			results.push(FactorPoint {
+				symbol: cur.symbol.clone(),
 				date: cur.filing_date,
 				value: rating - avg,
 			});
@@ -64,6 +65,7 @@ pub fn analyst_target_upside(
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: (target - price) / price,
 		});

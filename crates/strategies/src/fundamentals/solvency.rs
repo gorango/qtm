@@ -2,24 +2,7 @@
 use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
-use factors_core::{FundamentalPoint, FundamentalPointData};
-
-fn debt_to_assets(d: &FundamentalPointData) -> Option<f64> {
-	let a = d.total_assets?;
-	if a == 0.0 {
-		None
-	} else {
-		Some(d.total_debt? / a)
-	}
-}
-fn interest_coverage(d: &FundamentalPointData) -> Option<f64> {
-	let i = d.interest_expense?;
-	if i == 0.0 {
-		None
-	} else {
-		Some(d.operating_income? / i)
-	}
-}
+use factors_core::{debt_to_assets_value, interest_coverage_value, FundamentalPoint};
 
 // ── Configs ──────────────────────────────────────────────
 
@@ -50,9 +33,8 @@ pub fn solvency_strategy(points: Vec<FundamentalPoint>, config: Option<SolvencyC
 	points
 		.iter()
 		.map(|p| {
-			let d = &p.data;
-			let debt_ok = debt_to_assets(d).map(|v| v < max_da).unwrap_or(false);
-			let interest_ok = interest_coverage(d).map(|v| v > min_ic).unwrap_or(false);
+			let debt_ok = debt_to_assets_value(&p.data).map(|v| v < max_da).unwrap_or(false);
+			let interest_ok = interest_coverage_value(&p.data).map(|v| v > min_ic).unwrap_or(false);
 			if debt_ok && interest_ok {
 				1
 			} else {

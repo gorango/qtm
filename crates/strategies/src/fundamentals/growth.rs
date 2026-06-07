@@ -2,28 +2,15 @@
 use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
-use factors_core::{FactorPoint, FundamentalPoint, FundamentalPointData};
+use factors_core::{
+	FactorPoint, FundamentalPoint, FundamentalPointData, operating_profit_margin_value,
+	roe_value,
+};
 
-// ── Derived-field helpers (same as quality) ─────────────
+// ── Derived-field helpers (combinations, not in factors_core) ──
 
-fn roe(d: &FundamentalPointData) -> Option<f64> {
-	let e = d.shareholders_equity?;
-	if e == 0.0 {
-		None
-	} else {
-		Some(d.net_income? / e)
-	}
-}
-fn op_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.operating_income? / r)
-	}
-}
 fn sustainable_sgr(d: &FundamentalPointData) -> Option<f64> {
-	let r = roe(d)?;
+	let r = roe_value(d)?;
 	let pr = d
 		.dividends_paid
 		.and_then(|dp| d.net_income.map(|ni| if ni == 0.0 { 0.0 } else { dp / ni }))
@@ -278,7 +265,7 @@ pub fn earnings_growth_vs_competition_strategy(
 			if d.eps.unwrap_or(0.0) > prem {
 				met += 1;
 			}
-			if roe(d).map(|v| v > 0.0).unwrap_or(false) {
+			if roe_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
 				met += 1;
 			}
 			if d.operating_cash_flow.unwrap_or(0.0) > 0.0 {
@@ -349,7 +336,7 @@ pub fn sustainable_growth_rate_strategy(
 			if d.eps.unwrap_or(0.0) > actual {
 				met += 1;
 			}
-			if roe(d).map(|v| v > 0.15).unwrap_or(false) {
+			if roe_value(&p.data).map(|v| v > 0.15).unwrap_or(false) {
 				met += 1;
 			}
 			if met >= min_met {
@@ -380,7 +367,7 @@ pub fn earnings_reinvestment_rate_strategy(
 			if reinvest_rate(d).map(|v| v > min_rate).unwrap_or(false) {
 				met += 1;
 			}
-			if roe(d).map(|v| v > roe_thr).unwrap_or(false) {
+			if roe_value(&p.data).map(|v| v > roe_thr).unwrap_or(false) {
 				met += 1;
 			}
 			if d.operating_income.unwrap_or(0.0) > 0.0 {
@@ -514,7 +501,7 @@ pub fn revenue_growth_vs_competition_strategy(
 			if d.revenue.unwrap_or(0.0) > prem * 1e6 {
 				met += 1;
 			}
-			if op_margin(d).map(|v| v > 0.0).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
 				met += 1;
 			}
 			if d.operating_income.unwrap_or(0.0) > 0.0 {

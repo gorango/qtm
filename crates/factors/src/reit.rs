@@ -19,6 +19,7 @@ pub fn price_to_affo(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> V
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: price / affo,
 		});
@@ -45,6 +46,7 @@ pub fn reit_dividend_safety(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: div_rate / quarterly_affo,
 		});

@@ -1,31 +1,54 @@
 use crate::types::data::{FactorPoint, FundamentalPoint};
 
+pub fn shareholder_yield_value(d: &crate::types::data::FundamentalPointData) -> Option<f64> {
+	let mcap = d.market_cap?;
+	if mcap <= 0.0 {
+		return None;
+	}
+	let shares = d.shares_outstanding?;
+	if shares <= 0.0 {
+		return None;
+	}
+	let dps = d.dividends_per_share?;
+	Some((dps * shares) / mcap)
+}
+
+pub fn dividend_payout_ratio_value(d: &crate::types::data::FundamentalPointData) -> Option<f64> {
+	let dps = d.dividends_per_share?;
+	let eps = d.eps?;
+	if eps <= 0.0 {
+		return None;
+	}
+	Some(dps / eps)
+}
+
+pub fn dividend_coverage_ratio_value(d: &crate::types::data::FundamentalPointData) -> Option<f64> {
+	let ni = d.net_income?;
+	let dps = d.dividends_per_share?;
+	let shares = d.shares_outstanding?;
+	if shares <= 0.0 {
+		return None;
+	}
+	let total_divs = dps * shares;
+	if total_divs <= 0.0 {
+		return None;
+	}
+	Some(ni / total_divs)
+}
+
 /// Shareholder Yield: `(dividendsPerShare * sharesOutstanding) / marketCap`.
 /// Captures dividend component of total shareholder return.
 #[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn shareholder_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let dps = match f.data.dividends_per_share {
-			Some(v) => v,
-			None => continue,
-		};
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let shares = match f.data.shares_outstanding {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		if mcap <= 0.0 {
-			continue;
+		if let Some(value) = shareholder_yield_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
 		}
-		let div_yield = (dps * shares) / mcap;
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: div_yield,
-		});
 	}
 	results
 }
@@ -35,18 +58,13 @@ pub fn shareholder_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 pub fn dividend_payout_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let dps = match f.data.dividends_per_share {
-			Some(v) => v,
-			None => continue,
-		};
-		let eps = match f.data.eps {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: dps / eps,
-		});
+		if let Some(value) = dividend_payout_ratio_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -56,26 +74,13 @@ pub fn dividend_payout_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 pub fn dividend_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let ni = match f.data.net_income {
-			Some(v) => v,
-			None => continue,
-		};
-		let dps = match f.data.dividends_per_share {
-			Some(v) => v,
-			None => continue,
-		};
-		let shares = match f.data.shares_outstanding {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		let total_divs = dps * shares;
-		if total_divs <= 0.0 {
-			continue;
+		if let Some(value) = dividend_coverage_ratio_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
 		}
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: ni / total_divs,
-		});
 	}
 	results
 }
@@ -99,6 +104,7 @@ pub fn dividend_positive_10_years(fundamentals: Vec<FundamentalPoint>) -> Vec<Fa
 
 		if let Some(latest) = group.last() {
 			results.push(FactorPoint {
+				symbol: latest.symbol.clone(),
 				date: latest.filing_date,
 				value: if all_positive { 1.0 } else { 0.0 },
 			});

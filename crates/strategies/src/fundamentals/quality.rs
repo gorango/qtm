@@ -2,145 +2,14 @@
 use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
-use factors_core::{FactorPoint, FundamentalPoint, FundamentalPointData};
-
-// ── Derived-field helpers ───────────────────────────────
-
-fn roe(d: &FundamentalPointData) -> Option<f64> {
-	let n = d.net_income?;
-	let e = d.shareholders_equity?;
-	if e == 0.0 {
-		None
-	} else {
-		Some(n / e)
-	}
-}
-fn net_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.net_income? / r)
-	}
-}
-fn op_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.operating_income? / r)
-	}
-}
-fn gross_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.gross_profit? / r)
-	}
-}
-fn de_to_equity(d: &FundamentalPointData) -> Option<f64> {
-	let e = d.shareholders_equity?;
-	if e == 0.0 {
-		None
-	} else {
-		Some(d.total_debt? / e)
-	}
-}
-fn current_ratio(d: &FundamentalPointData) -> Option<f64> {
-	let l = d.current_liabilities?;
-	if l == 0.0 {
-		None
-	} else {
-		Some(d.current_assets? / l)
-	}
-}
-fn working_capital(d: &FundamentalPointData) -> Option<f64> {
-	Some(d.current_assets? - d.current_liabilities?)
-}
-fn wc_turnover(d: &FundamentalPointData) -> Option<f64> {
-	let wc = working_capital(d)?;
-	if wc == 0.0 {
-		None
-	} else {
-		Some(d.revenue? / wc)
-	}
-}
-fn roa(d: &FundamentalPointData) -> Option<f64> {
-	let a = d.total_assets?;
-	if a == 0.0 {
-		None
-	} else {
-		Some(d.net_income? / a)
-	}
-}
-fn roic(d: &FundamentalPointData) -> Option<f64> {
-	let cap = d.total_assets? - d.cash_and_equivalents.unwrap_or(0.0) - d.current_liabilities?;
-	if cap == 0.0 {
-		None
-	} else {
-		Some(d.operating_income? / cap)
-	}
-}
-fn fcf(d: &FundamentalPointData) -> Option<f64> {
-	Some(d.operating_cash_flow? - d.capital_expenditure?)
-}
-fn fcf_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(fcf(d)? / r)
-	}
-}
-fn fcf_per_share(d: &FundamentalPointData) -> Option<f64> {
-	let s = d.shares_outstanding?;
-	if s == 0.0 {
-		None
-	} else {
-		Some(fcf(d)? / s)
-	}
-}
-fn interest_cov(d: &FundamentalPointData) -> Option<f64> {
-	let i = d.interest_expense?;
-	if i == 0.0 {
-		None
-	} else {
-		Some(d.operating_income? / i)
-	}
-}
-fn pe_ratio(d: &FundamentalPointData) -> Option<f64> {
-	let n = d.net_income?;
-	if n == 0.0 {
-		None
-	} else {
-		Some(d.market_cap? / n)
-	}
-}
-fn rnd_to_rev(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.research_and_development_expenses? / r)
-	}
-}
-fn ebitda_margin(d: &FundamentalPointData) -> Option<f64> {
-	let r = d.revenue?;
-	if r == 0.0 {
-		None
-	} else {
-		Some(d.ebitda? / r)
-	}
-}
-fn net_debt_ebitda(d: &FundamentalPointData) -> Option<f64> {
-	let e = d.ebitda?;
-	if e == 0.0 {
-		None
-	} else {
-		Some((d.total_debt? - d.cash_and_equivalents.unwrap_or(0.0)) / e)
-	}
-}
+use factors_core::{
+    roe_value, roa_value, gross_margin_value, net_margin_value, operating_profit_margin_value,
+    ebitda_margin_value, working_capital_value, working_capital_turnover_value,
+    debt_to_equity_value, rnd_to_revenue_value, net_debt_to_ebitda_value,
+    fcf_margin_value, fcf_per_share_value, interest_coverage_value, pe_ratio_value,
+    current_ratio_value, roic_value,
+    FactorPoint, FundamentalPoint,
+};
 
 // ── Configs ──────────────────────────────────────────────
 
@@ -570,10 +439,10 @@ pub fn dupont_roe_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let met = [
-				roe(d).map(|v| v > m_roe).unwrap_or(false),
-				net_margin(d).map(|v| v > m_nm).unwrap_or(false),
+				roe_value(&p.data).map(|v| v > m_roe).unwrap_or(false),
+				net_margin_value(&p.data).map(|v| v > m_nm).unwrap_or(false),
 				d.asset_turnover.map(|v| v > m_at).unwrap_or(false),
-				de_to_equity(d).map(|v| 1.0 + v < m_em).unwrap_or(false),
+				debt_to_equity_value(&p.data).map(|v| 1.0 + v < m_em).unwrap_or(false),
 			]
 			.iter()
 			.filter(|&&x| x)
@@ -598,14 +467,14 @@ pub fn charlie_munger_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let checks: [bool; 8] = [
-				roic(d).map(|v| v > 0.20).unwrap_or(false),
-				op_margin(d).map(|v| v > 0.15).unwrap_or(false),
-				fcf_margin(d).map(|v| v > 0.10).unwrap_or(false),
+				roic_value(&p.data).map(|v| v > 0.20).unwrap_or(false),
+				operating_profit_margin_value(&p.data).map(|v| v > 0.15).unwrap_or(false),
+				fcf_margin_value(&p.data).map(|v| v > 0.10).unwrap_or(false),
 				d.revenue.unwrap_or(0.0) > 0.0,
-				net_debt_ebitda(d).map(|v| v < 3.0).unwrap_or(false),
-				interest_cov(d).map(|v| v > 10.0).unwrap_or(false),
+				net_debt_to_ebitda_value(&p.data).map(|v| v < 3.0).unwrap_or(false),
+				interest_coverage_value(&p.data).map(|v| v > 10.0).unwrap_or(false),
 				d.asset_turnover.map(|v| v > 0.7).unwrap_or(false),
-				pe_ratio(d).map(|v| v < 25.0).unwrap_or(false),
+				pe_ratio_value(&p.data).map(|v| v < 25.0).unwrap_or(false),
 			];
 			if checks.iter().filter(|&&x| x).count() >= min_met {
 				1
@@ -628,13 +497,13 @@ pub fn philip_fisher_strategy(
 			let d = &p.data;
 			let checks: [bool; 8] = [
 				d.revenue.unwrap_or(0.0) > 0.0,
-				rnd_to_rev(d).map(|v| v > 0.03).unwrap_or(false),
-				op_margin(d).map(|v| v > 0.0).unwrap_or(false),
-				gross_margin(d).map(|v| v > 0.30).unwrap_or(false),
+				rnd_to_revenue_value(&p.data).map(|v| v > 0.03).unwrap_or(false),
+				operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
+				gross_margin_value(&p.data).map(|v| v > 0.30).unwrap_or(false),
 				d.asset_turnover.map(|v| v > 0.5).unwrap_or(false),
-				wc_turnover(d).map(|v| v > 4.0).unwrap_or(false),
-				roa(d).map(|v| v > 0.08).unwrap_or(false),
-				fcf_per_share(d).map(|v| v > 0.0).unwrap_or(false),
+				working_capital_turnover_value(&p.data).map(|v| v > 4.0).unwrap_or(false),
+				roa_value(&p.data).map(|v| v > 0.08).unwrap_or(false),
+				fcf_per_share_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
 			];
 			if checks.iter().filter(|&&x| x).count() >= min_met {
 				1
@@ -660,11 +529,10 @@ pub fn return_on_capital_strategy(
 	points
 		.iter()
 		.map(|p| {
-			let d = &p.data;
 			let met = [
-				roe(d).map(|v| v > r_roe).unwrap_or(false),
-				roa(d).map(|v| v > r_roa).unwrap_or(false),
-				roic(d).map(|v| v > r_roic).unwrap_or(false),
+				roe_value(&p.data).map(|v| v > r_roe).unwrap_or(false),
+				roa_value(&p.data).map(|v| v > r_roa).unwrap_or(false),
+				roic_value(&p.data).map(|v| v > r_roic).unwrap_or(false),
 			]
 			.iter()
 			.filter(|&&x| x)
@@ -691,7 +559,7 @@ pub fn operating_margin_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if op_margin(d).map(|v| v > thr).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
 				met += 1;
 			}
 			if d.revenue.unwrap_or(0.0) > 0.0 {
@@ -804,13 +672,13 @@ pub fn ebitda_margin_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if ebitda_margin(d).map(|v| v > thr).unwrap_or(false) {
+			if ebitda_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
 				met += 1;
 			}
 			if d.ebitda.unwrap_or(0.0) > 0.0 {
 				met += 1;
 			}
-			if fcf_margin(d).map(|v| v > 0.10).unwrap_or(false) {
+			if fcf_margin_value(&p.data).map(|v| v > 0.10).unwrap_or(false) {
 				met += 1;
 			}
 			if let (Some(eb), Some(capex)) = (d.ebitda, d.capital_expenditure) {
@@ -840,7 +708,7 @@ pub fn gross_profit_analysis_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if gross_margin(d).map(|v| v > thr).unwrap_or(false) {
+			if gross_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
 				met += 1;
 			}
 			if d.gross_profit.unwrap_or(0.0) > 0.0 {
@@ -1027,7 +895,7 @@ pub fn five_year_margin_expansion_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			let nm = net_margin(d);
+			let nm = net_margin_value(&p.data);
 			if nm.map(|v| v > 0.0).unwrap_or(false) {
 				met += 1;
 			}
@@ -1062,10 +930,10 @@ pub fn ebitda_growth_vs_competition_strategy(
 			if d.ebitda.unwrap_or(0.0) > 0.0 {
 				met += 1;
 			}
-			if ebitda_margin(d).map(|v| v > prem).unwrap_or(false) {
+			if ebitda_margin_value(&p.data).map(|v| v > prem).unwrap_or(false) {
 				met += 1;
 			}
-			if op_margin(d).map(|v| v > 0.0).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
 				met += 1;
 			}
 			if met >= min_met {
@@ -1091,15 +959,15 @@ pub fn eps_vs_fcf_divergence_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if let (Some(eps_v), Some(fcf_v)) = (d.eps, fcf_per_share(d)) {
+			if let (Some(eps_v), Some(fcf_v)) = (d.eps, fcf_per_share_value(&p.data)) {
 				if eps_v > 0.0 && (eps_v - fcf_v).abs() / eps_v < max_div {
 					met += 1;
 				}
 			}
-			if fcf_per_share(d).map(|v| v > fcf_thr).unwrap_or(false) {
+			if fcf_per_share_value(&p.data).map(|v| v > fcf_thr).unwrap_or(false) {
 				met += 1;
 			}
-			if let (Some(eps_v), Some(fcf_v)) = (d.eps, fcf_per_share(d)) {
+			if let (Some(eps_v), Some(fcf_v)) = (d.eps, fcf_per_share_value(&p.data)) {
 				if fcf_v > eps_v {
 					met += 1;
 				}
@@ -1126,10 +994,10 @@ pub fn expense_surprise_detector_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if op_margin(d).map(|v| v > margin_exp).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data).map(|v| v > margin_exp).unwrap_or(false) {
 				met += 1;
 			}
-			if net_margin(d).map(|v| v > margin_exp).unwrap_or(false) {
+			if net_margin_value(&p.data).map(|v| v > margin_exp).unwrap_or(false) {
 				met += 1;
 			}
 			if d.operating_cash_flow.map(|v| v > 0.0).unwrap_or(false) {
@@ -1254,7 +1122,7 @@ pub fn rnd_intensity_tracker_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if let Some(r) = rnd_to_rev(d) {
+			if let Some(r) = rnd_to_revenue_value(&p.data) {
 				if r >= min_int && r <= max_int {
 					met += 1;
 				}
@@ -1289,10 +1157,10 @@ pub fn roic_durability_sweep_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if roic(d).map(|v| v > min_roic).unwrap_or(false) {
+			if roic_value(&p.data).map(|v| v > min_roic).unwrap_or(false) {
 				met += 1;
 			}
-			if roe(d).map(|v| v > 0.0).unwrap_or(false) {
+			if roe_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
 				met += 1;
 			}
 			if d.operating_income.unwrap_or(0.0) > 0.0 {
@@ -1323,15 +1191,14 @@ pub fn working_capital_efficiency_strategy(
 	points
 		.iter()
 		.map(|p| {
-			let d = &p.data;
 			let mut met = 0usize;
-			if current_ratio(d).map(|v| v > cr_thr).unwrap_or(false) {
+			if current_ratio_value(&p.data).map(|v| v > cr_thr).unwrap_or(false) {
 				met += 1;
 			}
-			if working_capital(d).map(|v| v > wc_thr).unwrap_or(false) {
+			if working_capital_value(&p.data).map(|v| v > wc_thr).unwrap_or(false) {
 				met += 1;
 			}
-			if wc_turnover(d).map(|v| v > to_thr).unwrap_or(false) {
+			if working_capital_turnover_value(&p.data).map(|v| v > to_thr).unwrap_or(false) {
 				met += 1;
 			}
 			if met >= min_met {

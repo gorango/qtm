@@ -40,6 +40,7 @@ pub fn altman_z_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 		}
 
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.date,
 			value: z,
 		});
@@ -82,6 +83,7 @@ pub fn magic_formula(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 		let score = earnings_yield + roc;
 		if score > 0.0 {
 			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
 				date: f.date,
 				value: score,
 			});
@@ -164,6 +166,7 @@ pub fn piotroski_f_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 			}
 
 			results.push(FactorPoint {
+				symbol: cur.symbol.clone(),
 				date: cur.date,
 				value: score as f64,
 			});

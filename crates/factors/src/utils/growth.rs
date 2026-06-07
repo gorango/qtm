@@ -51,6 +51,7 @@ pub fn create_growth_factor(fundamentals: &[FundamentalPoint], metric: &str) -> 
 					if pv != 0.0 {
 						let growth = (cv - pv) / pv.abs();
 						results.push(FactorPoint {
+							symbol: current.symbol.clone(),
 							date: current.filing_date,
 							value: growth,
 						});

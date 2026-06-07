@@ -1,22 +1,23 @@
-use crate::types::data::{FactorPoint, FundamentalPoint};
+use crate::types::data::{FactorPoint, FundamentalPoint, FundamentalPointData};
+
+pub fn debt_to_assets_value(d: &FundamentalPointData) -> Option<f64> {
+	let liab = d.total_liabilities?;
+	let assets = d.total_assets?;
+	if assets == 0.0 { None } else { Some(liab / assets) }
+}
 
 /// Debt-to-Assets ratio: `totalLiabilities / totalAssets`.
 #[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn debt_to_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let liab = match f.data.total_liabilities {
-			Some(v) => v,
-			None => continue,
-		};
-		let assets = match f.data.total_assets {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: liab / assets,
-		});
+		if let Some(value) = debt_to_assets_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -26,18 +27,13 @@ pub fn debt_to_assets(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 pub fn current_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let ca = match f.data.current_assets {
-			Some(v) => v,
-			None => continue,
-		};
-		let cl = match f.data.current_liabilities {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: ca / cl,
-		});
+		if let Some(value) = crate::current_ratio_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -57,6 +53,7 @@ pub fn interest_coverage(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: oi / interest,
 		});
@@ -78,6 +75,7 @@ pub fn tangible_asset_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: ppe / assets,
 		});

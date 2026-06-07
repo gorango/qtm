@@ -97,6 +97,7 @@ pub struct EarningsReportPoint {
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct FactorPoint {
+	pub symbol: String,
 	pub date: f64,
 	pub value: f64,
 }

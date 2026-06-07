@@ -1,4 +1,13 @@
-use factors_core::{Bar, FactorPoint, FundamentalPoint, FundamentalPointData};
+use factors_core::{
+    price_to_book_value, price_to_sales_value, free_cash_flow_yield_value,
+    free_cash_flow_margin_value, owner_earnings_value,
+    cash_to_market_cap_value, book_value_per_share_value, net_cash_value, cash_to_assets_value,
+    cash_to_liabilities_value, payout_ratio_value, debt_to_equity_value, current_ratio_value,
+    working_capital_value, interest_coverage_value, roe_value,
+    ev_to_ebitda_value, ev_to_revenue_value, ebitda_margin_value, pe_ratio_value,
+    dividend_coverage_ocf_value, quick_ratio_value, debt_service_coverage_value,
+    Bar, FactorPoint, FundamentalPoint,
+};
 #[cfg(feature = "napi")]
 use napi_derive::napi;
 use serde::{Deserialize, Serialize};
@@ -37,168 +46,7 @@ fn safe_div(num: f64, den: f64) -> Option<f64> {
 	}
 }
 
-fn compute_pe(d: &FundamentalPointData) -> Option<f64> {
-	match (d.market_cap, d.net_income) {
-		(Some(mc), Some(ni)) if ni > 0.0 => Some(mc / ni),
-		_ => None,
-	}
-}
 
-fn compute_pb(d: &FundamentalPointData) -> Option<f64> {
-	match (d.market_cap, d.shareholders_equity) {
-		(Some(mc), Some(se)) if se > 0.0 => Some(mc / se),
-		_ => None,
-	}
-}
-
-fn compute_current_ratio(d: &FundamentalPointData) -> Option<f64> {
-	match (d.current_assets, d.current_liabilities) {
-		(Some(ca), Some(cl)) if cl > 0.0 => Some(ca / cl),
-		_ => None,
-	}
-}
-
-fn compute_debt_to_equity(d: &FundamentalPointData) -> Option<f64> {
-	match (d.total_debt, d.shareholders_equity) {
-		(Some(td), Some(se)) if se > 0.0 => Some(td / se),
-		_ => None,
-	}
-}
-
-fn compute_roe(d: &FundamentalPointData) -> Option<f64> {
-	match (d.net_income, d.shareholders_equity) {
-		(Some(ni), Some(se)) if se > 0.0 => Some(ni / se),
-		_ => None,
-	}
-}
-
-fn compute_fcf(d: &FundamentalPointData) -> Option<f64> {
-	match (d.operating_cash_flow, d.capital_expenditure) {
-		(Some(ocf), Some(capex)) => Some(ocf - capex),
-		(Some(ocf), None) => Some(ocf),
-		_ => None,
-	}
-}
-
-fn compute_fcf_margin(d: &FundamentalPointData) -> Option<f64> {
-	match (compute_fcf(d), d.revenue) {
-		(Some(fcf), Some(rev)) if rev > 0.0 => Some(fcf / rev),
-		_ => None,
-	}
-}
-
-fn compute_fcf_yield(d: &FundamentalPointData) -> Option<f64> {
-	match (compute_fcf(d), d.market_cap) {
-		(Some(fcf), Some(mc)) if mc > 0.0 => Some(fcf / mc),
-		_ => None,
-	}
-}
-
-fn compute_interest_coverage(d: &FundamentalPointData) -> Option<f64> {
-	match (d.operating_income, d.interest_expense) {
-		(Some(oi), Some(ie)) if ie > 0.0 => Some(oi / ie),
-		_ => None,
-	}
-}
-
-fn compute_ps(d: &FundamentalPointData) -> Option<f64> {
-	match (d.market_cap, d.revenue) {
-		(Some(mc), Some(rev)) if rev > 0.0 => Some(mc / rev),
-		_ => None,
-	}
-}
-
-fn compute_ev_revenue(d: &FundamentalPointData) -> Option<f64> {
-	match (d.enterprise_value, d.revenue) {
-		(Some(ev), Some(rev)) if rev > 0.0 => Some(ev / rev),
-		_ => None,
-	}
-}
-
-fn compute_ev_ebitda(d: &FundamentalPointData) -> Option<f64> {
-	match (d.enterprise_value, d.ebitda) {
-		(Some(ev), Some(eb)) if eb > 0.0 => Some(ev / eb),
-		_ => None,
-	}
-}
-
-fn compute_ebitda_margin(d: &FundamentalPointData) -> Option<f64> {
-	match (d.ebitda, d.revenue) {
-		(Some(eb), Some(rev)) if rev > 0.0 => Some(eb / rev),
-		_ => None,
-	}
-}
-
-fn compute_working_capital(d: &FundamentalPointData) -> Option<f64> {
-	match (d.current_assets, d.current_liabilities) {
-		(Some(ca), Some(cl)) => Some(ca - cl),
-		_ => None,
-	}
-}
-
-fn compute_cash_to_mcap(d: &FundamentalPointData) -> Option<f64> {
-	match (d.cash_and_equivalents, d.market_cap) {
-		(Some(cash), Some(mc)) if mc > 0.0 => Some(cash / mc),
-		_ => None,
-	}
-}
-
-fn compute_cash_to_assets(d: &FundamentalPointData) -> Option<f64> {
-	match (d.cash_and_equivalents, d.total_assets) {
-		(Some(cash), Some(ta)) if ta > 0.0 => Some(cash / ta),
-		_ => None,
-	}
-}
-
-fn compute_cash_to_liabilities(d: &FundamentalPointData) -> Option<f64> {
-	match (d.cash_and_equivalents, d.current_liabilities) {
-		(Some(cash), Some(cl)) if cl > 0.0 => Some(cash / cl),
-		_ => None,
-	}
-}
-
-fn compute_dividend_coverage(d: &FundamentalPointData) -> Option<f64> {
-	match (d.operating_cash_flow, d.dividends_paid) {
-		(Some(ocf), Some(dp)) if dp > 0.0 => Some(ocf / dp),
-		_ => None,
-	}
-}
-
-fn compute_net_cash(d: &FundamentalPointData) -> Option<f64> {
-	match (d.cash_and_equivalents, d.total_debt) {
-		(Some(cash), Some(debt)) => Some(cash - debt),
-		(Some(cash), None) => Some(cash),
-		_ => None,
-	}
-}
-
-fn compute_bvps(d: &FundamentalPointData) -> Option<f64> {
-	match (d.shareholders_equity, d.shares_outstanding) {
-		(Some(se), Some(so)) if so > 0.0 => Some(se / so),
-		_ => None,
-	}
-}
-
-fn compute_dscr(d: &FundamentalPointData) -> Option<f64> {
-	match (d.operating_income, d.total_debt) {
-		(Some(oi), Some(td)) if td > 0.0 => Some(oi / td),
-		_ => None,
-	}
-}
-
-fn compute_quick_ratio(d: &FundamentalPointData) -> Option<f64> {
-	match (d.current_assets, d.current_liabilities) {
-		(Some(ca), Some(cl)) if cl > 0.0 => Some(ca / cl),
-		_ => None,
-	}
-}
-
-fn compute_payout_ratio(d: &FundamentalPointData) -> Option<f64> {
-	match (d.dividends_paid, d.net_income) {
-		(Some(dp), Some(ni)) if ni > 0.0 => Some(dp / ni),
-		_ => None,
-	}
-}
 
 // ============================================================
 // Configs
@@ -695,25 +543,25 @@ pub fn benjamin_graham_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_pe(d).is_some_and(|v| v < 15.0) {
+			if pe_ratio_value(d).is_some_and(|v| v < 15.0) {
 				count += 1;
 			}
-			if compute_pb(d).is_some_and(|v| v < 1.5) {
+			if price_to_book_value(d).is_some_and(|v| v < 1.5) {
 				count += 1;
 			}
-			if compute_current_ratio(d).is_some_and(|v| v > 2.0) {
+			if current_ratio_value(d).is_some_and(|v| v > 2.0) {
 				count += 1;
 			}
-			if compute_debt_to_equity(d).is_some_and(|v| v < 0.5) {
-				count += 1;
-			}
-			if d.eps.is_some_and(|v| v > 0.0) {
+			if debt_to_equity_value(d).is_some_and(|v| v < 0.5) {
 				count += 1;
 			}
 			if d.eps.is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_working_capital(d).is_some_and(|v| v > 0.0) {
+			if d.eps.is_some_and(|v| v > 0.0) {
+				count += 1;
+			}
+			if working_capital_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
 			if d.dividends_per_share.is_some_and(|v| v > 0.0) {
@@ -760,7 +608,7 @@ pub fn bill_miller_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_pe(d).is_some_and(|v| v < 20.0) {
+			if pe_ratio_value(d).is_some_and(|v| v < 20.0) {
 				count += 1;
 			}
 			if d.revenue.is_some_and(|v| v > 0.0) {
@@ -772,19 +620,19 @@ pub fn bill_miller_strategy(
 			{
 				count += 1;
 			}
-			if compute_fcf_yield(d).is_some_and(|v| v > 0.0) {
+			if free_cash_flow_yield_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_roe(d).is_some_and(|v| v > 0.15) {
+			if roe_value(d).is_some_and(|v| v > 0.15) {
 				count += 1;
 			}
-			if compute_dscr(d).is_some_and(|v| v > 3.0) {
+			if debt_service_coverage_value(d).is_some_and(|v| v > 3.0) {
 				count += 1;
 			}
 			if d.market_cap.is_some_and(|v| v > 500_000_000.0) {
 				count += 1;
 			}
-			if compute_ps(d).is_some_and(|v| v < 3.0) {
+			if price_to_sales_value(d).is_some_and(|v| v < 3.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -828,28 +676,28 @@ pub fn john_templeton_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_pe(d).is_some_and(|v| v < 15.0) {
+			if pe_ratio_value(d).is_some_and(|v| v < 15.0) {
 				count += 1;
 			}
-			if compute_pb(d).is_some_and(|v| v < 2.0) {
+			if price_to_book_value(d).is_some_and(|v| v < 2.0) {
 				count += 1;
 			}
-			if compute_current_ratio(d).is_some_and(|v| v > 1.5) {
+			if current_ratio_value(d).is_some_and(|v| v > 1.5) {
 				count += 1;
 			}
-			if compute_debt_to_equity(d).is_some_and(|v| v < 0.6) {
+			if debt_to_equity_value(d).is_some_and(|v| v < 0.6) {
 				count += 1;
 			}
-			if compute_roe(d).is_some_and(|v| v > 0.1) {
+			if roe_value(d).is_some_and(|v| v > 0.1) {
 				count += 1;
 			}
 			if d.eps.is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_fcf(d).is_some_and(|v| v > 0.0) {
+			if owner_earnings_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_dividend_coverage(d).is_some_and(|v| v > 2.0) {
+			if dividend_coverage_ocf_value(d).is_some_and(|v| v > 2.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -893,16 +741,16 @@ pub fn walter_schloss_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_pb(d).is_some_and(|v| v < 1.0) {
+			if price_to_book_value(d).is_some_and(|v| v < 1.0) {
 				count += 1;
 			}
-			if compute_debt_to_equity(d).is_some_and(|v| v < 0.3) {
+			if debt_to_equity_value(d).is_some_and(|v| v < 0.3) {
 				count += 1;
 			}
 			if d.market_cap.is_some_and(|v| v < 1_000_000_000.0) {
 				count += 1;
 			}
-			if compute_bvps(d).is_some_and(|v| v > 0.0) {
+			if book_value_per_share_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
 			if d.eps.is_some_and(|v| v > 0.0) {
@@ -914,10 +762,10 @@ pub fn walter_schloss_strategy(
 			{
 				count += 1;
 			}
-			if compute_current_ratio(d).is_some_and(|v| v > 2.0) {
+			if current_ratio_value(d).is_some_and(|v| v > 2.0) {
 				count += 1;
 			}
-			if compute_cash_to_mcap(d).is_some_and(|v| v > 0.1) {
+			if cash_to_market_cap_value(d).is_some_and(|v| v > 0.1) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -963,13 +811,13 @@ pub fn free_cash_flow_analysis_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_fcf_margin(d).is_some_and(|v| v > margin_thresh) {
+			if free_cash_flow_margin_value(d).is_some_and(|v| v > margin_thresh) {
 				count += 1;
 			}
-			if compute_fcf_yield(d).is_some_and(|v| v > yield_thresh) {
+			if free_cash_flow_yield_value(d).is_some_and(|v| v > yield_thresh) {
 				count += 1;
 			}
-			if compute_fcf(d).is_some_and(|v| v > 0.0) {
+			if owner_earnings_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1015,7 +863,7 @@ pub fn wacc_vs_roic_spread_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			let roic = compute_roe(d);
+			let roic = roe_value(d);
 			let wacc = d.interest_expense.map(|ie| {
 				d.total_debt
 					.and_then(|td| {
@@ -1082,13 +930,13 @@ pub fn ev_ebitda_fair_value_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_ev_ebitda(d).is_some_and(|v| v < ev_ebitda_thresh) {
+			if ev_to_ebitda_value(d).is_some_and(|v| v < ev_ebitda_thresh) {
 				count += 1;
 			}
-			if compute_ebitda_margin(d).is_some_and(|v| v > ebitda_margin_thresh) {
+			if ebitda_margin_value(d).is_some_and(|v| v > ebitda_margin_thresh) {
 				count += 1;
 			}
-			if compute_ev_ebitda(d).is_some_and(|v| v > 0.0 && v < ev_ebitda_thresh) {
+			if ev_to_ebitda_value(d).is_some_and(|v| v > 0.0 && v < ev_ebitda_thresh) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1249,7 +1097,7 @@ pub fn debt_ebitdar_stress_test_strategy(
 			}) {
 				count += 1;
 			}
-			if compute_interest_coverage(d).is_some_and(|v| v > 3.0) {
+			if interest_coverage_value(d).is_some_and(|v| v > 3.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1296,12 +1144,12 @@ pub fn ev_fcf_10yr_band_strategy(
 			let d = &fp.data;
 			let mut count = 0usize;
 			let ev_fcf = d.enterprise_value.and_then(|ev| {
-				compute_fcf(d).and_then(|fcf| if fcf > 0.0 { Some(ev / fcf) } else { None })
+				owner_earnings_value(d).and_then(|fcf| if fcf > 0.0 { Some(ev / fcf) } else { None })
 			});
 			if ev_fcf.is_some_and(|v| v < max_ev_fcf) {
 				count += 1;
 			}
-			if compute_fcf(d).is_some_and(|v| v > fcf_thresh) {
+			if owner_earnings_value(d).is_some_and(|v| v > fcf_thresh) {
 				count += 1;
 			}
 			if ev_fcf.is_some_and(|v| v < max_ev_fcf && v > 0.0) {
@@ -1350,13 +1198,13 @@ pub fn ev_revenue_multiples_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_ev_revenue(d).is_some_and(|v| v < ev_rev_thresh) {
+			if ev_to_revenue_value(d).is_some_and(|v| v < ev_rev_thresh) {
 				count += 1;
 			}
 			if d.revenue.is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_ev_revenue(d).is_some_and(|v| v < ev_rev_thresh && v > 0.0) {
+			if ev_to_revenue_value(d).is_some_and(|v| v < ev_rev_thresh && v > 0.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1402,7 +1250,7 @@ pub fn ev_sales_fair_value_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_ev_revenue(d).is_some_and(|v| v < ev_sales_thresh) {
+			if ev_to_revenue_value(d).is_some_and(|v| v < ev_sales_thresh) {
 				count += 1;
 			}
 			if d.revenue.is_some_and(|v| v > 0.0)
@@ -1411,7 +1259,7 @@ pub fn ev_sales_fair_value_strategy(
 			{
 				count += 1;
 			}
-			if compute_ev_revenue(d).is_some_and(|v| v < ev_sales_thresh && v > 0.0) {
+			if ev_to_revenue_value(d).is_some_and(|v| v < ev_sales_thresh && v > 0.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1456,7 +1304,7 @@ pub fn interest_coverage_buffer_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			let ic = compute_interest_coverage(d);
+			let ic = interest_coverage_value(d);
 			if ic.is_some_and(|v| v > min_ic) {
 				count += 1;
 			}
@@ -1562,15 +1410,15 @@ pub fn net_cash_position_toggle_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			let nc = compute_net_cash(d);
-			let de = compute_debt_to_equity(d);
+			let nc = net_cash_value(d);
+			let de = debt_to_equity_value(d);
 			if nc.is_some_and(|v| v > min_net_cash) || de.is_some_and(|v| v < max_de) {
 				count += 1;
 			}
-			if compute_cash_to_assets(d).is_some_and(|v| v > 0.1) {
+			if cash_to_assets_value(d).is_some_and(|v| v > 0.1) {
 				count += 1;
 			}
-			if compute_interest_coverage(d).is_some_and(|v| v > 5.0) {
+			if interest_coverage_value(d).is_some_and(|v| v > 5.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1615,13 +1463,13 @@ pub fn normal_pe_future_fair_value_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_pe(d).is_some_and(|v| v < max_fpe) {
+			if pe_ratio_value(d).is_some_and(|v| v < max_fpe) {
 				count += 1;
 			}
 			if d.eps.is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_pe(d).is_some_and(|v| v < max_fpe && v > 0.0) {
+			if pe_ratio_value(d).is_some_and(|v| v < max_fpe && v > 0.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1667,7 +1515,7 @@ pub fn ocf_coverage_dividends_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_dividend_coverage(d).is_some_and(|v| v > min_ratio) {
+			if dividend_coverage_ocf_value(d).is_some_and(|v| v > min_ratio) {
 				count += 1;
 			}
 			if d.dividend_yield.is_some_and(|v| v > yield_thresh) {
@@ -1719,7 +1567,7 @@ pub fn price_sales_fair_value_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_ps(d).is_some_and(|v| v < ps_thresh) {
+			if price_to_sales_value(d).is_some_and(|v| v < ps_thresh) {
 				count += 1;
 			}
 			if d.revenue.is_some_and(|v| v > 0.0)
@@ -1728,7 +1576,7 @@ pub fn price_sales_fair_value_strategy(
 			{
 				count += 1;
 			}
-			if compute_ps(d).is_some_and(|v| v < ps_thresh && v > 0.0) {
+			if price_to_sales_value(d).is_some_and(|v| v < ps_thresh && v > 0.0) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1836,14 +1684,14 @@ pub fn quick_ratio_stress_test_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			let qr = compute_quick_ratio(d);
+			let qr = quick_ratio_value(d);
 			if qr.is_some_and(|v| v > min_qr) {
 				count += 1;
 			}
 			if qr.is_some_and(|v| v * (1.0 - stress_red) > 1.0) {
 				count += 1;
 			}
-			if compute_cash_to_liabilities(d).is_some_and(|v| v > 0.5) {
+			if cash_to_liabilities_value(d).is_some_and(|v| v > 0.5) {
 				count += 1;
 			}
 			if count >= min_met {
@@ -1889,7 +1737,7 @@ pub fn return_of_capital_vs_growth_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_payout_ratio(d).is_some_and(|v| v < max_pr) {
+			if payout_ratio_value(d).is_some_and(|v| v < max_pr) {
 				count += 1;
 			}
 			if d.dividend_yield.is_some_and(|v| v > min_dy) {
@@ -1941,13 +1789,13 @@ pub fn working_capital_health_strategy(
 		.map(|fp| {
 			let d = &fp.data;
 			let mut count = 0usize;
-			if compute_current_ratio(d).is_some_and(|v| v > min_cr) {
+			if current_ratio_value(d).is_some_and(|v| v > min_cr) {
 				count += 1;
 			}
-			if compute_working_capital(d).is_some_and(|v| v > 0.0) {
+			if working_capital_value(d).is_some_and(|v| v > 0.0) {
 				count += 1;
 			}
-			if compute_working_capital(d)
+			if working_capital_value(d)
 				.zip(d.total_assets)
 				.is_some_and(|(wc, ta)| ta > 0.0 && wc / ta > min_wc_ta)
 			{

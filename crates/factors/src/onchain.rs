@@ -35,6 +35,7 @@ pub fn active_address_growth(
 			Some(j) if addrs[j].value > 0.0 => {
 				let growth = (cur.value - addrs[j].value) / addrs[j].value;
 				results.push(FactorPoint {
+					symbol: String::new(),
 					date: cur.time,
 					value: growth,
 				});
@@ -79,8 +80,9 @@ pub fn exchange_flow_momentum(
 		match prev_idx {
 			Some(j) if flows[j].value != 0.0 => {
 				let momentum = (cur.value - flows[j].value) / flows[j].value.abs();
-				results.push(FactorPoint {
-					date: cur.time,
+		results.push(FactorPoint {
+			symbol: String::new(),
+			date: cur.time,
 					value: momentum,
 				});
 			}
@@ -126,6 +128,7 @@ pub fn nvt_ratio(on_chain_data: Vec<OnChainDataPoint>) -> Vec<FactorPoint> {
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: String::new(),
 			date: *ts as f64,
 			value: mcap / vol,
 		});
@@ -169,6 +172,7 @@ pub fn staking_ratio(on_chain_data: Vec<OnChainDataPoint>) -> Vec<FactorPoint> {
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: String::new(),
 			date: *ts as f64,
 			value: staked / total,
 		});

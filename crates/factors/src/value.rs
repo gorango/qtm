@@ -1,5 +1,109 @@
-use crate::types::data::{Bar, FactorPoint, FundamentalPoint};
+use crate::types::data::{Bar, FactorPoint, FundamentalPoint, FundamentalPointData};
 use crate::utils::pricing::find_price_on_or_after;
+
+pub fn price_to_book_value(d: &FundamentalPointData) -> Option<f64> {
+	let mcap = d.market_cap?;
+	let equity = d.shareholders_equity?;
+	if equity <= 0.0 { None } else { Some(mcap / equity) }
+}
+
+pub fn price_to_sales_value(d: &FundamentalPointData) -> Option<f64> {
+	let mcap = d.market_cap?;
+	let revenue = d.revenue?;
+	if revenue <= 0.0 { None } else { Some(mcap / revenue) }
+}
+
+pub fn free_cash_flow_yield_value(d: &FundamentalPointData) -> Option<f64> {
+	let mcap = d.market_cap?;
+	if mcap <= 0.0 { return None; }
+	let ocf = d.operating_cash_flow?;
+	let capex = d.capital_expenditure.unwrap_or(0.0);
+	Some((ocf - capex) / mcap)
+}
+
+pub fn free_cash_flow_margin_value(d: &FundamentalPointData) -> Option<f64> {
+	let ocf = d.operating_cash_flow?;
+	let capex = d.capital_expenditure.unwrap_or(0.0);
+	let revenue = d.revenue?;
+	if revenue <= 0.0 { None } else { Some((ocf - capex) / revenue) }
+}
+
+pub fn owner_earnings_value(d: &FundamentalPointData) -> Option<f64> {
+	Some(d.operating_cash_flow? - d.capital_expenditure.unwrap_or(0.0))
+}
+
+pub fn earnings_yield_value(d: &FundamentalPointData) -> Option<f64> {
+	let eps = d.eps?;
+	let mcap = d.market_cap?;
+	let shares = d.shares_outstanding?;
+	if shares <= 0.0 { return None; }
+	let price_per_share = mcap / shares;
+	if price_per_share <= 0.0 { None } else { Some(eps / price_per_share) }
+}
+
+pub fn cash_to_market_cap_value(d: &FundamentalPointData) -> Option<f64> {
+	let cash = d.cash_and_equivalents?;
+	let mcap = d.market_cap?;
+	if mcap <= 0.0 { None } else { Some(cash / mcap) }
+}
+
+pub fn book_value_per_share_value(d: &FundamentalPointData) -> Option<f64> {
+	let equity = d.shareholders_equity?;
+	let shares = d.shares_outstanding?;
+	if shares <= 0.0 { None } else { Some(equity / shares) }
+}
+
+pub fn net_cash_value(d: &FundamentalPointData) -> Option<f64> {
+	Some(d.cash_and_equivalents? - d.total_debt?)
+}
+
+pub fn cash_to_assets_value(d: &FundamentalPointData) -> Option<f64> {
+	let cash = d.cash_and_equivalents?;
+	let assets = d.total_assets?;
+	if assets <= 0.0 { None } else { Some(cash / assets) }
+}
+
+pub fn cash_to_liabilities_value(d: &FundamentalPointData) -> Option<f64> {
+	let cash = d.cash_and_equivalents?;
+	let liab = d.current_liabilities?;
+	if liab <= 0.0 { None } else { Some(cash / liab) }
+}
+
+pub fn dividend_coverage_ocf_value(d: &FundamentalPointData) -> Option<f64> {
+	let ocf = d.operating_cash_flow?;
+	let paid = d.dividends_paid?;
+	if paid <= 0.0 { None } else { Some(ocf / paid) }
+}
+
+pub fn payout_ratio_value(d: &FundamentalPointData) -> Option<f64> {
+	let paid = d.dividends_paid?;
+	let ni = d.net_income?;
+	if ni <= 0.0 { None } else { Some(paid / ni) }
+}
+
+pub fn quick_ratio_value(d: &FundamentalPointData) -> Option<f64> {
+	let ca = d.current_assets?;
+	let cl = d.current_liabilities?;
+	if cl <= 0.0 { None } else { Some(ca / cl) }
+}
+
+pub fn ev_to_ebitda_value(d: &FundamentalPointData) -> Option<f64> {
+	let ev = d.enterprise_value?;
+	let ebitda = d.ebitda?;
+	if ebitda <= 0.0 { None } else { Some(ev / ebitda) }
+}
+
+pub fn ev_to_revenue_value(d: &FundamentalPointData) -> Option<f64> {
+	let ev = d.enterprise_value?;
+	let revenue = d.revenue?;
+	if revenue <= 0.0 { None } else { Some(ev / revenue) }
+}
+
+pub fn debt_service_coverage_value(d: &FundamentalPointData) -> Option<f64> {
+	let oi = d.operating_income?;
+	let debt = d.total_debt?;
+	if debt <= 0.0 { None } else { Some(oi / debt) }
+}
 
 /// Price-to-Earnings (P/E) ratio.
 ///
@@ -43,6 +147,7 @@ pub fn price_to_earnings(
 			None => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: price / eps,
 		});
@@ -55,18 +160,13 @@ pub fn price_to_earnings(
 pub fn price_to_book(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let equity = match f.data.shareholders_equity {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: mcap / equity,
-		});
+		if let Some(value) = price_to_book_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -76,18 +176,13 @@ pub fn price_to_book(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 pub fn price_to_sales(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let revenue = match f.data.revenue {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: mcap / revenue,
-		});
+		if let Some(value) = price_to_sales_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -111,6 +206,7 @@ pub fn price_to_free_cash_flow(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: mcap / fcf,
 		});
@@ -123,18 +219,13 @@ pub fn price_to_free_cash_flow(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 pub fn enterprise_value_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let ev = match f.data.enterprise_value {
-			Some(v) => v,
-			None => continue,
-		};
-		let ebitda = match f.data.ebitda {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: ev / ebitda,
-		});
+		if let Some(value) = ev_to_ebitda_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -144,26 +235,13 @@ pub fn enterprise_value_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<Fa
 pub fn earnings_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let eps = match f.data.eps {
-			Some(v) => v,
-			None => continue,
-		};
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let shares = match f.data.shares_outstanding {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		let price_per_share = mcap / shares;
-		if price_per_share <= 0.0 {
-			continue;
+		if let Some(value) = earnings_yield_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
 		}
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: eps / price_per_share,
-		});
 	}
 	results
 }
@@ -192,6 +270,7 @@ pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> 
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: dps / price,
 		});
@@ -204,23 +283,13 @@ pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> 
 pub fn free_cash_flow_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let ocf = match f.data.operating_cash_flow {
-			Some(v) => v,
-			None => continue,
-		};
-		let capex = f.data.capital_expenditure.unwrap_or(0.0);
-		let fcf = ocf - capex;
-		if mcap <= 0.0 {
-			continue;
+		if let Some(value) = free_cash_flow_yield_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
 		}
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: fcf / mcap,
-		});
 	}
 	results
 }
@@ -230,20 +299,13 @@ pub fn free_cash_flow_yield(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 pub fn free_cash_flow_margin(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let ocf = match f.data.operating_cash_flow {
-			Some(v) => v,
-			None => continue,
-		};
-		let capex = f.data.capital_expenditure.unwrap_or(0.0);
-		let revenue = match f.data.revenue {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		let fcf = ocf - capex;
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: fcf / revenue,
-		});
+		if let Some(value) = free_cash_flow_margin_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -269,6 +331,7 @@ pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: dcf / price - 1.0,
 		});
@@ -281,15 +344,13 @@ pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -
 pub fn owner_earnings(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let ocf = match f.data.operating_cash_flow {
-			Some(v) => v,
-			None => continue,
-		};
-		let capex = f.data.capital_expenditure.unwrap_or(0.0);
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: ocf - capex,
-		});
+		if let Some(value) = owner_earnings_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -318,6 +379,7 @@ pub fn wacc(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 		let tax_rate = 0.21;
 		let wacc_val = e_weight * cost_equity + d_weight * cost_debt * (1.0 - tax_rate);
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: wacc_val,
 		});
@@ -330,18 +392,13 @@ pub fn wacc(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 pub fn cash_to_market_cap(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let cash = match f.data.cash_and_equivalents {
-			Some(v) => v,
-			None => continue,
-		};
-		let mcap = match f.data.market_cap {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: cash / mcap,
-		});
+		if let Some(value) = cash_to_market_cap_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -353,6 +410,7 @@ pub fn market_cap_value(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint>
 	for f in &fundamentals {
 		if let Some(mcap) = f.data.market_cap {
 			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
 				date: f.filing_date,
 				value: mcap,
 			});
@@ -376,6 +434,7 @@ pub fn net_debt_to_ebitda(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: (debt - cash) / ebitda,
 		});
@@ -403,6 +462,7 @@ pub fn net_debt_to_ebitdar(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoi
 			continue;
 		}
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: (debt - cash) / ebitdar,
 		});
@@ -424,6 +484,7 @@ pub fn debt_service_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<F
 			_ => continue,
 		};
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: oi / interest,
 		});
@@ -436,18 +497,13 @@ pub fn debt_service_coverage_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<F
 pub fn book_value_per_share(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let equity = match f.data.shareholders_equity {
-			Some(v) => v,
-			None => continue,
-		};
-		let shares = match f.data.shares_outstanding {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: equity / shares,
-		});
+		if let Some(value) = book_value_per_share_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -457,18 +513,13 @@ pub fn book_value_per_share(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPo
 pub fn price_to_book_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 	let mut results = Vec::new();
 	for f in &fundamentals {
-		let mcap = match f.data.market_cap {
-			Some(v) => v,
-			None => continue,
-		};
-		let equity = match f.data.shareholders_equity {
-			Some(v) if v > 0.0 => v,
-			_ => continue,
-		};
-		results.push(FactorPoint {
-			date: f.filing_date,
-			value: mcap / equity,
-		});
+		if let Some(value) = price_to_book_value(&f.data) {
+			results.push(FactorPoint {
+				symbol: f.symbol.clone(),
+				date: f.filing_date,
+				value,
+			});
+		}
 	}
 	results
 }
@@ -492,6 +543,7 @@ pub fn price_to_earnings_ratio(fundamentals: Vec<FundamentalPoint>) -> Vec<Facto
 		};
 		let price = mcap / shares;
 		results.push(FactorPoint {
+			symbol: f.symbol.clone(),
 			date: f.filing_date,
 			value: price / eps,
 		});

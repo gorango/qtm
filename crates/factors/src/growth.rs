@@ -40,6 +40,7 @@ pub fn revenue_growth_cagr(
 			};
 			let cagr = (end_val / start_val).powf(1.0 / p as f64) - 1.0;
 			results.push(FactorPoint {
+				symbol: cur.symbol.clone(),
 				date: cur.filing_date,
 				value: cagr,
 			});
@@ -101,6 +102,7 @@ pub fn revenue_seasonality(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoi
 
 		let latest = group[group.len() - 1];
 		results.push(FactorPoint {
+			symbol: latest.symbol.clone(),
 			date: latest.date,
 			value: seasonality,
 		});
@@ -136,10 +138,11 @@ pub fn five_y_revenue_growth_per_share(fundamentals: Vec<FundamentalPoint>) -> V
 					let rps_cur = rev_cur / shares_cur;
 					let rps_start = rev_start / shares_start;
 					let growth = (rps_cur / rps_start).powf(1.0 / 5.0) - 1.0;
-					results.push(FactorPoint {
-						date: cur.filing_date,
-						value: growth,
-					});
+			results.push(FactorPoint {
+				symbol: cur.symbol.clone(),
+				date: cur.filing_date,
+				value: growth,
+			});
 				}
 			}
 		}
@@ -172,12 +175,13 @@ pub fn eps_growth_qo_q(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> 
 			if let (Some(eps_c), Some(eps_p)) = (cur.data.eps, prev.data.eps) {
 				if eps_p != 0.0 {
 					results.push(FactorPoint {
+						symbol: cur.symbol.clone(),
 						date: cur.filing_date,
 						value: (eps_c - eps_p) / eps_p.abs(),
 					});
 				}
-			}
 		}
+	}
 	}
 	results
 }
@@ -206,10 +210,11 @@ pub fn eps_growth_10_year(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 					(last.filing_date - first.filing_date) / (365.25 * 24.0 * 60.0 * 60.0 * 1000.0);
 				if years > 0.0 {
 					let growth = (eps_last / eps_first).powf(1.0 / years) - 1.0;
-					results.push(FactorPoint {
-						date: last.filing_date,
-						value: growth,
-					});
+		results.push(FactorPoint {
+				symbol: last.symbol.clone(),
+				date: last.filing_date,
+				value: growth,
+			});
 				}
 			}
 		}
@@ -244,6 +249,7 @@ pub fn eps_growth_cagr(
 				if eps_s > 0.0 {
 					let cagr = (eps_c / eps_s).powf(1.0 / p as f64) - 1.0;
 					results.push(FactorPoint {
+						symbol: cur.symbol.clone(),
 						date: cur.filing_date,
 						value: cagr,
 					});
@@ -282,6 +288,7 @@ pub fn eps_avg(fundamentals: Vec<FundamentalPoint>, periods: Option<u32>) -> Vec
 			}
 			if count > 0 {
 				results.push(FactorPoint {
+					symbol: group[i].symbol.clone(),
 					date: group[i].filing_date,
 					value: sum / count as f64,
 				});
@@ -316,6 +323,7 @@ pub fn eps_positive_count(
 				.filter(|&j| group[j].data.eps.is_some_and(|v| v > 0.0))
 				.count() as f64;
 			results.push(FactorPoint {
+				symbol: group[i].symbol.clone(),
 				date: group[i].filing_date,
 				value: count,
 			});
@@ -343,6 +351,7 @@ pub fn growth_eps(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint> {
 			if let (Some(eps_c), Some(eps_p)) = (cur.data.eps, prev.data.eps) {
 				if eps_p != 0.0 {
 					results.push(FactorPoint {
+						symbol: cur.symbol.clone(),
 						date: cur.filing_date,
 						value: (eps_c - eps_p) / eps_p.abs(),
 					});
@@ -384,10 +393,11 @@ pub fn free_cash_flow_growth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorP
 				_ => continue,
 			};
 			if fcf_p != 0.0 {
-				results.push(FactorPoint {
-					date: cur.filing_date,
-					value: (fcf_c - fcf_p) / fcf_p.abs(),
-				});
+		results.push(FactorPoint {
+				symbol: cur.symbol.clone(),
+				date: cur.filing_date,
+				value: (fcf_c - fcf_p) / fcf_p.abs(),
+			});
 			}
 		}
 	}
@@ -426,10 +436,11 @@ pub fn share_count_growth(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoin
 					(last.filing_date - first.filing_date) / (365.25 * 24.0 * 60.0 * 60.0 * 1000.0);
 				if years > 0.0 {
 					let growth = (shares_last / shares_first).powf(1.0 / years) - 1.0;
-					results.push(FactorPoint {
-						date: last.filing_date,
-						value: growth,
-					});
+		results.push(FactorPoint {
+				symbol: last.symbol.clone(),
+				date: last.filing_date,
+				value: growth,
+			});
 				}
 			}
 		}
