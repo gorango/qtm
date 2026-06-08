@@ -2,47 +2,15 @@
 	"name": "@quantamental/tools",
 	"version": "0.1.0",
 	"description": "AI agent tools for quantamental analysis — wrap indicators, factors, and strategies as typed LLM-callable tools",
-	"keywords": [
-		"ai-agents",
-		"ai-tools",
-		"quantamental",
-		"quantitative-finance",
-		"langchain",
-		"llm-orchestration",
-		"technical-analysis",
-		"vercel-ai"
-	],
-	"homepage": "https://quantamental.js.org",
-	"bugs": "https://github.com/gorango/quantamental/issues",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/gorango/quantamental.git",
-		"directory": "packages/tools"
-	},
-	"files": [
-		"dist"
-	],
 	"type": "module",
 	"exports": {
-		".": {
-			"types": "./dist/index.d.mts",
-			"import": "./dist/index.mjs"
-		},
-		"./adapters": {
-			"types": "./dist/adapters/index.d.mts",
-			"import": "./dist/adapters/index.mjs"
-		},
-		"./registry": {
-			"types": "./dist/registry/index.d.mts",
-			"import": "./dist/registry/index.mjs"
-		}
+		".": "./src/index.ts",
+		"./adapters": "./src/adapters/index.ts",
+		"./registry": "./src/registry/index.ts"
 	},
 	"scripts": {
 		"generate:ts": "bun scripts/generate.ts",
 		"generate": "cargo run -p codegen 2>&1 && bun scripts/generate.ts",
-		"dev": "tsdown --watch",
-		"build": "tsdown",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
 		"test:watch": "vitest",
@@ -59,7 +27,6 @@
 		"@vitest/coverage-v8": "^4.1.8",
 		"ai": "^6.0.197",
 		"openai": "^6.42.0",
-		"tsdown": "^0.22.2",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.8"
 	},
