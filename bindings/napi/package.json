@@ -20,7 +20,7 @@
 		"postversion": "npx napi create-npm-dirs && npm run build && npm run prepublishOnly && npm install"
 	},
 	"devDependencies": {
-		"@napi-rs/cli": "^3.7.0",
+		"@napi-rs/cli": "^3.7.2",
 		"typescript": "^6.0.3"
 	},
 	"napi": {
