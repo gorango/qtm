@@ -14,8 +14,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["1h", "4h", "1d"],
 	description = "Generates buy signals when fast MA crosses above slow MA and sell signals when fast MA crosses below slow MA",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 3.0, "max": 10.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 10.0, "max": 50.0, "step": 1.0}
+		{"param_name": "fastPeriod", "min": 3.0, "max": 10.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 10.0, "max": 50.0, "step": 1.0}
 	]"#
 )]
 pub fn ma_crossover_strategy(

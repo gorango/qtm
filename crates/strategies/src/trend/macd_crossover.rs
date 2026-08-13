@@ -15,9 +15,9 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when MACD line crosses above signal line and sell signals when MACD line crosses below signal line",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 15.0, "max": 50.0, "step": 1.0},
-		{"param_name": "signal_period", "min": 5.0, "max": 20.0, "step": 1.0}
+		{"param_name": "fastPeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 15.0, "max": 50.0, "step": 1.0},
+		{"param_name": "signalPeriod", "min": 5.0, "max": 20.0, "step": 1.0}
 	]"#
 )]
 pub fn macd_crossover_strategy(

@@ -5,20 +5,23 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FIConfig {
 	pub period: Option<u32>,
 }
 
 pub fn force_index(closings: &[f64], volumes: &[f64], config: Option<FIConfig>) -> Vec<f64> {
-	validate_arrays_equal_length(&[closings, volumes]).unwrap();
+	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = closings.len();
 
 	let cfg = config.unwrap_or(FIConfig { period: Some(13) });
 	let period = cfg.period.unwrap_or(13) as usize;
 
-	if period > 0 {
-		validate_period(period).unwrap();
+	if period > 0 && validate_period(period).is_err() {
+		return vec![];
 	}
 
 	let mut changes = Vec::with_capacity(len);

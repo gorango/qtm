@@ -91,6 +91,7 @@ fn shift_left_by(n: usize, values: &[f64]) -> Vec<f64> {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct IchimokuCloudConfig {
 	pub short: Option<u32>,
 	pub medium: Option<u32>,
@@ -114,7 +115,17 @@ pub fn ichimoku_cloud(
 	closings: &[f64],
 	config: Option<IchimokuCloudConfig>,
 ) -> IchimokuCloudResult {
-	validate_multiple_arrays(&[highs, lows, closings]).unwrap();
+	let empty = || IchimokuCloudResult {
+		tenkan: vec![],
+		kijun: vec![],
+		ssa: vec![],
+		ssb: vec![],
+		lagging_span: vec![],
+	};
+
+	if validate_multiple_arrays(&[highs, lows, closings]).is_err() {
+		return empty();
+	}
 
 	let config_obj = config.unwrap_or(IchimokuCloudConfig {
 		short: None,
@@ -128,13 +139,7 @@ pub fn ichimoku_cloud(
 	let close = config_obj.close.unwrap_or(26) as usize;
 
 	if highs.is_empty() {
-		return IchimokuCloudResult {
-			tenkan: vec![],
-			kijun: vec![],
-			ssa: vec![],
-			ssb: vec![],
-			lagging_span: vec![],
-		};
+		return empty();
 	}
 
 	let tenkan = calculate_tenkan_sen(highs, lows, short);

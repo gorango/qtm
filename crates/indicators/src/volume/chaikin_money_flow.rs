@@ -8,8 +8,12 @@ pub fn chaikin_money_flow(
 	volumes: &[f64],
 	period: u32,
 ) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, closings, volumes]).unwrap();
-	validate_period(period as usize).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, closings, volumes]).is_err() {
+		return vec![];
+	}
+	if validate_period(period as usize).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 	let mut result = vec![f64::NAN; len];

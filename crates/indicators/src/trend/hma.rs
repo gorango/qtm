@@ -8,6 +8,7 @@ pub fn hma(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_period(half_period)?;
 	let sqrt_period = (period as f64).sqrt() as usize;
 	crate::utils::validation::validate_period(sqrt_period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let wma_half = wma_internal(values, half_period);
 	let wma_full = wma_internal(values, period);

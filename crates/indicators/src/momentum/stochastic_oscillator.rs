@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct StochConfig {
 	pub k_period: Option<u32>,
 	pub d_period: Option<u32>,
@@ -36,7 +37,10 @@ pub fn stochastic_oscillator(
 	let _ = validate_period(k_period);
 
 	if highs.len() != lows.len() || highs.len() != closes.len() {
-		panic!("Highs, lows, and closings arrays must have same length");
+		return StochResult {
+			k: vec![],
+			d: vec![],
+		};
 	}
 
 	let len = highs.len();

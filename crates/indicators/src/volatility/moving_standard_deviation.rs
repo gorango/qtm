@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MSTDConfig {
 	pub period: Option<u32>,
 }
@@ -19,6 +20,7 @@ pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> IndicatorResult<Vec<f
 	let config = config.unwrap_or_default();
 	let period = config.period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let mut result = vec![f64::NAN; len];
 

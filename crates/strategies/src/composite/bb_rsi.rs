@@ -1,8 +1,7 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::BbRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "bb-rsi-breakout",
@@ -10,7 +9,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Bollinger Bands + RSI breakout confirmation",
-    opt_params = r#"[{"param_name": "bb_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "bb_std_dev", "min": 1.0, "max": 3.0, "step": 0.1}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "bbPeriod", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "bbStdDev", "min": 1.0, "max": 3.0, "step": 0.1}, {"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsiOversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsiOverbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
 )]
 pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
@@ -25,8 +24,7 @@ pub fn bb_rsi_strategy(closes: &[f64], config: Option<BbRsiConfig>) -> StrategyR
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: BB-RSI requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: BB-RSI requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

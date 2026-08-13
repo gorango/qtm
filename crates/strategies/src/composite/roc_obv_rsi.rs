@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::RocObvRsiConfig;
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "roc-obv-rsi-momentum",
@@ -9,7 +8,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Complex: ROC of OBV + RSI",
-    opt_params = r#"[{"param_name": "obv_roc_period", "min": 1.0, "max": 10.0, "step": 1.0}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "obvRocPeriod", "min": 1.0, "max": 10.0, "step": 1.0}, {"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsiOverbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "rsiOversold", "min": 10.0, "max": 40.0, "step": 5.0}]"#
 )]
 pub fn roc_obv_rsi_strategy(
 	closes: &[f64],
@@ -32,8 +31,7 @@ pub fn roc_obv_rsi_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: ROC OBV + RSI requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: ROC OBV + RSI requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

@@ -7,36 +7,60 @@ mod quality_helpers {
 	pub fn roe_value(d: &FundamentalPointData) -> Option<f64> {
 		let ni = d.net_income?;
 		let equity = d.shareholders_equity?;
-		if equity == 0.0 { None } else { Some(ni / equity) }
+		if equity == 0.0 {
+			None
+		} else {
+			Some(ni / equity)
+		}
 	}
 
 	pub fn roa_value(d: &FundamentalPointData) -> Option<f64> {
 		let ni = d.net_income?;
 		let ta = d.total_assets?;
-		if ta == 0.0 { None } else { Some(ni / ta) }
+		if ta == 0.0 {
+			None
+		} else {
+			Some(ni / ta)
+		}
 	}
 
 	pub fn gross_margin_value(d: &FundamentalPointData) -> Option<f64> {
 		let revenue = d.revenue?;
-		if revenue == 0.0 { None } else { Some((revenue - d.cost_of_revenue.unwrap_or(0.0)) / revenue) }
+		if revenue == 0.0 {
+			None
+		} else {
+			Some((revenue - d.cost_of_revenue.unwrap_or(0.0)) / revenue)
+		}
 	}
 
 	pub fn net_margin_value(d: &FundamentalPointData) -> Option<f64> {
 		let ni = d.net_income?;
 		let revenue = d.revenue?;
-		if revenue == 0.0 { None } else { Some(ni / revenue) }
+		if revenue == 0.0 {
+			None
+		} else {
+			Some(ni / revenue)
+		}
 	}
 
 	pub fn operating_profit_margin_value(d: &FundamentalPointData) -> Option<f64> {
 		let oi = d.operating_income?;
 		let revenue = d.revenue?;
-		if revenue == 0.0 { None } else { Some(oi / revenue) }
+		if revenue == 0.0 {
+			None
+		} else {
+			Some(oi / revenue)
+		}
 	}
 
 	pub fn ebitda_margin_value(d: &FundamentalPointData) -> Option<f64> {
 		let ebitda = d.ebitda.or(d.operating_income)?;
 		let revenue = d.revenue?;
-		if revenue == 0.0 { None } else { Some(ebitda / revenue) }
+		if revenue == 0.0 {
+			None
+		} else {
+			Some(ebitda / revenue)
+		}
 	}
 
 	pub fn working_capital_value(d: &FundamentalPointData) -> Option<f64> {
@@ -45,24 +69,40 @@ mod quality_helpers {
 
 	pub fn working_capital_turnover_value(d: &FundamentalPointData) -> Option<f64> {
 		let wc = working_capital_value(d)?;
-		if wc <= 0.0 { None } else { Some(d.revenue? / wc) }
+		if wc <= 0.0 {
+			None
+		} else {
+			Some(d.revenue? / wc)
+		}
 	}
 
 	pub fn debt_to_equity_value(d: &FundamentalPointData) -> Option<f64> {
 		let liab = d.total_liabilities?;
 		let equity = d.shareholders_equity?;
-		if equity == 0.0 { None } else { Some(liab / equity) }
+		if equity == 0.0 {
+			None
+		} else {
+			Some(liab / equity)
+		}
 	}
 
 	pub fn rnd_to_revenue_value(d: &FundamentalPointData) -> Option<f64> {
 		let rd = d.research_and_development_expenses?;
 		let revenue = d.revenue?;
-		if revenue == 0.0 { None } else { Some(rd / revenue) }
+		if revenue == 0.0 {
+			None
+		} else {
+			Some(rd / revenue)
+		}
 	}
 
 	pub fn net_debt_to_ebitda_value(d: &FundamentalPointData) -> Option<f64> {
 		let e = d.ebitda?;
-		if e == 0.0 { None } else { Some((d.total_debt? - d.cash_and_equivalents.unwrap_or(0.0)) / e) }
+		if e == 0.0 {
+			None
+		} else {
+			Some((d.total_debt? - d.cash_and_equivalents.unwrap_or(0.0)) / e)
+		}
 	}
 
 	pub fn fcf_value(d: &FundamentalPointData) -> Option<f64> {
@@ -71,37 +111,65 @@ mod quality_helpers {
 
 	pub fn fcf_margin_value(d: &FundamentalPointData) -> Option<f64> {
 		let r = d.revenue?;
-		if r == 0.0 { None } else { Some(fcf_value(d)? / r) }
+		if r == 0.0 {
+			None
+		} else {
+			Some(fcf_value(d)? / r)
+		}
 	}
 
 	pub fn fcf_per_share_value(d: &FundamentalPointData) -> Option<f64> {
 		let s = d.shares_outstanding?;
-		if s == 0.0 { None } else { Some(fcf_value(d)? / s) }
+		if s == 0.0 {
+			None
+		} else {
+			Some(fcf_value(d)? / s)
+		}
 	}
 
 	pub fn interest_coverage_value(d: &FundamentalPointData) -> Option<f64> {
 		let i = d.interest_expense?;
-		if i == 0.0 { None } else { Some(d.operating_income? / i) }
+		if i == 0.0 {
+			None
+		} else {
+			Some(d.operating_income? / i)
+		}
 	}
 
 	pub fn pe_ratio_value(d: &FundamentalPointData) -> Option<f64> {
 		let n = d.net_income?;
-		if n == 0.0 { None } else { Some(d.market_cap? / n) }
+		if n == 0.0 {
+			None
+		} else {
+			Some(d.market_cap? / n)
+		}
 	}
 
 	pub fn current_ratio_value(d: &FundamentalPointData) -> Option<f64> {
 		let l = d.current_liabilities?;
-		if l == 0.0 { None } else { Some(d.current_assets? / l) }
+		if l == 0.0 {
+			None
+		} else {
+			Some(d.current_assets? / l)
+		}
 	}
 
 	pub fn roic_value(d: &FundamentalPointData) -> Option<f64> {
 		let cap = d.total_assets? - d.cash_and_equivalents.unwrap_or(0.0) - d.current_liabilities?;
-		if cap == 0.0 { None } else { Some(d.operating_income? / cap) }
+		if cap == 0.0 {
+			None
+		} else {
+			Some(d.operating_income? / cap)
+		}
 	}
 
 	pub fn ebitdar_value(d: &FundamentalPointData) -> Option<f64> {
 		let oi = d.operating_income?;
-		let da = if let Some(e) = d.ebitda { (e - oi).max(0.0) } else { 0.0 };
+		let da = if let Some(e) = d.ebitda {
+			(e - oi).max(0.0)
+		} else {
+			0.0
+		};
 		Some(oi + da)
 	}
 }
@@ -463,7 +531,7 @@ mod tests {
 	}
 
 	fn assert_approx_eq(a: f64, b: f64, epsilon: f64) {
-		assert!((a - b).abs() < epsilon, "expected {} ≈ {}", a, b);
+		assert!((a - b).abs() < epsilon, "expected {a} ≈ {b}");
 	}
 
 	#[test]

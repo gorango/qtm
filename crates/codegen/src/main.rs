@@ -97,7 +97,11 @@ fn build_registry() -> String {
 				id: desc.id.to_string(),
 				name: desc.name.to_string(),
 				category: desc.category.to_string(),
-				default_timeframes: desc.default_timeframes.iter().map(|s| s.to_string()).collect(),
+				default_timeframes: desc
+					.default_timeframes
+					.iter()
+					.map(|s| s.to_string())
+					.collect(),
 				description: desc.description.to_string(),
 				defaults: params,
 				params_schema: params_schema_str.to_string(),
@@ -120,7 +124,7 @@ fn main() {
 	if is_check {
 		let path = Path::new(DEFAULT_PATH);
 		if !path.exists() {
-			eprintln!("CHECK FAILED: {} does not exist", DEFAULT_PATH);
+			eprintln!("CHECK FAILED: {DEFAULT_PATH} does not exist");
 			std::process::exit(1);
 		}
 		let existing = std::fs::read_to_string(path).expect("read existing registry");
@@ -140,7 +144,7 @@ fn main() {
 				Ok(out) => {
 					let diff_str = String::from_utf8_lossy(&out.stdout);
 					if !diff_str.is_empty() {
-						eprintln!("{}", diff_str);
+						eprintln!("{diff_str}");
 					}
 				}
 				Err(_) => {
@@ -150,11 +154,15 @@ fn main() {
 			std::process::exit(1);
 		}
 	} else {
-		let path = args.get(1).map(|s| s.as_str()).filter(|&s| s != "--check").unwrap_or(DEFAULT_PATH);
+		let path = args
+			.get(1)
+			.map(|s| s.as_str())
+			.filter(|&s| s != "--check")
+			.unwrap_or(DEFAULT_PATH);
 		if let Some(parent) = Path::new(path).parent() {
 			let _ = std::fs::create_dir_all(parent);
 		}
 		std::fs::write(path, &json).expect("write registry.json");
-		eprintln!("Wrote registry to {}", path);
+		eprintln!("Wrote registry to {path}");
 	}
 }

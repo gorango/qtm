@@ -14,8 +14,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when fast ALMA crosses above slow ALMA and sell signals when fast ALMA crosses below slow ALMA",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 15.0, "max": 50.0, "step": 1.0},
+		{"param_name": "fastPeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 15.0, "max": 50.0, "step": 1.0},
 		{"param_name": "offset", "min": 0.5, "max": 1.0, "step": 0.05}
 	]"#
 )]

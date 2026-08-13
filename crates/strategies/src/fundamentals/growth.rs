@@ -3,8 +3,7 @@ use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
 use factors_core::{
-	FactorPoint, FundamentalPoint, FundamentalPointData, operating_profit_margin_value,
-	roe_value,
+	operating_profit_margin_value, roe_value, FactorPoint, FundamentalPoint, FundamentalPointData,
 };
 
 // ── Derived-field helpers (combinations, not in factors_core) ──
@@ -29,6 +28,7 @@ fn reinvest_rate(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PegConfig {
 	pub max_peg_ratio: Option<f64>,
 }
@@ -42,6 +42,7 @@ impl Default for PegConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GrowthVsCompetitionConfig {
 	pub min_criteria_met: Option<u32>,
 	pub growth_premium: Option<f64>,
@@ -59,6 +60,7 @@ impl Default for GrowthVsCompetitionConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenueGrowthAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub yoy_threshold: Option<f64>,
@@ -78,6 +80,7 @@ impl Default for RevenueGrowthAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SustainableGrowthRateConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_sgr: Option<f64>,
@@ -95,6 +98,7 @@ impl Default for SustainableGrowthRateConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EarningsReinvestmentRateConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_reinvestment_rate: Option<f64>,
@@ -112,6 +116,7 @@ impl Default for EarningsReinvestmentRateConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TopQuartileConfig {
 	pub metrics: Option<Vec<String>>,
 }
@@ -130,6 +135,7 @@ impl Default for TopQuartileConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QoqRevenueMomentumConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_qtr_growth: Option<f64>,
@@ -147,6 +153,7 @@ impl Default for QoqRevenueMomentumConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenueGrowthVsCompetitorsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub growth_premium: Option<f64>,
@@ -162,6 +169,7 @@ impl Default for RevenueGrowthVsCompetitorsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenueVolatilityScoreConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_volatility: Option<f64>,
@@ -179,6 +187,7 @@ impl Default for RevenueVolatilityScoreConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SeasonalityIndexRevenueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_seasonality_index: Option<f64>,
@@ -196,6 +205,7 @@ impl Default for SeasonalityIndexRevenueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MgmtEarningsCallToneConfig {
 	pub min_criteria_met: Option<u32>,
 	pub tone_threshold: Option<f64>,
@@ -213,6 +223,7 @@ impl Default for MgmtEarningsCallToneConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EarningsCallRevenueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub revenue_guidance_beat: Option<bool>,
@@ -501,7 +512,10 @@ pub fn revenue_growth_vs_competition_strategy(
 			if d.revenue.unwrap_or(0.0) > prem * 1e6 {
 				met += 1;
 			}
-			if operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data)
+				.map(|v| v > 0.0)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if d.operating_income.unwrap_or(0.0) > 0.0 {
@@ -659,31 +673,31 @@ pub fn peg_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"peg-ratio-analysis","name":"PEG Ratio Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"PEG ratio below threshold"})
 }
 pub fn peg_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"max_peg_ratio":1.5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"maxPegRatio":1.5},"optimization_bounds":[]})
 }
 pub fn earnings_growth_vs_competition_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"earnings-growth-vs-competition","name":"Earnings Growth vs. Competitors","category":"fundamental","default_timeframes":["1d","1w"],"description":"EPS growth exceeds peers"})
 }
 pub fn earnings_growth_vs_competition_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"growth_premium":0.05,"period":5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"growthPremium":0.05,"period":5},"optimization_bounds":[]})
 }
 pub fn revenue_growth_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-growth-analysis","name":"Revenue & Growth Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"YoY growth, CAGR, accelerating momentum"})
 }
 pub fn revenue_growth_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"yoy_threshold":0.1,"cagr_threshold":0.15,"cagr_period":5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"yoyThreshold":0.1,"cagrThreshold":0.15,"cagrPeriod":5},"optimization_bounds":[]})
 }
 pub fn sustainable_growth_rate_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"sustainable-growth-rate","name":"Sustainable Growth Rate","category":"fundamental","default_timeframes":["1d","1w"],"description":"SGR above threshold, strong ROE"})
 }
 pub fn sustainable_growth_rate_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"min_sgr":0.05,"actual_growth_threshold":0.03},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"minSgr":0.05,"actualGrowthThreshold":0.03},"optimization_bounds":[]})
 }
 pub fn earnings_reinvestment_rate_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"earnings-reinvestment-rate","name":"Earnings Re-investment Rate","category":"fundamental","default_timeframes":["1d","1w"],"description":"High retention rate, strong ROE"})
 }
 pub fn earnings_reinvestment_rate_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"min_reinvestment_rate":0.3,"roe_threshold":0.15},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"minReinvestmentRate":0.3,"roeThreshold":0.15},"optimization_bounds":[]})
 }
 pub fn top_quartile_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"top-quartile-growth","name":"Top Quartile Performers","category":"fundamental","default_timeframes":["1d","1w"],"description":"Growth metrics in top quartile"})
@@ -695,41 +709,89 @@ pub fn qoq_revenue_momentum_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"qoq-revenue-momentum","name":"QoQ Revenue Momentum","category":"fundamental","default_timeframes":["1d","1w"],"description":"Positive QoQ growth, accelerating trend"})
 }
 pub fn qoq_revenue_momentum_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"min_qtr_growth":0.02,"accelerating_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"minQtrGrowth":0.02,"acceleratingPeriods":4},"optimization_bounds":[]})
 }
 pub fn revenue_growth_vs_competitors_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-growth-vs-competitors","name":"Revenue Growth vs. Competitors","category":"fundamental","default_timeframes":["1d","1w"],"description":"YoY revenue exceeds peer average"})
 }
 pub fn revenue_growth_vs_competitors_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"growth_premium":0.03},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"growthPremium":0.03},"optimization_bounds":[]})
 }
 pub fn revenue_growth_vs_competition_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-growth-vs-competition","name":"Revenue Growth vs. Competition","category":"fundamental","default_timeframes":["1d","1w"],"description":"Revenue CAGR exceeds industry peers"})
 }
 pub fn revenue_growth_vs_competition_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"growth_premium":0.05,"period":5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"growthPremium":0.05,"period":5},"optimization_bounds":[]})
 }
 pub fn revenue_volatility_score_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-volatility-score","name":"Revenue Volatility Score","category":"fundamental","default_timeframes":["1d","1w"],"description":"Low volatility in revenue growth"})
 }
 pub fn revenue_volatility_score_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_volatility":0.2,"periods":8},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxVolatility":0.2,"periods":8},"optimization_bounds":[]})
 }
 pub fn seasonality_index_revenue_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"seasonality-index-revenue","name":"Seasonality Index in Revenue","category":"fundamental","default_timeframes":["1d","1w"],"description":"Low seasonality, stable quarterly revenue"})
 }
 pub fn seasonality_index_revenue_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_seasonality_index":0.3,"min_quarters":8},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxSeasonalityIndex":0.3,"minQuarters":8},"optimization_bounds":[]})
 }
 pub fn management_earnings_call_tone_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"management-earnings-call-tone-analysis","name":"Management Earnings Call Tone Analysis","category":"fundamental","default_timeframes":["1m","3m"],"description":"Sentiment analysis from earnings calls"})
 }
 pub fn management_earnings_call_tone_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":3,"tone_threshold":0.7,"confidence_threshold":0.8},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":3,"toneThreshold":0.7,"confidenceThreshold":0.8},"optimization_bounds":[]})
 }
 pub fn earnings_call_revenue_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"earnings-call-revenue-analysis","name":"Earnings Call Revenue Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"Revenue guidance, sentiment, earnings beat"})
 }
 pub fn earnings_call_revenue_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"revenue_guidance_beat":true,"revenue_sentiment_threshold":0.6},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"revenueGuidanceBeat":true,"revenueSentimentThreshold":0.6},"optimization_bounds":[]})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		peg_strategy_defaults => PegConfig,
+		earnings_growth_vs_competition_strategy_defaults => GrowthVsCompetitionConfig,
+		revenue_growth_analysis_strategy_defaults => RevenueGrowthAnalysisConfig,
+		sustainable_growth_rate_strategy_defaults => SustainableGrowthRateConfig,
+		earnings_reinvestment_rate_strategy_defaults => EarningsReinvestmentRateConfig,
+		top_quartile_strategy_defaults => TopQuartileConfig,
+		qoq_revenue_momentum_strategy_defaults => QoqRevenueMomentumConfig,
+		revenue_growth_vs_competitors_strategy_defaults => RevenueGrowthVsCompetitorsConfig,
+		revenue_growth_vs_competition_strategy_defaults => GrowthVsCompetitionConfig,
+		revenue_volatility_score_strategy_defaults => RevenueVolatilityScoreConfig,
+		seasonality_index_revenue_strategy_defaults => SeasonalityIndexRevenueConfig,
+		management_earnings_call_tone_analysis_strategy_defaults => MgmtEarningsCallToneConfig,
+		earnings_call_revenue_analysis_strategy_defaults => EarningsCallRevenueConfig,
+	}
 }

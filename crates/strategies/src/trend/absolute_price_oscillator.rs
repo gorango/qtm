@@ -15,8 +15,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when APO crosses above zero and sell signals when APO crosses below zero",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 15.0, "max": 50.0, "step": 1.0}
+		{"param_name": "fastPeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 15.0, "max": 50.0, "step": 1.0}
 	]"#
 )]
 pub fn absolute_price_oscillator_strategy(

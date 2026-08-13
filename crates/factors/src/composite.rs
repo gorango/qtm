@@ -108,7 +108,7 @@ pub fn piotroski_f_score(fundamentals: Vec<FundamentalPoint>) -> Vec<FactorPoint
 		group.sort_by(|a, b| {
 			a.date
 				.partial_cmp(&b.date)
-				.expect("values should be comparable")
+				.unwrap_or(std::cmp::Ordering::Equal)
 		});
 		for i in 1..group.len() {
 			let cur = group[i];

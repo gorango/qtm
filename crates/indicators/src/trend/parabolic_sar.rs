@@ -11,6 +11,7 @@ pub struct PSARResult {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PSARConfig {
 	pub step: Option<f64>,
 	pub max: Option<f64>,

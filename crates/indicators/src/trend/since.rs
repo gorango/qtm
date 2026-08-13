@@ -25,5 +25,6 @@ pub fn since_internal(values: &[f64]) -> Vec<f64> {
 }
 
 pub fn since(values: &[f64]) -> IndicatorResult<Vec<f64>> {
+	crate::utils::validation::validate_finite(&[values])?;
 	Ok(since_internal(values))
 }

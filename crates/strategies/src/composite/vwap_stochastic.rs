@@ -1,10 +1,9 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::VwapStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::stochastic_oscillator;
 use indicators_core::vwap;
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "vwap-stochastic-confirmation",
@@ -12,7 +11,7 @@ use indicators_core::vwap;
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "VWAP + Stochastic confirmation",
-    opt_params = r#"[{"param_name": "vwap_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "vwapPeriod", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "kPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "dPeriod", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
 )]
 pub fn vwap_stochastic_strategy(
 	highs: &[f64],
@@ -38,8 +37,7 @@ pub fn vwap_stochastic_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: VWAP Stochastic requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: VWAP Stochastic requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

@@ -4,6 +4,7 @@ pub fn max_drawdown(prices: &[f64], period: u32) -> IndicatorResult<Vec<f64>> {
 	let period = period as usize;
 
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[prices])?;
 
 	let mut result = vec![0.0; len];
 

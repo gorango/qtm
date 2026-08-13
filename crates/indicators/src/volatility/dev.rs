@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MeanAbsoluteDeviationConfig {
 	pub period: Option<u32>,
 }

@@ -22,5 +22,6 @@ pub fn moving_max_internal(values: &[f64], period: usize) -> Vec<f64> {
 pub fn moving_max(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 	Ok(moving_max_internal(values, period))
 }

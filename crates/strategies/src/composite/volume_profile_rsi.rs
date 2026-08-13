@@ -1,9 +1,8 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::VolumeProfileRsiConfig;
 use crate::{StrategyError, StrategyResult};
 use indicators_core::rsi;
 use indicators_core::volume_profile;
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "volume-profile-rsi",
@@ -11,7 +10,7 @@ use indicators_core::volume_profile;
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Volume Profile + RSI",
-    opt_params = r#"[{"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "volume_profile_bins", "min": 20.0, "max": 100.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsiOversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsiOverbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "volumeProfileBins", "min": 20.0, "max": 100.0, "step": 5.0}]"#
 )]
 pub fn volume_profile_rsi_strategy(
 	highs: &[f64],
@@ -49,7 +48,7 @@ pub fn volume_profile_rsi_strategy(
 	let vp = volume_profile(highs_vec, lows_vec, volumes_vec, Some(volume_profile_bins));
 
 	let mut sorted_volumes = vp.volumes.clone();
-	sorted_volumes.sort_by(|a, b| a.partial_cmp(b).unwrap());
+	sorted_volumes.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
 	let median_volume = sorted_volumes[sorted_volumes.len() / 2];
 
 	let data_len = closes.len();

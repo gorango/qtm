@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::MfiObvConfig;
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "mfi-obv-volume-flow",
@@ -9,7 +8,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Combines MFI (Money Flow Index) + OBV volume confirmation",
-    opt_params = r#"[{"param_name": "mfi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "mfiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
 )]
 pub fn mfi_obv_strategy(
 	highs: &[f64],
@@ -33,8 +32,7 @@ pub fn mfi_obv_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: MFI + OBV requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: MFI + OBV requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

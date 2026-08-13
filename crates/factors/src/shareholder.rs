@@ -97,7 +97,11 @@ pub fn dividend_positive_10_years(fundamentals: Vec<FundamentalPoint>) -> Vec<Fa
 	}
 
 	for group in symbol_groups.values_mut() {
-		group.sort_by(|a, b| a.filing_date.partial_cmp(&b.filing_date).unwrap());
+		group.sort_by(|a, b| {
+			a.filing_date
+				.partial_cmp(&b.filing_date)
+				.unwrap_or(std::cmp::Ordering::Equal)
+		});
 
 		let mut recent = group.iter().rev().take(40);
 		let all_positive = recent.all(|f| f.data.dividends_per_share.is_some_and(|v| v > 0.0));

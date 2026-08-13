@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::TriangleRsiConfig;
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "triangle-rsi-breakout",
@@ -9,7 +8,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Triangle pattern + RSI breakout",
-    opt_params = r#"[{"param_name": "min_points", "min": 3.0, "max": 8.0, "step": 1.0}, {"param_name": "slope_tolerance", "min": 0.005, "max": 0.05, "step": 0.005}, {"param_name": "rsi_period", "min": 7.0, "max": 21.0, "step": 1.0}, {"param_name": "oversold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "overbought", "min": 60.0, "max": 80.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "minPoints", "min": 3.0, "max": 8.0, "step": 1.0}, {"param_name": "slopeTolerance", "min": 0.005, "max": 0.05, "step": 0.005}, {"param_name": "rsiPeriod", "min": 7.0, "max": 21.0, "step": 1.0}, {"param_name": "oversold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "overbought", "min": 60.0, "max": 80.0, "step": 1.0}]"#
 )]
 pub fn triangle_rsi_strategy(
 	highs: &[f64],
@@ -53,7 +52,7 @@ pub fn triangle_rsi_strategy(
 	}
 	let mut signals = Vec::with_capacity(data_len);
 
-	let triangle = triangle_signals.as_ref().unwrap();
+	let triangle = triangle_signals?;
 
 	for i in 0..data_len {
 		let signal = if i < rsi_period as usize {

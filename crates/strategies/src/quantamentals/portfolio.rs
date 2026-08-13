@@ -6,6 +6,7 @@ use factors_core::{Bar, FactorPoint};
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MultiFactorConfig {
 	pub rebalance_interval: Option<u32>,
 	pub top_percentile: Option<f64>,
@@ -28,6 +29,7 @@ impl Default for MultiFactorConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RiskParityConfig {
 	pub volatility_period: Option<u32>,
 	pub risk_target: Option<f64>,
@@ -44,6 +46,7 @@ impl Default for RiskParityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DualMomentumConfig {
 	pub momentum_period: Option<u32>,
 	pub risk_free_rate: Option<f64>,
@@ -306,4 +309,42 @@ pub fn dual_momentum_strategy_defaults() -> serde_json::Value {
 			{"param_name": "momentumPeriod", "min": 20.0, "max": 500.0, "step": 10.0}
 		]
 	})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		multi_factor_strategy_defaults => MultiFactorConfig,
+		risk_parity_strategy_defaults => RiskParityConfig,
+		dual_momentum_strategy_defaults => DualMomentumConfig,
+	}
 }

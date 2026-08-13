@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ZScoreConfig {
 	pub period: Option<u32>,
 }
@@ -23,12 +24,12 @@ pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f
 
 	if len < period {
 		return Err(IndicatorError::Custom(format!(
-			"Not enough data points. Need at least {}, got {}",
-			period, len
+			"Not enough data points. Need at least {period}, got {len}"
 		)));
 	}
 
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let means = sma_internal(values, period);
 	let stds = std_dev_internal(values, period);

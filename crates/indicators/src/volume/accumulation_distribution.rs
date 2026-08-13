@@ -6,7 +6,9 @@ pub fn accumulation_distribution(
 	closings: &[f64],
 	volume: &[f64],
 ) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, closings, volume]).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, closings, volume]).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 	let mut result = vec![f64::NAN; len];

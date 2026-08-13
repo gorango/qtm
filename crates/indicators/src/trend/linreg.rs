@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LinRegConfig {
 	pub period: Option<u32>,
 	pub offset: Option<u32>,
@@ -18,6 +19,7 @@ pub fn linreg(values: &[f64], config: Option<LinRegConfig>) -> IndicatorResult<V
 	let offset = config.offset.unwrap_or(0) as usize;
 
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let len = values.len();
 	if len < period {

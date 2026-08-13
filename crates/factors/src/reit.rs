@@ -6,7 +6,11 @@ use crate::utils::pricing::find_price_on_or_after;
 #[cfg_attr(feature = "napi", ::napi_derive::napi)]
 pub fn price_to_affo(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
-	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	prices_sorted.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.unwrap_or(std::cmp::Ordering::Equal)
+	});
 
 	let mut results = Vec::new();
 	for f in &fundamentals {

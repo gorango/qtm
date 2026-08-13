@@ -3,7 +3,16 @@ use std::sync::OnceLock;
 
 use crate::StrategyResult;
 
-#[derive(Clone)]
+#[cfg(feature = "napi")]
+use napi_derive::napi;
+
+/// Unified OHLCV input for registry-dispatched strategies.
+///
+/// Under the `napi` feature this is exposed as a plain JS object so that
+/// `runStrategy(id, input, config)` can dispatch any `#[strategy]`-registered
+/// strategy by id from Node.
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Default)]
 pub struct StrategyInput {
 	pub opens: Option<Vec<f64>>,
 	pub highs: Option<Vec<f64>>,
@@ -91,7 +100,11 @@ pub fn get_strategy_registry() -> crate::types::results::StrategyRegistry {
 				id: desc.id.to_string(),
 				name: desc.name.to_string(),
 				category: desc.category.to_string(),
-				default_timeframes: desc.default_timeframes.iter().map(|s| s.to_string()).collect(),
+				default_timeframes: desc
+					.default_timeframes
+					.iter()
+					.map(|s| s.to_string())
+					.collect(),
 				description: Some(desc.description.to_string()),
 			},
 		);
@@ -99,11 +112,23 @@ pub fn get_strategy_registry() -> crate::types::results::StrategyRegistry {
 
 	// Composite strategies (not yet migrated to #[strategy])
 	for (key, meta_fn) in [
-		("flag-pennant-macd-continuation", crate::flag_pennant_macd_strategy_metadata as fn() -> serde_json::Value),
-		("macd-rsi-momentum", crate::macd_rsi_strategy_metadata as fn() -> serde_json::Value),
+		(
+			"flag-pennant-macd-continuation",
+			crate::flag_pennant_macd_strategy_metadata as fn() -> serde_json::Value,
+		),
+		(
+			"macd-rsi-momentum",
+			crate::macd_rsi_strategy_metadata as fn() -> serde_json::Value,
+		),
 		// Aliases for strategies registered under alternate keys
-		("percentRank-ranking", crate::percent_rank_strategy_metadata as fn() -> serde_json::Value),
-		("elliott-wave-pattern", crate::percent_rank_strategy_metadata as fn() -> serde_json::Value),
+		(
+			"percentRank-ranking",
+			crate::percent_rank_strategy_metadata as fn() -> serde_json::Value,
+		),
+		(
+			"elliott-wave-pattern",
+			crate::percent_rank_strategy_metadata as fn() -> serde_json::Value,
+		),
 	] {
 		strategies.insert(
 			key.to_string(),

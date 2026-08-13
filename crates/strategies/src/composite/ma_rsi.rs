@@ -1,8 +1,7 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::MaRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "ma-rsi-trend-following",
@@ -10,7 +9,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Combine MA trend + RSI momentum",
-    opt_params = r#"[{"param_name": "ma_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "maPeriod", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
 )]
 pub fn ma_rsi_strategy(closes: &[f64], config: Option<MaRsiConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();
@@ -24,13 +23,12 @@ pub fn ma_rsi_strategy(closes: &[f64], config: Option<MaRsiConfig>) -> StrategyR
 
 	if data_len < min_periods {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: MA + RSI requires at least {} data points, got {}",
-			min_periods, data_len
+			"Insufficient data: MA + RSI requires at least {min_periods} data points, got {data_len}"
 		)));
 	}
 
 	let closes_vec: Vec<f64> = closes.to_vec();
-	let ma_values = indicators_core::sma(&closes_vec, Some(ma_period)).unwrap();
+	let ma_values = indicators_core::sma(&closes_vec, Some(ma_period))?;
 
 	let rsi_config = indicators_core::RSIConfig {
 		period: Some(rsi_period),

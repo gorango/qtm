@@ -12,11 +12,7 @@ fn latest_factor_at_or_before(factors: &[FactorPoint], time: f64) -> Option<f64>
 	factors
 		.iter()
 		.filter(|f| f.date <= time)
-		.max_by(|a, b| {
-			a.date
-				.partial_cmp(&b.date)
-				.expect("f64 values should be comparable")
-		})
+		.max_by(|a, b| a.date.total_cmp(&b.date))
 		.map(|f| f.value)
 }
 
@@ -42,6 +38,7 @@ fn times_from_bars(bars: &[Bar]) -> Vec<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QarpConfig {
 	pub roe_threshold: Option<f64>,
 	pub de_threshold: Option<f64>,
@@ -112,6 +109,7 @@ pub fn qarp_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MultiFactorValueConfig {
 	pub pfcf_threshold: Option<f64>,
 	pub pe_threshold: Option<f64>,
@@ -208,6 +206,7 @@ pub fn multi_factor_value_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AlternativeDataConfig {
 	pub exchange_threshold: Option<f64>,
 	pub exchange_period: Option<u32>,
@@ -257,6 +256,7 @@ pub fn alternative_data_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EventDrivenConfig {
 	pub odds_threshold: Option<f64>,
 	pub sma_period: Option<u32>,
@@ -304,16 +304,12 @@ pub fn event_driven_strategy(
 
 	let mut odds_by_time: Vec<f64> = Vec::new();
 	for group in market_groups.values_mut() {
-		group.sort_by(|a, b| {
-			a.time
-				.partial_cmp(&b.time)
-				.expect("values should be comparable")
-		});
+		group.sort_by(|a, b| a.time.total_cmp(&b.time));
 		for p in group {
 			odds_by_time.push(p.price);
 		}
 	}
-	odds_by_time.sort_by(|a, b| a.partial_cmp(b).expect("values should be comparable"));
+	odds_by_time.sort_by(f64::total_cmp);
 
 	let mut signals = vec![0i8; prices.len()];
 	let times = times_from_bars(&prices);
@@ -345,12 +341,13 @@ fn latest_odds_above_threshold(
 		.filter(|p| p.time <= time)
 		.map(|p| p.price)
 		.collect();
-	relevant.sort_by(|a, b| a.partial_cmp(b).expect("values should be comparable"));
+	relevant.sort_by(f64::total_cmp);
 	relevant.last().copied().unwrap_or(0.0) > threshold
 }
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OnChainConfirmationConfig {
 	pub fast_ema: Option<u32>,
 	pub slow_ema: Option<u32>,
@@ -410,11 +407,7 @@ pub fn on_chain_confirmation_strategy(
 		let latest_flow = flows
 			.iter()
 			.filter(|f| f.time <= prices[i].time)
-			.max_by(|a, b| {
-				a.time
-					.partial_cmp(&b.time)
-					.expect("values should be comparable")
-			})
+			.max_by(|a, b| a.time.total_cmp(&b.time))
 			.map(|f| f.value)
 			.unwrap_or(0.0);
 
@@ -428,6 +421,7 @@ pub fn on_chain_confirmation_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ValueMomentumPatternConfig {
 	pub pfcf_threshold: Option<f64>,
 	pub pattern_min_distance: Option<u32>,
@@ -501,6 +495,7 @@ pub fn value_momentum_pattern_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GrowthQualityConfig {
 	pub min_eps_growth: Option<f64>,
 	pub min_roe: Option<f64>,
@@ -567,6 +562,7 @@ pub fn growth_quality_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CompositeValueMomentumConfig {
 	pub pe_threshold: Option<f64>,
 	pub rsi_threshold: Option<f64>,
@@ -648,6 +644,7 @@ pub fn composite_value_momentum_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QuantamentalValueMomentumConfig {
 	pub pe_threshold: Option<f64>,
 	pub sma_period: Option<u32>,
@@ -866,13 +863,13 @@ pub fn event_driven_strategy_defaults() -> serde_json::Value {
 pub fn on_chain_confirmation_strategy_defaults() -> serde_json::Value {
 	serde_json::json!({
 		"params": {
-			"fastEMA": 12,
-			"slowEMA": 26,
+			"fastEma": 12,
+			"slowEma": 26,
 			"netflowThreshold": 0.1
 		},
 		"optimization_bounds": [
-			{"param_name": "fastEMA", "min": 5.0, "max": 50.0, "step": 1.0},
-			{"param_name": "slowEMA", "min": 10.0, "max": 100.0, "step": 1.0},
+			{"param_name": "fastEma", "min": 5.0, "max": 50.0, "step": 1.0},
+			{"param_name": "slowEma", "min": 10.0, "max": 100.0, "step": 1.0},
 			{"param_name": "netflowThreshold", "min": 0.01, "max": 0.5, "step": 0.01}
 		]
 	})
@@ -896,15 +893,15 @@ pub fn value_momentum_pattern_strategy_defaults() -> serde_json::Value {
 pub fn growth_quality_strategy_defaults() -> serde_json::Value {
 	serde_json::json!({
 		"params": {
-			"minEPSGrowth": 0.1,
-			"minROE": 0.15,
-			"minRSI": 50.0,
+			"minEpsGrowth": 0.1,
+			"minRoe": 0.15,
+			"minRsi": 50.0,
 			"rsiPeriod": 14
 		},
 		"optimization_bounds": [
-			{"param_name": "minEPSGrowth", "min": 0.05, "max": 0.3, "step": 0.01},
-			{"param_name": "minROE", "min": 0.1, "max": 0.25, "step": 0.01},
-			{"param_name": "minRSI", "min": 30.0, "max": 70.0, "step": 5.0},
+			{"param_name": "minEpsGrowth", "min": 0.05, "max": 0.3, "step": 0.01},
+			{"param_name": "minRoe", "min": 0.1, "max": 0.25, "step": 0.01},
+			{"param_name": "minRsi", "min": 30.0, "max": 70.0, "step": 5.0},
 			{"param_name": "rsiPeriod", "min": 7.0, "max": 21.0, "step": 1.0}
 		]
 	})
@@ -940,4 +937,48 @@ pub fn quantamental_value_momentum_strategy_defaults() -> serde_json::Value {
 			{"param_name": "smaPeriod", "min": 10.0, "max": 200.0, "step": 5.0}
 		]
 	})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		qarp_strategy_defaults => QarpConfig,
+		multi_factor_value_strategy_defaults => MultiFactorValueConfig,
+		alternative_data_strategy_defaults => AlternativeDataConfig,
+		event_driven_strategy_defaults => EventDrivenConfig,
+		on_chain_confirmation_strategy_defaults => OnChainConfirmationConfig,
+		value_momentum_pattern_strategy_defaults => ValueMomentumPatternConfig,
+		growth_quality_strategy_defaults => GrowthQualityConfig,
+		composite_value_momentum_strategy_defaults => CompositeValueMomentumConfig,
+		quantamental_value_momentum_strategy_defaults => QuantamentalValueMomentumConfig,
+	}
 }

@@ -5,6 +5,7 @@ pub fn vwma(closings: &[f64], volumes: &[f64], period: Option<u32>) -> Indicator
 	let period = period.unwrap_or(20) as usize;
 
 	crate::utils::validation::validate_multiple_arrays(&[closings, volumes])?;
+	crate::utils::validation::validate_finite(&[closings, volumes])?;
 
 	if closings.is_empty() {
 		return Err(IndicatorError::Custom("Arrays cannot be empty".into()));

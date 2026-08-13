@@ -1,10 +1,9 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::RsiMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use indicators_core::macd;
 use indicators_core::rsi;
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "rsi-macd-confirmation",
@@ -12,7 +11,7 @@ use indicators_core::rsi;
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "RSI + MACD confirmation",
-    opt_params = r#"[{"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsi_oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsi_overbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "macd_fast_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "macd_slow_period", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "macd_signal_period", "min": 5.0, "max": 20.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "rsiOversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "rsiOverbought", "min": 60.0, "max": 90.0, "step": 5.0}, {"param_name": "macdFastPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "macdSlowPeriod", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "macdSignalPeriod", "min": 5.0, "max": 20.0, "step": 1.0}]"#
 )]
 pub fn rsi_macd_strategy(closes: &[f64], config: Option<RsiMacdConfig>) -> StrategyResult<Vec<i8>> {
 	let config = config.unwrap_or_default();

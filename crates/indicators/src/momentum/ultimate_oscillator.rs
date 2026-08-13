@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UltimateOscillatorConfig {
 	pub period1: Option<u32>,
 	pub period2: Option<u32>,
@@ -17,7 +18,9 @@ pub fn ultimate_oscillator(
 	closings: &[f64],
 	config: Option<UltimateOscillatorConfig>,
 ) -> Vec<f64> {
-	validate_multiple_arrays(&[highs, lows, closings]).unwrap();
+	if validate_multiple_arrays(&[highs, lows, closings]).is_err() {
+		return vec![];
+	}
 
 	let config_obj = config.unwrap_or(UltimateOscillatorConfig {
 		period1: None,

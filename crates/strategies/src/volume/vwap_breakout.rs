@@ -15,7 +15,7 @@ use strategies_proc_macro::strategy;
 	description = "Generates buy signals when price crosses above VWAP + breakout threshold, sell signals when price crosses below VWAP",
 	opt_params = r#"[
 		{"param_name": "period", "min": 5.0, "max": 50.0, "step": 1.0},
-		{"param_name": "breakout_threshold", "min": 0.005, "max": 0.1, "step": 0.005}
+		{"param_name": "breakoutThreshold", "min": 0.005, "max": 0.1, "step": 0.005}
 	]"#
 )]
 pub fn vwap_breakout_strategy(

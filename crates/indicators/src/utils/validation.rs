@@ -49,3 +49,18 @@ pub fn validate_multiple_arrays(arrays: &[&[f64]]) -> IndicatorResult<()> {
 	}
 	validate_arrays_equal_length(arrays)
 }
+
+/// Returns an error if any value in any input array is NaN or infinite.
+///
+/// This validates INPUT data only. NaN warmup in indicator OUTPUT (the first
+/// `period - 1` values) is standard behavior and must not be treated as an error.
+pub fn validate_finite(arrays: &[&[f64]]) -> IndicatorResult<()> {
+	for arr in arrays {
+		if arr.iter().any(|v| !v.is_finite()) {
+			return Err(IndicatorError::Custom(
+				"Input contains a non-finite value (NaN or Infinity)".into(),
+			));
+		}
+	}
+	Ok(())
+}

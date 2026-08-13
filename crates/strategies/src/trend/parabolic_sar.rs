@@ -14,7 +14,7 @@ use strategies_proc_macro::strategy;
 	description = "Generates buy signals when price is above SAR and sell signals when price is below SAR",
 	opt_params = r#"[
 		{"param_name": "step", "min": 0.01, "max": 0.05, "step": 0.005},
-		{"param_name": "max_step", "min": 0.01, "max": 0.1, "step": 0.01}
+		{"param_name": "maxStep", "min": 0.01, "max": 0.1, "step": 0.01}
 	]"#
 )]
 pub fn parabolic_sar_strategy(

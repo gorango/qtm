@@ -15,10 +15,10 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["4h", "1d"],
 	description = "Generates buy signals for impulse waves and sell signals for corrective waves using Larsson indicator with consolidating filter",
 	opt_params = r#"[
-		{"param_name": "use_consolidating_filter", "min": 0.0, "max": 1.0, "step": 1.0},
-		{"param_name": "consolidating_lookback", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "consolidating_threshold_pct", "min": 0.01, "max": 0.05, "step": 0.005},
-		{"param_name": "signal_offset", "min": -2.0, "max": 2.0, "step": 1.0}
+		{"param_name": "useConsolidatingFilter", "min": 0.0, "max": 1.0, "step": 1.0},
+		{"param_name": "consolidatingLookback", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "consolidatingThresholdPct", "min": 0.01, "max": 0.05, "step": 0.005},
+		{"param_name": "signalOffset", "min": -2.0, "max": 2.0, "step": 1.0}
 	]"#
 )]
 pub fn larsson_strategy(
@@ -43,8 +43,7 @@ pub fn larsson_strategy(
 	let warmup_period = 30; // Based on SMMA period used in Larsson indicator
 	if data_len < warmup_period {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data for Larsson strategy (need at least {} bars)",
-			warmup_period
+			"Insufficient data for Larsson strategy (need at least {warmup_period} bars)"
 		)));
 	}
 

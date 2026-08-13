@@ -14,7 +14,11 @@ pub fn active_address_growth(
 		.iter()
 		.filter(|d| d.metric == "activeAddresses")
 		.collect();
-	addrs.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	addrs.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.unwrap_or(std::cmp::Ordering::Equal)
+	});
 
 	if addrs.len() < 2 {
 		return results;
@@ -60,7 +64,11 @@ pub fn exchange_flow_momentum(
 		.iter()
 		.filter(|d| d.metric == "exchangeNetflow")
 		.collect();
-	flows.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	flows.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.unwrap_or(std::cmp::Ordering::Equal)
+	});
 
 	if flows.len() < 2 {
 		return results;
@@ -80,9 +88,9 @@ pub fn exchange_flow_momentum(
 		match prev_idx {
 			Some(j) if flows[j].value != 0.0 => {
 				let momentum = (cur.value - flows[j].value) / flows[j].value.abs();
-		results.push(FactorPoint {
-			symbol: String::new(),
-			date: cur.time,
+				results.push(FactorPoint {
+					symbol: String::new(),
+					date: cur.time,
 					value: momentum,
 				});
 			}
@@ -194,7 +202,7 @@ mod tests {
 	}
 
 	fn assert_approx_eq(a: f64, b: f64, epsilon: f64) {
-		assert!((a - b).abs() < epsilon, "expected {} ≈ {}", a, b);
+		assert!((a - b).abs() < epsilon, "expected {a} ≈ {b}");
 	}
 
 	#[test]

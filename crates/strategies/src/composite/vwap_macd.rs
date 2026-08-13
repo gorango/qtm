@@ -1,8 +1,7 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::VwapMacdConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "vwap-macd-momentum",
@@ -10,7 +9,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "VWAP + MACD momentum",
-    opt_params = r#"[{"param_name": "macd_fast_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "macd_slow_period", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "macd_signal_period", "min": 5.0, "max": 20.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "macdFastPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "macdSlowPeriod", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "macdSignalPeriod", "min": 5.0, "max": 20.0, "step": 1.0}]"#
 )]
 pub fn vwap_macd_strategy(
 	highs: &[f64],
@@ -34,8 +33,7 @@ pub fn vwap_macd_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: VWAP MACD requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: VWAP MACD requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

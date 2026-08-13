@@ -13,7 +13,7 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals on bullish divergence (price lower low, OBV higher low) and sell signals on bearish divergence (price higher high, OBV lower high)",
 	opt_params = r#"[
-		{"param_name": "lookback_period", "min": 10.0, "max": 50.0, "step": 1.0}
+		{"param_name": "lookbackPeriod", "min": 10.0, "max": 50.0, "step": 1.0}
 	]"#
 )]
 pub fn obv_strategy(
@@ -61,36 +61,36 @@ pub fn obv_strategy(
 
 			let current_price_min = *current_prices
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.min_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::INFINITY);
 			let previous_price_min = *previous_prices
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.min_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::INFINITY);
 			let current_obv_min = *current_obvs
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.min_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::INFINITY);
 			let previous_obv_min = *previous_obvs
 				.iter()
-				.min_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.min_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::INFINITY);
 
 			let current_price_max = *current_prices
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.max_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let previous_price_max = *previous_prices
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.max_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let current_obv_max = *current_obvs
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.max_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::NEG_INFINITY);
 			let previous_obv_max = *previous_obvs
 				.iter()
-				.max_by(|a, b| a.partial_cmp(b).expect("f64 values should be comparable"))
+				.max_by(|a, b| a.total_cmp(b))
 				.unwrap_or(&f64::NEG_INFINITY);
 
 			let bullish_divergence =

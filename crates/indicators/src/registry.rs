@@ -36,13 +36,13 @@ pub fn get_indicator(id: &str) -> Option<&'static IndicatorDescriptor> {
 // ── momentum ─────────────────────────────────────
 
 inventory::submit! {
-	IndicatorDescriptor { id: "awesome_oscillator", name: "Awesome Oscillator", category: "momentum", description: "Measures market momentum by comparing SMA of median price over two periods", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":5},\"slow_period\":{\"type\":\"integer\",\"default\":34}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "awesome_oscillator", name: "Awesome Oscillator", category: "momentum", description: "Measures market momentum by comparing SMA of median price over two periods", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":5},\"slowPeriod\":{\"type\":\"integer\",\"default\":34}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "chaikin_oscillator", name: "Chaikin Oscillator", category: "momentum", description: "Measures accumulation/distribution momentum as EMA difference of ADL", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":3},\"slow_period\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "chaikin_oscillator", name: "Chaikin Oscillator", category: "momentum", description: "Measures accumulation/distribution momentum as EMA difference of ADL", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":3},\"slowPeriod\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "cmo", name: "Chaikin Oscillator", category: "momentum", description: "Alias for Chaikin Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":3},\"slow_period\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "cmo", name: "Chaikin Oscillator", category: "momentum", description: "Alias for Chaikin Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":3},\"slowPeriod\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "ichimoku_cloud", name: "Ichimoku Cloud", category: "momentum", description: "Comprehensive indicator showing support, resistance, and momentum", params_schema: "{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}", output_type: "indicator" }
@@ -51,25 +51,25 @@ inventory::submit! {
 	IndicatorDescriptor { id: "ichimoku", name: "Ichimoku", category: "momentum", description: "Alias for Ichimoku Cloud", params_schema: "{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "kst", name: "Know Sure Thing", category: "momentum", description: "KST oscillator based on four rate-of-change periods", params_schema: "{\"type\":\"object\",\"properties\":{\"roc1_period\":{\"type\":\"integer\",\"default\":10},\"roc2_period\":{\"type\":\"integer\",\"default\":15},\"roc3_period\":{\"type\":\"integer\",\"default\":20},\"roc4_period\":{\"type\":\"integer\",\"default\":30},\"sma1_period\":{\"type\":\"integer\",\"default\":10},\"sma2_period\":{\"type\":\"integer\",\"default\":10},\"sma3_period\":{\"type\":\"integer\",\"default\":10},\"sma4_period\":{\"type\":\"integer\",\"default\":15},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "kst", name: "Know Sure Thing", category: "momentum", description: "KST oscillator based on four rate-of-change periods", params_schema: "{\"type\":\"object\",\"properties\":{\"roc1Period\":{\"type\":\"integer\",\"default\":10},\"roc2Period\":{\"type\":\"integer\",\"default\":15},\"roc3Period\":{\"type\":\"integer\",\"default\":20},\"roc4Period\":{\"type\":\"integer\",\"default\":30},\"sma1Period\":{\"type\":\"integer\",\"default\":10},\"sma2Period\":{\"type\":\"integer\",\"default\":10},\"sma3Period\":{\"type\":\"integer\",\"default\":10},\"sma4Period\":{\"type\":\"integer\",\"default\":15},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "larsson", name: "Larsson", category: "momentum", description: "Larsson signal indicator using SMMA crossovers", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "macd", name: "MACD", category: "momentum", description: "Moving Average Convergence Divergence", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "macd", name: "MACD", category: "momentum", description: "Moving Average Convergence Divergence", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "momentum_index", name: "Momentum Index", category: "momentum", description: "Simple price momentum over a lookback period", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "percentage_price_oscillator", name: "Percentage Price Oscillator", category: "momentum", description: "Percentage-based MACD variant", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "percentage_price_oscillator", name: "Percentage Price Oscillator", category: "momentum", description: "Percentage-based MACD variant", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "percentage_volume_oscillator", name: "Percentage Volume Oscillator", category: "momentum", description: "Percentage-based MACD applied to volume", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "percentage_volume_oscillator", name: "Percentage Volume Oscillator", category: "momentum", description: "Percentage-based MACD applied to volume", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "pvo", name: "Percentage Volume Oscillator", category: "momentum", description: "Alias for Percentage Volume Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":12},\"slow_period\":{\"type\":\"integer\",\"default\":26},\"signal_period\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "pvo", name: "Percentage Volume Oscillator", category: "momentum", description: "Alias for Percentage Volume Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "price_rate_of_change", name: "Price Rate of Change", category: "momentum", description: "Percentage price change over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
@@ -81,7 +81,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "rsi", name: "RSI", category: "momentum", description: "Relative Strength Index", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "stochastic_oscillator", name: "Stochastic Oscillator", category: "momentum", description: "Compares close to the high-low range over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"k_period\":{\"type\":\"integer\",\"default\":14},\"d_period\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "stochastic_oscillator", name: "Stochastic Oscillator", category: "momentum", description: "Compares close to the high-low range over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"kPeriod\":{\"type\":\"integer\",\"default\":14},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "ultimate_oscillator", name: "Ultimate Oscillator", category: "momentum", description: "Multi-timeframe momentum oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"period1\":{\"type\":\"integer\",\"default\":7},\"period2\":{\"type\":\"integer\",\"default\":14},\"period3\":{\"type\":\"integer\",\"default\":28}}}", output_type: "indicator" }
@@ -96,7 +96,7 @@ inventory::submit! {
 // ── trend ─────────────────────────────────────────
 
 inventory::submit! {
-	IndicatorDescriptor { id: "absolute_price_oscillator", name: "Absolute Price Oscillator", category: "trend", description: "Absolute difference between fast and slow EMA", params_schema: "{\"type\":\"object\",\"properties\":{\"fast_period\":{\"type\":\"integer\",\"default\":14},\"slow_period\":{\"type\":\"integer\",\"default\":30}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "absolute_price_oscillator", name: "Absolute Price Oscillator", category: "trend", description: "Absolute difference between fast and slow EMA", params_schema: "{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":14},\"slowPeriod\":{\"type\":\"integer\",\"default\":30}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "adx", name: "ADX", category: "trend", description: "Average Directional Index for trend strength", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
@@ -120,7 +120,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "moving_chande_forecast_oscillator", name: "Moving Chande Forecast Oscillator", category: "trend", description: "Moving variant of the Chande Forecast Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "classify_market_trend", name: "Classify Market Trend", category: "trend", description: "Classifies market as trending, ranging, or volatile", params_schema: "{\"type\":\"object\",\"properties\":{\"trailing_period_length\":{\"type\":\"integer\",\"description\":\"Trailing period length\",\"default\":0}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "classify_market_trend", name: "Classify Market Trend", category: "trend", description: "Classifies market as trending, ranging, or volatile", params_schema: "{\"type\":\"object\",\"properties\":{\"trailingPeriodLength\":{\"type\":\"integer\",\"description\":\"Trailing period length\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "dema", name: "DEMA", category: "trend", description: "Double Exponential Moving Average", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}", output_type: "indicator" }
@@ -141,7 +141,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "linreg", name: "Linear Regression", category: "trend", description: "Linear regression line over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"offset\":{\"type\":\"integer\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "mass_index", name: "Mass Index", category: "trend", description: "Mass Index for trend reversal detection", params_schema: "{\"type\":\"object\",\"properties\":{\"ema_period\":{\"type\":\"integer\",\"default\":9},\"mi_period\":{\"type\":\"integer\",\"default\":25}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "mass_index", name: "Mass Index", category: "trend", description: "Mass Index for trend reversal detection", params_schema: "{\"type\":\"object\",\"properties\":{\"emaPeriod\":{\"type\":\"integer\",\"default\":9},\"miPeriod\":{\"type\":\"integer\",\"default\":25}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "moving_max", name: "Moving Max", category: "trend", description: "Rolling maximum over a window", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}", output_type: "indicator" }
@@ -159,7 +159,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "pivot_points", name: "Pivot Points", category: "trend", description: "Standard pivot point levels", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "random_index", name: "Random Index", category: "trend", description: "Random walk index for mean reversion", params_schema: "{\"type\":\"object\",\"properties\":{\"r_period\":{\"type\":\"integer\",\"default\":9},\"k_period\":{\"type\":\"integer\",\"default\":3},\"d_period\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "random_index", name: "Random Index", category: "trend", description: "Random walk index for mean reversion", params_schema: "{\"type\":\"object\",\"properties\":{\"rPeriod\":{\"type\":\"integer\",\"default\":9},\"kPeriod\":{\"type\":\"integer\",\"default\":3},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "rma", name: "RMA", category: "trend", description: "Rolling Moving Average", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}", output_type: "indicator" }
@@ -210,7 +210,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "acceleration_bands", name: "Acceleration Bands", category: "volatility", description: "Volatility bands based on price acceleration", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "annualized_volatility", name: "Annualized Volatility", category: "volatility", description: "Annualized standard deviation of returns", params_schema: "{\"type\":\"object\",\"properties\":{\"trading_days\":{\"type\":\"integer\",\"description\":\"Trading days per year\",\"default\":252}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "annualized_volatility", name: "Annualized Volatility", category: "volatility", description: "Annualized standard deviation of returns", params_schema: "{\"type\":\"object\",\"properties\":{\"tradingDays\":{\"type\":\"integer\",\"description\":\"Trading days per year\",\"default\":252}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "atr", name: "ATR", category: "volatility", description: "Alias for Average True Range", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"RMA lookback period\",\"default\":14}}}", output_type: "indicator" }
@@ -219,10 +219,10 @@ inventory::submit! {
 	IndicatorDescriptor { id: "average_true_range", name: "Average True Range", category: "volatility", description: "Average True Range", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"RMA lookback period\",\"default\":14}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "bb", name: "Bollinger Bands", category: "volatility", description: "Bollinger Bands", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"std_dev\":{\"type\":\"number\",\"default\":2}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "bb", name: "Bollinger Bands", category: "volatility", description: "Bollinger Bands", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"stdDev\":{\"type\":\"number\",\"default\":2}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "bollinger_bands", name: "Bollinger Bands", category: "volatility", description: "Bollinger Bands", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"std_dev\":{\"type\":\"number\",\"default\":2}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "bollinger_bands", name: "Bollinger Bands", category: "volatility", description: "Bollinger Bands", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"stdDev\":{\"type\":\"number\",\"default\":2}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "bbw", name: "Bollinger Bands Width", category: "volatility", description: "Alias for Bollinger Bands Width", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}", output_type: "indicator" }
@@ -279,7 +279,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "true_range", name: "True Range", category: "volatility", description: "True Range", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "ttm_squeeze", name: "TTM Squeeze", category: "volatility", description: "Detects Bollinger/Keltner squeeze setups", params_schema: "{\"type\":\"object\",\"properties\":{\"bb_period\":{\"type\":\"integer\",\"default\":20},\"bb_std_dev\":{\"type\":\"number\",\"default\":2},\"kc_period\":{\"type\":\"integer\",\"default\":20}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "ttm_squeeze", name: "TTM Squeeze", category: "volatility", description: "Detects Bollinger/Keltner squeeze setups", params_schema: "{\"type\":\"object\",\"properties\":{\"bbPeriod\":{\"type\":\"integer\",\"default\":20},\"bbStdDev\":{\"type\":\"number\",\"default\":2},\"kcPeriod\":{\"type\":\"integer\",\"default\":20}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "ui", name: "Ulcer Index", category: "volatility", description: "Alias for Ulcer Index", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
@@ -306,7 +306,7 @@ inventory::submit! {
 	IndicatorDescriptor { id: "ad", name: "Accumulation Distribution", category: "volume", description: "Alias for Accumulation Distribution", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "anchored_vwap", name: "Anchored VWAP", category: "volume", description: "VWAP from a specified start point", params_schema: "{\"type\":\"object\",\"properties\":{\"anchor_index\":{\"type\":\"integer\",\"description\":\"Index from which to start VWAP calculation\",\"default\":0}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "anchored_vwap", name: "Anchored VWAP", category: "volume", description: "VWAP from a specified start point", params_schema: "{\"type\":\"object\",\"properties\":{\"anchorIndex\":{\"type\":\"integer\",\"description\":\"Index from which to start VWAP calculation\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "chaikin_money_flow", name: "Chaikin Money Flow", category: "volume", description: "Money flow volume over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":20}}}", output_type: "indicator" }
@@ -327,10 +327,10 @@ inventory::submit! {
 	IndicatorDescriptor { id: "fi", name: "Force Index", category: "volume", description: "Alias for Force Index", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "mfi", name: "Money Flow Index", category: "volume", description: "Alias for Money Flow Index", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "mfi", name: "Money Flow Index", category: "volume", description: "Alias for Money Flow Index", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"priceSource\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "money_flow_index", name: "Money Flow Index", category: "volume", description: "Volume-weighted RSI variant", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "money_flow_index", name: "Money Flow Index", category: "volume", description: "Volume-weighted RSI variant", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":14},\"priceSource\":{\"type\":\"number\",\"description\":\"Price source\",\"default\":\"typical\"}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "negative_volume_index", name: "Negative Volume Index", category: "volume", description: "Tracks price changes on lower volume days", params_schema: "{\"type\":\"object\",\"properties\":{\"start\":{\"type\":\"number\",\"description\":\"Starting value for the NVI\",\"default\":1000}}}", output_type: "indicator" }
@@ -360,10 +360,10 @@ inventory::submit! {
 	IndicatorDescriptor { id: "vs", name: "Volume Surge", category: "volume", description: "Alias for Volume Surge", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA period for volume baseline\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"description\":\"Threshold multiplier\",\"default\":2}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "vwap", name: "VWAP", category: "volume", description: "Volume-Weighted Average Price", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"session_length\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "vwap", name: "VWAP", category: "volume", description: "Volume-Weighted Average Price", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"priceSource\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"sessionLength\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "volume_weighted_average_price", name: "Volume Weighted Average Price", category: "volume", description: "VWAP", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"price_source\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"session_length\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "volume_weighted_average_price", name: "Volume Weighted Average Price", category: "volume", description: "VWAP", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"priceSource\":{\"type\":\"number\",\"description\":\"Price source: close or hlc3\",\"default\":\"close\"},\"anchored\":{\"type\":\"boolean\",\"description\":\"Anchored VWAP calculation\",\"default\":false},\"sessionLength\":{\"type\":\"integer\",\"description\":\"Session length for anchored mode\",\"default\":0}}}", output_type: "indicator" }
 }
 
 // ── patterns ──────────────────────────────────────
@@ -375,16 +375,16 @@ inventory::submit! {
 	IndicatorDescriptor { id: "bearish_engulfing", name: "Bearish Engulfing", category: "patterns", description: "Bearish engulfing candlestick pattern", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "cup_and_handle", name: "Cup and Handle", category: "patterns", description: "Cup and handle pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"cup_depth\":{\"type\":\"number\",\"default\":0.15},\"handle_retracement\":{\"type\":\"number\",\"default\":0.3},\"min_duration\":{\"type\":\"integer\",\"default\":20}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "cup_and_handle", name: "Cup and Handle", category: "patterns", description: "Cup and handle pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"cupDepth\":{\"type\":\"number\",\"default\":0.15},\"handleRetracement\":{\"type\":\"number\",\"default\":0.3},\"minDuration\":{\"type\":\"integer\",\"default\":20}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "double_bottom", name: "Double Bottom", category: "patterns", description: "Double bottom reversal pattern", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"min_separation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "double_bottom", name: "Double Bottom", category: "patterns", description: "Double bottom reversal pattern", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "double_top", name: "Double Top", category: "patterns", description: "Double top reversal pattern", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"min_separation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "double_top", name: "Double Top", category: "patterns", description: "Double top reversal pattern", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "elliott_wave", name: "Elliott Wave", category: "patterns", description: "Elliott Wave pattern detection", params_schema: "{\"type\":\"object\",\"properties\":{\"wave2_retracement\":{\"type\":\"number\",\"default\":0.618},\"wave4_retracement\":{\"type\":\"number\",\"default\":0.382},\"wave3_min_extension\":{\"type\":\"number\",\"default\":1.618},\"min_wave_separation\":{\"type\":\"integer\",\"default\":5},\"lookaround\":{\"type\":\"integer\",\"default\":2},\"retracement_tolerance\":{\"type\":\"number\",\"default\":0.1}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "elliott_wave", name: "Elliott Wave", category: "patterns", description: "Elliott Wave pattern detection", params_schema: "{\"type\":\"object\",\"properties\":{\"wave2Retracement\":{\"type\":\"number\",\"default\":0.618},\"wave4Retracement\":{\"type\":\"number\",\"default\":0.382},\"wave3MinExtension\":{\"type\":\"number\",\"default\":1.618},\"minWaveSeparation\":{\"type\":\"integer\",\"default\":5},\"lookaround\":{\"type\":\"integer\",\"default\":2},\"retracementTolerance\":{\"type\":\"number\",\"default\":0.1}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "find_peaks", name: "Find Peaks", category: "patterns", description: "Locates local maxima in price data", params_schema: "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"description\":\"Bars on each side to confirm peak\",\"default\":2}}}", output_type: "indicator" }
@@ -396,19 +396,19 @@ inventory::submit! {
 	IndicatorDescriptor { id: "linear_regression", name: "Linear Regression", category: "patterns", description: "Linear regression slope and intercept", params_schema: "", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "flags_pennants", name: "Flags and Pennants", category: "patterns", description: "Flag and pennant pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"pole_length\":{\"type\":\"integer\",\"default\":10},\"consolidation_bars\":{\"type\":\"integer\",\"default\":10},\"breakout_threshold\":{\"type\":\"number\",\"default\":0.02}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "flags_pennants", name: "Flags and Pennants", category: "patterns", description: "Flag and pennant pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"poleLength\":{\"type\":\"integer\",\"default\":10},\"consolidationBars\":{\"type\":\"integer\",\"default\":10},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0.02}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "head_and_shoulders", name: "Head and Shoulders", category: "patterns", description: "Head and shoulders pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"min_distance\":{\"type\":\"integer\",\"default\":5},\"tolerance\":{\"type\":\"number\",\"default\":0.02},\"deviation\":{\"type\":\"number\",\"default\":0}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "head_and_shoulders", name: "Head and Shoulders", category: "patterns", description: "Head and shoulders pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"minDistance\":{\"type\":\"integer\",\"default\":5},\"tolerance\":{\"type\":\"number\",\"default\":0.02},\"deviation\":{\"type\":\"number\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "stars", name: "Stars", category: "patterns", description: "Morning star and evening star patterns", params_schema: "{\"type\":\"object\",\"properties\":{\"body_ratio_threshold\":{\"type\":\"number\",\"default\":0.3},\"gap_threshold\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "stars", name: "Stars", category: "patterns", description: "Morning star and evening star patterns", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatioThreshold\":{\"type\":\"number\",\"default\":0.3},\"gapThreshold\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "triangles", name: "Triangles", category: "patterns", description: "Triangle pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"min_points\":{\"type\":\"integer\",\"default\":4},\"tolerance\":{\"type\":\"number\",\"default\":0.01},\"convergence_tolerance\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "triangles", name: "Triangles", category: "patterns", description: "Triangle pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":4},\"tolerance\":{\"type\":\"number\",\"default\":0.01},\"convergenceTolerance\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
 }
 inventory::submit! {
-	IndicatorDescriptor { id: "wedges", name: "Wedges", category: "patterns", description: "Wedge pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"min_points\":{\"type\":\"integer\",\"default\":4},\"slope_tolerance\":{\"type\":\"number\",\"default\":0.0001}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "wedges", name: "Wedges", category: "patterns", description: "Wedge pattern recognition", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":4},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0001}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "zig_zag_filter", name: "Zig Zag Filter", category: "patterns", description: "Filters out noise by percentage deviation", params_schema: "{\"type\":\"object\",\"properties\":{\"deviation\":{\"type\":\"number\",\"description\":\"Minimum deviation to register a pivot\",\"default\":0.01}}}", output_type: "indicator" }
@@ -426,7 +426,7 @@ inventory::submit! {
 // ── shared ────────────────────────────────────────
 
 inventory::submit! {
-	IndicatorDescriptor { id: "cointegration", name: "Cointegration", category: "shared", description: "Cointegration test between two series", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"beta_period\":{\"type\":\"integer\",\"default\":60}}}", output_type: "indicator" }
+	IndicatorDescriptor { id: "cointegration", name: "Cointegration", category: "shared", description: "Cointegration test between two series", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"betaPeriod\":{\"type\":\"integer\",\"default\":60}}}", output_type: "indicator" }
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "correlation", name: "Correlation", category: "shared", description: "Correlation coefficient between two series", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Rolling window for correlation\",\"default\":14}}}", output_type: "indicator" }

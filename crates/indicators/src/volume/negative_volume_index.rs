@@ -1,7 +1,9 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 
 pub fn negative_volume_index(closings: &[f64], volumes: &[f64], start: Option<f64>) -> Vec<f64> {
-	validate_arrays_equal_length(&[closings, volumes]).unwrap();
+	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = closings.len();
 	let mut result = vec![f64::NAN; len];

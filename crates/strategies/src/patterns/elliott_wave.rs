@@ -13,12 +13,12 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["1h", "4h", "1d"],
 	description = "Generates buy signals for impulse waves and sell signals for corrective waves",
 	opt_params = r#"[
-		{"param_name": "wave2_retracement", "min": 0.3, "max": 1.0, "step": 0.05},
-		{"param_name": "wave4_retracement", "min": 0.2, "max": 0.8, "step": 0.05},
-		{"param_name": "wave3_min_extension", "min": 1.0, "max": 3.0, "step": 0.1},
-		{"param_name": "min_wave_separation", "min": 2.0, "max": 20.0, "step": 1.0},
+		{"param_name": "wave2Retracement", "min": 0.3, "max": 1.0, "step": 0.05},
+		{"param_name": "wave4Retracement", "min": 0.2, "max": 0.8, "step": 0.05},
+		{"param_name": "wave3MinExtension", "min": 1.0, "max": 3.0, "step": 0.1},
+		{"param_name": "minWaveSeparation", "min": 2.0, "max": 20.0, "step": 1.0},
 		{"param_name": "lookaround", "min": 1.0, "max": 5.0, "step": 1.0},
-		{"param_name": "retracement_tolerance", "min": 0.05, "max": 0.3, "step": 0.025}
+		{"param_name": "retracementTolerance", "min": 0.05, "max": 0.3, "step": 0.025}
 	]"#
 )]
 pub fn elliott_wave_strategy(

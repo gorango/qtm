@@ -14,10 +14,10 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when SMA crosses above VWAP and sell signals when SMA crosses below VWAP",
 	opt_params = r#"[
-		{"param_name": "sma_period", "min": 2.0, "max": 10.0, "step": 1.0},
-		{"param_name": "vwap_period", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "smaPeriod", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "vwapPeriod", "min": 5.0, "max": 50.0, "step": 1.0},
 		{"param_name": "anchored", "min": 0.0, "max": 1.0, "step": 1.0},
-		{"param_name": "session_length", "min": 60.0, "max": 1440.0, "step": 60.0}
+		{"param_name": "sessionLength", "min": 60.0, "max": 1440.0, "step": 60.0}
 	]"#
 )]
 pub fn sma_vwap_crossover_strategy(

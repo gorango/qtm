@@ -3,18 +3,18 @@ use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
 use factors_core::{
-    roe_value, roa_value, gross_margin_value, net_margin_value, operating_profit_margin_value,
-    ebitda_margin_value, working_capital_value, working_capital_turnover_value,
-    debt_to_equity_value, rnd_to_revenue_value, net_debt_to_ebitda_value,
-    fcf_margin_value, fcf_per_share_value, interest_coverage_value, pe_ratio_value,
-    current_ratio_value, roic_value,
-    FactorPoint, FundamentalPoint,
+	current_ratio_value, debt_to_equity_value, ebitda_margin_value, fcf_margin_value,
+	fcf_per_share_value, gross_margin_value, interest_coverage_value, net_debt_to_ebitda_value,
+	net_margin_value, operating_profit_margin_value, pe_ratio_value, rnd_to_revenue_value,
+	roa_value, roe_value, roic_value, working_capital_turnover_value, working_capital_value,
+	FactorPoint, FundamentalPoint,
 };
 
 // ── Configs ──────────────────────────────────────────────
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QualityConfig {
 	pub roe_threshold: Option<f64>,
 	pub periods: Option<u32>,
@@ -30,6 +30,7 @@ impl Default for QualityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DupontRoeConfig {
 	pub min_roe: Option<f64>,
 	pub min_net_margin: Option<f64>,
@@ -51,6 +52,7 @@ impl Default for DupontRoeConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QualityChecklistConfig {
 	pub min_criteria_met: Option<u32>,
 }
@@ -64,6 +66,7 @@ impl Default for QualityChecklistConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ReturnOnCapitalConfig {
 	pub roe_threshold: Option<f64>,
 	pub roa_threshold: Option<f64>,
@@ -83,6 +86,7 @@ impl Default for ReturnOnCapitalConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MarginChecklistConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_threshold: Option<f64>,
@@ -100,6 +104,7 @@ impl Default for MarginChecklistConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EarningsQualityConfig {
 	pub min_criteria_met: Option<u32>,
 	pub sloan_max_ratio: Option<f64>,
@@ -117,6 +122,7 @@ impl Default for EarningsQualityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CapexDisciplineConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_capex_to_revenue: Option<f64>,
@@ -134,6 +140,7 @@ impl Default for CapexDisciplineConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EbitdaMarginConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_threshold: Option<f64>,
@@ -151,6 +158,7 @@ impl Default for EbitdaMarginConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GrossProfitConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_threshold: Option<f64>,
@@ -170,6 +178,7 @@ impl Default for GrossProfitConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OcfAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ocf_margin_threshold: Option<f64>,
@@ -187,6 +196,7 @@ impl Default for OcfAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OperatingLeverageConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_operating_leverage: Option<f64>,
@@ -204,6 +214,7 @@ impl Default for OperatingLeverageConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CccCheckConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_cash_conversion_cycle: Option<f64>,
@@ -221,6 +232,7 @@ impl Default for CccCheckConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CccAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ccc_threshold: Option<f64>,
@@ -238,6 +250,7 @@ impl Default for CccAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MarginExpansionConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_expansion_threshold: Option<f64>,
@@ -255,6 +268,7 @@ impl Default for MarginExpansionConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EbitdaGrowthVsCompetitionConfig {
 	pub min_criteria_met: Option<u32>,
 	pub growth_premium: Option<f64>,
@@ -272,6 +286,7 @@ impl Default for EbitdaGrowthVsCompetitionConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EpsVsFcfDivergenceConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_divergence: Option<f64>,
@@ -289,6 +304,7 @@ impl Default for EpsVsFcfDivergenceConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ExpenseSurpriseConfig {
 	pub min_criteria_met: Option<u32>,
 	pub expense_beat_threshold: Option<f64>,
@@ -306,6 +322,7 @@ impl Default for ExpenseSurpriseConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenueAssetsEfficiencyConfig {
 	pub min_criteria_met: Option<u32>,
 	pub revenue_to_assets_threshold: Option<f64>,
@@ -323,6 +340,7 @@ impl Default for RevenueAssetsEfficiencyConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenueDiversificationConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_revenue_concentration: Option<f64>,
@@ -340,6 +358,7 @@ impl Default for RevenueDiversificationConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RevenuePerEmployeeConfig {
 	pub min_criteria_met: Option<u32>,
 	pub revenue_per_employee_threshold: Option<f64>,
@@ -357,6 +376,7 @@ impl Default for RevenuePerEmployeeConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RndIntensityConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_rnd_intensity: Option<f64>,
@@ -374,6 +394,7 @@ impl Default for RndIntensityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RoicDurabilityConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_roic_threshold: Option<f64>,
@@ -393,6 +414,7 @@ impl Default for RoicDurabilityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkingCapitalEfficiencyConfig {
 	pub min_criteria_met: Option<u32>,
 	pub current_ratio_threshold: Option<f64>,
@@ -442,7 +464,9 @@ pub fn dupont_roe_strategy(
 				roe_value(&p.data).map(|v| v > m_roe).unwrap_or(false),
 				net_margin_value(&p.data).map(|v| v > m_nm).unwrap_or(false),
 				d.asset_turnover.map(|v| v > m_at).unwrap_or(false),
-				debt_to_equity_value(&p.data).map(|v| 1.0 + v < m_em).unwrap_or(false),
+				debt_to_equity_value(&p.data)
+					.map(|v| 1.0 + v < m_em)
+					.unwrap_or(false),
 			]
 			.iter()
 			.filter(|&&x| x)
@@ -468,11 +492,17 @@ pub fn charlie_munger_strategy(
 			let d = &p.data;
 			let checks: [bool; 8] = [
 				roic_value(&p.data).map(|v| v > 0.20).unwrap_or(false),
-				operating_profit_margin_value(&p.data).map(|v| v > 0.15).unwrap_or(false),
+				operating_profit_margin_value(&p.data)
+					.map(|v| v > 0.15)
+					.unwrap_or(false),
 				fcf_margin_value(&p.data).map(|v| v > 0.10).unwrap_or(false),
 				d.revenue.unwrap_or(0.0) > 0.0,
-				net_debt_to_ebitda_value(&p.data).map(|v| v < 3.0).unwrap_or(false),
-				interest_coverage_value(&p.data).map(|v| v > 10.0).unwrap_or(false),
+				net_debt_to_ebitda_value(&p.data)
+					.map(|v| v < 3.0)
+					.unwrap_or(false),
+				interest_coverage_value(&p.data)
+					.map(|v| v > 10.0)
+					.unwrap_or(false),
 				d.asset_turnover.map(|v| v > 0.7).unwrap_or(false),
 				pe_ratio_value(&p.data).map(|v| v < 25.0).unwrap_or(false),
 			];
@@ -497,13 +527,23 @@ pub fn philip_fisher_strategy(
 			let d = &p.data;
 			let checks: [bool; 8] = [
 				d.revenue.unwrap_or(0.0) > 0.0,
-				rnd_to_revenue_value(&p.data).map(|v| v > 0.03).unwrap_or(false),
-				operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
-				gross_margin_value(&p.data).map(|v| v > 0.30).unwrap_or(false),
+				rnd_to_revenue_value(&p.data)
+					.map(|v| v > 0.03)
+					.unwrap_or(false),
+				operating_profit_margin_value(&p.data)
+					.map(|v| v > 0.0)
+					.unwrap_or(false),
+				gross_margin_value(&p.data)
+					.map(|v| v > 0.30)
+					.unwrap_or(false),
 				d.asset_turnover.map(|v| v > 0.5).unwrap_or(false),
-				working_capital_turnover_value(&p.data).map(|v| v > 4.0).unwrap_or(false),
+				working_capital_turnover_value(&p.data)
+					.map(|v| v > 4.0)
+					.unwrap_or(false),
 				roa_value(&p.data).map(|v| v > 0.08).unwrap_or(false),
-				fcf_per_share_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
+				fcf_per_share_value(&p.data)
+					.map(|v| v > 0.0)
+					.unwrap_or(false),
 			];
 			if checks.iter().filter(|&&x| x).count() >= min_met {
 				1
@@ -559,7 +599,10 @@ pub fn operating_margin_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if operating_profit_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data)
+				.map(|v| v > thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if d.revenue.unwrap_or(0.0) > 0.0 {
@@ -672,7 +715,10 @@ pub fn ebitda_margin_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if ebitda_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
+			if ebitda_margin_value(&p.data)
+				.map(|v| v > thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if d.ebitda.unwrap_or(0.0) > 0.0 {
@@ -708,7 +754,10 @@ pub fn gross_profit_analysis_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if gross_margin_value(&p.data).map(|v| v > thr).unwrap_or(false) {
+			if gross_margin_value(&p.data)
+				.map(|v| v > thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if d.gross_profit.unwrap_or(0.0) > 0.0 {
@@ -930,10 +979,16 @@ pub fn ebitda_growth_vs_competition_strategy(
 			if d.ebitda.unwrap_or(0.0) > 0.0 {
 				met += 1;
 			}
-			if ebitda_margin_value(&p.data).map(|v| v > prem).unwrap_or(false) {
+			if ebitda_margin_value(&p.data)
+				.map(|v| v > prem)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
-			if operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data)
+				.map(|v| v > 0.0)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if met >= min_met {
@@ -964,7 +1019,10 @@ pub fn eps_vs_fcf_divergence_strategy(
 					met += 1;
 				}
 			}
-			if fcf_per_share_value(&p.data).map(|v| v > fcf_thr).unwrap_or(false) {
+			if fcf_per_share_value(&p.data)
+				.map(|v| v > fcf_thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if let (Some(eps_v), Some(fcf_v)) = (d.eps, fcf_per_share_value(&p.data)) {
@@ -994,10 +1052,16 @@ pub fn expense_surprise_detector_strategy(
 		.map(|p| {
 			let d = &p.data;
 			let mut met = 0usize;
-			if operating_profit_margin_value(&p.data).map(|v| v > margin_exp).unwrap_or(false) {
+			if operating_profit_margin_value(&p.data)
+				.map(|v| v > margin_exp)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
-			if net_margin_value(&p.data).map(|v| v > margin_exp).unwrap_or(false) {
+			if net_margin_value(&p.data)
+				.map(|v| v > margin_exp)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if d.operating_cash_flow.map(|v| v > 0.0).unwrap_or(false) {
@@ -1192,13 +1256,22 @@ pub fn working_capital_efficiency_strategy(
 		.iter()
 		.map(|p| {
 			let mut met = 0usize;
-			if current_ratio_value(&p.data).map(|v| v > cr_thr).unwrap_or(false) {
+			if current_ratio_value(&p.data)
+				.map(|v| v > cr_thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
-			if working_capital_value(&p.data).map(|v| v > wc_thr).unwrap_or(false) {
+			if working_capital_value(&p.data)
+				.map(|v| v > wc_thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
-			if working_capital_turnover_value(&p.data).map(|v| v > to_thr).unwrap_or(false) {
+			if working_capital_turnover_value(&p.data)
+				.map(|v| v > to_thr)
+				.unwrap_or(false)
+			{
 				met += 1;
 			}
 			if met >= min_met {
@@ -1216,143 +1289,202 @@ pub fn quality_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"quality-investing","name":"Quality Investing Fundamental","category":"fundamental","default_timeframes":["1d","1w"],"description":"Quality investing strategy focusing on high ROE"})
 }
 pub fn quality_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"roe_threshold":0.15,"periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"roeThreshold":0.15,"periods":4},"optimization_bounds":[]})
 }
 pub fn dupont_roe_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"dupont-roe-analysis","name":"DuPont ROE Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"ROE breakdown: profitability, efficiency, leverage"})
 }
 pub fn dupont_roe_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_roe":0.15,"min_net_margin":0.05,"min_asset_turnover":0.7,"max_equity_multiplier":3,"min_criteria_met":3},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minRoe":0.15,"minNetMargin":0.05,"minAssetTurnover":0.7,"maxEquityMultiplier":3,"minCriteriaMet":3},"optimization_bounds":[]})
 }
 pub fn charlie_munger_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"charlie-munger-quality","name":"Charlie Munger Quality at Fair Price","category":"fundamental","default_timeframes":["1d","1w"],"description":"8-criteria checklist"})
 }
 pub fn charlie_munger_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":7},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":7},"optimization_bounds":[]})
 }
 pub fn philip_fisher_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"philip-fisher-growth","name":"Philip Fisher Growth","category":"fundamental","default_timeframes":["1d","1w"],"description":"8-criteria growth checklist"})
 }
 pub fn philip_fisher_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":7},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":7},"optimization_bounds":[]})
 }
 pub fn return_on_capital_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"return-on-capital-metrics","name":"Return on Capital Metrics","category":"fundamental","default_timeframes":["1d","1w"],"description":"ROE, ROA, ROIC threshold"})
 }
 pub fn return_on_capital_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"roe_threshold":0.15,"roa_threshold":0.05,"roic_threshold":0.1,"min_criteria_met":2},"optimization_bounds":[]})
+	serde_json::json!({"params":{"roeThreshold":0.15,"roaThreshold":0.05,"roicThreshold":0.1,"minCriteriaMet":2},"optimization_bounds":[]})
 }
 pub fn operating_margin_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"operating-margin-analysis","name":"Operating Margin Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"Operating margin quality and trend"})
 }
 pub fn operating_margin_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":3,"margin_threshold":0.15,"increasing_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":3,"marginThreshold":0.15,"increasingPeriods":4},"optimization_bounds":[]})
 }
 pub fn earnings_quality_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"earnings-quality-analysis","name":"Earnings Quality Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"Sloan Ratio, Cash Flow Coverage, Earnings Persistence"})
 }
 pub fn earnings_quality_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"sloan_max_ratio":0.1,"cash_flow_coverage":1.2},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"sloanMaxRatio":0.1,"cashFlowCoverage":1.2},"optimization_bounds":[]})
 }
 pub fn capex_discipline_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"capex-discipline","name":"CapEx Discipline","category":"fundamental","default_timeframes":["1d","1w"],"description":"Capital allocation efficiency"})
 }
 pub fn capex_discipline_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_capex_to_revenue":0.1,"capex_efficiency_threshold":1.5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxCapexToRevenue":0.1,"capexEfficiencyThreshold":1.5},"optimization_bounds":[]})
 }
 pub fn ebitda_margin_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"ebitda-margin-analysis","name":"EBITDA Margin Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"EBITDA margin quality"})
 }
 pub fn ebitda_margin_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":3,"margin_threshold":0.2,"increasing_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":3,"marginThreshold":0.2,"increasingPeriods":4},"optimization_bounds":[]})
 }
 pub fn gross_profit_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"gross-profit-analysis","name":"Gross Profit Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"Gross margin threshold and stability"})
 }
 pub fn gross_profit_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"margin_threshold":0.2,"stability_period":4,"variance":0.05},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"marginThreshold":0.2,"stabilityPeriod":4,"variance":0.05},"optimization_bounds":[]})
 }
 pub fn operating_cashflow_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"operating-cashflow-analysis","name":"Operating Cashflow Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"OCF margin, growth, positivity"})
 }
 pub fn operating_cashflow_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"ocf_margin_threshold":0.1,"growth_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"ocfMarginThreshold":0.1,"growthPeriods":4},"optimization_bounds":[]})
 }
 pub fn operating_leverage_trend_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"operating-leverage-trend","name":"Operating Leverage Trend","category":"fundamental","default_timeframes":["1d","1w"],"description":"Operating leverage level"})
 }
 pub fn operating_leverage_trend_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"min_operating_leverage":1.5,"improving_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"minOperatingLeverage":1.5,"improvingPeriods":4},"optimization_bounds":[]})
 }
 pub fn cash_conversion_cycle_check_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"cash-conversion-cycle-check","name":"Cash Conversion Cycle Check","category":"fundamental","default_timeframes":["1d","1w"],"description":"CCC below threshold, improving, positive"})
 }
 pub fn cash_conversion_cycle_check_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_cash_conversion_cycle":60,"min_improvement":5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxCashConversionCycle":60,"minImprovement":5},"optimization_bounds":[]})
 }
 pub fn cash_conversion_cycle_analysis_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"cash-conversion-cycle-analysis","name":"Cash Conversion Cycle Analysis","category":"fundamental","default_timeframes":["1d","1w"],"description":"CCC threshold, receivables efficiency"})
 }
 pub fn cash_conversion_cycle_analysis_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"ccc_threshold":30,"improving_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"cccThreshold":30,"improvingPeriods":4},"optimization_bounds":[]})
 }
 pub fn five_year_margin_expansion_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"five-year-margin-expansion","name":"Five-Year Margin Expansion","category":"fundamental","default_timeframes":["1d","1w"],"description":"Net margin expansion over 5 years"})
 }
 pub fn five_year_margin_expansion_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"margin_expansion_threshold":0.05,"periods":20},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"marginExpansionThreshold":0.05,"periods":20},"optimization_bounds":[]})
 }
 pub fn ebitda_growth_vs_competition_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"ebitda-growth-vs-competition","name":"EBITDA Growth vs. Competitors","category":"fundamental","default_timeframes":["1d","1w"],"description":"EBITDA growth exceeds peers"})
 }
 pub fn ebitda_growth_vs_competition_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"growth_premium":0.05,"period":5},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"growthPremium":0.05,"period":5},"optimization_bounds":[]})
 }
 pub fn eps_vs_fcf_divergence_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"eps-vs-fcf-divergence","name":"EPS vs. FCF Per-Share Divergence","category":"fundamental","default_timeframes":["1d","1w"],"description":"Earnings quality via EPS/FCF alignment"})
 }
 pub fn eps_vs_fcf_divergence_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_divergence":0.2,"fcf_threshold":0},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxDivergence":0.2,"fcfThreshold":0},"optimization_bounds":[]})
 }
 pub fn expense_surprise_detector_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"expense-surprise-detector","name":"Expense Surprise Detector","category":"fundamental","default_timeframes":["1m","3m"],"description":"Expense beat expectations"})
 }
 pub fn expense_surprise_detector_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"expense_beat_threshold":0.05,"margin_expansion_threshold":0.02},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"expenseBeatThreshold":0.05,"marginExpansionThreshold":0.02},"optimization_bounds":[]})
 }
 pub fn revenue_assets_efficiency_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-assets-efficiency","name":"Revenue-to-Assets Efficiency","category":"fundamental","default_timeframes":["1d","1w"],"description":"Asset utilization efficiency"})
 }
 pub fn revenue_assets_efficiency_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"revenue_to_assets_threshold":0.5,"improving_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"revenueToAssetsThreshold":0.5,"improvingPeriods":4},"optimization_bounds":[]})
 }
 pub fn revenue_diversification_proxy_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-diversification-proxy","name":"Revenue Diversification Proxy","category":"fundamental","default_timeframes":["1d","1w"],"description":"Revenue concentration and diversification"})
 }
 pub fn revenue_diversification_proxy_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"max_revenue_concentration":0.3,"min_customer_count":1000},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"maxRevenueConcentration":0.3,"minCustomerCount":1000},"optimization_bounds":[]})
 }
 pub fn revenue_per_employee_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"revenue-per-employee","name":"Revenue per Employee Productivity","category":"fundamental","default_timeframes":["1d","1w"],"description":"Workforce productivity"})
 }
 pub fn revenue_per_employee_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"revenue_per_employee_threshold":200000,"improving_periods":4},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"revenuePerEmployeeThreshold":200000,"improvingPeriods":4},"optimization_bounds":[]})
 }
 pub fn rnd_intensity_tracker_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"rnd-intensity-tracker","name":"R&D Intensity Tracker","category":"fundamental","default_timeframes":["1d","1w"],"description":"Innovation investment analysis"})
 }
 pub fn rnd_intensity_tracker_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"min_rnd_intensity":0.05,"max_rnd_intensity":0.2},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"minRndIntensity":0.05,"maxRndIntensity":0.2},"optimization_bounds":[]})
 }
 pub fn roic_durability_sweep_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"roic-durability-sweep","name":"ROIC Durability Sweep","category":"fundamental","default_timeframes":["1m","1y"],"description":"ROIC consistency and trend"})
 }
 pub fn roic_durability_sweep_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":3,"min_roic_threshold":0.08,"volatility_threshold":0.02,"trend_threshold":0.01},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":3,"minRoicThreshold":0.08,"volatilityThreshold":0.02,"trendThreshold":0.01},"optimization_bounds":[]})
 }
 pub fn working_capital_efficiency_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"working-capital-efficiency","name":"Working Capital Efficiency","category":"fundamental","default_timeframes":["1d","1w"],"description":"Working capital management quality"})
 }
 pub fn working_capital_efficiency_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"min_criteria_met":2,"current_ratio_threshold":1.5,"working_capital_threshold":0,"turnover_threshold":2},"optimization_bounds":[]})
+	serde_json::json!({"params":{"minCriteriaMet":2,"currentRatioThreshold":1.5,"workingCapitalThreshold":0,"turnoverThreshold":2},"optimization_bounds":[]})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		quality_strategy_defaults => QualityConfig,
+		dupont_roe_strategy_defaults => DupontRoeConfig,
+		charlie_munger_strategy_defaults => QualityChecklistConfig,
+		philip_fisher_strategy_defaults => QualityChecklistConfig,
+		return_on_capital_strategy_defaults => ReturnOnCapitalConfig,
+		operating_margin_strategy_defaults => MarginChecklistConfig,
+		earnings_quality_analysis_strategy_defaults => EarningsQualityConfig,
+		capex_discipline_strategy_defaults => CapexDisciplineConfig,
+		ebitda_margin_strategy_defaults => EbitdaMarginConfig,
+		gross_profit_analysis_strategy_defaults => GrossProfitConfig,
+		operating_cashflow_analysis_strategy_defaults => OcfAnalysisConfig,
+		operating_leverage_trend_strategy_defaults => OperatingLeverageConfig,
+		cash_conversion_cycle_check_strategy_defaults => CccCheckConfig,
+		cash_conversion_cycle_analysis_strategy_defaults => CccAnalysisConfig,
+		five_year_margin_expansion_strategy_defaults => MarginExpansionConfig,
+		ebitda_growth_vs_competition_strategy_defaults => EbitdaGrowthVsCompetitionConfig,
+		eps_vs_fcf_divergence_strategy_defaults => EpsVsFcfDivergenceConfig,
+		expense_surprise_detector_strategy_defaults => ExpenseSurpriseConfig,
+		revenue_assets_efficiency_strategy_defaults => RevenueAssetsEfficiencyConfig,
+		revenue_diversification_proxy_strategy_defaults => RevenueDiversificationConfig,
+		revenue_per_employee_strategy_defaults => RevenuePerEmployeeConfig,
+		rnd_intensity_tracker_strategy_defaults => RndIntensityConfig,
+		roic_durability_sweep_strategy_defaults => RoicDurabilityConfig,
+		working_capital_efficiency_strategy_defaults => WorkingCapitalEfficiencyConfig,
+	}
 }

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AwesomeOscillatorConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,

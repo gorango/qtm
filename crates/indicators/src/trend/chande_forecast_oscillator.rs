@@ -63,12 +63,13 @@ fn moving_linear_regression_least_squares(period: usize, x: &[f64], y: &[f64]) -
 		}
 
 		if window_y.len() > period {
-			let old_y = window_y.pop_front().unwrap();
-			let old_x = xi - period as f64;
-			sum_x -= old_x;
-			sum_y -= old_y;
-			sum_xy -= old_x * old_y;
-			sum_xx -= old_x * old_x;
+			if let Some(old_y) = window_y.pop_front() {
+				let old_x = xi - period as f64;
+				sum_x -= old_x;
+				sum_y -= old_y;
+				sum_xy -= old_x * old_y;
+				sum_xx -= old_x * old_x;
+			}
 		}
 	}
 
@@ -79,6 +80,7 @@ pub fn chande_forecast_oscillator(closings: &[f64]) -> IndicatorResult<Vec<f64>>
 	if closings.is_empty() {
 		return Err(IndicatorError::Custom("Array cannot be empty".into()));
 	}
+	crate::utils::validation::validate_finite(&[closings])?;
 
 	let len = closings.len();
 	let x: Vec<f64> = (0..len).map(|i| i as f64).collect();
@@ -109,6 +111,7 @@ pub fn moving_chande_forecast_oscillator(
 	if closings.is_empty() {
 		return Err(IndicatorError::Custom("Array cannot be empty".into()));
 	}
+	crate::utils::validation::validate_finite(&[closings])?;
 
 	let len = closings.len();
 	let x: Vec<f64> = (0..len).map(|i| i as f64).collect();

@@ -15,11 +15,15 @@ pub fn prediction_market_odds(prediction_data: Vec<PredictionMarketPoint>) -> Ve
 	}
 
 	for group in market_groups.values_mut() {
-		group.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+		group.sort_by(|a, b| {
+			a.time
+				.partial_cmp(&b.time)
+				.unwrap_or(std::cmp::Ordering::Equal)
+		});
 		for point in group {
-		results.push(FactorPoint {
-			symbol: String::new(),
-			date: point.time,
+			results.push(FactorPoint {
+				symbol: String::new(),
+				date: point.time,
 				value: point.price,
 			});
 		}
@@ -46,7 +50,11 @@ pub fn odds_momentum(
 	}
 
 	for group in market_groups.values_mut() {
-		group.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+		group.sort_by(|a, b| {
+			a.time
+				.partial_cmp(&b.time)
+				.unwrap_or(std::cmp::Ordering::Equal)
+		});
 		if group.len() <= p {
 			continue;
 		}
@@ -55,9 +63,9 @@ pub fn odds_momentum(
 			let prev = group[i - p];
 			if prev.price != 0.0 {
 				let momentum = (cur.price - prev.price) / prev.price;
-		results.push(FactorPoint {
-			symbol: String::new(),
-			date: cur.time,
+				results.push(FactorPoint {
+					symbol: String::new(),
+					date: cur.time,
 					value: momentum,
 				});
 			}

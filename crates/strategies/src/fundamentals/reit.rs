@@ -17,6 +17,7 @@ fn price_to_affo(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct HighYieldReitConfig {
 	pub price_to_affo_threshold: Option<f64>,
 	pub min_dividend_yield: Option<f64>,
@@ -106,5 +107,41 @@ pub fn high_yield_reit_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id": "high-yield-reit","name": "High Yield REIT Fundamental","category": "fundamental","default_timeframes": ["1d","1w"],"description": "REITs with attractive P/AFFO valuations and high dividend yields"})
 }
 pub fn high_yield_reit_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params": {"price_to_affo_threshold": 15,"min_dividend_yield": 0.06,"max_affo_payout_ratio": 0.95,"min_dividend_growth": 0,"dividend_growth_years": 3,"exit_price_to_affo_threshold": 20},"optimization_bounds": []})
+	serde_json::json!({"params": {"priceToAffoThreshold": 15,"minDividendYield": 0.06,"maxAffoPayoutRatio": 0.95,"minDividendGrowth": 0,"dividendGrowthYears": 3,"exitPriceToAffoThreshold": 20},"optimization_bounds": []})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		high_yield_reit_strategy_defaults => HighYieldReitConfig,
+	}
 }

@@ -3,11 +3,10 @@ use napi_derive::napi;
 use serde::{Deserialize, Serialize};
 
 use factors_core::{
-	roe_value, roa_value, gross_margin_value, net_margin_value, operating_profit_margin_value,
-	working_capital_turnover_value,
-	debt_to_equity_value, rnd_to_revenue_value, net_debt_to_ebitda_value,
-	fcf_margin_value, fcf_per_share_value, interest_coverage_value, pe_ratio_value,
-	current_ratio_value, roic_value, price_to_book_value, earnings_yield_value,
+	current_ratio_value, debt_to_equity_value, earnings_yield_value, fcf_margin_value,
+	fcf_per_share_value, gross_margin_value, interest_coverage_value, net_debt_to_ebitda_value,
+	net_margin_value, operating_profit_margin_value, pe_ratio_value, price_to_book_value,
+	rnd_to_revenue_value, roa_value, roe_value, roic_value, working_capital_turnover_value,
 	FactorPoint, FundamentalPoint, FundamentalPointData,
 };
 
@@ -41,6 +40,7 @@ fn reinvest_rate(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AltmanZScoreConfig {
 	pub z_score_threshold: Option<f64>,
 }
@@ -54,6 +54,7 @@ impl Default for AltmanZScoreConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PiotroskiConfig {
 	pub f_score_threshold: Option<u32>,
 }
@@ -67,6 +68,7 @@ impl Default for PiotroskiConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MagicFormulaConfig {
 	pub earnings_yield_threshold: Option<f64>,
 	pub return_on_capital_threshold: Option<f64>,
@@ -82,6 +84,7 @@ impl Default for MagicFormulaConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct JoelGreenblattConfig {
 	pub earnings_yield_threshold: Option<f64>,
 	pub return_on_capital_threshold: Option<f64>,
@@ -97,6 +100,7 @@ impl Default for JoelGreenblattConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SuiteConfig {
 	pub threshold: Option<f64>,
 }
@@ -110,6 +114,7 @@ impl Default for SuiteConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MultiFactorSuiteConfig {
 	pub value_weight: Option<f64>,
 	pub growth_weight: Option<f64>,
@@ -251,11 +256,17 @@ pub fn quality_investing_suite_strategy(
 			let mut total = 0usize;
 			let munger: [bool; 8] = [
 				roic_value(&p.data).map(|v| v > 0.20).unwrap_or(false),
-				operating_profit_margin_value(&p.data).map(|v| v > 0.15).unwrap_or(false),
+				operating_profit_margin_value(&p.data)
+					.map(|v| v > 0.15)
+					.unwrap_or(false),
 				fcf_margin_value(&p.data).map(|v| v > 0.10).unwrap_or(false),
 				d.revenue.unwrap_or(0.0) > 0.0,
-				net_debt_to_ebitda_value(&p.data).map(|v| v < 3.0).unwrap_or(false),
-				interest_coverage_value(&p.data).map(|v| v > 10.0).unwrap_or(false),
+				net_debt_to_ebitda_value(&p.data)
+					.map(|v| v < 3.0)
+					.unwrap_or(false),
+				interest_coverage_value(&p.data)
+					.map(|v| v > 10.0)
+					.unwrap_or(false),
 				asset_turnover(&p.data).map(|v| v > 0.7).unwrap_or(false),
 				pe_ratio_value(&p.data).map(|v| v < 25.0).unwrap_or(false),
 			];
@@ -266,20 +277,32 @@ pub fn quality_investing_suite_strategy(
 				roe_value(&p.data).map(|v| v > 0.15).unwrap_or(false),
 				net_margin_value(&p.data).map(|v| v > 0.05).unwrap_or(false),
 				asset_turnover(&p.data).map(|v| v > 0.7).unwrap_or(false),
-				debt_to_equity_value(&p.data).map(|v| 1.0 + v < 3.0).unwrap_or(false),
+				debt_to_equity_value(&p.data)
+					.map(|v| 1.0 + v < 3.0)
+					.unwrap_or(false),
 			];
 			if dupont.iter().filter(|&&x| x).count() >= 3 {
 				total += 1;
 			}
 			let fisher: [bool; 8] = [
 				d.revenue.unwrap_or(0.0) > 0.0,
-				rnd_to_revenue_value(&p.data).map(|v| v > 0.03).unwrap_or(false),
-				operating_profit_margin_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
-				gross_margin_value(&p.data).map(|v| v > 0.30).unwrap_or(false),
+				rnd_to_revenue_value(&p.data)
+					.map(|v| v > 0.03)
+					.unwrap_or(false),
+				operating_profit_margin_value(&p.data)
+					.map(|v| v > 0.0)
+					.unwrap_or(false),
+				gross_margin_value(&p.data)
+					.map(|v| v > 0.30)
+					.unwrap_or(false),
 				asset_turnover(&p.data).map(|v| v > 0.5).unwrap_or(false),
-				working_capital_turnover_value(&p.data).map(|v| v > 4.0).unwrap_or(false),
+				working_capital_turnover_value(&p.data)
+					.map(|v| v > 4.0)
+					.unwrap_or(false),
 				roa_value(&p.data).map(|v| v > 0.08).unwrap_or(false),
-				fcf_per_share_value(&p.data).map(|v| v > 0.0).unwrap_or(false),
+				fcf_per_share_value(&p.data)
+					.map(|v| v > 0.0)
+					.unwrap_or(false),
 			];
 			if fisher.iter().filter(|&&x| x).count() >= 7 {
 				total += 1;
@@ -308,19 +331,31 @@ pub fn value_investing_suite_strategy(
 			let d = &p.data;
 			let mut total = 0usize;
 			if pe_ratio_value(&p.data).map(|v| v < 15.0).unwrap_or(false)
-				&& price_to_book_value(&p.data).map(|v| v < 1.5).unwrap_or(false)
-				&& debt_to_equity_value(&p.data).map(|v| v < 1.1).unwrap_or(false)
-				&& current_ratio_value(&p.data).map(|v| v > 1.5).unwrap_or(false)
+				&& price_to_book_value(&p.data)
+					.map(|v| v < 1.5)
+					.unwrap_or(false)
+				&& debt_to_equity_value(&p.data)
+					.map(|v| v < 1.1)
+					.unwrap_or(false)
+				&& current_ratio_value(&p.data)
+					.map(|v| v > 1.5)
+					.unwrap_or(false)
 			{
 				total += 1;
 			}
 			if pe_ratio_value(&p.data).map(|v| v < 10.0).unwrap_or(false)
-				&& debt_to_equity_value(&p.data).map(|v| v < 1.0).unwrap_or(false)
+				&& debt_to_equity_value(&p.data)
+					.map(|v| v < 1.0)
+					.unwrap_or(false)
 			{
 				total += 1;
 			}
-			if price_to_book_value(&p.data).map(|v| v < 1.2).unwrap_or(false)
-				&& debt_to_equity_value(&p.data).map(|v| v < 0.5).unwrap_or(false)
+			if price_to_book_value(&p.data)
+				.map(|v| v < 1.2)
+				.unwrap_or(false)
+				&& debt_to_equity_value(&p.data)
+					.map(|v| v < 0.5)
+					.unwrap_or(false)
 				&& d.net_income.map(|v| v > 0.0).unwrap_or(false)
 			{
 				total += 1;
@@ -384,25 +419,25 @@ pub fn altman_z_score_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"altman-z-score","name":"Altman Z-Score Bankruptcy Prediction","category":"fundamental","default_timeframes":["1d","1w"],"description":"Invests in companies with low bankruptcy risk"})
 }
 pub fn altman_z_score_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"z_score_threshold":3},"optimization_bounds":[]})
+	serde_json::json!({"params":{"zScoreThreshold":3},"optimization_bounds":[]})
 }
 pub fn piotroski_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"piotroski-f-score","name":"Piotroski F-Score Quality","category":"fundamental","default_timeframes":["1d","1w"],"description":"Companies with F-Score >= 7"})
 }
 pub fn piotroski_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"f_score_threshold":7},"optimization_bounds":[]})
+	serde_json::json!({"params":{"fScoreThreshold":7},"optimization_bounds":[]})
 }
 pub fn magic_formula_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"magic-formula","name":"Magic Formula Investing","category":"fundamental","default_timeframes":["1d","1w"],"description":"High earnings yield and return on capital"})
 }
 pub fn magic_formula_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"earnings_yield_threshold":0.1,"return_on_capital_threshold":0.25},"optimization_bounds":[]})
+	serde_json::json!({"params":{"earningsYieldThreshold":0.1,"returnOnCapitalThreshold":0.25},"optimization_bounds":[]})
 }
 pub fn joel_greenblatt_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"joel-greenblatt-magic-formula","name":"Joel Greenblatt Magic Formula","category":"fundamental","default_timeframes":["1d","1w"],"description":"Greenblatt's magic formula"})
 }
 pub fn joel_greenblatt_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"earnings_yield_threshold":0.06,"return_on_capital_threshold":0.25},"optimization_bounds":[]})
+	serde_json::json!({"params":{"earningsYieldThreshold":0.06,"returnOnCapitalThreshold":0.25},"optimization_bounds":[]})
 }
 pub fn growth_investing_suite_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"growth-investing-suite","name":"Growth Investing Suite","category":"fundamental","default_timeframes":["1m","1y"],"description":"Combines multiple growth approaches"})
@@ -426,5 +461,48 @@ pub fn multi_factor_suite_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id":"multi-factor-suite","name":"Multi-Factor Suite","category":"fundamental","default_timeframes":["1m","1y"],"description":"Weighted value, growth, quality factors"})
 }
 pub fn multi_factor_suite_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params":{"value_weight":0.4,"growth_weight":0.3,"quality_weight":0.3,"threshold":0.6},"optimization_bounds":[]})
+	serde_json::json!({"params":{"valueWeight":0.4,"growthWeight":0.3,"qualityWeight":0.3,"threshold":0.6},"optimization_bounds":[]})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		altman_z_score_strategy_defaults => AltmanZScoreConfig,
+		piotroski_strategy_defaults => PiotroskiConfig,
+		magic_formula_strategy_defaults => MagicFormulaConfig,
+		joel_greenblatt_strategy_defaults => JoelGreenblattConfig,
+		growth_investing_suite_strategy_defaults => SuiteConfig,
+		quality_investing_suite_strategy_defaults => SuiteConfig,
+		value_investing_suite_strategy_defaults => SuiteConfig,
+		multi_factor_suite_strategy_defaults => MultiFactorSuiteConfig,
+	}
 }

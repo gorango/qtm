@@ -14,11 +14,11 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["1h", "4h", "1d"],
 	description = "Generates buy signals when KST crosses above signal line and sell signals when KST crosses below signal line",
 	opt_params = r#"[
-		{"param_name": "roc1_period", "min": 5.0, "max": 15.0, "step": 1.0},
-		{"param_name": "roc2_period", "min": 10.0, "max": 20.0, "step": 1.0},
-		{"param_name": "roc3_period", "min": 15.0, "max": 25.0, "step": 1.0},
-		{"param_name": "roc4_period", "min": 20.0, "max": 40.0, "step": 1.0},
-		{"param_name": "signal_period", "min": 5.0, "max": 15.0, "step": 1.0}
+		{"param_name": "roc1Period", "min": 5.0, "max": 15.0, "step": 1.0},
+		{"param_name": "roc2Period", "min": 10.0, "max": 20.0, "step": 1.0},
+		{"param_name": "roc3Period", "min": 15.0, "max": 25.0, "step": 1.0},
+		{"param_name": "roc4Period", "min": 20.0, "max": 40.0, "step": 1.0},
+		{"param_name": "signalPeriod", "min": 5.0, "max": 15.0, "step": 1.0}
 	]"#
 )]
 pub fn kst_strategy(closes: &[f64], config: Option<KSTConfig>) -> StrategyResult<Vec<i8>> {

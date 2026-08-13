@@ -3,7 +3,11 @@ use crate::types::data::{FactorPoint, FundamentalPoint, FundamentalPointData};
 pub fn debt_to_assets_value(d: &FundamentalPointData) -> Option<f64> {
 	let liab = d.total_liabilities?;
 	let assets = d.total_assets?;
-	if assets == 0.0 { None } else { Some(liab / assets) }
+	if assets == 0.0 {
+		None
+	} else {
+		Some(liab / assets)
+	}
 }
 
 /// Debt-to-Assets ratio: `totalLiabilities / totalAssets`.
@@ -105,7 +109,7 @@ mod tests {
 	}
 
 	fn assert_approx_eq(a: f64, b: f64, epsilon: f64) {
-		assert!((a - b).abs() < epsilon, "expected {} ≈ {}", a, b);
+		assert!((a - b).abs() < epsilon, "expected {a} ≈ {b}");
 	}
 
 	#[test]

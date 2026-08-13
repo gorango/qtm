@@ -1,12 +1,11 @@
 use factors_core::{
-    price_to_book_value, price_to_sales_value, free_cash_flow_yield_value,
-    free_cash_flow_margin_value, owner_earnings_value,
-    cash_to_market_cap_value, book_value_per_share_value, net_cash_value, cash_to_assets_value,
-    cash_to_liabilities_value, payout_ratio_value, debt_to_equity_value, current_ratio_value,
-    working_capital_value, interest_coverage_value, roe_value,
-    ev_to_ebitda_value, ev_to_revenue_value, ebitda_margin_value, pe_ratio_value,
-    dividend_coverage_ocf_value, quick_ratio_value, debt_service_coverage_value,
-    Bar, FactorPoint, FundamentalPoint,
+	book_value_per_share_value, cash_to_assets_value, cash_to_liabilities_value,
+	cash_to_market_cap_value, current_ratio_value, debt_service_coverage_value,
+	debt_to_equity_value, dividend_coverage_ocf_value, ebitda_margin_value, ev_to_ebitda_value,
+	ev_to_revenue_value, free_cash_flow_margin_value, free_cash_flow_yield_value,
+	interest_coverage_value, net_cash_value, owner_earnings_value, payout_ratio_value,
+	pe_ratio_value, price_to_book_value, price_to_sales_value, quick_ratio_value, roe_value,
+	working_capital_value, Bar, FactorPoint, FundamentalPoint,
 };
 #[cfg(feature = "napi")]
 use napi_derive::napi;
@@ -46,14 +45,13 @@ fn safe_div(num: f64, den: f64) -> Option<f64> {
 	}
 }
 
-
-
 // ============================================================
 // Configs
 // ============================================================
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ValueConfig {
 	pub pe_threshold: Option<f64>,
 	pub enable_time_based_exit: Option<bool>,
@@ -72,6 +70,7 @@ impl Default for ValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ClassicValueConfig {
 	pub quartile: Option<u32>,
 }
@@ -84,6 +83,7 @@ impl Default for ClassicValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ValueChecklistConfig {
 	pub min_criteria_met: Option<u32>,
 }
@@ -98,6 +98,7 @@ impl Default for ValueChecklistConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FreeCashFlowAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub fcf_margin_threshold: Option<f64>,
@@ -116,6 +117,7 @@ impl Default for FreeCashFlowAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WaccVsRoicSpreadConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_roic: Option<f64>,
@@ -134,6 +136,7 @@ impl Default for WaccVsRoicSpreadConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EvEbitdaFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_ebitda_threshold: Option<f64>,
@@ -152,6 +155,7 @@ impl Default for EvEbitdaFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct IntrinsicValueMultiMetricConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_of_safety: Option<f64>,
@@ -170,6 +174,7 @@ impl Default for IntrinsicValueMultiMetricConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CashBurnRunwayConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_runway_months: Option<f64>,
@@ -188,6 +193,7 @@ impl Default for CashBurnRunwayConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DebtEbitdarStressTestConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_debt_ebitdar: Option<f64>,
@@ -206,6 +212,7 @@ impl Default for DebtEbitdarStressTestConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EvFcf10yrBandConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_ev_fcf: Option<f64>,
@@ -224,6 +231,7 @@ impl Default for EvFcf10yrBandConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EvRevenueMultiplesConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_revenue_threshold: Option<f64>,
@@ -242,6 +250,7 @@ impl Default for EvRevenueMultiplesConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EvSalesFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_sales_threshold: Option<f64>,
@@ -260,6 +269,7 @@ impl Default for EvSalesFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct InterestCoverageBufferConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_interest_coverage: Option<f64>,
@@ -278,6 +288,7 @@ impl Default for InterestCoverageBufferConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MarginOfSafetyTargetPriceConfig {
 	pub min_criteria_met: Option<u32>,
 	pub upside_threshold: Option<f64>,
@@ -296,6 +307,7 @@ impl Default for MarginOfSafetyTargetPriceConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct NetCashPositionToggleConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_net_cash: Option<f64>,
@@ -314,6 +326,7 @@ impl Default for NetCashPositionToggleConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct NormalPeFutureFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_forward_pe: Option<f64>,
@@ -332,6 +345,7 @@ impl Default for NormalPeFutureFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OcfCoverageDividendsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_coverage_ratio: Option<f64>,
@@ -350,6 +364,7 @@ impl Default for OcfCoverageDividendsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PriceSalesFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ps_threshold: Option<f64>,
@@ -368,6 +383,7 @@ impl Default for PriceSalesFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PriceToOwnerEarningsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_price_to_owner_earnings: Option<f64>,
@@ -386,6 +402,7 @@ impl Default for PriceToOwnerEarningsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct QuickRatioStressTestConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_quick_ratio: Option<f64>,
@@ -404,6 +421,7 @@ impl Default for QuickRatioStressTestConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ReturnOfCapitalVsGrowthConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_payout_ratio: Option<f64>,
@@ -422,6 +440,7 @@ impl Default for ReturnOfCapitalVsGrowthConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkingCapitalHealthConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_current_ratio: Option<f64>,
@@ -616,7 +635,8 @@ pub fn bill_miller_strategy(
 			}
 			if d.cost_and_expenses.is_some_and(|_| true)
 				&& d.revenue.is_some_and(|r| r > 0.0)
-				&& d.cost_and_expenses.is_none_or(|c| c < d.revenue.unwrap())
+				&& d.cost_and_expenses
+					.is_none_or(|c| c < d.revenue.unwrap_or(f64::NAN))
 			{
 				count += 1;
 			}
@@ -1144,7 +1164,8 @@ pub fn ev_fcf_10yr_band_strategy(
 			let d = &fp.data;
 			let mut count = 0usize;
 			let ev_fcf = d.enterprise_value.and_then(|ev| {
-				owner_earnings_value(d).and_then(|fcf| if fcf > 0.0 { Some(ev / fcf) } else { None })
+				owner_earnings_value(d)
+					.and_then(|fcf| if fcf > 0.0 { Some(ev / fcf) } else { None })
 			});
 			if ev_fcf.is_some_and(|v| v < max_ev_fcf) {
 				count += 1;
@@ -1255,7 +1276,7 @@ pub fn ev_sales_fair_value_strategy(
 			}
 			if d.revenue.is_some_and(|v| v > 0.0)
 				&& d.cost_and_expenses
-					.is_none_or(|c| d.revenue.unwrap() > c * (1.0 + sales_growth_thresh))
+					.is_none_or(|c| d.revenue.unwrap_or(f64::NAN) > c * (1.0 + sales_growth_thresh))
 			{
 				count += 1;
 			}
@@ -1572,7 +1593,7 @@ pub fn price_sales_fair_value_strategy(
 			}
 			if d.revenue.is_some_and(|v| v > 0.0)
 				&& d.cost_and_expenses
-					.is_none_or(|c| d.revenue.unwrap() > c * (1.0 + sales_growth_thresh))
+					.is_none_or(|c| d.revenue.unwrap_or(f64::NAN) > c * (1.0 + sales_growth_thresh))
 			{
 				count += 1;
 			}
@@ -1822,4 +1843,64 @@ pub fn working_capital_health_strategy_metadata() -> serde_json::Value {
 
 pub fn working_capital_health_strategy_defaults() -> serde_json::Value {
 	serde_json::json!({ "params": { "minCriteriaMet": 2, "minCurrentRatio": 1.5, "minWorkingCapitalToAssets": 0.1 }, "optimization_bounds": [] })
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		value_strategy_defaults => ValueConfig,
+		classic_value_strategy_defaults => ClassicValueConfig,
+		benjamin_graham_strategy_defaults => ValueChecklistConfig,
+		bill_miller_strategy_defaults => ValueChecklistConfig,
+		john_templeton_strategy_defaults => ValueChecklistConfig,
+		walter_schloss_strategy_defaults => ValueChecklistConfig,
+		free_cash_flow_analysis_strategy_defaults => FreeCashFlowAnalysisConfig,
+		wacc_vs_roic_spread_strategy_defaults => WaccVsRoicSpreadConfig,
+		ev_ebitda_fair_value_strategy_defaults => EvEbitdaFairValueConfig,
+		intrinsic_value_multi_metric_strategy_defaults => IntrinsicValueMultiMetricConfig,
+		cash_burn_runway_strategy_defaults => CashBurnRunwayConfig,
+		debt_ebitdar_stress_test_strategy_defaults => DebtEbitdarStressTestConfig,
+		ev_fcf_10yr_band_strategy_defaults => EvFcf10yrBandConfig,
+		ev_revenue_multiples_strategy_defaults => EvRevenueMultiplesConfig,
+		ev_sales_fair_value_strategy_defaults => EvSalesFairValueConfig,
+		interest_coverage_buffer_strategy_defaults => InterestCoverageBufferConfig,
+		margin_of_safety_target_price_strategy_defaults => MarginOfSafetyTargetPriceConfig,
+		net_cash_position_toggle_strategy_defaults => NetCashPositionToggleConfig,
+		normal_pe_future_fair_value_strategy_defaults => NormalPeFutureFairValueConfig,
+		ocf_coverage_dividends_strategy_defaults => OcfCoverageDividendsConfig,
+		price_sales_fair_value_strategy_defaults => PriceSalesFairValueConfig,
+		price_to_owner_earnings_strategy_defaults => PriceToOwnerEarningsConfig,
+		quick_ratio_stress_test_strategy_defaults => QuickRatioStressTestConfig,
+		return_of_capital_vs_growth_strategy_defaults => ReturnOfCapitalVsGrowthConfig,
+		working_capital_health_strategy_defaults => WorkingCapitalHealthConfig,
+	}
 }

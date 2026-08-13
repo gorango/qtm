@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MFIConfig {
 	pub period: Option<u32>,
 	pub price_source: Option<String>,
@@ -18,7 +19,9 @@ pub fn mfi(
 	volumes: &[f64],
 	config: Option<MFIConfig>,
 ) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, closings, volumes]).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, closings, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 
@@ -30,8 +33,8 @@ pub fn mfi(
 	let period = cfg.period.unwrap_or(14) as usize;
 	let _price_source = cfg.price_source.unwrap_or("typical".to_string());
 
-	if period > 0 {
-		validate_period(period).unwrap();
+	if period > 0 && validate_period(period).is_err() {
+		return vec![];
 	}
 
 	let typical_prices = typical_price_internal(highs, lows, closings);

@@ -3,8 +3,12 @@ use crate::utils::arrays::validate_arrays_equal_length;
 use crate::utils::validation::validate_period;
 
 pub fn ease_of_movement(highs: &[f64], lows: &[f64], volumes: &[f64], period: u32) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, volumes]).unwrap();
-	validate_period(period as usize).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, volumes]).is_err() {
+		return vec![];
+	}
+	if validate_period(period as usize).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 	let period = period as usize;

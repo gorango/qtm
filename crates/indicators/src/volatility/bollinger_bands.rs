@@ -13,6 +13,7 @@ pub struct BBResult {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct BBConfig {
 	pub period: Option<u32>,
 	pub std_dev: Option<f64>,
@@ -51,6 +52,7 @@ pub fn bb(closings: &[f64], config: Option<BBConfig>) -> IndicatorResult<BBResul
 	let period = config.period.unwrap_or(20) as usize;
 	let std_dev_multiplier = config.std_dev.unwrap_or(2.0);
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[closings])?;
 
 	let std_dev_array = std_dev_internal(closings, period);
 	let middle = sma_internal(closings, period);

@@ -2,7 +2,9 @@ use crate::internal::moving_sum::moving_sum_internal;
 use crate::utils::arrays::validate_arrays_equal_length;
 
 pub fn volume_price_trend(closings: &[f64], volumes: &[f64]) -> Vec<f64> {
-	validate_arrays_equal_length(&[closings, volumes]).unwrap();
+	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = closings.len();
 	let mut vpt_values = vec![f64::NAN; len];

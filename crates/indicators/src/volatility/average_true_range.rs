@@ -12,6 +12,7 @@ pub struct ATRResult {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ATRConfig {
 	pub period: Option<u32>,
 }

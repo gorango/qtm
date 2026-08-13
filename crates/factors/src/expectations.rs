@@ -12,7 +12,11 @@ pub fn analyst_rating_momentum(
 	let mut results = Vec::new();
 
 	let mut sorted = fundamentals.clone();
-	sorted.sort_by(|a, b| a.filing_date.partial_cmp(&b.filing_date).unwrap());
+	sorted.sort_by(|a, b| {
+		a.filing_date
+			.partial_cmp(&b.filing_date)
+			.unwrap_or(std::cmp::Ordering::Equal)
+	});
 
 	let mut symbol_map: std::collections::HashMap<String, Vec<&FundamentalPoint>> =
 		std::collections::HashMap::new();
@@ -21,7 +25,11 @@ pub fn analyst_rating_momentum(
 	}
 
 	for sfs in symbol_map.values_mut() {
-		sfs.sort_by(|a, b| a.filing_date.partial_cmp(&b.filing_date).unwrap());
+		sfs.sort_by(|a, b| {
+			a.filing_date
+				.partial_cmp(&b.filing_date)
+				.unwrap_or(std::cmp::Ordering::Equal)
+		});
 		for i in p..sfs.len() {
 			let cur = sfs[i];
 			let rating = match cur.data.rating {
@@ -52,7 +60,11 @@ pub fn analyst_target_upside(
 	prices: Vec<Bar>,
 ) -> Vec<FactorPoint> {
 	let mut prices_sorted = prices.clone();
-	prices_sorted.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
+	prices_sorted.sort_by(|a, b| {
+		a.time
+			.partial_cmp(&b.time)
+			.unwrap_or(std::cmp::Ordering::Equal)
+	});
 
 	let mut results = Vec::new();
 	for f in &fundamentals {

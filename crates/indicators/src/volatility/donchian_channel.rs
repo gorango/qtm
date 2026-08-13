@@ -22,6 +22,7 @@ pub fn dc(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[closings])?;
 
 	let upper = rolling_max_growing(closings, period);
 	let lower = rolling_min_growing(closings, period);

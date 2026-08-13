@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MACDConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -48,6 +49,7 @@ pub fn macd(closes: &[f64], config: Option<MACDConfig>) -> IndicatorResult<MACDR
 	validate_period(fast_period)?;
 	validate_period(slow_period)?;
 	validate_period(signal_period)?;
+	crate::utils::validation::validate_finite(&[closes])?;
 
 	let len = closes.len();
 

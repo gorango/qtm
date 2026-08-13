@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct KSTConfig {
 	pub roc1_period: Option<u32>,
 	pub roc2_period: Option<u32>,

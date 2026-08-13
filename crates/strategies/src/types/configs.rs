@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Base strategy configuration with flexible parameters
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Default, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct StrategyConfig {
 	/// Strategy-specific parameters as JSON
 	pub params: serde_json::Value,
@@ -13,6 +14,7 @@ pub struct StrategyConfig {
 /// RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct RSIConfig {
 	pub period: Option<u32>,
 	pub oversold: Option<f64>,
@@ -32,6 +34,7 @@ impl Default for RSIConfig {
 /// MACD Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MACDConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -51,6 +54,7 @@ impl Default for MACDConfig {
 /// MACD Crossover Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MacdCrossoverConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -70,6 +74,7 @@ impl Default for MacdCrossoverConfig {
 /// Moving Average Crossover configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MaCrossoverConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -87,6 +92,7 @@ impl Default for MaCrossoverConfig {
 /// Stochastic Oscillator configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct StochasticConfig {
 	pub k_period: Option<u32>,
 	pub d_period: Option<u32>,
@@ -108,6 +114,7 @@ impl Default for StochasticConfig {
 /// VWAP configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VWAPConfig {
 	pub anchor_period: Option<String>, // e.g., "daily", "weekly"
 }
@@ -123,6 +130,7 @@ impl Default for VWAPConfig {
 /// Volume Weighted Average Price Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VolumeWeightedAveragePriceConfig {
 	pub period: Option<u32>,
 }
@@ -136,6 +144,7 @@ impl Default for VolumeWeightedAveragePriceConfig {
 /// SMA-VWAP Crossover configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct SmaVwapCrossoverConfig {
 	pub sma_period: Option<u32>,
 	pub vwap_period: Option<u32>,
@@ -159,6 +168,7 @@ impl Default for SmaVwapCrossoverConfig {
 /// OBV Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct OBVConfig {
 	pub lookback_period: Option<u32>,
 }
@@ -174,6 +184,7 @@ impl Default for OBVConfig {
 /// Volume Price Trend Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VolumePriceTrendConfig {
 	pub min_criteria_met: Option<u32>,
 	pub vpt_threshold: Option<f64>,
@@ -191,6 +202,7 @@ impl Default for VolumePriceTrendConfig {
 /// Volume Profile RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VolumeProfileRsiConfig {
 	pub rsi_period: Option<u32>,
 	pub rsi_oversold: Option<f64>,
@@ -212,6 +224,7 @@ impl Default for VolumeProfileRsiConfig {
 /// Cup and Handle Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CupAndHandleConfig {
 	pub cup_depth: Option<f64>,
 	pub handle_retracement: Option<f64>,
@@ -231,6 +244,7 @@ impl Default for CupAndHandleConfig {
 /// Double Top/Bottom Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct DoubleTopBottomConfig {
 	pub min_distance: Option<u32>,
 	pub tolerance: Option<f64>,
@@ -250,6 +264,7 @@ impl Default for DoubleTopBottomConfig {
 /// Flags and Pennants Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct FlagsPennantsConfig {
 	pub pole_length: Option<u32>,
 	pub consolidation_bars: Option<u32>,
@@ -271,6 +286,7 @@ impl Default for FlagsPennantsConfig {
 /// Head and Shoulders Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct HeadAndShouldersConfig {
 	pub min_distance: Option<u32>,
 	pub tolerance: Option<f64>,
@@ -292,6 +308,7 @@ impl Default for HeadAndShouldersConfig {
 /// Triangle Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct TriangleConfig {
 	pub min_points: Option<u32>,
 	pub slope_tolerance: Option<f64>,
@@ -313,6 +330,7 @@ impl Default for TriangleConfig {
 /// Wedge Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct WedgeConfig {
 	pub min_points: Option<u32>,
 	pub slope_tolerance: Option<f64>,
@@ -332,6 +350,7 @@ impl Default for WedgeConfig {
 /// Z-Score Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ZScoreConfig {
 	pub mean_period: Option<u32>,
 	pub std_period: Option<u32>,
@@ -351,6 +370,7 @@ impl Default for ZScoreConfig {
 /// Percent Rank Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PercentRankConfig {
 	pub period: Option<u32>,
 	pub entry_percentile: Option<f64>,
@@ -370,6 +390,7 @@ impl Default for PercentRankConfig {
 /// Correlation Pair Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CorrelationPairConfig {
 	pub period: Option<u32>,
 	pub entry_threshold: Option<f64>,
@@ -393,6 +414,7 @@ impl Default for CorrelationPairConfig {
 /// Correlation Reversion Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CorrelationReversionConfig {
 	pub period: Option<u32>,
 	pub reversion_threshold: Option<f64>,
@@ -414,6 +436,7 @@ impl Default for CorrelationReversionConfig {
 /// Cointegration Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CointegrationConfig {
 	pub period: Option<u32>,
 	pub beta_period: Option<u32>,
@@ -435,6 +458,7 @@ impl Default for CointegrationConfig {
 /// Accumulation Distribution Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AccumulationDistributionConfig {
 	pub period: Option<u32>,
 }
@@ -448,6 +472,7 @@ impl Default for AccumulationDistributionConfig {
 /// Chaikin Money Flow Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ChaikinMoneyFlowConfig {
 	pub period: Option<u32>,
 }
@@ -461,6 +486,7 @@ impl Default for ChaikinMoneyFlowConfig {
 /// Ease of Movement Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct EaseOfMovementConfig {
 	pub period: Option<u32>,
 }
@@ -474,6 +500,7 @@ impl Default for EaseOfMovementConfig {
 /// Force Index Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ForceIndexConfig {
 	pub period: Option<u32>,
 	pub oversold: Option<f64>,
@@ -493,6 +520,7 @@ impl Default for ForceIndexConfig {
 /// Money Flow Index Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MoneyFlowIndexConfig {
 	pub period: Option<u32>,
 	pub oversold: Option<f64>,
@@ -512,6 +540,7 @@ impl Default for MoneyFlowIndexConfig {
 /// Negative Volume Index Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct NegativeVolumeIndexConfig {
 	pub period: Option<u32>,
 	pub start: Option<f64>,
@@ -529,6 +558,7 @@ impl Default for NegativeVolumeIndexConfig {
 /// OBV Confirmation Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ObvConfirmationConfig {
 	pub obv_period: Option<u32>,
 	pub price_period: Option<u32>,
@@ -546,6 +576,7 @@ impl Default for ObvConfirmationConfig {
 /// VWAP Breakout Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapBreakoutConfig {
 	pub period: Option<u32>,
 	pub breakout_threshold: Option<f64>,
@@ -563,6 +594,7 @@ impl Default for VwapBreakoutConfig {
 /// VWAP Reversion Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapReversionConfig {
 	pub period: Option<u32>,
 	pub deviation_threshold: Option<f64>,
@@ -579,6 +611,7 @@ impl Default for VwapReversionConfig {
 /// MFI OBV Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MfiObvConfig {
 	pub mfi_period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -598,6 +631,7 @@ impl Default for MfiObvConfig {
 /// VWAP RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapRsiConfig {
 	pub vwap_period: Option<u32>,
 	pub rsi_period: Option<u32>,
@@ -619,6 +653,7 @@ impl Default for VwapRsiConfig {
 /// ADX RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AdxRsiConfig {
 	pub adx_period: Option<u32>,
 	pub trend_threshold: Option<f64>,
@@ -642,6 +677,7 @@ impl Default for AdxRsiConfig {
 /// MA RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MaRsiConfig {
 	pub ma_period: Option<u32>,
 	pub rsi_period: Option<u32>,
@@ -663,6 +699,7 @@ impl Default for MaRsiConfig {
 /// BB RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct BbRsiConfig {
 	pub bb_period: Option<u32>,
 	pub bb_std_dev: Option<f64>,
@@ -686,6 +723,7 @@ impl Default for BbRsiConfig {
 /// VWAP MACD Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapMacdConfig {
 	pub macd_fast_period: Option<u32>,
 	pub macd_slow_period: Option<u32>,
@@ -705,6 +743,7 @@ impl Default for VwapMacdConfig {
 /// MACD Stochastic Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MacdStochasticConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -732,6 +771,7 @@ impl Default for MacdStochasticConfig {
 /// ROC OBV RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct RocObvRsiConfig {
 	pub obv_roc_period: Option<u32>,
 	pub rsi_period: Option<u32>,
@@ -753,6 +793,7 @@ impl Default for RocObvRsiConfig {
 /// Double Top Stochastic Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct DoubleTopStochasticConfig {
 	pub min_distance: Option<u32>,
 	pub tolerance: Option<f64>,
@@ -778,6 +819,7 @@ impl Default for DoubleTopStochasticConfig {
 /// Triangle RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct TriangleRsiConfig {
 	pub min_points: Option<u32>,
 	pub slope_tolerance: Option<f64>,
@@ -801,6 +843,7 @@ impl Default for TriangleRsiConfig {
 /// VWAP Stochastic Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapStochasticConfig {
 	pub vwap_period: Option<u32>,
 	pub k_period: Option<u32>,
@@ -824,6 +867,7 @@ impl Default for VwapStochasticConfig {
 /// VWAP EMA RSI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwapEmaRsiConfig {
 	pub ema_fast_period: Option<u32>,
 	pub ema_slow_period: Option<u32>,
@@ -847,6 +891,7 @@ impl Default for VwapEmaRsiConfig {
 /// RSI MACD Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct RsiMacdConfig {
 	pub rsi_period: Option<u32>,
 	pub rsi_oversold: Option<f64>,
@@ -872,6 +917,7 @@ impl Default for RsiMacdConfig {
 /// Flag/Pennant + MACD Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct FlagsPennantsMacdConfig {
 	pub pole_length: Option<u32>,
 	pub consolidation_bars: Option<u32>,
@@ -899,6 +945,7 @@ impl Default for FlagsPennantsMacdConfig {
 /// Acceleration Bands Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AccelerationBandsConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
@@ -916,6 +963,7 @@ impl Default for AccelerationBandsConfig {
 /// Bollinger Bands Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct BollingerBandsConfig {
 	pub period: Option<u32>,
 	pub std_dev: Option<f64>,
@@ -933,6 +981,7 @@ impl Default for BollingerBandsConfig {
 /// Donchian Turtle Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct DonchianTurtleConfig {
 	pub period: Option<u32>,
 }
@@ -946,6 +995,7 @@ impl Default for DonchianTurtleConfig {
 /// Keltner Channel Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct KeltnerChannelConfig {
 	pub period: Option<u32>,
 }
@@ -959,6 +1009,7 @@ impl Default for KeltnerChannelConfig {
 /// Keltner Volatility Breakout Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct KeltnerVolatilityBreakoutConfig {
 	pub period: Option<u32>,
 }
@@ -972,6 +1023,7 @@ impl Default for KeltnerVolatilityBreakoutConfig {
 /// ATR Threshold Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AtrThresholdConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
@@ -989,6 +1041,7 @@ impl Default for AtrThresholdConfig {
 /// ATR Volatility Threshold Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AtrVolatilityThresholdConfig {
 	pub period: Option<u32>,
 	pub volatility_threshold: Option<f64>,
@@ -1006,6 +1059,7 @@ impl Default for AtrVolatilityThresholdConfig {
 /// Standard Deviation Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct StandardDeviationConfig {
 	pub period: Option<u32>,
 	pub threshold: Option<f64>,
@@ -1023,6 +1077,7 @@ impl Default for StandardDeviationConfig {
 /// Variance Stop Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VarianceStopConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
@@ -1040,6 +1095,7 @@ impl Default for VarianceStopConfig {
 /// Volatility Adjusted Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VolatilityAdjustedConfig {
 	pub period: Option<u32>,
 	pub target_volatility: Option<f64>,
@@ -1057,6 +1113,7 @@ impl Default for VolatilityAdjustedConfig {
 /// Z-Score Reversion Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ZScoreReversionConfig {
 	pub period: Option<u32>,
 	pub threshold: Option<f64>,
@@ -1074,6 +1131,7 @@ impl Default for ZScoreReversionConfig {
 /// MAD Reversion Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MadReversionConfig {
 	pub period: Option<u32>,
 	pub deviation_multiplier: Option<f64>,
@@ -1091,6 +1149,7 @@ impl Default for MadReversionConfig {
 /// Opening Range Breakout Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct OpeningRangeBreakoutConfig {
 	pub lookback: Option<u32>,
 	pub threshold_pct: Option<f64>,
@@ -1108,6 +1167,7 @@ impl Default for OpeningRangeBreakoutConfig {
 /// Pairs Trading Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PairsTradingConfig {
 	pub period: Option<u32>,
 	pub entry_threshold: Option<f64>,
@@ -1127,6 +1187,7 @@ impl Default for PairsTradingConfig {
 /// Projection Oscillator Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ProjectionOscillatorConfig {
 	pub period: Option<u32>,
 	pub smooth: Option<u32>,
@@ -1144,6 +1205,7 @@ impl Default for ProjectionOscillatorConfig {
 /// Fibonacci Retracement Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct FibonacciRetracementConfig {
 	pub period: Option<u32>,
 	pub fib_level: Option<f64>,
@@ -1161,6 +1223,7 @@ impl Default for FibonacciRetracementConfig {
 /// Absolute Price Oscillator Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AbsolutePriceOscillatorConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -1178,6 +1241,7 @@ impl Default for AbsolutePriceOscillatorConfig {
 /// ALMA Crossover Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AlmacrossoverConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -1197,6 +1261,7 @@ impl Default for AlmacrossoverConfig {
 /// ALMA HMA Divergence Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AlmahmaDivergenceConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -1218,6 +1283,7 @@ impl Default for AlmahmaDivergenceConfig {
 /// Aroon Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AroonConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1237,6 +1303,7 @@ impl Default for AroonConfig {
 /// Balance of Power Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct BalanceOfPowerConfig {
 	pub period: Option<u32>,
 }
@@ -1250,6 +1317,7 @@ impl Default for BalanceOfPowerConfig {
 /// Chande Forecast Oscillator Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ChandeForecastOscillatorConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1269,6 +1337,7 @@ impl Default for ChandeForecastOscillatorConfig {
 /// DMI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct DmiConfig {
 	pub period_di: Option<u32>,
 	pub period_adx: Option<u32>,
@@ -1288,6 +1357,7 @@ impl Default for DmiConfig {
 /// HMA Trend Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct HmaTrendConfig {
 	pub period: Option<u32>,
 }
@@ -1301,6 +1371,7 @@ impl Default for HmaTrendConfig {
 /// KDJ Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct KdjConfig {
 	pub period: Option<u32>,
 	pub period1: Option<u32>,
@@ -1324,6 +1395,7 @@ impl Default for KdjConfig {
 /// Larsson Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LarssonConfig {
 	pub use_consolidating_filter: Option<i32>,
 	pub consolidating_lookback: Option<i32>,
@@ -1345,6 +1417,7 @@ impl Default for LarssonConfig {
 /// LinRegChannelConfig is used for Linear Regression Channel trend strategy
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LinRegChannelConfig {
 	pub period: Option<u32>,
 	pub offset: Option<f64>,
@@ -1362,6 +1435,7 @@ impl Default for LinRegChannelConfig {
 /// Linear Regression Channel Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LinregChannelConfig {
 	pub period: Option<u32>,
 	pub std_dev_multiplier: Option<f64>,
@@ -1379,6 +1453,7 @@ impl Default for LinregChannelConfig {
 /// Linear Regression Slope Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LinregSlopeConfig {
 	pub period: Option<u32>,
 	pub slope_period: Option<u32>,
@@ -1400,6 +1475,7 @@ impl Default for LinregSlopeConfig {
 /// Parabolic SAR Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ParabolicSarConfig {
 	pub step: Option<f64>,
 	pub max_step: Option<f64>,
@@ -1417,6 +1493,7 @@ impl Default for ParabolicSarConfig {
 /// Pivot Points Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PivotPointsConfig {
 	pub period: Option<u32>,
 	pub period_high: Option<u32>,
@@ -1436,6 +1513,7 @@ impl Default for PivotPointsConfig {
 /// Super Trend Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct SuperTrendConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
@@ -1453,16 +1531,19 @@ impl Default for SuperTrendConfig {
 /// Typical Price Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Default, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct TypicalPriceConfig {}
 
 /// Buy and Hold Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Default, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct BuyAndHoldConfig {}
 
 /// Vortex Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VortexConfig {
 	pub period: Option<u32>,
 }
@@ -1476,6 +1557,7 @@ impl Default for VortexConfig {
 /// VWMA Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct VwmaConfig {
 	pub period: Option<u32>,
 }
@@ -1489,6 +1571,7 @@ impl Default for VwmaConfig {
 /// WMA Confirmation Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct WmaConfirmationConfig {
 	pub period: Option<u32>,
 	pub threshold: Option<f64>,
@@ -1506,6 +1589,7 @@ impl Default for WmaConfirmationConfig {
 /// WMA Momentum Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct WmaMomentumConfig {
 	pub period: Option<u32>,
 }
@@ -1519,6 +1603,7 @@ impl Default for WmaMomentumConfig {
 /// Williams R Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct WilliamsRConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1538,6 +1623,7 @@ impl Default for WilliamsRConfig {
 /// KST Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct KSTConfig {
 	pub roc1_period: Option<u32>,
 	pub roc2_period: Option<u32>,
@@ -1561,6 +1647,7 @@ impl Default for KSTConfig {
 /// ADX Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ADXConfig {
 	pub period: Option<u32>,
 	pub trend_threshold: Option<f64>,
@@ -1578,6 +1665,7 @@ impl Default for ADXConfig {
 /// Momentum Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct MomentumConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1597,6 +1685,7 @@ impl Default for MomentumConfig {
 /// Awesome Oscillator Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct AwesomeOscillatorConfig {
 	pub fast_period: Option<u32>,
 	pub slow_period: Option<u32>,
@@ -1614,6 +1703,7 @@ impl Default for AwesomeOscillatorConfig {
 /// CCI Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CciConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1633,6 +1723,7 @@ impl Default for CciConfig {
 /// ROC Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct RocConfig {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1652,6 +1743,7 @@ impl Default for RocConfig {
 /// RSI2 Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct Rsi2Config {
 	pub period: Option<u32>,
 	pub overbought: Option<f64>,
@@ -1671,6 +1763,7 @@ impl Default for Rsi2Config {
 /// Ultimate Oscillator Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct UltimateOscillatorConfig {
 	pub period1: Option<u32>,
 	pub period2: Option<u32>,
@@ -1694,6 +1787,7 @@ impl Default for UltimateOscillatorConfig {
 /// Ichimoku Cloud Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct IchimokuCloudConfig {
 	pub short: Option<u32>,
 	pub medium: Option<u32>,
@@ -1715,6 +1809,7 @@ impl Default for IchimokuCloudConfig {
 /// Elliott Wave Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ElliottWaveConfig {
 	pub wave2_retracement: Option<f64>,
 	pub wave4_retracement: Option<f64>,

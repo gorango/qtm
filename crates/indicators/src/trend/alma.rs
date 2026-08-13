@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ALMAConfig {
 	pub period: Option<u32>,
 	pub offset: Option<f64>,
@@ -21,6 +22,7 @@ pub fn alma(values: &[f64], config: Option<ALMAConfig>) -> IndicatorResult<Vec<f
 	let sigma = config.sigma.unwrap_or(6.0);
 
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let len = values.len();
 	if len < period {

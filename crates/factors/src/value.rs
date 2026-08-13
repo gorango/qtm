@@ -4,18 +4,28 @@ use crate::utils::pricing::find_price_on_or_after;
 pub fn price_to_book_value(d: &FundamentalPointData) -> Option<f64> {
 	let mcap = d.market_cap?;
 	let equity = d.shareholders_equity?;
-	if equity <= 0.0 { None } else { Some(mcap / equity) }
+	if equity <= 0.0 {
+		None
+	} else {
+		Some(mcap / equity)
+	}
 }
 
 pub fn price_to_sales_value(d: &FundamentalPointData) -> Option<f64> {
 	let mcap = d.market_cap?;
 	let revenue = d.revenue?;
-	if revenue <= 0.0 { None } else { Some(mcap / revenue) }
+	if revenue <= 0.0 {
+		None
+	} else {
+		Some(mcap / revenue)
+	}
 }
 
 pub fn free_cash_flow_yield_value(d: &FundamentalPointData) -> Option<f64> {
 	let mcap = d.market_cap?;
-	if mcap <= 0.0 { return None; }
+	if mcap <= 0.0 {
+		return None;
+	}
 	let ocf = d.operating_cash_flow?;
 	let capex = d.capital_expenditure.unwrap_or(0.0);
 	Some((ocf - capex) / mcap)
@@ -25,7 +35,11 @@ pub fn free_cash_flow_margin_value(d: &FundamentalPointData) -> Option<f64> {
 	let ocf = d.operating_cash_flow?;
 	let capex = d.capital_expenditure.unwrap_or(0.0);
 	let revenue = d.revenue?;
-	if revenue <= 0.0 { None } else { Some((ocf - capex) / revenue) }
+	if revenue <= 0.0 {
+		None
+	} else {
+		Some((ocf - capex) / revenue)
+	}
 }
 
 pub fn owner_earnings_value(d: &FundamentalPointData) -> Option<f64> {
@@ -36,21 +50,35 @@ pub fn earnings_yield_value(d: &FundamentalPointData) -> Option<f64> {
 	let eps = d.eps?;
 	let mcap = d.market_cap?;
 	let shares = d.shares_outstanding?;
-	if shares <= 0.0 { return None; }
+	if shares <= 0.0 {
+		return None;
+	}
 	let price_per_share = mcap / shares;
-	if price_per_share <= 0.0 { None } else { Some(eps / price_per_share) }
+	if price_per_share <= 0.0 {
+		None
+	} else {
+		Some(eps / price_per_share)
+	}
 }
 
 pub fn cash_to_market_cap_value(d: &FundamentalPointData) -> Option<f64> {
 	let cash = d.cash_and_equivalents?;
 	let mcap = d.market_cap?;
-	if mcap <= 0.0 { None } else { Some(cash / mcap) }
+	if mcap <= 0.0 {
+		None
+	} else {
+		Some(cash / mcap)
+	}
 }
 
 pub fn book_value_per_share_value(d: &FundamentalPointData) -> Option<f64> {
 	let equity = d.shareholders_equity?;
 	let shares = d.shares_outstanding?;
-	if shares <= 0.0 { None } else { Some(equity / shares) }
+	if shares <= 0.0 {
+		None
+	} else {
+		Some(equity / shares)
+	}
 }
 
 pub fn net_cash_value(d: &FundamentalPointData) -> Option<f64> {
@@ -60,49 +88,81 @@ pub fn net_cash_value(d: &FundamentalPointData) -> Option<f64> {
 pub fn cash_to_assets_value(d: &FundamentalPointData) -> Option<f64> {
 	let cash = d.cash_and_equivalents?;
 	let assets = d.total_assets?;
-	if assets <= 0.0 { None } else { Some(cash / assets) }
+	if assets <= 0.0 {
+		None
+	} else {
+		Some(cash / assets)
+	}
 }
 
 pub fn cash_to_liabilities_value(d: &FundamentalPointData) -> Option<f64> {
 	let cash = d.cash_and_equivalents?;
 	let liab = d.current_liabilities?;
-	if liab <= 0.0 { None } else { Some(cash / liab) }
+	if liab <= 0.0 {
+		None
+	} else {
+		Some(cash / liab)
+	}
 }
 
 pub fn dividend_coverage_ocf_value(d: &FundamentalPointData) -> Option<f64> {
 	let ocf = d.operating_cash_flow?;
 	let paid = d.dividends_paid?;
-	if paid <= 0.0 { None } else { Some(ocf / paid) }
+	if paid <= 0.0 {
+		None
+	} else {
+		Some(ocf / paid)
+	}
 }
 
 pub fn payout_ratio_value(d: &FundamentalPointData) -> Option<f64> {
 	let paid = d.dividends_paid?;
 	let ni = d.net_income?;
-	if ni <= 0.0 { None } else { Some(paid / ni) }
+	if ni <= 0.0 {
+		None
+	} else {
+		Some(paid / ni)
+	}
 }
 
 pub fn quick_ratio_value(d: &FundamentalPointData) -> Option<f64> {
 	let ca = d.current_assets?;
 	let cl = d.current_liabilities?;
-	if cl <= 0.0 { None } else { Some(ca / cl) }
+	if cl <= 0.0 {
+		None
+	} else {
+		Some(ca / cl)
+	}
 }
 
 pub fn ev_to_ebitda_value(d: &FundamentalPointData) -> Option<f64> {
 	let ev = d.enterprise_value?;
 	let ebitda = d.ebitda?;
-	if ebitda <= 0.0 { None } else { Some(ev / ebitda) }
+	if ebitda <= 0.0 {
+		None
+	} else {
+		Some(ev / ebitda)
+	}
 }
 
 pub fn ev_to_revenue_value(d: &FundamentalPointData) -> Option<f64> {
 	let ev = d.enterprise_value?;
 	let revenue = d.revenue?;
-	if revenue <= 0.0 { None } else { Some(ev / revenue) }
+	if revenue <= 0.0 {
+		None
+	} else {
+		Some(ev / revenue)
+	}
 }
 
 pub fn debt_service_coverage_value(d: &FundamentalPointData) -> Option<f64> {
 	let oi = d.operating_income?;
 	let debt = d.total_debt?;
-	if debt <= 0.0 { None } else { Some(oi / debt) }
+	if debt <= 0.0 {
+		None
+	} else {
+		Some(oi / debt)
+	}
 }
 
 /// Price-to-Earnings (P/E) ratio.
@@ -133,7 +193,7 @@ pub fn price_to_earnings(
 	prices_sorted.sort_by(|a, b| {
 		a.time
 			.partial_cmp(&b.time)
-			.expect("values should be comparable")
+			.unwrap_or(std::cmp::Ordering::Equal)
 	});
 
 	let mut results = Vec::new();
@@ -253,7 +313,7 @@ pub fn dividend_yield(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -> 
 	prices_sorted.sort_by(|a, b| {
 		a.time
 			.partial_cmp(&b.time)
-			.expect("values should be comparable")
+			.unwrap_or(std::cmp::Ordering::Equal)
 	});
 
 	let mut results = Vec::new();
@@ -317,7 +377,7 @@ pub fn margin_of_safety(fundamentals: Vec<FundamentalPoint>, prices: Vec<Bar>) -
 	prices_sorted.sort_by(|a, b| {
 		a.time
 			.partial_cmp(&b.time)
-			.expect("values should be comparable")
+			.unwrap_or(std::cmp::Ordering::Equal)
 	});
 
 	let mut results = Vec::new();
@@ -584,7 +644,7 @@ mod tests {
 	}
 
 	fn assert_approx_eq(a: f64, b: f64, epsilon: f64) {
-		assert!((a - b).abs() < epsilon, "expected {} ≈ {}", a, b);
+		assert!((a - b).abs() < epsilon, "expected {a} ≈ {b}");
 	}
 
 	#[test]

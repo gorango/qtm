@@ -125,7 +125,7 @@ mod tests {
 		let closes = vec![100.0; 20];
 		let result = momentum_strategy(&closes, None).unwrap();
 		for i in 0..13 {
-			assert_eq!(result[i], 0, "signal[{}] should be 0", i);
+			assert_eq!(result[i], 0, "signal[{i}] should be 0");
 		}
 	}
 

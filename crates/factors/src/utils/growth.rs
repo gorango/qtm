@@ -23,7 +23,11 @@ pub fn create_growth_factor(fundamentals: &[FundamentalPoint], metric: &str) -> 
 	}
 
 	for group in symbol_groups.values_mut() {
-		group.sort_by(|a, b| a.date.partial_cmp(&b.date).unwrap());
+		group.sort_by(|a, b| {
+			a.date
+				.partial_cmp(&b.date)
+				.unwrap_or(std::cmp::Ordering::Equal)
+		});
 
 		let mut period_groups: std::collections::HashMap<&str, Vec<&&FundamentalPoint>> =
 			std::collections::HashMap::new();
@@ -33,7 +37,11 @@ pub fn create_growth_factor(fundamentals: &[FundamentalPoint], metric: &str) -> 
 
 		for points in period_groups.values() {
 			let mut sorted = points.clone();
-			sorted.sort_by(|a, b| a.date.partial_cmp(&b.date).unwrap());
+			sorted.sort_by(|a, b| {
+				a.date
+					.partial_cmp(&b.date)
+					.unwrap_or(std::cmp::Ordering::Equal)
+			});
 
 			for i in 1..sorted.len() {
 				let current = sorted[i];

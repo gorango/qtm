@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::AdxRsiConfig;
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "adx-rsi-trend-momentum",
@@ -9,7 +8,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Combine ADX trend + RSI momentum",
-    opt_params = r#"[{"param_name": "adx_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "trend_threshold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "rsi_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "adxPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "trendThreshold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "rsiPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 40.0, "step": 5.0}, {"param_name": "overbought", "min": 60.0, "max": 90.0, "step": 5.0}]"#
 )]
 pub fn adx_rsi_strategy(
 	highs: &[f64],
@@ -34,8 +33,7 @@ pub fn adx_rsi_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: ADX + RSI requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: ADX + RSI requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 
@@ -52,7 +50,7 @@ pub fn adx_rsi_strategy(
 	};
 	let rsi_values = indicators_core::rsi(&closes_vec, Some(rsi_config));
 
-	let adx = adx_result.as_ref().unwrap();
+	let adx = adx_result?;
 	let mut signals = Vec::with_capacity(data_len);
 
 	for (i, (&adx_value, &rsi_value)) in adx

@@ -14,7 +14,7 @@ use strategies_proc_macro::strategy;
 	description = "Generates buy signals when price is above Fibonacci level and sell signals when price is below Fibonacci level",
 	opt_params = r#"[
 		{"param_name": "period", "min": 20.0, "max": 100.0, "step": 5.0},
-		{"param_name": "fib_level", "min": 0.236, "max": 0.786, "step": 0.05}
+		{"param_name": "fibLevel", "min": 0.236, "max": 0.786, "step": 0.05}
 	]"#
 )]
 pub fn fibonacci_retracement_strategy(

@@ -4,6 +4,7 @@ use crate::IndicatorResult;
 pub fn trix(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;
+	crate::utils::validation::validate_finite(&[values])?;
 
 	let ema1 = ema_internal(values, period);
 	let ema2 = ema_internal(&ema1, period);

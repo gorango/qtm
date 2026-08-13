@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PercentileNearestRankConfig {
 	pub period: Option<u32>,
 	pub percentage: Option<f64>,
@@ -19,7 +20,7 @@ fn percentile_nearest_rank_internal(values: &[f64], period: usize, percentage: f
 
 	for i in period - 1..len {
 		let mut window: Vec<f64> = values[i - period + 1..=i].to_vec();
-		window.sort_by(|a, b| a.partial_cmp(b).unwrap());
+		window.sort_by(f64::total_cmp);
 
 		let p = percentage / 100.0;
 		let mut index = (p * period as f64).ceil() as usize - 1;
@@ -47,6 +48,7 @@ pub fn percentile_nearest_rank(
 	let percentage = percentage.unwrap_or(50.0);
 
 	validation::validate_period(period)?;
+	validation::validate_finite(&[values])?;
 
 	Ok(percentile_nearest_rank_internal(values, period, percentage))
 }

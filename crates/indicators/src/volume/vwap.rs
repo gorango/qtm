@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct VWAPConfig {
 	pub period: Option<u32>,
 	pub price_source: Option<String>,
@@ -20,7 +21,9 @@ pub fn vwap(
 	volumes: &[f64],
 	config: Option<VWAPConfig>,
 ) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, closings, volumes]).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, closings, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 	let mut result = vec![f64::NAN; len];
@@ -37,8 +40,8 @@ pub fn vwap(
 	let anchored = cfg.anchored.unwrap_or(false);
 	let session_length = cfg.session_length.unwrap_or(0) as usize;
 
-	if period > 0 {
-		validate_period(period).unwrap();
+	if period > 0 && validate_period(period).is_err() {
+		return vec![];
 	}
 
 	let prices = if price_source == "hlc3" {

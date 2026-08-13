@@ -14,9 +14,9 @@ use strategies_proc_macro::strategy;
 	description = "Generates signals based on slope direction with ADX confirmation for trending markets",
 	opt_params = r#"[
 		{"param_name": "period", "min": 10.0, "max": 50.0, "step": 1.0},
-		{"param_name": "slope_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "period_adx", "min": 5.0, "max": 30.0, "step": 1.0},
-		{"param_name": "adx_threshold", "min": 15.0, "max": 35.0, "step": 1.0}
+		{"param_name": "slopePeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "periodAdx", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "adxThreshold", "min": 15.0, "max": 35.0, "step": 1.0}
 	]"#
 )]
 pub fn lin_reg_slope_strategy(

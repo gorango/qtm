@@ -9,5 +9,6 @@ pub fn typical_price_internal(highs: &[f64], lows: &[f64], closings: &[f64]) -> 
 
 pub fn typical_price(highs: &[f64], lows: &[f64], closings: &[f64]) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
+	crate::utils::validation::validate_finite(&[highs, lows, closings])?;
 	Ok(typical_price_internal(highs, lows, closings))
 }

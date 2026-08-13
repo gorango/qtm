@@ -89,14 +89,10 @@ pub fn wedges(
 		None => return Ok(results),
 	};
 
-	let end_index = *recent_peaks
-		.last()
-		.expect("recent_peaks should be non-empty after pattern detection")
-		.max(
-			recent_troughs
-				.last()
-				.expect("recent_troughs should be non-empty after pattern detection"),
-		);
+	let end_index = match (recent_peaks.last(), recent_troughs.last()) {
+		(Some(&p), Some(&t)) => p.max(t),
+		_ => return Ok(results),
+	};
 
 	for i in (end_index + 1)..highs.len() {
 		let close = closes[i];

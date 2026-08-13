@@ -1,6 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::FlagsPennantsMacdConfig;
 use crate::{StrategyError, StrategyResult};
+use strategies_proc_macro::strategy;
 
 /// Flag Pennant Macd
 ///
@@ -11,7 +11,7 @@ use crate::{StrategyError, StrategyResult};
 	category = "composite",
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Flag/Pennant + MACD continuation",
-	opt_params = r#"[{"param_name":"pole_length","min":5.0,"max":20.0,"step":1.0},{"param_name":"fast_period","min":5.0,"max":20.0,"step":1.0},{"param_name":"slow_period","min":20.0,"max":50.0,"step":1.0},{"param_name":"signal_period","min":5.0,"max":20.0,"step":1.0}]"#
+	opt_params = r#"[{"param_name": "poleLength","min":5.0,"max":20.0,"step":1.0},{"param_name": "macdFastPeriod","min":5.0,"max":20.0,"step":1.0},{"param_name": "macdSlowPeriod","min":20.0,"max":50.0,"step":1.0},{"param_name": "macdSignalPeriod","min":5.0,"max":20.0,"step":1.0}]"#
 )]
 pub fn flag_pennant_macd_strategy(
 	highs: &[f64],
@@ -36,14 +36,12 @@ pub fn flag_pennant_macd_strategy(
 		));
 	}
 
-	let min_data_length = pole_length
-		.max(slow_period + signal_period) as usize
-		+ consolidation_bars as usize;
+	let min_data_length =
+		pole_length.max(slow_period + signal_period) as usize + consolidation_bars as usize;
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: Flag/Pennant + MACD requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: Flag/Pennant + MACD requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

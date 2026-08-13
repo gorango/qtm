@@ -23,8 +23,7 @@ pub fn validate_data_length(
 ) -> StrategyResult<()> {
 	validate_min_data!(data_length, required_length, |min, actual| {
 		StrategyError::InsufficientData(format!(
-			"{} strategy requires at least {} data points, got {}",
-			strategy_name, min, actual
+			"{strategy_name} strategy requires at least {min} data points, got {actual}"
 		))
 	});
 	Ok(())

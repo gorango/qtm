@@ -10,6 +10,7 @@ pub struct TrueRangeResult {
 
 pub fn tr(highs: &[f64], lows: &[f64], closings: &[f64]) -> IndicatorResult<TrueRangeResult> {
 	crate::utils::validation::validate_multiple_arrays(&[highs, lows, closings])?;
+	crate::utils::validation::validate_finite(&[highs, lows, closings])?;
 
 	Ok(TrueRangeResult {
 		tr_line: tr_internal(highs, lows, closings),

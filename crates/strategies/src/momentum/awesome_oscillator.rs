@@ -14,8 +14,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when AO crosses above zero and sell signals when AO crosses below zero",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 3.0, "max": 10.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 20.0, "max": 50.0, "step": 1.0}
+		{"param_name": "fastPeriod", "min": 3.0, "max": 10.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 20.0, "max": 50.0, "step": 1.0}
 	]"#
 )]
 pub fn awesome_oscillator_strategy(

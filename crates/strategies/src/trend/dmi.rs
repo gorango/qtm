@@ -15,9 +15,9 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["1h", "4h", "1d"],
 	description = "Uses ADX and Directional Indicators for trend signals when ADX crosses over threshold with directional bias",
 	opt_params = r#"[
-		{"param_name": "period_di", "min": 5.0, "max": 30.0, "step": 1.0},
-		{"param_name": "period_adx", "min": 5.0, "max": 30.0, "step": 1.0},
-		{"param_name": "adx_threshold", "min": 15.0, "max": 35.0, "step": 1.0}
+		{"param_name": "periodDi", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "periodAdx", "min": 5.0, "max": 30.0, "step": 1.0},
+		{"param_name": "adxThreshold", "min": 15.0, "max": 35.0, "step": 1.0}
 	]"#
 )]
 pub fn dmi_strategy(

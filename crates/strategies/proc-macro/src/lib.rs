@@ -58,7 +58,7 @@ impl Parse for StrategyAttr {
 				_ => {
 					return Err(syn::Error::new_spanned(
 						&pair.key,
-						format!("unknown attribute key: {}", key),
+						format!("unknown attribute key: {key}"),
 					));
 				}
 			}
@@ -157,7 +157,7 @@ fn ohlcv_accessor(name: &str) -> proc_macro2::TokenStream {
 		"lows" => quote! { input.lows.as_deref().unwrap_or(&input.closes) },
 		"opens" => quote! { input.opens.as_deref().unwrap_or(&input.closes) },
 		"volumes" => quote! { input.volumes.as_deref().unwrap_or(&input.closes) },
-		_ => panic!("unknown OHLCV param: {}", name),
+		_ => panic!("unknown OHLCV param: {name}"),
 	}
 }
 
@@ -183,7 +183,7 @@ fn generate_napi_binding(
 	ohlcv_params: &[String],
 	config_type: &Type,
 ) -> proc_macro2::TokenStream {
-	let napi_fn_name = Ident::new(&format!("{}_napi_binding", fn_name_str), fn_name.span());
+	let napi_fn_name = Ident::new(&format!("{fn_name_str}_napi_binding"), fn_name.span());
 	let js_name = snake_to_camel(fn_name_str);
 
 	let napi_params: Vec<_> = ohlcv_params
@@ -316,10 +316,10 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 
 	let fn_name = extract_fn_name(&input_fn);
 	let fn_name_str = fn_name.to_string();
-	let wrapped_fn_name = Ident::new(&format!("{}_wrapped", fn_name_str), fn_name.span());
-	let metadata_fn_name = Ident::new(&format!("{}_metadata", fn_name_str), fn_name.span());
-	let defaults_fn_name = Ident::new(&format!("{}_defaults", fn_name_str), fn_name.span());
-	let params_schema_fn_name = Ident::new(&format!("{}_params_schema", fn_name_str), fn_name.span());
+	let wrapped_fn_name = Ident::new(&format!("{fn_name_str}_wrapped"), fn_name.span());
+	let metadata_fn_name = Ident::new(&format!("{fn_name_str}_metadata"), fn_name.span());
+	let defaults_fn_name = Ident::new(&format!("{fn_name_str}_defaults"), fn_name.span());
+	let params_schema_fn_name = Ident::new(&format!("{fn_name_str}_params_schema"), fn_name.span());
 
 	let id = &attr.id;
 	let name = &attr.name;

@@ -8,6 +8,7 @@ use factors_core::{debt_to_assets_value, interest_coverage_value, FundamentalPoi
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SolvencyConfig {
 	pub max_debt_to_assets: Option<f64>,
 	pub min_interest_coverage: Option<f64>,
@@ -33,8 +34,12 @@ pub fn solvency_strategy(points: Vec<FundamentalPoint>, config: Option<SolvencyC
 	points
 		.iter()
 		.map(|p| {
-			let debt_ok = debt_to_assets_value(&p.data).map(|v| v < max_da).unwrap_or(false);
-			let interest_ok = interest_coverage_value(&p.data).map(|v| v > min_ic).unwrap_or(false);
+			let debt_ok = debt_to_assets_value(&p.data)
+				.map(|v| v < max_da)
+				.unwrap_or(false);
+			let interest_ok = interest_coverage_value(&p.data)
+				.map(|v| v > min_ic)
+				.unwrap_or(false);
 			if debt_ok && interest_ok {
 				1
 			} else {
@@ -50,5 +55,41 @@ pub fn solvency_strategy_metadata() -> serde_json::Value {
 	serde_json::json!({"id": "solvency-focused","name": "Solvency Focused Fundamental","category": "fundamental","default_timeframes": ["1d","1w"],"description": "Strong balance sheets: low debt-to-assets, high interest coverage"})
 }
 pub fn solvency_strategy_defaults() -> serde_json::Value {
-	serde_json::json!({"params": {"max_debt_to_assets": 0.5,"min_interest_coverage": 3},"optimization_bounds": [{"param_name": "max_debt_to_assets","min": 0,"max": 1,"step": 0.05},{"param_name": "min_interest_coverage","min": 1,"max": 10,"step": 0.5}]})
+	serde_json::json!({"params": {"maxDebtToAssets": 0.5,"minInterestCoverage": 3},"optimization_bounds": [{"param_name": "maxDebtToAssets","min": 0,"max": 1,"step": 0.05},{"param_name": "minInterestCoverage","min": 1,"max": 10,"step": 0.5}]})
+}
+
+#[cfg(test)]
+mod defaults_tests {
+	use super::*;
+
+	macro_rules! check_defaults {
+		($($defaults_fn:ident => $cfg:ty),* $(,)?) => {
+			$(
+				#[test]
+				fn $defaults_fn() {
+					let defaults = super::$defaults_fn();
+					let params = defaults["params"].clone();
+					let cfg: $cfg = serde_json::from_value(params.clone())
+						.expect("defaults params must deserialize");
+					let canonical = serde_json::to_value(&cfg).unwrap();
+					for (k, v) in params.as_object().unwrap() {
+						let expected = canonical.get(k).unwrap_or(&serde_json::Value::Null);
+						let matches = match (expected.as_f64(), v.as_f64()) {
+							(Some(a), Some(b)) => a == b,
+							_ => expected == v,
+						};
+						assert!(
+							matches,
+							"key `{k}` is not a recognized field of {}",
+							stringify!($cfg)
+						);
+					}
+				}
+			)*
+		};
+	}
+
+	check_defaults! {
+		solvency_strategy_defaults => SolvencyConfig,
+	}
 }

@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::DoubleTopStochasticConfig;
 use crate::StrategyResult;
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "double-top-stochastic-reversal",
@@ -9,7 +8,7 @@ use crate::StrategyResult;
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Double Top/Bottom pattern + Stochastic confirmation",
-    opt_params = r#"[{"param_name": "min_distance", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "tolerance", "min": 0.01, "max": 0.1, "step": 0.01}, {"param_name": "k_period", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
+    opt_params = r#"[{"param_name": "minDistance", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "tolerance", "min": 0.01, "max": 0.1, "step": 0.01}, {"param_name": "kPeriod", "min": 5.0, "max": 30.0, "step": 1.0}, {"param_name": "dPeriod", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 5.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 5.0}]"#
 )]
 pub fn double_top_stochastic_strategy(
 	highs: &[f64],

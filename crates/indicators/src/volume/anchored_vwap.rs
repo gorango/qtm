@@ -7,7 +7,9 @@ pub fn anchored_vwap(
 	volumes: &[f64],
 	anchor_index: u32,
 ) -> Vec<f64> {
-	validate_arrays_equal_length(&[highs, lows, closes, volumes]).unwrap();
+	if validate_arrays_equal_length(&[highs, lows, closes, volumes]).is_err() {
+		return vec![];
+	}
 
 	let len = highs.len();
 	let mut result = vec![f64::NAN; len];

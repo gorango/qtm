@@ -17,7 +17,7 @@ use strategies_proc_macro::strategy;
 	description = "Generates buy signals when ADX crosses above trend threshold in bullish trends (+DI > -DI), sell signals in bearish trends (-DI > +DI) or ranging markets",
 	opt_params = r#"[
 		{"param_name": "period", "min": 5.0, "max": 30.0, "step": 1.0},
-		{"param_name": "trend_threshold", "min": 15.0, "max": 35.0, "step": 1.0}
+		{"param_name": "trendThreshold", "min": 15.0, "max": 35.0, "step": 1.0}
 	]"#
 )]
 pub fn adx_strategy(

@@ -15,10 +15,10 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when ALMA diverges above HMA by threshold and sell signals when ALMA diverges below HMA by threshold",
 	opt_params = r#"[
-		{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "slow_period", "min": 10.0, "max": 50.0, "step": 1.0},
+		{"param_name": "fastPeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "slowPeriod", "min": 10.0, "max": 50.0, "step": 1.0},
 		{"param_name": "offset", "min": 0.5, "max": 1.0, "step": 0.05},
-		{"param_name": "divergence_threshold", "min": 0.001, "max": 0.1, "step": 0.001}
+		{"param_name": "divergenceThreshold", "min": 0.001, "max": 0.1, "step": 0.001}
 	]"#
 )]
 pub fn alma_hma_divergence_strategy(

@@ -13,6 +13,7 @@ pub struct AroonResult {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AroonConfig {
 	pub period: Option<u32>,
 }

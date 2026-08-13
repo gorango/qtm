@@ -14,8 +14,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when OBV crosses above its SMA, sell signals when OBV crosses below its SMA",
 	opt_params = r#"[
-		{"param_name": "obv_period", "min": 5.0, "max": 50.0, "step": 1.0},
-		{"param_name": "price_period", "min": 5.0, "max": 50.0, "step": 1.0}
+		{"param_name": "obvPeriod", "min": 5.0, "max": 50.0, "step": 1.0},
+		{"param_name": "pricePeriod", "min": 5.0, "max": 50.0, "step": 1.0}
 	]"#
 )]
 pub fn obv_confirmation_strategy(

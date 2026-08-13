@@ -1,8 +1,7 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::MacdStochasticConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "macd-stochastic-confirmation",
@@ -10,7 +9,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "MACD + Stochastic confirmation",
-    opt_params = r#"[{"param_name": "fast_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "slow_period", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "signal_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "fastPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "slowPeriod", "min": 20.0, "max": 50.0, "step": 1.0}, {"param_name": "signalPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "kPeriod", "min": 5.0, "max": 20.0, "step": 1.0}, {"param_name": "dPeriod", "min": 2.0, "max": 10.0, "step": 1.0}, {"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0}, {"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}]"#
 )]
 pub fn macd_stochastic_strategy(
 	highs: &[f64],
@@ -37,8 +36,7 @@ pub fn macd_stochastic_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: MACD Stochastic requires at least {} data points",
-			min_data_length
+			"Insufficient data: MACD Stochastic requires at least {min_data_length} data points"
 		)));
 	}
 

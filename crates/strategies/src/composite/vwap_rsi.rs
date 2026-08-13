@@ -1,8 +1,7 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::VwapRsiConfig;
 use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "vwap-rsi-breakout",
@@ -10,7 +9,7 @@ use crate::{StrategyError, StrategyResult};
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],
     description = "Combine VWAP + RSI breakout",
-    opt_params = r#"[{"param_name": "vwap_period", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "rsi_period", "min": 7.0, "max": 21.0, "step": 1.0}, {"param_name": "oversold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "overbought", "min": 60.0, "max": 80.0, "step": 1.0}]"#
+    opt_params = r#"[{"param_name": "vwapPeriod", "min": 5.0, "max": 50.0, "step": 1.0}, {"param_name": "rsiPeriod", "min": 7.0, "max": 21.0, "step": 1.0}, {"param_name": "oversold", "min": 20.0, "max": 40.0, "step": 1.0}, {"param_name": "overbought", "min": 60.0, "max": 80.0, "step": 1.0}]"#
 )]
 pub fn vwap_rsi_strategy(
 	highs: &[f64],
@@ -35,8 +34,7 @@ pub fn vwap_rsi_strategy(
 
 	if data_len < min_periods {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: VWAP + RSI requires at least {} data points, got {}",
-			min_periods, data_len
+			"Insufficient data: VWAP + RSI requires at least {min_periods} data points, got {data_len}"
 		)));
 	}
 

@@ -1,17 +1,19 @@
 use crate::internal::sma::sma_internal;
-use crate::utils::validation::validate_min_length;
 use crate::utils::validation::validate_period;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct VolumeSurgeConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
 }
 
 pub fn volume_surge(volumes: &[f64], config: Option<VolumeSurgeConfig>) -> Vec<bool> {
-	validate_min_length(volumes.len(), 1).unwrap();
+	if volumes.is_empty() {
+		return vec![];
+	}
 
 	let len = volumes.len();
 
@@ -23,11 +25,13 @@ pub fn volume_surge(volumes: &[f64], config: Option<VolumeSurgeConfig>) -> Vec<b
 	let period = cfg.period.unwrap_or(20) as usize;
 	let multiplier = cfg.multiplier.unwrap_or(2.0);
 
-	if period > 0 {
-		validate_period(period).unwrap();
+	if period > 0 && validate_period(period).is_err() {
+		return vec![];
 	}
 
-	validate_min_length(len, period).unwrap();
+	if len < period {
+		return vec![];
+	}
 
 	let volume_ma = sma_internal(volumes, period);
 	let mut result = vec![false; len];

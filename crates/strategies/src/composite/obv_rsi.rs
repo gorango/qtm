@@ -1,7 +1,6 @@
-use strategies_proc_macro::strategy;
 use crate::types::configs::RSIConfig;
 use crate::{StrategyError, StrategyResult};
-
+use strategies_proc_macro::strategy;
 
 #[strategy(
     id = "obv-rsi-volume-confirmation",
@@ -32,8 +31,7 @@ pub fn obv_rsi_strategy(
 
 	if data_len < min_data_length {
 		return Err(StrategyError::InsufficientData(format!(
-			"Insufficient data: OBV + RSI requires at least {} data points, got {}",
-			min_data_length, data_len
+			"Insufficient data: OBV + RSI requires at least {min_data_length} data points, got {data_len}"
 		)));
 	}
 

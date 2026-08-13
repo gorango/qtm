@@ -14,8 +14,8 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when %K crosses above oversold level and sell signals when %K crosses below overbought level",
 	opt_params = r#"[
-		{"param_name": "k_period", "min": 5.0, "max": 20.0, "step": 1.0},
-		{"param_name": "d_period", "min": 2.0, "max": 10.0, "step": 1.0},
+		{"param_name": "kPeriod", "min": 5.0, "max": 20.0, "step": 1.0},
+		{"param_name": "dPeriod", "min": 2.0, "max": 10.0, "step": 1.0},
 		{"param_name": "oversold", "min": 10.0, "max": 30.0, "step": 1.0},
 		{"param_name": "overbought", "min": 70.0, "max": 90.0, "step": 1.0}
 	]"#

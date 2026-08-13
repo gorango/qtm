@@ -14,7 +14,7 @@ use strategies_proc_macro::strategy;
 	default_timeframes = ["15m", "1h", "4h"],
 	description = "Generates buy signals when VPT crosses above positive threshold with volume confirmation, sell signals when VPT crosses below negative threshold with volume confirmation",
 	opt_params = r#"[
-		{"param_name": "vpt_threshold", "min": 0.01, "max": 0.5, "step": 0.01}
+		{"param_name": "vptThreshold", "min": 0.01, "max": 0.5, "step": 0.01}
 	]"#
 )]
 pub fn volume_price_trend_strategy(

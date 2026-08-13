@@ -18,6 +18,8 @@ pub fn mcclellan_oscillator(advances: &[f64], declines: &[f64]) -> IndicatorResu
 		));
 	}
 
+	crate::utils::validation::validate_finite(&[advances, declines])?;
+
 	let len = advances.len();
 	let mut ad_diff = vec![0.0; len];
 
