@@ -7,6 +7,7 @@ members = [
     "crates/strategies/proc-macro",
     "crates/codegen",
     "bindings/napi",
+    "bindings/pyo3",
 ]
 
 [workspace.dependencies]

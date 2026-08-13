@@ -1,0 +1,18 @@
+[package]
+name = "quantamental-python"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "quantamental"
+crate-type = ["cdylib"]
+
+[dependencies]
+factors-core = { path = "../../crates/factors" }
+indicators-core = { path = "../../crates/indicators" }
+strategies-core = { path = "../../crates/strategies" }
+numpy = "0.29"
+pyo3 = { version = "0.29", features = ["extension-module", "serde"] }
+serde.workspace = true
+serde_json.workspace = true
+rayon.workspace = true
