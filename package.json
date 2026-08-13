@@ -4,10 +4,5 @@
 	"workspaces": [
 		"bindings/*",
 		"packages/*"
-	],
-	"scripts": {
-		"build": "npm run build --workspaces --if-present",
-		"test": "cargo test --workspace",
-		"lint": "cargo clippy --workspace"
-	}
+	]
 }
