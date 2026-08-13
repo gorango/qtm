@@ -13,7 +13,7 @@ pub struct BBResult {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BBConfig {
 	pub period: Option<u32>,
 	pub std_dev: Option<f64>,

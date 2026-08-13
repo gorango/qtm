@@ -40,7 +40,7 @@ fn reinvest_rate(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct AltmanZScoreConfig {
 	pub z_score_threshold: Option<f64>,
 }
@@ -54,7 +54,7 @@ impl Default for AltmanZScoreConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PiotroskiConfig {
 	pub f_score_threshold: Option<u32>,
 }
@@ -68,7 +68,7 @@ impl Default for PiotroskiConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MagicFormulaConfig {
 	pub earnings_yield_threshold: Option<f64>,
 	pub return_on_capital_threshold: Option<f64>,
@@ -84,7 +84,7 @@ impl Default for MagicFormulaConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct JoelGreenblattConfig {
 	pub earnings_yield_threshold: Option<f64>,
 	pub return_on_capital_threshold: Option<f64>,
@@ -100,7 +100,7 @@ impl Default for JoelGreenblattConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SuiteConfig {
 	pub threshold: Option<f64>,
 }
@@ -114,7 +114,7 @@ impl Default for SuiteConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MultiFactorSuiteConfig {
 	pub value_weight: Option<f64>,
 	pub growth_weight: Option<f64>,

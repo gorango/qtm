@@ -28,7 +28,7 @@ fn reinvest_rate(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PegConfig {
 	pub max_peg_ratio: Option<f64>,
 }
@@ -42,7 +42,7 @@ impl Default for PegConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct GrowthVsCompetitionConfig {
 	pub min_criteria_met: Option<u32>,
 	pub growth_premium: Option<f64>,
@@ -60,7 +60,7 @@ impl Default for GrowthVsCompetitionConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RevenueGrowthAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub yoy_threshold: Option<f64>,
@@ -80,7 +80,7 @@ impl Default for RevenueGrowthAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SustainableGrowthRateConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_sgr: Option<f64>,
@@ -98,7 +98,7 @@ impl Default for SustainableGrowthRateConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EarningsReinvestmentRateConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_reinvestment_rate: Option<f64>,
@@ -116,7 +116,7 @@ impl Default for EarningsReinvestmentRateConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TopQuartileConfig {
 	pub metrics: Option<Vec<String>>,
 }
@@ -135,7 +135,7 @@ impl Default for TopQuartileConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct QoqRevenueMomentumConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_qtr_growth: Option<f64>,
@@ -153,7 +153,7 @@ impl Default for QoqRevenueMomentumConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RevenueGrowthVsCompetitorsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub growth_premium: Option<f64>,
@@ -169,7 +169,7 @@ impl Default for RevenueGrowthVsCompetitorsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RevenueVolatilityScoreConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_volatility: Option<f64>,
@@ -187,7 +187,7 @@ impl Default for RevenueVolatilityScoreConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SeasonalityIndexRevenueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_seasonality_index: Option<f64>,
@@ -205,7 +205,7 @@ impl Default for SeasonalityIndexRevenueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MgmtEarningsCallToneConfig {
 	pub min_criteria_met: Option<u32>,
 	pub tone_threshold: Option<f64>,
@@ -223,7 +223,7 @@ impl Default for MgmtEarningsCallToneConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EarningsCallRevenueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub revenue_guidance_beat: Option<bool>,

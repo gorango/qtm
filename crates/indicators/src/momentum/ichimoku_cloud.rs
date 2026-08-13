@@ -91,7 +91,7 @@ fn shift_left_by(n: usize, values: &[f64]) -> Vec<f64> {
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct IchimokuCloudConfig {
 	pub short: Option<u32>,
 	pub medium: Option<u32>,

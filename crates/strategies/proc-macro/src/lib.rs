@@ -390,7 +390,15 @@ pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 			config: Option<serde_json::Value>,
 		) -> crate::StrategyResult<Vec<i8>> {
 			let config = config
-				.map(|c| serde_json::from_value::<#config_type>(c).unwrap_or_default());
+				.map(|c| {
+					serde_json::from_value::<#config_type>(c).map_err(|e| {
+						crate::StrategyError::ConfigError(format!(
+							"Invalid config for {}: {e}",
+							stringify!(#config_type)
+						))
+					})
+				})
+				.transpose()?;
 			#fn_name(#(#ohlcv_args),*, config)
 		}
 

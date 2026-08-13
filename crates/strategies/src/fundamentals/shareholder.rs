@@ -8,7 +8,7 @@ use factors_core::{dividend_payout_ratio_value, shareholder_yield_value, Fundame
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DividendConfig {
 	pub payout_ratio_max: Option<f64>,
 	pub min_shareholder_yield: Option<f64>,
@@ -25,7 +25,7 @@ impl Default for DividendConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DividendGrowthConsistencyConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_years_consistent: Option<f64>,

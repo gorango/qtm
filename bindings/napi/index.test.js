@@ -49,12 +49,12 @@ test('registry strategies are dispatchable by id via runStrategy', () => {
 
 	// Registry metadata is backed by a live handler for every advertised id.
 	const closes = Array.from({ length: 300 }, (_, i) => 100 + i * 0.5)
-	// Pair strategies (cointegration/correlation) require a second series via
-	// config.secondCloses (serde camelCase, matching the JS-native convention);
-	// unknown config keys are ignored.
-	const config = { secondCloses: closes }
+	// Configs are strict (serde deny_unknown_fields): only pair strategies accept
+	// a second series. Derive the config per strategy from its registered schema.
 	const registry = binding.getStrategyRegistry()
 	for (const id of Object.keys(registry.strategies)) {
+		const schema = JSON.parse(registryJson.strategies[id]?.params_schema || '{}')
+		const config = schema.properties?.secondCloses ? { secondCloses: closes } : null
 		const out = binding.runStrategy(id, { closes }, config)
 		assert.ok(Array.isArray(out), `strategy ${id} should produce a signal array`)
 		assert.equal(out.length, closes.length, `strategy ${id} should produce one signal per bar`)
@@ -134,9 +134,19 @@ test('runStrategy applies camelCase config keys (no silent drop)', () => {
 		/secondCloses must have the same length as closes/,
 	)
 
-	// The snake_case key is no longer part of the config contract and is ignored.
+	// The snake_case key is outside the strict config contract and now hard-fails
+	// instead of being silently dropped.
 	assert.throws(
 		() => binding.runStrategy('correlation-pair-trading', { closes }, { second_closes: secondCloses }),
-		/secondCloses must have the same length as closes/,
+		/Invalid config/,
+	)
+})
+
+test('runStrategy rejects unknown config keys', () => {
+	// serde deny_unknown_fields: a config key that is not a struct field must
+	// throw rather than silently run with defaults.
+	assert.throws(
+		() => binding.runStrategy('buyAndHold', { closes: [1, 2, 3] }, { noSuchKey: 1 }),
+		/Invalid config/,
 	)
 })

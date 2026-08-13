@@ -51,7 +51,7 @@ fn safe_div(num: f64, den: f64) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ValueConfig {
 	pub pe_threshold: Option<f64>,
 	pub enable_time_based_exit: Option<bool>,
@@ -70,7 +70,7 @@ impl Default for ValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ClassicValueConfig {
 	pub quartile: Option<u32>,
 }
@@ -83,7 +83,7 @@ impl Default for ClassicValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ValueChecklistConfig {
 	pub min_criteria_met: Option<u32>,
 }
@@ -98,7 +98,7 @@ impl Default for ValueChecklistConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct FreeCashFlowAnalysisConfig {
 	pub min_criteria_met: Option<u32>,
 	pub fcf_margin_threshold: Option<f64>,
@@ -117,7 +117,7 @@ impl Default for FreeCashFlowAnalysisConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WaccVsRoicSpreadConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_roic: Option<f64>,
@@ -136,7 +136,7 @@ impl Default for WaccVsRoicSpreadConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EvEbitdaFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_ebitda_threshold: Option<f64>,
@@ -155,7 +155,7 @@ impl Default for EvEbitdaFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct IntrinsicValueMultiMetricConfig {
 	pub min_criteria_met: Option<u32>,
 	pub margin_of_safety: Option<f64>,
@@ -174,7 +174,7 @@ impl Default for IntrinsicValueMultiMetricConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CashBurnRunwayConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_runway_months: Option<f64>,
@@ -193,7 +193,7 @@ impl Default for CashBurnRunwayConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DebtEbitdarStressTestConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_debt_ebitdar: Option<f64>,
@@ -212,7 +212,7 @@ impl Default for DebtEbitdarStressTestConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EvFcf10yrBandConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_ev_fcf: Option<f64>,
@@ -231,7 +231,7 @@ impl Default for EvFcf10yrBandConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EvRevenueMultiplesConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_revenue_threshold: Option<f64>,
@@ -250,7 +250,7 @@ impl Default for EvRevenueMultiplesConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EvSalesFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ev_sales_threshold: Option<f64>,
@@ -269,7 +269,7 @@ impl Default for EvSalesFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InterestCoverageBufferConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_interest_coverage: Option<f64>,
@@ -288,7 +288,7 @@ impl Default for InterestCoverageBufferConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MarginOfSafetyTargetPriceConfig {
 	pub min_criteria_met: Option<u32>,
 	pub upside_threshold: Option<f64>,
@@ -307,7 +307,7 @@ impl Default for MarginOfSafetyTargetPriceConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct NetCashPositionToggleConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_net_cash: Option<f64>,
@@ -326,7 +326,7 @@ impl Default for NetCashPositionToggleConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct NormalPeFutureFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_forward_pe: Option<f64>,
@@ -345,7 +345,7 @@ impl Default for NormalPeFutureFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OcfCoverageDividendsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_coverage_ratio: Option<f64>,
@@ -364,7 +364,7 @@ impl Default for OcfCoverageDividendsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PriceSalesFairValueConfig {
 	pub min_criteria_met: Option<u32>,
 	pub ps_threshold: Option<f64>,
@@ -383,7 +383,7 @@ impl Default for PriceSalesFairValueConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PriceToOwnerEarningsConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_price_to_owner_earnings: Option<f64>,
@@ -402,7 +402,7 @@ impl Default for PriceToOwnerEarningsConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct QuickRatioStressTestConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_quick_ratio: Option<f64>,
@@ -421,7 +421,7 @@ impl Default for QuickRatioStressTestConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReturnOfCapitalVsGrowthConfig {
 	pub min_criteria_met: Option<u32>,
 	pub max_payout_ratio: Option<f64>,
@@ -440,7 +440,7 @@ impl Default for ReturnOfCapitalVsGrowthConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkingCapitalHealthConfig {
 	pub min_criteria_met: Option<u32>,
 	pub min_current_ratio: Option<f64>,

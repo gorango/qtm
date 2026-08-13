@@ -6,7 +6,7 @@ use factors_core::{Bar, FactorPoint};
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MultiFactorConfig {
 	pub rebalance_interval: Option<u32>,
 	pub top_percentile: Option<f64>,
@@ -29,7 +29,7 @@ impl Default for MultiFactorConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RiskParityConfig {
 	pub volatility_period: Option<u32>,
 	pub risk_target: Option<f64>,
@@ -46,7 +46,7 @@ impl Default for RiskParityConfig {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DualMomentumConfig {
 	pub momentum_period: Option<u32>,
 	pub risk_free_rate: Option<f64>,

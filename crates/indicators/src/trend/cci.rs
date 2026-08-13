@@ -12,7 +12,7 @@ fn typical_price_for_cci(highs: &[f64], lows: &[f64], closings: &[f64]) -> Vec<f
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CCIConfig {
 	pub period: Option<u32>,
 }

@@ -38,7 +38,7 @@ fn times_from_bars(bars: &[Bar]) -> Vec<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct QarpConfig {
 	pub roe_threshold: Option<f64>,
 	pub de_threshold: Option<f64>,
@@ -109,7 +109,7 @@ pub fn qarp_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MultiFactorValueConfig {
 	pub pfcf_threshold: Option<f64>,
 	pub pe_threshold: Option<f64>,
@@ -206,7 +206,7 @@ pub fn multi_factor_value_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct AlternativeDataConfig {
 	pub exchange_threshold: Option<f64>,
 	pub exchange_period: Option<u32>,
@@ -256,7 +256,7 @@ pub fn alternative_data_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct EventDrivenConfig {
 	pub odds_threshold: Option<f64>,
 	pub sma_period: Option<u32>,
@@ -347,7 +347,7 @@ fn latest_odds_above_threshold(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OnChainConfirmationConfig {
 	pub fast_ema: Option<u32>,
 	pub slow_ema: Option<u32>,
@@ -421,7 +421,7 @@ pub fn on_chain_confirmation_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ValueMomentumPatternConfig {
 	pub pfcf_threshold: Option<f64>,
 	pub pattern_min_distance: Option<u32>,
@@ -495,7 +495,7 @@ pub fn value_momentum_pattern_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct GrowthQualityConfig {
 	pub min_eps_growth: Option<f64>,
 	pub min_roe: Option<f64>,
@@ -562,7 +562,7 @@ pub fn growth_quality_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CompositeValueMomentumConfig {
 	pub pe_threshold: Option<f64>,
 	pub rsi_threshold: Option<f64>,
@@ -644,7 +644,7 @@ pub fn composite_value_momentum_strategy(
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct QuantamentalValueMomentumConfig {
 	pub pe_threshold: Option<f64>,
 	pub sma_period: Option<u32>,

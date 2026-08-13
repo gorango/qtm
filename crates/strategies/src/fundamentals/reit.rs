@@ -17,7 +17,7 @@ fn price_to_affo(d: &FundamentalPointData) -> Option<f64> {
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HighYieldReitConfig {
 	pub price_to_affo_threshold: Option<f64>,
 	pub min_dividend_yield: Option<f64>,

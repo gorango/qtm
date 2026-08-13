@@ -8,7 +8,7 @@ use factors_core::{debt_to_assets_value, interest_coverage_value, FundamentalPoi
 
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SolvencyConfig {
 	pub max_debt_to_assets: Option<f64>,
 	pub min_interest_coverage: Option<f64>,
