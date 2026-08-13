@@ -31,17 +31,18 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install ARM64 Linker (Linux)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Install dependencies
-        run: npm ci
-        working-directory: bindings/napi
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: bun run build
         working-directory: bindings/napi
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
@@ -71,9 +72,6 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-        working-directory: bindings/napi
       - name: Download artifacts
         uses: actions/download-artifact@v5
         with:
@@ -97,6 +95,10 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
       - name: Download all artifacts
         uses: actions/download-artifact@v5
@@ -112,8 +114,8 @@ jobs:
           echo "Publishing @quantamental/bindings..."
           cd bindings/napi
           cp ../../artifacts/*.node . 2>/dev/null || true
-          npx napi artifacts
-          npx napi prepublish -t npm
+          bunx napi artifacts
+          bunx napi prepublish -t npm
           for dir in npm/*; do
             if [ -d "$dir" ]; then
               (cd "$dir" && npm publish --provenance --access public)
