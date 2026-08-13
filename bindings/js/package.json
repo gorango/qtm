@@ -1,5 +1,5 @@
 {
-	"name": "@quantamental/bindings",
+	"name": "@quantamental/js",
 	"version": "0.1.0",
 	"description": "Unified native Rust quantamental analysis — factors, indicators, and strategies",
 	"type": "module",

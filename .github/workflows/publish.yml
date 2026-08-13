@@ -43,7 +43,7 @@ jobs:
 
       - name: Build
         run: bun run build
-        working-directory: bindings/napi
+        working-directory: bindings/js
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: bindings-${{ matrix.target }}
-          path: bindings/napi/*.node
+          path: bindings/js/*.node
 
   test:
     needs: build
@@ -76,13 +76,13 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           pattern: bindings-${{ matrix.target }}
-          path: bindings/napi/
+          path: bindings/js/
           merge-multiple: true
       - name: Run Rust tests
         run: cargo test --workspace
       - name: Run Node.js smoke tests
         run: node --test ./index.test.js
-        working-directory: bindings/napi
+        working-directory: bindings/js
 
   publish:
     needs: test
@@ -111,8 +111,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "Publishing @quantamental/bindings..."
-          cd bindings/napi
+          echo "Publishing @quantamental/js..."
+          cd bindings/js
           cp ../../artifacts/*.node . 2>/dev/null || true
           bunx napi artifacts
           bunx napi prepublish -t npm
@@ -127,13 +127,13 @@ jobs:
       - name: Smoke test published package
         run: |
           set -euo pipefail
-          VERSION=$(node -p "require('./bindings/napi/package.json').version")
+          VERSION=$(node -p "require('./bindings/js/package.json').version")
           TMP_DIR=$(mktemp -d)
           cd "$TMP_DIR"
           npm init -y >/dev/null
-          npm install "@quantamental/bindings@$VERSION" >/dev/null
+          npm install "@quantamental/js@$VERSION" >/dev/null
           node --input-type=module -e "
-            import { rsi, getStrategyRegistry } from '@quantamental/bindings'
+            import { rsi, getStrategyRegistry } from '@quantamental/js'
             const closes = [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
             const out = rsi(closes)
             if (!Array.isArray(out) || !out.some((v) => Number.isFinite(v))) throw new Error('rsi failed')

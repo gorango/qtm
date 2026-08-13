@@ -17,7 +17,7 @@
 		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
-		"@quantamental/bindings": "workspace:*",
+		"@quantamental/js": "workspace:*",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
@@ -33,7 +33,7 @@
 	"peerDependencies": {
 		"@anthropic-ai/sdk": ">=0.30.0",
 		"@langchain/core": ">=0.3.0",
-		"@quantamental/bindings": ">=0.1.0",
+		"@quantamental/js": ">=0.1.0",
 		"ai": ">=7.0.0",
 		"openai": ">=4.0.0"
 	},
@@ -44,7 +44,7 @@
 		"@langchain/core": {
 			"optional": true
 		},
-		"@quantamental/bindings": {
+		"@quantamental/js": {
 			"optional": true
 		},
 		"ai": {

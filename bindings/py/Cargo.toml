@@ -1,5 +1,5 @@
 [package]
-name = "quantamental-python"
+name = "quantamental-py"
 version = "0.1.0"
 edition = "2021"
 

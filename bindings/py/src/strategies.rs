@@ -9,7 +9,7 @@ use strategies_core::*;
 type PyResultO = PyResult<PyObject>;
 
 // ── Hand-written dialect strategy wrappers ────────────────────
-// Shapes mirror bindings/napi: factors | points | points+prices | on-chain |
+// Shapes mirror bindings/js: factors | points | points+prices | on-chain |
 // prediction | portfolio. Configs accept dicts (snake_case keys are normalized
 // to the serde camelCase field names).
 

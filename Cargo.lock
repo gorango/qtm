@@ -715,7 +715,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "quantamental-bindings"
+name = "quantamental-js"
 version = "0.1.0"
 dependencies = [
  "factors-core",
@@ -730,7 +730,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "quantamental-python"
+name = "quantamental-py"
 version = "0.1.0"
 dependencies = [
  "factors-core",
