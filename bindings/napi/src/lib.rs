@@ -1,3 +1,5 @@
+mod validation;
+
 pub mod factors_registry;
 pub mod fundamentals;
 pub mod indicators;

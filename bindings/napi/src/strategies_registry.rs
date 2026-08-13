@@ -88,3 +88,35 @@ pub fn get_strategy_categories() -> Vec<String> {
 		"special".to_string(),
 	]
 }
+
+/// Run a `#[strategy]`-registered strategy by id with a unified OHLCV input.
+///
+/// This is the execution entry point that backs the LLM tool surface generated
+/// from `registry.json` (`createDynamicStrategyTool`): every id advertised by
+/// `getStrategyRegistry()` is dispatchable here through the descriptor handler.
+///
+/// `config`, when provided, is deserialized with serde — its keys must match
+/// the serde field names emitted by `getStrategyDefaults()` (camelCase, e.g.
+/// `secondCloses` for pair strategies). Unknown keys are ignored.
+///
+/// Strategies of the *hand-written* dialect (fundamentals/quantamentals, which
+/// take typed `FactorPoint`/`FundamentalPoint`/`Bar` inputs rather than OHLCV)
+/// are intentionally NOT registered here — they cannot be expressed as
+/// `StrategyInput` and are executed via their dedicated exports instead
+/// (e.g. `valueStrategy`, `qarpStrategy`).
+#[napi]
+pub fn run_strategy(
+	id: String,
+	input: crate::StrategyInput,
+	config: Option<serde_json::Value>,
+) -> napi::Result<Vec<i8>> {
+	match crate::get_strategy_registry_impl().get(&id) {
+		Some(handler) => {
+			handler(&input, config).map_err(|e| napi::Error::from_reason(e.to_string()))
+		}
+		None => Err(napi::Error::new(
+			napi::Status::GenericFailure,
+			format!("Unknown strategy: {id}"),
+		)),
+	}
+}

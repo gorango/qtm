@@ -1,3 +1,4 @@
+use crate::validation::{validate_non_empty, validate_period};
 use indicators_core::{
 	absolute_price_oscillator as apo_core, adx as adx_core, alma as alma_core, aroon as aroon_core,
 	balance_of_power as bop_core, camarilla_pivot_points as cpp_core, cci as cci_core,
@@ -9,10 +10,10 @@ use indicators_core::{
 	smoothed_moving_average as smma_core, super_trend as st_core, tema as tema_core,
 	tma as tma_core, trend::moving_max::moving_max_internal,
 	trend::moving_min::moving_min_internal, trend::rma::rma_internal, trend::since::since_internal,
-	trend::typical_price::typical_price_internal, trix as trix_core, vortex as vortex_core,
-	vwma as vwma_core, wma as wma_core, ADXConfig, ADXResult, ALMAConfig, AroonConfig, AroonResult,
-	Bar, CCIConfig, FibonacciPivotPointsResult, KDJResult, LinRegConfig, PSARConfig, PSARResult,
-	PivotPointsResult, SuperTrendResult, TrendAnalysis, VortexResult,
+	trend::typical_price::typical_price as typical_price_core, trix as trix_core,
+	vortex as vortex_core, vwma as vwma_core, wma as wma_core, ADXConfig, ADXResult, ALMAConfig,
+	AroonConfig, AroonResult, Bar, CCIConfig, FibonacciPivotPointsResult, KDJResult, LinRegConfig,
+	PSARConfig, PSARResult, PivotPointsResult, SuperTrendResult, TrendAnalysis, VortexResult,
 };
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
@@ -101,8 +102,10 @@ pub fn dema(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
 /// Ema
 #[napi]
 pub fn ema(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	let period = period.unwrap_or(12) as usize;
-	Ok(ema_internal(values.as_ref(), period))
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(12);
+	validate_period(period, "period")?;
+	Ok(ema_internal(values.as_ref(), period as usize))
 }
 
 /// Hma
@@ -131,23 +134,29 @@ pub fn mass_index(
 
 /// Moving Max
 #[napi]
-pub fn moving_max(values: Float64Array, period: Option<u32>) -> Vec<f64> {
-	let period = period.unwrap_or(4) as usize;
-	moving_max_internal(values.as_ref(), period)
+pub fn moving_max(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(4);
+	validate_period(period, "period")?;
+	Ok(moving_max_internal(values.as_ref(), period as usize))
 }
 
 /// Moving Min
 #[napi]
-pub fn moving_min(values: Float64Array, period: Option<u32>) -> Vec<f64> {
-	let period = period.unwrap_or(4) as usize;
-	moving_min_internal(values.as_ref(), period)
+pub fn moving_min(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(4);
+	validate_period(period, "period")?;
+	Ok(moving_min_internal(values.as_ref(), period as usize))
 }
 
 /// Moving Sum
 #[napi]
-pub fn moving_sum(values: Float64Array, period: Option<u32>) -> Vec<f64> {
-	let period = period.unwrap_or(4) as usize;
-	moving_sum_internal(values.as_ref(), period)
+pub fn moving_sum(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(4);
+	validate_period(period, "period")?;
+	Ok(moving_sum_internal(values.as_ref(), period as usize))
 }
 
 /// Parabolic Sar
@@ -204,8 +213,10 @@ pub fn random_index(
 /// Rma
 #[napi]
 pub fn rma(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	let period = period.unwrap_or(4) as usize;
-	Ok(rma_internal(values.as_ref(), period))
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(4);
+	validate_period(period, "period")?;
+	Ok(rma_internal(values.as_ref(), period as usize))
 }
 
 /// Rolling Moving Average
@@ -223,8 +234,10 @@ pub fn since(values: Float64Array) -> Vec<f64> {
 /// Sma
 #[napi]
 pub fn sma(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
-	let period = period.unwrap_or(2) as usize;
-	Ok(sma_internal(values.as_ref(), period))
+	validate_non_empty(values.as_ref(), "values")?;
+	let period = period.unwrap_or(2);
+	validate_period(period, "period")?;
+	Ok(sma_internal(values.as_ref(), period as usize))
 }
 
 /// Smoothed Moving Average
@@ -281,8 +294,13 @@ pub fn trix(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
 
 /// Typical Price
 #[napi]
-pub fn typical_price(highs: Float64Array, lows: Float64Array, closes: Float64Array) -> Vec<f64> {
-	typical_price_internal(highs.as_ref(), lows.as_ref(), closes.as_ref())
+pub fn typical_price(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+) -> Result<Vec<f64>> {
+	typical_price_core(highs.as_ref(), lows.as_ref(), closes.as_ref())
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Vortex

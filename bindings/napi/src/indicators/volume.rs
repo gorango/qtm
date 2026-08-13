@@ -1,3 +1,4 @@
+use crate::validation::{validate_arrays, validate_non_empty, validate_period};
 use indicators_core::{
 	fi as fi_alias, force_index as fi_core, mfi as mfi_core, money_flow_index as mfi_alias,
 	volume::accumulation_distribution::{accumulation_distribution as ad_core, ad as ad_alias},
@@ -21,13 +22,22 @@ pub fn accumulation_distribution(
 	lows: Float64Array,
 	closings: Float64Array,
 	volumes: Float64Array,
-) -> Vec<f64> {
-	ad_core(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	Ok(ad_core(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
-	)
+	))
 }
 
 /// Ad
@@ -37,13 +47,22 @@ pub fn ad(
 	lows: Float64Array,
 	closings: Float64Array,
 	volumes: Float64Array,
-) -> Vec<f64> {
-	ad_alias(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	Ok(ad_alias(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
-	)
+	))
 }
 
 /// Anchored Vwap
@@ -54,15 +73,24 @@ pub fn anchored_vwap(
 	closings: Float64Array,
 	volumes: Float64Array,
 	anchor_index: Option<u32>,
-) -> Vec<f64> {
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
 	let anchor = anchor_index.unwrap_or(0);
-	avwap_core(
+	Ok(avwap_core(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		anchor,
-	)
+	))
 }
 
 /// Chaikin Money Flow
@@ -73,15 +101,25 @@ pub fn chaikin_money_flow(
 	closings: Float64Array,
 	volumes: Float64Array,
 	period: Option<u32>,
-) -> Vec<f64> {
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
 	let period = period.unwrap_or(20);
-	cmf_core(
+	validate_period(period, "period")?;
+	Ok(cmf_core(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		period,
-	)
+	))
 }
 
 /// Cmf
@@ -92,15 +130,25 @@ pub fn cmf(
 	closings: Float64Array,
 	volumes: Float64Array,
 	period: Option<u32>,
-) -> Vec<f64> {
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
 	let period = period.unwrap_or(20);
-	cmf_alias(
+	validate_period(period, "period")?;
+	Ok(cmf_alias(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		period,
-	)
+	))
 }
 
 /// Ease Of Movement
@@ -110,9 +158,19 @@ pub fn ease_of_movement(
 	lows: Float64Array,
 	volumes: Float64Array,
 	period: Option<u32>,
-) -> Vec<f64> {
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[highs.as_ref(), lows.as_ref(), volumes.as_ref()],
+		&["highs", "lows", "volumes"],
+	)?;
 	let period = period.unwrap_or(14);
-	eom_core(highs.as_ref(), lows.as_ref(), volumes.as_ref(), period)
+	validate_period(period, "period")?;
+	Ok(eom_core(
+		highs.as_ref(),
+		lows.as_ref(),
+		volumes.as_ref(),
+		period,
+	))
 }
 
 /// Emv
@@ -122,9 +180,19 @@ pub fn emv(
 	lows: Float64Array,
 	volumes: Float64Array,
 	period: Option<u32>,
-) -> Vec<f64> {
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[highs.as_ref(), lows.as_ref(), volumes.as_ref()],
+		&["highs", "lows", "volumes"],
+	)?;
 	let period = period.unwrap_or(14);
-	emv_core(highs.as_ref(), lows.as_ref(), volumes.as_ref(), period)
+	validate_period(period, "period")?;
+	Ok(emv_core(
+		highs.as_ref(),
+		lows.as_ref(),
+		volumes.as_ref(),
+		period,
+	))
 }
 
 /// Force Index
@@ -133,14 +201,36 @@ pub fn force_index(
 	closings: Float64Array,
 	volumes: Float64Array,
 	config: Option<FIConfig>,
-) -> Vec<f64> {
-	fi_core(closings.as_ref(), volumes.as_ref(), config)
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	let period = config
+		.unwrap_or(FIConfig { period: Some(13) })
+		.period
+		.unwrap_or(13);
+	validate_period(period, "period")?;
+	Ok(fi_core(closings.as_ref(), volumes.as_ref(), config))
 }
 
 /// Fi
 #[napi]
-pub fn fi(closings: Float64Array, volumes: Float64Array, config: Option<FIConfig>) -> Vec<f64> {
-	fi_alias(closings.as_ref(), volumes.as_ref(), config)
+pub fn fi(
+	closings: Float64Array,
+	volumes: Float64Array,
+	config: Option<FIConfig>,
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	let period = config
+		.unwrap_or(FIConfig { period: Some(13) })
+		.period
+		.unwrap_or(13);
+	validate_period(period, "period")?;
+	Ok(fi_alias(closings.as_ref(), volumes.as_ref(), config))
 }
 
 /// Mfi
@@ -151,14 +241,32 @@ pub fn mfi(
 	closings: Float64Array,
 	volumes: Float64Array,
 	config: Option<MFIConfig>,
-) -> Vec<f64> {
-	mfi_core(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	let period = config
+		.clone()
+		.unwrap_or(MFIConfig {
+			period: Some(14),
+			price_source: None,
+		})
+		.period
+		.unwrap_or(14);
+	validate_period(period, "period")?;
+	Ok(mfi_core(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		config,
-	)
+	))
 }
 
 /// Money Flow Index
@@ -169,14 +277,32 @@ pub fn money_flow_index(
 	closings: Float64Array,
 	volumes: Float64Array,
 	config: Option<MFIConfig>,
-) -> Vec<f64> {
-	mfi_alias(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	let period = config
+		.clone()
+		.unwrap_or(MFIConfig {
+			period: Some(14),
+			price_source: None,
+		})
+		.period
+		.unwrap_or(14);
+	validate_period(period, "period")?;
+	Ok(mfi_alias(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		config,
-	)
+	))
 }
 
 /// Negative Volume Index
@@ -185,38 +311,62 @@ pub fn negative_volume_index(
 	closings: Float64Array,
 	volumes: Float64Array,
 	start: Option<f64>,
-) -> Vec<f64> {
-	nvi_core(closings.as_ref(), volumes.as_ref(), start)
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(nvi_core(closings.as_ref(), volumes.as_ref(), start))
 }
 
 /// Nvi
 #[napi]
-pub fn nvi(closings: Float64Array, volumes: Float64Array, start: Option<f64>) -> Vec<f64> {
-	nvi_alias(closings.as_ref(), volumes.as_ref(), start)
+pub fn nvi(closings: Float64Array, volumes: Float64Array, start: Option<f64>) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(nvi_alias(closings.as_ref(), volumes.as_ref(), start))
 }
 
 /// Obv
 #[napi]
-pub fn obv(closings: Float64Array, volumes: Float64Array) -> Vec<f64> {
-	obv_core(closings.as_ref(), volumes.as_ref())
+pub fn obv(closings: Float64Array, volumes: Float64Array) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(obv_core(closings.as_ref(), volumes.as_ref()))
 }
 
 /// On Balance Volume
 #[napi]
-pub fn on_balance_volume(closings: Float64Array, volumes: Float64Array) -> Vec<f64> {
-	obv_alias(closings.as_ref(), volumes.as_ref())
+pub fn on_balance_volume(closings: Float64Array, volumes: Float64Array) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(obv_alias(closings.as_ref(), volumes.as_ref()))
 }
 
 /// Volume Price Trend
 #[napi]
-pub fn volume_price_trend(closings: Float64Array, volumes: Float64Array) -> Vec<f64> {
-	vpt_core(closings.as_ref(), volumes.as_ref())
+pub fn volume_price_trend(closings: Float64Array, volumes: Float64Array) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(vpt_core(closings.as_ref(), volumes.as_ref()))
 }
 
 /// Vpt
 #[napi]
-pub fn vpt(closings: Float64Array, volumes: Float64Array) -> Vec<f64> {
-	vpt_alias(closings.as_ref(), volumes.as_ref())
+pub fn vpt(closings: Float64Array, volumes: Float64Array) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[closings.as_ref(), volumes.as_ref()],
+		&["closings", "volumes"],
+	)?;
+	Ok(vpt_alias(closings.as_ref(), volumes.as_ref()))
 }
 
 /// Volume Profile
@@ -226,20 +376,49 @@ pub fn volume_profile(
 	lows: Float64Array,
 	volumes: Float64Array,
 	bins: Option<u32>,
-) -> VolumeProfileResult {
-	vp_core(highs.as_ref(), lows.as_ref(), volumes.as_ref(), bins)
+) -> Result<VolumeProfileResult> {
+	validate_arrays(
+		&[highs.as_ref(), lows.as_ref(), volumes.as_ref()],
+		&["highs", "lows", "volumes"],
+	)?;
+	let bins = bins.unwrap_or(50);
+	validate_period(bins, "bins")?;
+	Ok(vp_core(
+		highs.as_ref(),
+		lows.as_ref(),
+		volumes.as_ref(),
+		Some(bins),
+	))
 }
 
 /// Volume Surge
 #[napi]
-pub fn volume_surge(volumes: Float64Array, config: Option<VolumeSurgeConfig>) -> Vec<bool> {
-	vs_core(volumes.as_ref(), config)
+pub fn volume_surge(volumes: Float64Array, config: Option<VolumeSurgeConfig>) -> Result<Vec<bool>> {
+	validate_non_empty(volumes.as_ref(), "volumes")?;
+	let period = config
+		.unwrap_or(VolumeSurgeConfig {
+			period: Some(20),
+			multiplier: Some(2.0),
+		})
+		.period
+		.unwrap_or(20);
+	validate_period(period, "period")?;
+	Ok(vs_core(volumes.as_ref(), config))
 }
 
 /// Vs
 #[napi]
-pub fn vs(volumes: Float64Array, config: Option<VolumeSurgeConfig>) -> Vec<bool> {
-	vs_alias(volumes.as_ref(), config)
+pub fn vs(volumes: Float64Array, config: Option<VolumeSurgeConfig>) -> Result<Vec<bool>> {
+	validate_non_empty(volumes.as_ref(), "volumes")?;
+	let period = config
+		.unwrap_or(VolumeSurgeConfig {
+			period: Some(20),
+			multiplier: Some(2.0),
+		})
+		.period
+		.unwrap_or(20);
+	validate_period(period, "period")?;
+	Ok(vs_alias(volumes.as_ref(), config))
 }
 
 /// Vwap
@@ -250,14 +429,35 @@ pub fn vwap(
 	closings: Float64Array,
 	volumes: Float64Array,
 	config: Option<VWAPConfig>,
-) -> Vec<f64> {
-	vwap_core(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	let config_obj = config.clone().unwrap_or(VWAPConfig {
+		period: Some(14),
+		price_source: None,
+		anchored: None,
+		session_length: None,
+	});
+	if let Some(period) = config_obj.period {
+		validate_period(period, "period")?;
+	}
+	if let Some(session_length) = config_obj.session_length {
+		validate_period(session_length, "session_length")?;
+	}
+	Ok(vwap_core(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		config,
-	)
+	))
 }
 
 /// Volume Weighted Average Price
@@ -268,12 +468,33 @@ pub fn volume_weighted_average_price(
 	closings: Float64Array,
 	volumes: Float64Array,
 	config: Option<VWAPConfig>,
-) -> Vec<f64> {
-	vwap_alias(
+) -> Result<Vec<f64>> {
+	validate_arrays(
+		&[
+			highs.as_ref(),
+			lows.as_ref(),
+			closings.as_ref(),
+			volumes.as_ref(),
+		],
+		&["highs", "lows", "closings", "volumes"],
+	)?;
+	let config_obj = config.clone().unwrap_or(VWAPConfig {
+		period: Some(14),
+		price_source: None,
+		anchored: None,
+		session_length: None,
+	});
+	if let Some(period) = config_obj.period {
+		validate_period(period, "period")?;
+	}
+	if let Some(session_length) = config_obj.session_length {
+		validate_period(session_length, "session_length")?;
+	}
+	Ok(vwap_alias(
 		highs.as_ref(),
 		lows.as_ref(),
 		closings.as_ref(),
 		volumes.as_ref(),
 		config,
-	)
+	))
 }
