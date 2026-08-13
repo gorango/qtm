@@ -82,8 +82,8 @@ jobs:
           merge-multiple: true
       - name: Run Rust tests
         run: cargo test --workspace
-      - name: Run Node.js tests
-        run: node --test ./index.test.js 2>/dev/null || echo "No Node.js tests yet"
+      - name: Run Node.js smoke tests
+        run: node --test ./index.test.js
         working-directory: bindings/napi
 
   publish:
@@ -116,8 +116,27 @@ jobs:
           npx napi prepublish -t npm
           for dir in npm/*; do
             if [ -d "$dir" ]; then
-              (cd "$dir" && npm publish --provenance --access public) || true
+              (cd "$dir" && npm publish --provenance --access public)
             fi
           done
-          npm publish --provenance --access public || true
+          npm publish --provenance --access public
           cd ../..
+
+      - name: Smoke test published package
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./bindings/napi/package.json').version")
+          TMP_DIR=$(mktemp -d)
+          cd "$TMP_DIR"
+          npm init -y >/dev/null
+          npm install "@quantamental/bindings@$VERSION" >/dev/null
+          node --input-type=module -e "
+            import { rsi, getStrategyRegistry } from '@quantamental/bindings'
+            const closes = [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+            const out = rsi(closes)
+            if (!Array.isArray(out) || !out.some((v) => Number.isFinite(v))) throw new Error('rsi failed')
+            const registry = getStrategyRegistry()
+            const ids = Object.keys(registry.strategies ?? {})
+            if (ids.length === 0) throw new Error('strategy registry empty')
+            console.log('smoke OK:', ids.length, 'strategies')
+          "

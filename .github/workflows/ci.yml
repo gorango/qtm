@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
@@ -46,3 +46,6 @@ jobs:
       - name: Typecheck generated TS
         working-directory: packages/tools
         run: bun run typecheck
+      - name: Test generated tools
+        working-directory: packages/tools
+        run: bun run test
