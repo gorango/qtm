@@ -19,7 +19,7 @@ fn percentile_nearest_rank_internal(values: &[f64], period: usize, percentage: f
 	let mut result = vec![f64::NAN; len];
 
 	for i in period - 1..len {
-		let mut window: Vec<f64> = values[i - period + 1..=i].to_vec();
+		let mut window: Vec<f64> = values[i - (period - 1)..=i].to_vec();
 		window.sort_by(f64::total_cmp);
 
 		let p = percentage / 100.0;

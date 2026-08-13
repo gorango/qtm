@@ -30,7 +30,7 @@ pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> IndicatorResu
 			let mut sum_squares = 0.0;
 
 			for j in 0..period {
-				let val = values[i - period + 1 + j];
+				let val = values[i - (period - 1) + j];
 				sum += val;
 				sum_squares += val * val;
 			}

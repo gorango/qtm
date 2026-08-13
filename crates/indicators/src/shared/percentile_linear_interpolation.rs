@@ -23,7 +23,7 @@ fn percentile_linear_interpolation_internal(
 	let mut result = vec![f64::NAN; len];
 
 	for i in period - 1..len {
-		let mut window: Vec<f64> = values[i - period + 1..=i].to_vec();
+		let mut window: Vec<f64> = values[i - (period - 1)..=i].to_vec();
 		window.sort_by(f64::total_cmp);
 
 		let p = percentage / 100.0;

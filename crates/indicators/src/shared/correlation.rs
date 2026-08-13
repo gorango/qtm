@@ -27,8 +27,8 @@ fn correlation_internal(values1: &[f64], values2: &[f64], period: usize) -> Vec<
 		let mut count = 0;
 
 		for j in 0..period {
-			let x = values1[i - period + 1 + j];
-			let y = values2[i - period + 1 + j];
+			let x = values1[i - (period - 1) + j];
+			let y = values2[i - (period - 1) + j];
 
 			if x.is_nan() || y.is_nan() {
 				continue;

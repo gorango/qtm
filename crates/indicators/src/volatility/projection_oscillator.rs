@@ -16,7 +16,7 @@ fn moving_least_square(period: usize, x: &[usize], y: &[f64]) -> Vec<LinearRegre
 
 	for i in 0..len {
 		let start = if period > 0 && i + 1 >= period {
-			i - period + 1
+			i - (period - 1)
 		} else {
 			0
 		};

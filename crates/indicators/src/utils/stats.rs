@@ -9,7 +9,7 @@ pub fn variance(values: &[f64], period: usize) -> Vec<f64> {
 	let mut result = vec![f64::NAN; len];
 
 	for i in period - 1..len {
-		let window = &values[i - period + 1..=i];
+		let window = &values[i - (period - 1)..=i];
 		let m = mean(window);
 
 		let sum_sq_diff = window

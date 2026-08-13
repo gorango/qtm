@@ -37,7 +37,7 @@ pub fn linreg(values: &[f64], config: Option<LinRegConfig>) -> IndicatorResult<V
 
 		for j in 0..period {
 			let x = (period - 1 - j) as f64;
-			let y = values[i - period + 1 + j];
+			let y = values[i - (period - 1) + j];
 			sum_x += x;
 			sum_y += y;
 			sum_xy += x * y;

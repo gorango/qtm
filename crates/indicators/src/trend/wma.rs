@@ -14,7 +14,7 @@ pub fn wma_internal(values: &[f64], period: usize) -> Vec<f64> {
 		let mut sum = 0.0;
 		for j in 0..period {
 			let weight = (period - j) as f64;
-			sum += weight * values[i - period + 1 + j];
+			sum += weight * values[i - (period - 1) + j];
 		}
 		result[i] = sum / sum_weights;
 	}

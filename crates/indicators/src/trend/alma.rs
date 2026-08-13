@@ -54,7 +54,7 @@ pub fn alma(values: &[f64], config: Option<ALMAConfig>) -> IndicatorResult<Vec<f
 	for i in (period - 1)..len {
 		let mut sum = 0.0;
 		for j in 0..period {
-			sum += weights[j] * values[i - period + 1 + j];
+			sum += weights[j] * values[i - (period - 1) + j];
 		}
 		result[i] = sum;
 	}

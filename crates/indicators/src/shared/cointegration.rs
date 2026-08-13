@@ -56,8 +56,8 @@ fn cointegration_internal(
 	let mut betas = vec![f64::NAN; len];
 
 	for i in beta_period - 1..len {
-		let x = &values2[i - beta_period + 1..=i];
-		let y = &values1[i - beta_period + 1..=i];
+		let x = &values2[i - (beta_period - 1)..=i];
+		let y = &values1[i - (beta_period - 1)..=i];
 		betas[i] = ols_beta(y, x);
 	}
 
@@ -71,7 +71,7 @@ fn cointegration_internal(
 
 	let mut result = vec![f64::NAN; len];
 	for i in period - 1..len {
-		let window: Vec<f64> = spreads[i - period + 1..=i]
+		let window: Vec<f64> = spreads[i - (period - 1)..=i]
 			.iter()
 			.filter(|v| !v.is_nan())
 			.copied()

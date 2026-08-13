@@ -31,14 +31,14 @@ pub fn dev(
 			let mut sum = 0.0;
 
 			for j in 0..period {
-				sum += values[i - period + 1 + j];
+				sum += values[i - (period - 1) + j];
 			}
 
 			let mean = sum / period as f64;
 			let mut sum_deviation = 0.0;
 
 			for j in 0..period {
-				sum_deviation += (values[i - period + 1 + j] - mean).abs();
+				sum_deviation += (values[i - (period - 1) + j] - mean).abs();
 			}
 
 			result[i] = sum_deviation / period as f64;
