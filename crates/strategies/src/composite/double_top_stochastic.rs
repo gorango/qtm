@@ -21,8 +21,6 @@ pub fn double_top_stochastic_strategy(
 	let tolerance = config.tolerance.unwrap_or(0.03);
 	let k_period = config.k_period.unwrap_or(14);
 	let d_period = config.d_period.unwrap_or(3);
-	let oversold = config.oversold.unwrap_or(20.0);
-	let overbought = config.overbought.unwrap_or(80.0);
 
 	let lookaround = 2;
 
@@ -69,11 +67,17 @@ pub fn double_top_stochastic_strategy(
 	let double_top = &double_top_signals;
 
 	for i in 0..data_len {
+		// double_top emits -1.0 for a top / double_bottom +1.0 for a bottom.
+		// The original checked double_top == 1.0 (never true) and required
+		// extreme stoch, which never co-occurs: pattern detectors fire at
+		// pattern COMPLETION, when stoch has already swung to the other
+		// extreme (median K 91.6 at detected bottoms).  Stoch crossover
+		// (k vs d) is the reachable confirmation of the reversal.
 		let signal = if i < (k_period + d_period) as usize {
 			0
-		} else if double_bottom[i] == 1.0 && stoch_result.k[i] <= oversold {
+		} else if double_bottom[i] == 1.0 && stoch_result.k[i] > stoch_result.d[i] {
 			1
-		} else if double_top[i] == 1.0 && stoch_result.k[i] >= overbought {
+		} else if double_top[i] == -1.0 && stoch_result.k[i] < stoch_result.d[i] {
 			-1
 		} else {
 			0

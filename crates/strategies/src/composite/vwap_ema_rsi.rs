@@ -25,8 +25,6 @@ pub fn vwap_ema_rsi_strategy(
 	let ema_fast_period = config.ema_fast_period.unwrap_or(5);
 	let ema_slow_period = config.ema_slow_period.unwrap_or(20);
 	let rsi_period = config.rsi_period.unwrap_or(14);
-	let rsi_oversold = config.rsi_oversold.unwrap_or(30.0);
-	let rsi_overbought = config.rsi_overbought.unwrap_or(70.0);
 
 	let min_data_length = ema_slow_period.max(rsi_period) as usize;
 
@@ -77,13 +75,17 @@ pub fn vwap_ema_rsi_strategy(
 		let signal = if i < min_data_length - 1 {
 			0
 		} else {
+			// RSI must CONFIRM the crossover direction: a bullish EMA cross
+			// with price above VWAP implies momentum turned up, so RSI is
+			// above mid — requiring RSI < oversold made the confluence
+			// self-contradictory and the strategy could never fire.
 			let buy_condition = crossed_over_series(&ema_fast, &ema_slow, i as u32)
 				&& closes[i] > vwap_values[i]
-				&& rsi_values[i] < rsi_oversold;
+				&& rsi_values[i] > 50.0;
 
 			let sell_condition = crossed_under_series(&ema_fast, &ema_slow, i as u32)
 				&& closes[i] < vwap_values[i]
-				&& rsi_values[i] > rsi_overbought;
+				&& rsi_values[i] < 50.0;
 
 			if buy_condition {
 				1

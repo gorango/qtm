@@ -1,5 +1,4 @@
 use crate::types::configs::DonchianTurtleConfig;
-use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
@@ -33,19 +32,19 @@ pub fn donchian_breakout_strategy(
 	let dc = indicators_core::donchian_channel(closes, Some(period))?;
 	let mut signals = Vec::with_capacity(data_len);
 
+	#[allow(clippy::needless_range_loop)] // compares against the PRIOR window (i-1)
 	for i in 0..data_len {
-		let signal = if i < period as usize {
+		// Classic turtle: the current close breaks out beyond the channel of
+		// the PRIOR window.  Comparing against dc.upper[i] is impossible —
+		// the channel includes closes[i], so close can never exceed it.
+		let signal = if i < period as usize + 1 {
 			0
+		} else if closes[i] > dc.upper[i - 1] {
+			1 // Buy signal: price crosses over prior upper band (breakout)
+		} else if closes[i] < dc.lower[i - 1] {
+			-1 // Sell signal: price crosses under prior lower band (breakdown)
 		} else {
-			let closes_vec = closes;
-
-			if crossed_over_series(closes_vec, &dc.upper, i as u32) {
-				1 // Buy signal: price crosses over upper band (breakout)
-			} else if crossed_under_series(closes_vec, &dc.lower, i as u32) {
-				-1 // Sell signal: price crosses under lower band (breakdown)
-			} else {
-				0
-			}
+			0
 		};
 		signals.push(signal);
 	}
