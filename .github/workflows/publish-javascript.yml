@@ -113,14 +113,11 @@ jobs:
         run: |
           echo "Publishing @quantamental/js..."
           cd bindings/js
-          cp ../../artifacts/*.node . 2>/dev/null || true
+          mkdir -p artifacts
+          cp ../../artifacts/*.node artifacts/ 2>/dev/null || true
+          bunx napi create-npm-dirs
           bunx napi artifacts
-          bunx napi prepublish -t npm
-          for dir in npm/*; do
-            if [ -d "$dir" ]; then
-              (cd "$dir" && npm publish --provenance --access public)
-            fi
-          done
+          bunx napi pre-publish -t npm
           npm publish --provenance --access public
           cd ../..
 
