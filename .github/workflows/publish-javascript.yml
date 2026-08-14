@@ -109,7 +109,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "Publishing @quantamental/js..."
+          echo "Publishing @quantamental/core..."
           cd bindings/js
           mkdir -p artifacts
           cp ../../artifacts/*.node artifacts/
@@ -133,20 +133,20 @@ jobs:
           npm init -y >/dev/null
           # npm's packument index can lag a fresh publish by a few minutes.
           for i in $(seq 1 20); do
-            if npm install "@quantamental/js@$VERSION" >/dev/null 2>&1; then
+            if npm install "@quantamental/core@$VERSION" >/dev/null 2>&1; then
               INSTALLED=1
               break
             fi
-            echo "waiting for @quantamental/js@$VERSION to propagate (attempt $i/20)..."
+            echo "waiting for @quantamental/core@$VERSION to propagate (attempt $i/20)..."
             sleep 15
           done
           if [ -z "${INSTALLED:-}" ]; then
-            echo "failed to install @quantamental/js@$VERSION after retries"
-            npm install "@quantamental/js@$VERSION"
+            echo "failed to install @quantamental/core@$VERSION after retries"
+            npm install "@quantamental/core@$VERSION"
             exit 1
           fi
           node --input-type=module -e "
-            import { rsi, getStrategyRegistry } from '@quantamental/js'
+            import { rsi, getStrategyRegistry } from '@quantamental/core'
             const closes = [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
             const out = rsi(closes)
             if (!Array.isArray(out) || !out.some((v) => Number.isFinite(v))) throw new Error('rsi failed')

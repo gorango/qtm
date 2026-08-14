@@ -4,7 +4,7 @@
   "workspaces": {
     "": {},
     "bindings/js": {
-      "name": "@quantamental/js",
+      "name": "@quantamental/core",
       "version": "0.1.0",
       "devDependencies": {
         "@napi-rs/cli": "^3.7.2",
@@ -15,7 +15,7 @@
       "name": "@quantamental/tools",
       "version": "0.1.0",
       "dependencies": {
-        "@quantamental/js": "workspace:*",
+        "@quantamental/core": "workspace:*",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -31,14 +31,14 @@
       "peerDependencies": {
         "@anthropic-ai/sdk": ">=0.30.0",
         "@langchain/core": ">=0.3.0",
-        "@quantamental/js": ">=0.1.0",
+        "@quantamental/core": ">=0.1.0",
         "ai": ">=7.0.0",
         "openai": ">=4.0.0",
       },
       "optionalPeers": [
         "@anthropic-ai/sdk",
         "@langchain/core",
-        "@quantamental/js",
+        "@quantamental/core",
         "ai",
         "openai",
       ],
@@ -245,7 +245,7 @@
 
     "@oxc-project/types": ["@oxc-project/types@0.132.0", "", {}, "sha512-FESMOxil5Se014ui/Eq8fT5uHJo6nIRwH0PfJrZJXs6Gek3ZVFOrpUv3YIZT20m+extU98Hg1Ym72U58rlsxUQ=="],
 
-    "@quantamental/js": ["@quantamental/js@workspace:bindings/js"],
+    "@quantamental/core": ["@quantamental/core@workspace:bindings/js"],
 
     "@quantamental/tools": ["@quantamental/tools@workspace:packages/tools"],
 
