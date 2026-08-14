@@ -24,9 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
+        run: rustup target add ${{ matrix.target }}
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
@@ -42,7 +40,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build
-        run: bun run build
+        run: bun run build -- --target ${{ matrix.target }}
         working-directory: bindings/js
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
