@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when VPT crosses above positive threshold with volume confirmation
 /// Generates sell signals when VPT crosses below negative threshold with volume confirmation
 #[strategy(
-	id = "volume-price-trend",
+	id = "volume_price_trend",
 	name = "Volume Price Trend",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

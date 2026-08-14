@@ -4,7 +4,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "vwap-rsi-breakout",
+    id = "vwap_rsi_breakout",
     name = "VWAP + RSI Breakout",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when Force Index crosses above oversold threshold
 /// Generates sell signals when Force Index crosses below overbought threshold
 #[strategy(
-	id = "force-index",
+	id = "force_index",
 	name = "Force Index",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

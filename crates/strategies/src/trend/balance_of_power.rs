@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when BOP crosses over zero
 /// Generates sell signals when BOP crosses under zero
 #[strategy(
-	id = "balanceOfPower",
+	id = "balance_of_power",
 	name = "Balance of Power Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

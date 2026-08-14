@@ -3,7 +3,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "mfi-obv-volume-flow",
+    id = "mfi_obv_volume_flow",
     name = "MFI + OBV Volume Flow",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

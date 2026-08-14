@@ -5,7 +5,7 @@ use indicators_core::volume_profile;
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "volume-profile-rsi",
+    id = "volume_profile_rsi",
     name = "Volume Profile + RSI",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

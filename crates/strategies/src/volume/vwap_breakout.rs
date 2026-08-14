@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price crosses above VWAP + breakout threshold
 /// Generates sell signals when price crosses below VWAP
 #[strategy(
-	id = "vwap-breakout",
+	id = "vwap_breakout",
 	name = "VWAP Breakout",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

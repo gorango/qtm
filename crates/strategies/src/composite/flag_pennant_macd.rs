@@ -6,7 +6,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Buy on flag/pennant breakout with MACD bullish crossover.
 #[strategy(
-	id = "flag-pennant-macd-continuation",
+	id = "flag_pennant_macd_continuation",
 	name = "Flag/Pennant + MACD Continuation",
 	category = "composite",
 	default_timeframes = ["15m", "1h", "4h"],

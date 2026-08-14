@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when UO crosses above oversold level
 /// Generates sell signals when UO crosses below overbought level
 #[strategy(
-	id = "ultimateOscillator",
+	id = "ultimate_oscillator",
 	name = "Ultimate Oscillator Momentum Strategy",
 	category = "momentum",
 	default_timeframes = ["15m", "1h", "4h"],

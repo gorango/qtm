@@ -3,7 +3,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "triangle-rsi-breakout",
+    id = "triangle_rsi_breakout",
     name = "Triangle + RSI Breakout",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when SMA crosses above VWAP
 /// Generates sell signals when SMA crosses below VWAP
 #[strategy(
-	id = "smaVwapCrossover",
+	id = "sma_vwap_crossover",
 	name = "Sma Vwap Crossover",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

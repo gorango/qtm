@@ -7,7 +7,7 @@ use indicators_core::vwap;
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "vwap-ema-rsi-trend",
+    id = "vwap_ema_rsi_trend",
     name = "VWAP + EMA + RSI Trend",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

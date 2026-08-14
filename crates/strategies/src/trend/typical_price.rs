@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when close > typical price
 /// Generates sell signals when close < typical price
 #[strategy(
-	id = "typicalPrice",
+	id = "typical_price",
 	name = "Typical Price Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

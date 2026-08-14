@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when OBV crosses above its SMA
 /// Generates sell signals when OBV crosses below its SMA
 #[strategy(
-	id = "obv-confirmation",
+	id = "obv_confirmation",
 	name = "OBV Confirmation",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

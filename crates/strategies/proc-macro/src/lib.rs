@@ -177,6 +177,15 @@ fn snake_to_camel(s: &str) -> String {
 	result
 }
 
+/// Canonical strategy-id form: lowercase alphanumerics + underscores
+/// (snake_case) — matching the indicator/factor registries package-wide.
+fn is_valid_strategy_id(id: &str) -> bool {
+	!id.is_empty()
+		&& id
+			.chars()
+			.all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '_')
+}
+
 fn generate_napi_binding(
 	fn_name: &Ident,
 	fn_name_str: &str,
@@ -313,6 +322,16 @@ fn generate_napi_binding(
 pub fn strategy(attr: TokenStream, item: TokenStream) -> TokenStream {
 	let attr = parse_macro_input!(attr as StrategyAttr);
 	let input_fn = parse_macro_input!(item as ItemFn);
+
+	if !is_valid_strategy_id(&attr.id) {
+		let msg = format!(
+			"strategy id must be snake_case (got {:?}); e.g. id = \"super_trend\", not \"superTrend\" or \"super-trend\"",
+			attr.id
+		);
+		return syn::Error::new_spanned(&input_fn.sig, msg)
+			.to_compile_error()
+			.into();
+	}
 
 	let fn_name = extract_fn_name(&input_fn);
 	let fn_name_str = fn_name.to_string();

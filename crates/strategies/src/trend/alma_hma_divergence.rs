@@ -9,7 +9,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when ALMA diverges above HMA by threshold
 /// Generates sell signals when ALMA diverges below HMA by threshold
 #[strategy(
-	id = "almaHmaDivergence",
+	id = "alma_hma_divergence",
 	name = "ALMA HMA Divergence Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price crosses above the linear regression line
 /// Generates sell signals when price crosses below the linear regression line
 #[strategy(
-	id = "linRegChannel",
+	id = "lin_reg_channel",
 	name = "Linear Regression Channel",
 	category = "trend",
 	default_timeframes = ["1h", "4h", "1d"],

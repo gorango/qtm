@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when z-score crosses over positive threshold (strong upward momentum)
 /// Generates sell signals when z-score crosses under negative threshold (strong downward momentum)
 #[strategy(
-	id = "zScoreBreakout",
+	id = "z_score_breakout",
 	name = "Z-Score Breakout Strategy",
 	category = "volatility",
 	default_timeframes = ["1h", "4h", "1d"],

@@ -9,12 +9,12 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when correlation between two assets crosses over entry threshold
 /// Generates sell signals when correlation falls crosses under exit threshold
 ///
-/// @strategy_id correlation-pair-trading
+/// @strategy_id correlation_pair_trading
 /// @strategy_name Correlation Pair Trading Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
 #[strategy(
-	id = "correlation-pair-trading",
+	id = "correlation_pair_trading",
 	name = "Correlation Pair Trading Strategy",
 	category = "statistics",
 	default_timeframes = ["1h", "4h", "1d"],

@@ -9,12 +9,12 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when percent rank crosses over entry percentile
 /// Generates sell signals when percent rank crosses under exit percentile
 ///
-/// @strategy_id percentRank-ranking
+/// @strategy_id percent_rank_ranking
 /// @strategy_name Percent Rank Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
 #[strategy(
-	id = "percentRank-ranking",
+	id = "percent_rank_ranking",
 	name = "Percent Rank Strategy",
 	category = "statistics",
 	default_timeframes = ["1h", "4h", "1d"],

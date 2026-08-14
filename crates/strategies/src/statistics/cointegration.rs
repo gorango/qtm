@@ -9,12 +9,12 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when spread z-score crosses under negative entry threshold
 /// Generates sell signals when spread z-score crosses over entry threshold
 ///
-/// @strategy_id cointegration-pair-trading
+/// @strategy_id cointegration_pair_trading
 /// @strategy_name Cointegration Pair Trading Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
 #[strategy(
-	id = "cointegration-pair-trading",
+	id = "cointegration_pair_trading",
 	name = "Cointegration Pair Trading Strategy",
 	category = "statistics",
 	default_timeframes = ["1h", "4h", "1d"],

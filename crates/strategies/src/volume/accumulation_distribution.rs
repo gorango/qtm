@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when AD line and price are both increasing (bullish confirmation)
 /// Generates sell signals when AD and price diverge (bearish divergence)
 #[strategy(
-	id = "accumulation-distribution",
+	id = "accumulation_distribution",
 	name = "Accumulation/Distribution Line",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

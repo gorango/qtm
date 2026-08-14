@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals for impulse waves (1, 2)
 /// Generates sell signals for corrective waves (-1, -2)
 #[strategy(
-	id = "elliott-wave-pattern",
+	id = "elliott_wave_pattern",
 	name = "Elliott Wave Pattern Strategy",
 	category = "patterns",
 	default_timeframes = ["1h", "4h", "1d"],

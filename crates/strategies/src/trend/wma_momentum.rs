@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when WMA is increasing
 /// Generates sell signals when WMA is decreasing
 #[strategy(
-	id = "wmaMomentum",
+	id = "wma_momentum",
 	name = "WMA Momentum Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

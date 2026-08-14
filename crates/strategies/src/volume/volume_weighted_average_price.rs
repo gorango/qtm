@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price crosses above VWAP
 /// Generates sell signals when price crosses below VWAP
 #[strategy(
-	id = "volumeWeightedAveragePrice",
+	id = "volume_weighted_average_price",
 	name = "Volume Weighted Average Price Trend",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

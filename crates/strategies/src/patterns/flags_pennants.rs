@@ -8,12 +8,12 @@ use strategies_proc_macro::strategy;
 /// Flag: Consolidation with parallel lines
 /// Pennant: Consolidation with converging lines
 ///
-/// @strategy_id flags-pennants-continuation
+/// @strategy_id flags_pennants_continuation
 /// @strategy_name Flags and Pennants Continuation Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "flags-pennants-continuation",
+	id = "flags_pennants_continuation",
 	name = "Flags and Pennants Continuation Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

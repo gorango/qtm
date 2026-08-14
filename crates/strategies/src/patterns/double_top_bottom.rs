@@ -8,12 +8,12 @@ use strategies_proc_macro::strategy;
 /// Double Top: Two peaks at similar price levels followed by breakdown
 /// Double Bottom: Two troughs at similar price levels followed by breakout
 ///
-/// @strategy_id double-top-bottom-reversal
+/// @strategy_id double_top_bottom_reversal
 /// @strategy_name Double Top/Bottom Reversal Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "double-top-bottom-reversal",
+	id = "double_top_bottom_reversal",
 	name = "Double Top/Bottom Reversal Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

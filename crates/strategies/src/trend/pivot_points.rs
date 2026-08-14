@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates signals based on price vs pivot levels
 /// Buy when price breaks above pivot, sell when price breaks below pivot
 #[strategy(
-	id = "pivotPoints",
+	id = "pivot_points",
 	name = "Pivot Points Trend",
 	category = "trend",
 	default_timeframes = ["1h", "4h", "1d"],

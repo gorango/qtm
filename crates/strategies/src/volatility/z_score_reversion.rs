@@ -6,7 +6,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
 #[strategy(
-	id = "zScoreReversion",
+	id = "z_score_reversion",
 	name = "Z-Score Reversion Strategy",
 	category = "volatility",
 	default_timeframes = ["15m", "1h", "4h"],

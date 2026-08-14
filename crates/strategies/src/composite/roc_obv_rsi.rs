@@ -3,7 +3,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "roc-obv-rsi-momentum",
+    id = "roc_obv_rsi_momentum",
     name = "ROC OBV + RSI Momentum",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

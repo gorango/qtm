@@ -9,12 +9,12 @@ use strategies_proc_macro::strategy;
 /// Descending Triangle: Falling resistance line, flat support (bearish breakout)
 /// Symmetrical Triangle: Converging lines (direction depends on breakout)
 ///
-/// @strategy_id triangle-breakout
+/// @strategy_id triangle_breakout
 /// @strategy_name Triangle Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "triangle-breakout",
+	id = "triangle_breakout",
 	name = "Triangle Breakout Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

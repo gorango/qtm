@@ -9,7 +9,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when MACD line crosses above signal line
 /// Generates sell signals when MACD line crosses below signal line
 #[strategy(
-	id = "macdCrossover",
+	id = "macd_crossover",
 	name = "MACD Crossover Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

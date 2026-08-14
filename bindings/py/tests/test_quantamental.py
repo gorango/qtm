@@ -59,11 +59,11 @@ def test_strategy_registry_is_populated():
 	assert isinstance(registry, dict)
 	ids = set(registry.get("strategies", {}))
 	assert len(ids) > 0
-	assert "buyAndHold" in ids
+	assert "buy_and_hold" in ids
 
 
 def test_registry_strategies_are_dispatchable_by_id():
-	signals = q.run_strategy("buyAndHold", {"closes": [100, 101, 102, 103, 104]})
+	signals = q.run_strategy("buy_and_hold", {"closes": [100, 101, 102, 103, 104]})
 	assert isinstance(signals, np.ndarray)
 	assert signals.dtype == np.int8
 	assert signals.tolist() == [1, 0, 0, 0, 0]

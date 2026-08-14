@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price crosses below VWAP - deviation threshold
 /// Generates sell signals when price crosses above VWAP + deviation threshold
 #[strategy(
-	id = "vwap-reversion",
+	id = "vwap_reversion",
 	name = "VWAP Reversion",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

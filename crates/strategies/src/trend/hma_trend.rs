@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates signals based on HMA slope direction
 /// Buy when HMA is rising, sell when HMA is falling
 #[strategy(
-	id = "hmaTrend",
+	id = "hma_trend",
 	name = "HMA Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

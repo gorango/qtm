@@ -113,20 +113,20 @@ pub fn get_strategy_registry() -> crate::types::results::StrategyRegistry {
 	// Composite strategies (not yet migrated to #[strategy])
 	for (key, meta_fn) in [
 		(
-			"flag-pennant-macd-continuation",
+			"flag_pennant_macd_continuation",
 			crate::flag_pennant_macd_strategy_metadata as fn() -> serde_json::Value,
 		),
 		(
-			"macd-rsi-momentum",
+			"macd_rsi_momentum",
 			crate::macd_rsi_strategy_metadata as fn() -> serde_json::Value,
 		),
 		// Aliases for strategies registered under alternate keys
 		(
-			"percentRank-ranking",
+			"percent_rank_ranking",
 			crate::percent_rank_strategy_metadata as fn() -> serde_json::Value,
 		),
 		(
-			"elliott-wave-pattern",
+			"elliott_wave_pattern",
 			crate::percent_rank_strategy_metadata as fn() -> serde_json::Value,
 		),
 	] {

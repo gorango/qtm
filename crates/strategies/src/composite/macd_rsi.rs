@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Buy when RSI is oversold and MACD confirms bullish crossover. Sell on bearish alignment.
 #[strategy(
-	id = "macd-rsi-momentum",
+	id = "macd_rsi_momentum",
 	name = "MACD + RSI Momentum",
 	category = "composite",
 	default_timeframes = ["15m", "1h", "4h"],

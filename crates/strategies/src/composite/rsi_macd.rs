@@ -6,7 +6,7 @@ use indicators_core::rsi;
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "rsi-macd-confirmation",
+    id = "rsi_macd_confirmation",
     name = "RSI + MACD Confirmation",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

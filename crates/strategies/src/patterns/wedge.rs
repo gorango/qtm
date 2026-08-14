@@ -10,12 +10,12 @@ use strategies_proc_macro::strategy;
 /// Falling Wedge: Both lines slope downward (bullish breakout)
 /// Breakouts typically occur opposite to the wedge direction
 ///
-/// @strategy_id wedge-breakout
+/// @strategy_id wedge_breakout
 /// @strategy_name Wedge Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "wedge-breakout",
+	id = "wedge_breakout",
 	name = "Wedge Breakout Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

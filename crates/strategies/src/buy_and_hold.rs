@@ -6,7 +6,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Buy on first bar, hold forever
 #[strategy(
-	id = "buyAndHold",
+	id = "buy_and_hold",
 	name = "Buy and Hold",
 	category = "special",
 	default_timeframes = ["1d", "1w", "1M"],

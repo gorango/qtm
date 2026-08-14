@@ -4,7 +4,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "ma-rsi-trend-following",
+    id = "ma_rsi_trend_following",
     name = "MA + RSI Trend Following",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

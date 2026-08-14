@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
 #[strategy(
-	id = "keltnerChannelBreakout",
+	id = "keltner_channel_breakout",
 	name = "Keltner Channel Breakout Strategy",
 	category = "volatility",
 	default_timeframes = ["15m", "1h", "4h"],

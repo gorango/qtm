@@ -8,12 +8,12 @@ use strategies_proc_macro::strategy;
 /// Regular Head & Shoulders: Left shoulder - head - right shoulder formation (bearish)
 /// Inverse Head & Shoulders: Inverted formation (bullish)
 ///
-/// @strategy_id head-and-shoulders-reversal
+/// @strategy_id head_and_shoulders_reversal
 /// @strategy_name Head and Shoulders Reversal Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "head-and-shoulders-reversal",
+	id = "head_and_shoulders_reversal",
 	name = "Head and Shoulders Reversal Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

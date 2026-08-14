@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when fast MA crosses above slow MA
 /// Generates sell signals when fast MA crosses below slow MA
 #[strategy(
-	id = "ma-crossover",
+	id = "ma_crossover",
 	name = "Moving Average Crossover Information",
 	category = "trend",
 	default_timeframes = ["1h", "4h", "1d"],

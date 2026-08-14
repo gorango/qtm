@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when Williams %R crosses above oversold level
 /// Generates sell signals when Williams %R crosses below overbought level
 #[strategy(
-	id = "williamsR",
+	id = "williams_r",
 	name = "Williams %R Momentum Strategy",
 	category = "momentum",
 	default_timeframes = ["15m", "1h", "4h"],

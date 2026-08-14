@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when NVI crosses above its SMA
 /// Generates sell signals when NVI crosses below its SMA
 #[strategy(
-	id = "negative-volume-index",
+	id = "negative_volume_index",
 	name = "Negative Volume Index",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

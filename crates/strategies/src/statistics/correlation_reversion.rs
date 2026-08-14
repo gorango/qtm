@@ -8,12 +8,12 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when correlation drops below reversion threshold (mean reversion entry)
 /// Generates sell signals when correlation exceeds 1.5x reversion threshold (exit)
 ///
-/// @strategy_id correlation-mean-reversion
+/// @strategy_id correlation_mean_reversion
 /// @strategy_name Correlation Mean Reversion Strategy
 /// @category statistics
 /// @default_timeframes 1h,4h,1d
 #[strategy(
-	id = "correlation-mean-reversion",
+	id = "correlation_mean_reversion",
 	name = "Correlation Mean Reversion Strategy",
 	category = "statistics",
 	default_timeframes = ["1h", "4h", "1d"],

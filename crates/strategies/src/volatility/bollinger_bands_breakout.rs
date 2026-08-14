@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Generates buy/sell signals based on volatility channel breakouts and mean reversion.
 #[strategy(
-	id = "bollingerBands",
+	id = "bollinger_bands",
 	name = "Bollinger Bands Strategy",
 	category = "volatility",
 	default_timeframes = ["15m", "1h", "4h"],

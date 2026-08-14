@@ -6,7 +6,7 @@ use strategies_proc_macro::strategy;
 ///
 /// Buy when spread deviates below threshold (undervalued). Sell when above threshold (overvalued).
 #[strategy(
-	id = "pairsTrading",
+	id = "pairs_trading",
 	name = "Pairs Trading Strategy",
 	category = "volatility",
 	default_timeframes = ["15m", "1h", "4h"],

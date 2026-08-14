@@ -6,7 +6,7 @@ use indicators_core::vwap;
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "vwap-stochastic-confirmation",
+    id = "vwap_stochastic_confirmation",
     name = "VWAP + Stochastic Confirmation",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

@@ -4,7 +4,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "macd-stochastic-confirmation",
+    id = "macd_stochastic_confirmation",
     name = "MACD + Stochastic Confirmation",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

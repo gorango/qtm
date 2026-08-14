@@ -3,7 +3,7 @@ use crate::StrategyResult;
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "double-top-stochastic-reversal",
+    id = "double_top_stochastic_reversal",
     name = "Double Top/Bottom + Stochastic Reversal",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

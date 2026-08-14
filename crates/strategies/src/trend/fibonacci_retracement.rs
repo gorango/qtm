@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price is above Fibonacci level
 /// Generates sell signals when price is below Fibonacci level
 #[strategy(
-	id = "fibonacciRetracement",
+	id = "fibonacci_retracement",
 	name = "Fibonacci Retracement Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

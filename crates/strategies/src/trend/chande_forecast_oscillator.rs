@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when CFO crosses under oversold level
 /// Generates sell signals when CFO crosses over overbought level
 #[strategy(
-	id = "chandeForecastOscillator",
+	id = "chande_forecast_oscillator",
 	name = "Chande Forecast Oscillator Trend",
 	category = "trend",
 	default_timeframes = ["1h", "4h", "1d"],

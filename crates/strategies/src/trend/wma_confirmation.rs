@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when WMA slope is above threshold
 /// Generates sell signals when WMA slope is below negative threshold
 #[strategy(
-	id = "wmaConfirmation",
+	id = "wma_confirmation",
 	name = "WMA Confirmation Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

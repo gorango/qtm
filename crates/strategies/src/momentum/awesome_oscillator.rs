@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when AO crosses above zero
 /// Generates sell signals when AO crosses below zero
 #[strategy(
-	id = "awesomeOscillator",
+	id = "awesome_oscillator",
 	name = "Awesome Oscillator Momentum Strategy",
 	category = "momentum",
 	default_timeframes = ["15m", "1h", "4h"],

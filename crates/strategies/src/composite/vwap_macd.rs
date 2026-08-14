@@ -4,7 +4,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "vwap-macd-momentum",
+    id = "vwap_macd_momentum",
     name = "VWAP + MACD Momentum",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

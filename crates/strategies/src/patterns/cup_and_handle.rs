@@ -7,12 +7,12 @@ use strategies_proc_macro::strategy;
 /// Detects the cup and handle continuation pattern, a bullish formation
 /// consisting of a rounded bottom (cup) followed by a small pullback (handle)
 ///
-/// @strategy_id cup-and-handle-breakout
+/// @strategy_id cup_and_handle_breakout
 /// @strategy_name Cup and Handle Breakout Strategy
 /// @category patterns
 /// @default_timeframes 15m,1h,4h
 #[strategy(
-	id = "cup-and-handle-breakout",
+	id = "cup_and_handle_breakout",
 	name = "Cup and Handle Breakout Strategy",
 	category = "patterns",
 	default_timeframes = ["15m", "1h", "4h"],

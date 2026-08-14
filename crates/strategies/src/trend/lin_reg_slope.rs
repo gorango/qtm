@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates signals based on slope direction with ADX confirmation
 /// Buy when slope > 0 and ADX > threshold, sell when slope < 0 and ADX > threshold
 #[strategy(
-	id = "linRegSlope",
+	id = "lin_reg_slope",
 	name = "Linear Regression Slope Trend",
 	category = "trend",
 	default_timeframes = ["1h", "4h", "1d"],

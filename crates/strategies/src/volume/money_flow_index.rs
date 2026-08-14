@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when MFI crosses below oversold level
 /// Generates sell signals when MFI crosses above overbought level
 #[strategy(
-	id = "money-flow-index",
+	id = "money_flow_index",
 	name = "Money Flow Index",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

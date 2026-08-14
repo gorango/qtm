@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when CMF crosses above zero
 /// Generates sell signals when CMF crosses below zero
 #[strategy(
-	id = "chaikin-money-flow",
+	id = "chaikin_money_flow",
 	name = "Chaikin Money Flow",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],

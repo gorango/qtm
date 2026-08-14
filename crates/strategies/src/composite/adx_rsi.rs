@@ -3,7 +3,7 @@ use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
 #[strategy(
-    id = "adx-rsi-trend-momentum",
+    id = "adx_rsi_trend_momentum",
     name = "ADX + RSI Trend Momentum",
     category = "composite",
     default_timeframes = ["15m", "1h", "4h"],

@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when price is above SAR
 /// Generates sell signals when price is below SAR
 #[strategy(
-	id = "parabolicSar",
+	id = "parabolic_sar",
 	name = "Parabolic SAR Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

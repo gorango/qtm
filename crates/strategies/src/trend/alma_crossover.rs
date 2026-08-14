@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when fast ALMA crosses above slow ALMA
 /// Generates sell signals when fast ALMA crosses below slow ALMA
 #[strategy(
-	id = "almaCrossover",
+	id = "alma_crossover",
 	name = "ALMA Crossover Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

@@ -9,7 +9,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when APO crosses above zero line
 /// Generates sell signals when APO crosses below zero line
 #[strategy(
-	id = "absolutePriceOscillator",
+	id = "absolute_price_oscillator",
 	name = "Absolute Price Oscillator Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

@@ -7,7 +7,7 @@ use strategies_proc_macro::strategy;
 /// Generates signals on trend direction changes
 /// Buy when trend changes to up, sell when trend changes to down
 #[strategy(
-	id = "superTrend",
+	id = "super_trend",
 	name = "Super Trend Trend",
 	category = "trend",
 	default_timeframes = ["15m", "1h", "4h"],

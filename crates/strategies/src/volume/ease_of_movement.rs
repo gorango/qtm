@@ -8,7 +8,7 @@ use strategies_proc_macro::strategy;
 /// Generates buy signals when EOM crosses above zero
 /// Generates sell signals when EOM crosses below zero
 #[strategy(
-	id = "ease-of-movement",
+	id = "ease_of_movement",
 	name = "Ease of Movement",
 	category = "volume",
 	default_timeframes = ["15m", "1h", "4h"],
