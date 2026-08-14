@@ -1,4 +1,4 @@
-name: Publish NAPI Bindings
+name: Publish Javascript Bindings
 on:
   push:
     tags:
