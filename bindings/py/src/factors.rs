@@ -154,11 +154,7 @@ pub fn earnings_surprise(py: Python<'_>, reports: Vec<Json>) -> PyResultO {
 
 #[pyfunction]
 #[pyo3(signature = (fundamentals, periods = None))]
-pub fn eps_avg(
-	py: Python<'_>,
-	fundamentals: Vec<Json>,
-	periods: Option<u32>,
-) -> PyResultO {
+pub fn eps_avg(py: Python<'_>, fundamentals: Vec<Json>, periods: Option<u32>) -> PyResultO {
 	let fundamentals: Vec<FundamentalPoint> = records(fundamentals, "fundamentals")?;
 	validate_non_empty(&fundamentals, "fundamentals")?;
 	let out = factors_core::eps_avg(fundamentals, periods);
@@ -167,11 +163,7 @@ pub fn eps_avg(
 
 #[pyfunction]
 #[pyo3(signature = (fundamentals, period = None))]
-pub fn eps_growth_cagr(
-	py: Python<'_>,
-	fundamentals: Vec<Json>,
-	period: Option<u32>,
-) -> PyResultO {
+pub fn eps_growth_cagr(py: Python<'_>, fundamentals: Vec<Json>, period: Option<u32>) -> PyResultO {
 	let fundamentals: Vec<FundamentalPoint> = records(fundamentals, "fundamentals")?;
 	validate_non_empty(&fundamentals, "fundamentals")?;
 	let out = factors_core::eps_growth_cagr(fundamentals, period);
@@ -219,11 +211,7 @@ pub fn exchange_flow_momentum(
 
 #[pyfunction]
 #[pyo3(signature = (prediction_data, period = None))]
-pub fn odds_momentum(
-	py: Python<'_>,
-	prediction_data: Vec<Json>,
-	period: Option<u32>,
-) -> PyResultO {
+pub fn odds_momentum(py: Python<'_>, prediction_data: Vec<Json>, period: Option<u32>) -> PyResultO {
 	let prediction_data: Vec<factors_core::PredictionMarketPoint> =
 		records(prediction_data, "prediction_data")?;
 	validate_non_empty(&prediction_data, "prediction_data")?;

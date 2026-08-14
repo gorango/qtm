@@ -1,6 +1,8 @@
 use pyo3::prelude::*;
 
-use crate::convert::{deserialize_cfg, err, f64_out, i8_out, json_to_py, normalize_config, records};
+use crate::convert::{
+	deserialize_cfg, err, f64_out, i8_out, json_to_py, normalize_config, records,
+};
 use crate::convert::{Json, PyObject};
 use crate::validation::validate_non_empty;
 use factors_core::{Bar, FactorPoint, FundamentalPoint, OnChainDataPoint};
@@ -240,7 +242,13 @@ pub fn multi_factor_strategy(
 	validate_non_empty(&momentum_factors, "momentum_factors")?;
 	validate_non_empty(&prices, "prices")?;
 	let cfg = deserialize_cfg::<MultiFactorConfig>(config.map(|c| normalize_config(c.0)))?;
-	let out = strategies_core::multi_factor_strategy(value_factors, quality_factors, momentum_factors, prices, cfg);
+	let out = strategies_core::multi_factor_strategy(
+		value_factors,
+		quality_factors,
+		momentum_factors,
+		prices,
+		cfg,
+	);
 	Ok(f64_out(py, &out))
 }
 

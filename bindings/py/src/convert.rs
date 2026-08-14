@@ -78,7 +78,9 @@ pub fn any_to_json(obj: &Bound<'_, PyAny>) -> PyResult<Value> {
 		}
 		return Ok(Value::Array(items));
 	}
-	Err(err("unsupported Python object; expected a JSON-compatible value"))
+	Err(err(
+		"unsupported Python object; expected a JSON-compatible value",
+	))
 }
 
 /// Common array-input type: accepts a numpy float64 array (or anything numpy
@@ -122,7 +124,11 @@ pub fn normalize_config(value: Value) -> Value {
 		Value::Object(map) => Value::Object(
 			map.into_iter()
 				.map(|(k, v)| {
-					let key = if k.contains('_') { snake_to_camel(&k) } else { k };
+					let key = if k.contains('_') {
+						snake_to_camel(&k)
+					} else {
+						k
+					};
 					(key, normalize_config(v))
 				})
 				.collect(),
@@ -148,11 +154,7 @@ pub fn records<T: DeserializeOwned>(items: Vec<Json>, what: &str) -> PyResult<Ve
 
 /// Extract a 2D array to Vec<Vec<f64>>.
 pub fn f64_matrix(arr: &F64Arr2<'_>, _what: &str) -> PyResult<Vec<Vec<f64>>> {
-	Ok(arr
-		.as_array()
-		.outer_iter()
-		.map(|r| r.to_vec())
-		.collect())
+	Ok(arr.as_array().outer_iter().map(|r| r.to_vec()).collect())
 }
 
 /// Read the `period` field out of a normalized config, with a default.
@@ -204,10 +206,7 @@ pub fn json_to_py(py: Python<'_>, v: &Value) -> PyResult<PyObject> {
 		}
 		Value::String(s) => s.into_pyobject(py)?.into_any().unbind(),
 		Value::Array(items) => {
-			if items
-				.iter()
-				.all(|i| i.is_number() || i.is_null())
-			{
+			if items.iter().all(|i| i.is_number() || i.is_null()) {
 				let arr: Vec<f64> = items
 					.iter()
 					.map(|i| i.as_f64().unwrap_or(f64::NAN))

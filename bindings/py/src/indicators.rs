@@ -1,94 +1,43 @@
 use pyo3::prelude::*;
 
-
-use crate::convert::{
-	cfg_u32, deserialize_cfg, err, f64_out, normalize_config, to_py, F64Arr1,
-};
+use crate::convert::{cfg_u32, deserialize_cfg, err, f64_out, normalize_config, to_py, F64Arr1};
 use crate::convert::{Json, PyObject};
 use crate::validation::{validate_arrays, validate_non_empty, validate_period};
-use indicators_core::{absolute_price_oscillator as absolute_price_oscillator_core,
-	adx as adx_core,
-	alma as alma_core,
-	annualized_volatility as annualized_volatility_core,
-	aroon as aroon_core,
-	awesome_oscillator as awesome_oscillator_core,
-	balance_of_power as balance_of_power_core,
-	cci as cci_core,
+use indicators_core::{
+	absolute_price_oscillator as absolute_price_oscillator_core, adx as adx_core,
+	alma as alma_core, annualized_volatility as annualized_volatility_core, aroon as aroon_core,
+	awesome_oscillator as awesome_oscillator_core, balance_of_power as balance_of_power_core,
+	bearish_engulfing as bearish_engulfing_core, bullish_engulfing as bullish_engulfing_core,
+	camarilla_pivot_points as camarilla_pivot_points_core, cci as cci_core,
 	chande_forecast_oscillator as chande_forecast_oscillator_core,
-	classify_market_trend as classify_market_trend_core,
-	cointegration as cointegration_core,
-	correlation as correlation_core,
-	cup_and_handle as cup_and_handle_core,
-	dema as dema_core,
-	double_bottom as double_bottom_core,
-	double_top as double_top_core,
-	elliott_wave as elliott_wave_core,
-	emv as emv_core,
-	find_peaks as find_peaks_core,
-	find_troughs as find_troughs_core,
-	force_index as force_index_core,
-	hma as hma_core,
-	ichimoku_cloud as ichimoku_cloud_core,
-	internal::ema::ema_internal,
-	internal::moving_sum::moving_sum_internal,
-	internal::sma::sma_internal,
-	kst as kst_core,
-	larsson as larsson_core,
-	linreg as linreg_core,
-	linear_regression as linear_regression_core,
-	macd as macd_core,
-	market::advance_decline::advance_decline_line as advance_decline_line_core,
+	classify_market_trend as classify_market_trend_core, cointegration as cointegration_core,
+	correlation as correlation_core, cup_and_handle as cup_and_handle_core, dema as dema_core,
+	double_bottom as double_bottom_core, double_top as double_top_core,
+	elliott_wave as elliott_wave_core, emv as emv_core,
+	fibonacci_pivot_points as fibonacci_pivot_points_core, find_peaks as find_peaks_core,
+	find_troughs as find_troughs_core, flags_pennants as flags_pennants_core,
+	force_index as force_index_core, head_and_shoulders as head_and_shoulders_core,
+	hma as hma_core, ichimoku_cloud as ichimoku_cloud_core, internal::ema::ema_internal,
+	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, kst as kst_core,
+	larsson as larsson_core, linear_regression as linear_regression_core, linreg as linreg_core,
+	macd as macd_core, market::advance_decline::advance_decline_line as advance_decline_line_core,
 	market::mcclellan_oscillator::mcclellan_oscillator as mcclellan_oscillator_core,
-	mass_index as mass_index_core,
-	max_drawdown as max_drawdown_core,
-	mfi as mfi_core,
-	momentum_index as momentum_index_core,
-	money_flow_index as money_flow_index_core,
-	parabolic_sar as parabolic_sar_core,
-	percent_rank as percent_rank_core,
+	mass_index as mass_index_core, max_drawdown as max_drawdown_core, mfi as mfi_core,
+	momentum_index as momentum_index_core, money_flow_index as money_flow_index_core,
+	parabolic_sar as parabolic_sar_core, percent_rank as percent_rank_core,
 	percentage_price_oscillator as percentage_price_oscillator_core,
 	percentage_volume_oscillator as percentage_volume_oscillator_core,
 	percentile_linear_interpolation as percentile_linear_interpolation_core,
-	percentile_nearest_rank as percentile_nearest_rank_core,
-	pivot_points as pivot_points_core,
-	fibonacci_pivot_points as fibonacci_pivot_points_core,
-	camarilla_pivot_points as camarilla_pivot_points_core,
-	price_rate_of_change as price_rate_of_change_core,
-	qstick as qstick_core,
-	random_index as random_index_core,
-	rsi as rsi_core,
-	rolling_moving_average as rolling_moving_average_core,
-	smoothed_moving_average as smoothed_moving_average_core,
-	stochastic_oscillator as stochastic_oscillator_core,
-	super_trend as super_trend_core,
-	tema as tema_core,
-	tma as tma_core,
-	trend::moving_max::moving_max_internal,
-	trend::moving_min::moving_min_internal,
-	trend::rma::rma_internal,
-	trend::since::since_internal,
-	trend::typical_price::typical_price as typical_price_core,
-	trix as trix_core,
-	ulcer_index as ulcer_index_core,
-	ultimate_oscillator as ultimate_oscillator_core,
-	uo as uo_core,
-	value_when as value_when_core,
-	vortex as vortex_core,
-	volume::accumulation_distribution::accumulation_distribution as accumulation_distribution_core,
-	volume::accumulation_distribution::ad as ad_core,
-	volume::anchored_vwap::anchored_vwap as anchored_vwap_core,
-	volume::chaikin_money_flow::chaikin_money_flow as chaikin_money_flow_core,
-	volume::chaikin_money_flow::cmf as cmf_core,
-	volume::ease_of_movement::ease_of_movement as ease_of_movement_core,
-	volume::negative_volume_index::negative_volume_index as negative_volume_index_core,
-	volume::negative_volume_index::nvi as nvi_core,
-	volume::obv::obv as obv_core,
-	volume::obv::on_balance_volume as on_balance_volume_core,
-	volume::volume_price_trend::volume_price_trend as volume_price_trend_core,
-	volume::volume_price_trend::vpt as vpt_core,
-	volume_profile as volume_profile_core,
-	volume_surge as volume_surge_core,
-	volume_weighted_average_price as volume_weighted_average_price_core,
+	percentile_nearest_rank as percentile_nearest_rank_core, pivot_points as pivot_points_core,
+	price_rate_of_change as price_rate_of_change_core, qstick as qstick_core,
+	random_index as random_index_core, rolling_moving_average as rolling_moving_average_core,
+	rsi as rsi_core, smoothed_moving_average as smoothed_moving_average_core, stars as stars_core,
+	stochastic_oscillator as stochastic_oscillator_core, super_trend as super_trend_core,
+	tema as tema_core, tma as tma_core, trend::moving_max::moving_max_internal,
+	trend::moving_min::moving_min_internal, trend::rma::rma_internal, trend::since::since_internal,
+	trend::typical_price::typical_price as typical_price_core, triangles as triangles_core,
+	trix as trix_core, ulcer_index as ulcer_index_core,
+	ultimate_oscillator as ultimate_oscillator_core, uo as uo_core, value_when as value_when_core,
 	volatility::acceleration_bands::ab as ab_core,
 	volatility::acceleration_bands::acceleration_bands as acceleration_bands_core,
 	volatility::average_true_range::atr as atr_core,
@@ -109,61 +58,34 @@ use indicators_core::{absolute_price_oscillator as absolute_price_oscillator_cor
 	volatility::moving_standard_deviation::mstd as mstd_core,
 	volatility::projection_oscillator::po as po_core,
 	volatility::projection_oscillator::projection_oscillator as projection_oscillator_core,
-	volatility::true_range::tr as tr_core,
-	volatility::true_range::true_range as true_range_core,
+	volatility::true_range::tr as tr_core, volatility::true_range::true_range as true_range_core,
 	volatility::ttm_squeeze::ttm_squeeze as ttm_squeeze_core,
 	volatility::variance::rolling_variance as rolling_variance_core,
-	volatility::variance::variance as variance_core,
-	volatility::z_score::z_score as z_score_core,
-	vwap as vwap_core,
-	vwma as vwma_core,
-	wedges as wedges_core,
-	williams_r as williams_r_core,
-	wma as wma_core,
-	zig_zag_filter as zig_zag_filter_core,
-	bearish_engulfing as bearish_engulfing_core,
-	bullish_engulfing as bullish_engulfing_core,
-	flags_pennants as flags_pennants_core,
-	head_and_shoulders as head_and_shoulders_core,
-	stars as stars_core,
-	triangles as triangles_core,
-	ADXConfig,
-	ALMAConfig,
-	AroonConfig,
-	AwesomeOscillatorConfig,
-	Bar,
-	BBConfig,
-	BBResult,
-	CCIConfig,
-	ChaikinOscillatorConfig,
-	CointegrationConfig,
-	CorrelationConfig,
-	FIConfig,
-	IchimokuCloudConfig,
-	KSTConfig,
-	LinRegConfig,
-	MACDConfig,
-	MFIConfig,
-	MomentumIndexConfig,
-	MSTDConfig,
-	MeanAbsoluteDeviationConfig,
-	PercentagePriceOscillatorConfig,
-	PercentageVolumeOscillatorConfig,
-	PercentRankConfig,
-	PercentileLinearInterpolationConfig,
-	PercentileNearestRankConfig,
-	PSARConfig,
-	PriceRateOfChangeConfig,
-	QstickConfig,
-	RSIConfig,
-	StochConfig,
-	UltimateOscillatorConfig,
-	VWAPConfig,
-	ValueWhenConfig,
-	VarianceConfig,
-	VolumeSurgeConfig,
-	WilliamsRConfig,
-	ZScoreConfig};
+	volatility::variance::variance as variance_core, volatility::z_score::z_score as z_score_core,
+	volume::accumulation_distribution::accumulation_distribution as accumulation_distribution_core,
+	volume::accumulation_distribution::ad as ad_core,
+	volume::anchored_vwap::anchored_vwap as anchored_vwap_core,
+	volume::chaikin_money_flow::chaikin_money_flow as chaikin_money_flow_core,
+	volume::chaikin_money_flow::cmf as cmf_core,
+	volume::ease_of_movement::ease_of_movement as ease_of_movement_core,
+	volume::negative_volume_index::negative_volume_index as negative_volume_index_core,
+	volume::negative_volume_index::nvi as nvi_core, volume::obv::obv as obv_core,
+	volume::obv::on_balance_volume as on_balance_volume_core,
+	volume::volume_price_trend::volume_price_trend as volume_price_trend_core,
+	volume::volume_price_trend::vpt as vpt_core, volume_profile as volume_profile_core,
+	volume_surge as volume_surge_core,
+	volume_weighted_average_price as volume_weighted_average_price_core, vortex as vortex_core,
+	vwap as vwap_core, vwma as vwma_core, wedges as wedges_core, williams_r as williams_r_core,
+	wma as wma_core, zig_zag_filter as zig_zag_filter_core, ADXConfig, ALMAConfig, AroonConfig,
+	AwesomeOscillatorConfig, BBConfig, BBResult, Bar, CCIConfig, ChaikinOscillatorConfig,
+	CointegrationConfig, CorrelationConfig, FIConfig, IchimokuCloudConfig, KSTConfig, LinRegConfig,
+	MACDConfig, MFIConfig, MSTDConfig, MeanAbsoluteDeviationConfig, MomentumIndexConfig,
+	PSARConfig, PercentRankConfig, PercentagePriceOscillatorConfig,
+	PercentageVolumeOscillatorConfig, PercentileLinearInterpolationConfig,
+	PercentileNearestRankConfig, PriceRateOfChangeConfig, QstickConfig, RSIConfig, StochConfig,
+	UltimateOscillatorConfig, VWAPConfig, ValueWhenConfig, VarianceConfig, VolumeSurgeConfig,
+	WilliamsRConfig, ZScoreConfig,
+};
 
 /// Indicator helpers used across modules.
 type PyResultO = PyResult<PyObject>;
@@ -219,11 +141,7 @@ pub fn pearson_correlation<'py>(
 
 #[pyfunction]
 #[pyo3(signature = (values, config = None))]
-pub fn percent_rank<'py>(
-	py: Python<'py>,
-	values: F64Arr1<'py>,
-	config: Option<Json>,
-) -> PyResultO {
+pub fn percent_rank<'py>(py: Python<'py>, values: F64Arr1<'py>, config: Option<Json>) -> PyResultO {
 	let values = values.as_array().to_vec();
 	validate_non_empty(&values, "values")?;
 	let cfg = deserialize_cfg::<PercentRankConfig>(config.map(|c| normalize_config(c.0)))?;
@@ -240,7 +158,9 @@ pub fn percentile_linear_interpolation<'py>(
 ) -> PyResultO {
 	let values = values.as_array().to_vec();
 	validate_non_empty(&values, "values")?;
-	let cfg = deserialize_cfg::<PercentileLinearInterpolationConfig>(config.map(|c| normalize_config(c.0)))?;
+	let cfg = deserialize_cfg::<PercentileLinearInterpolationConfig>(
+		config.map(|c| normalize_config(c.0)),
+	)?;
 	let out = result_or_err(percentile_linear_interpolation_core(&values, cfg))?;
 	Ok(f64_out(py, &out))
 }
@@ -254,7 +174,8 @@ pub fn percentile_nearest_rank<'py>(
 ) -> PyResultO {
 	let values = values.as_array().to_vec();
 	validate_non_empty(&values, "values")?;
-	let cfg = deserialize_cfg::<PercentileNearestRankConfig>(config.map(|c| normalize_config(c.0)))?;
+	let cfg =
+		deserialize_cfg::<PercentileNearestRankConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(percentile_nearest_rank_core(&values, cfg))?;
 	Ok(f64_out(py, &out))
 }
@@ -337,7 +258,12 @@ pub fn chaikin_oscillator<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	let period = cfg_u32(&cfg, "fast_period", 3);
 	validate_period(period, "fast_period")?;
@@ -363,7 +289,12 @@ pub fn cmo<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	let period = cfg_u32(&cfg, "fast_period", 3);
 	validate_period(period, "fast_period")?;
@@ -446,11 +377,7 @@ pub fn kst<'py>(py: Python<'py>, prices: F64Arr1<'py>, config: Option<Json>) -> 
 }
 
 #[pyfunction]
-pub fn larsson<'py>(
-	py: Python<'py>,
-	highs: F64Arr1<'py>,
-	lows: F64Arr1<'py>,
-) -> PyResultO {
+pub fn larsson<'py>(py: Python<'py>, highs: F64Arr1<'py>, lows: F64Arr1<'py>) -> PyResultO {
 	let highs = highs.as_array().to_vec();
 	let lows = lows.as_array().to_vec();
 	validate_arrays([(&highs, "highs"), (&lows, "lows")])?;
@@ -493,7 +420,8 @@ pub fn percentage_price_oscillator<'py>(
 ) -> PyResultO {
 	let prices = prices.as_array().to_vec();
 	validate_non_empty(&prices, "prices")?;
-	let cfg = deserialize_cfg::<PercentagePriceOscillatorConfig>(config.map(|c| normalize_config(c.0)))?;
+	let cfg =
+		deserialize_cfg::<PercentagePriceOscillatorConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(percentage_price_oscillator_core(&prices, cfg))?;
 	to_py(py, &out)
 }
@@ -508,7 +436,11 @@ pub fn percentage_volume_oscillator<'py>(
 	let volumes = volumes.as_array().to_vec();
 	validate_non_empty(&volumes, "volumes")?;
 	let cfg = config.map(|c| normalize_config(c.0));
-	for (key, default) in [("fast_period", 12u32), ("slow_period", 26), ("signal_period", 9)] {
+	for (key, default) in [
+		("fast_period", 12u32),
+		("slow_period", 26),
+		("signal_period", 9),
+	] {
 		validate_period(cfg_u32(&cfg, key, default), key)?;
 	}
 	let cfg = deserialize_cfg::<PercentageVolumeOscillatorConfig>(cfg)?;
@@ -518,15 +450,15 @@ pub fn percentage_volume_oscillator<'py>(
 
 #[pyfunction]
 #[pyo3(signature = (volumes, config = None))]
-pub fn pvo<'py>(
-	py: Python<'py>,
-	volumes: F64Arr1<'py>,
-	config: Option<Json>,
-) -> PyResultO {
+pub fn pvo<'py>(py: Python<'py>, volumes: F64Arr1<'py>, config: Option<Json>) -> PyResultO {
 	let volumes = volumes.as_array().to_vec();
 	validate_non_empty(&volumes, "volumes")?;
 	let cfg = config.map(|c| normalize_config(c.0));
-	for (key, default) in [("fast_period", 12u32), ("slow_period", 26), ("signal_period", 9)] {
+	for (key, default) in [
+		("fast_period", 12u32),
+		("slow_period", 26),
+		("signal_period", 9),
+	] {
 		validate_period(cfg_u32(&cfg, key, default), key)?;
 	}
 	let cfg = deserialize_cfg::<PercentageVolumeOscillatorConfig>(cfg)?;
@@ -691,7 +623,13 @@ pub fn cup_and_handle<'py>(
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
 	let out = result_or_err(cup_and_handle_core(
-		&o, &h, &l, &c, cup_depth, handle_retracement, min_duration,
+		&o,
+		&h,
+		&l,
+		&c,
+		cup_depth,
+		handle_retracement,
+		min_duration,
 	))?;
 	Ok(f64_out(py, &out))
 }
@@ -716,7 +654,13 @@ pub fn double_bottom<'py>(
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
 	let out = result_or_err(double_bottom_core(
-		&o, &h, &l, &c, tolerance, min_separation, lookaround,
+		&o,
+		&h,
+		&l,
+		&c,
+		tolerance,
+		min_separation,
+		lookaround,
 	))?;
 	Ok(f64_out(py, &out))
 }
@@ -741,7 +685,13 @@ pub fn double_top<'py>(
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
 	let out = result_or_err(double_top_core(
-		&o, &h, &l, &c, tolerance, min_separation, lookaround,
+		&o,
+		&h,
+		&l,
+		&c,
+		tolerance,
+		min_separation,
+		lookaround,
 	))?;
 	Ok(f64_out(py, &out))
 }
@@ -872,7 +822,13 @@ pub fn head_and_shoulders<'py>(
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
 	let out = result_or_err(head_and_shoulders_core(
-		&o, &h, &l, &c, min_distance, tolerance, deviation,
+		&o,
+		&h,
+		&l,
+		&c,
+		min_distance,
+		tolerance,
+		deviation,
 	))?;
 	Ok(f64_out(py, &out))
 }
@@ -903,11 +859,7 @@ pub fn linear_regression<'py>(py: Python<'py>, points: F64Arr1<'py>) -> PyResult
 }
 
 #[pyfunction]
-pub fn zig_zag_filter<'py>(
-	py: Python<'py>,
-	values: F64Arr1<'py>,
-	deviation: f64,
-) -> PyResultO {
+pub fn zig_zag_filter<'py>(py: Python<'py>, values: F64Arr1<'py>, deviation: f64) -> PyResultO {
 	let values = values.as_array().to_vec();
 	let out = zig_zag_filter_core(&values, deviation);
 	Ok(f64_out(py, &out))
@@ -931,7 +883,14 @@ pub fn stars<'py>(
 		closes.as_array().to_vec(),
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
-	let out = result_or_err(stars_core(&o, &h, &l, &c, body_ratio_threshold, gap_threshold))?;
+	let out = result_or_err(stars_core(
+		&o,
+		&h,
+		&l,
+		&c,
+		body_ratio_threshold,
+		gap_threshold,
+	))?;
 	Ok(f64_out(py, &out))
 }
 
@@ -1000,7 +959,11 @@ pub fn absolute_price_oscillator<'py>(
 ) -> PyResultO {
 	let closes = closes.as_array().to_vec();
 	validate_non_empty(&closes, "closes")?;
-	let out = result_or_err(absolute_price_oscillator_core(&closes, fast_period, slow_period))?;
+	let out = result_or_err(absolute_price_oscillator_core(
+		&closes,
+		fast_period,
+		slow_period,
+	))?;
 	Ok(f64_out(py, &out))
 }
 
@@ -1090,10 +1053,7 @@ pub fn cci<'py>(
 }
 
 #[pyfunction]
-pub fn chande_forecast_oscillator<'py>(
-	py: Python<'py>,
-	values: F64Arr1<'py>,
-) -> PyResultO {
+pub fn chande_forecast_oscillator<'py>(py: Python<'py>, values: F64Arr1<'py>) -> PyResultO {
 	let values = values.as_array().to_vec();
 	let out = result_or_err(chande_forecast_oscillator_core(&values))?;
 	Ok(f64_out(py, &out))
@@ -1208,32 +1168,17 @@ pub fn parabolic_sar<'py>(
 }
 
 #[pyfunction]
-pub fn pivot_points<'py>(
-	py: Python<'py>,
-	high: f64,
-	low: f64,
-	close: f64,
-) -> PyResultO {
+pub fn pivot_points<'py>(py: Python<'py>, high: f64, low: f64, close: f64) -> PyResultO {
 	to_py(py, &pivot_points_core(high, low, close))
 }
 
 #[pyfunction]
-pub fn fibonacci_pivot_points<'py>(
-	py: Python<'py>,
-	high: f64,
-	low: f64,
-	close: f64,
-) -> PyResultO {
+pub fn fibonacci_pivot_points<'py>(py: Python<'py>, high: f64, low: f64, close: f64) -> PyResultO {
 	to_py(py, &fibonacci_pivot_points_core(high, low, close))
 }
 
 #[pyfunction]
-pub fn camarilla_pivot_points<'py>(
-	py: Python<'py>,
-	high: f64,
-	low: f64,
-	close: f64,
-) -> PyResultO {
+pub fn camarilla_pivot_points<'py>(py: Python<'py>, high: f64, low: f64, close: f64) -> PyResultO {
 	to_py(py, &camarilla_pivot_points_core(high, low, close))
 }
 
@@ -1561,11 +1506,7 @@ pub fn bbw<'py>(py: Python<'py>, bb: Json, period: Option<u32>) -> PyResultO {
 
 #[pyfunction]
 #[pyo3(signature = (bb, period = None))]
-pub fn bollinger_bands_width<'py>(
-	py: Python<'py>,
-	bb: Json,
-	period: Option<u32>,
-) -> PyResultO {
+pub fn bollinger_bands_width<'py>(py: Python<'py>, bb: Json, period: Option<u32>) -> PyResultO {
 	let bb: BBResult = crate::convert::from_value(bb.0, "bb")?;
 	let out = result_or_err(bollinger_bands_width_core(bb, period))?;
 	to_py(py, &out)
@@ -1614,7 +1555,8 @@ pub fn chandelier_exit<'py>(
 pub fn dev<'py>(py: Python<'py>, values: F64Arr1<'py>, config: Option<Json>) -> PyResultO {
 	let values = values.as_array().to_vec();
 	validate_non_empty(&values, "values")?;
-	let cfg = deserialize_cfg::<MeanAbsoluteDeviationConfig>(config.map(|c| normalize_config(c.0)))?;
+	let cfg =
+		deserialize_cfg::<MeanAbsoluteDeviationConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(dev_core(&values, cfg))?;
 	Ok(f64_out(py, &out))
 }
@@ -1628,7 +1570,8 @@ pub fn mean_absolute_deviation<'py>(
 ) -> PyResultO {
 	let values = values.as_array().to_vec();
 	validate_non_empty(&values, "values")?;
-	let cfg = deserialize_cfg::<MeanAbsoluteDeviationConfig>(config.map(|c| normalize_config(c.0)))?;
+	let cfg =
+		deserialize_cfg::<MeanAbsoluteDeviationConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(mean_absolute_deviation_core(&values, cfg))?;
 	Ok(f64_out(py, &out))
 }
@@ -1694,11 +1637,7 @@ pub fn keltner_channel<'py>(
 }
 
 #[pyfunction]
-pub fn max_drawdown<'py>(
-	py: Python<'py>,
-	values: F64Arr1<'py>,
-	period: u32,
-) -> PyResultO {
+pub fn max_drawdown<'py>(py: Python<'py>, values: F64Arr1<'py>, period: u32) -> PyResultO {
 	let values = values.as_array().to_vec();
 	let out = result_or_err(max_drawdown_core(&values, period))?;
 	Ok(f64_out(py, &out))
@@ -1819,17 +1758,15 @@ pub fn ttm_squeeze<'py>(
 		closes.as_array().to_vec(),
 	);
 	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
-	let out = result_or_err(ttm_squeeze_core(&h, &l, &c, bb_period, bb_std_dev, kc_period))?;
+	let out = result_or_err(ttm_squeeze_core(
+		&h, &l, &c, bb_period, bb_std_dev, kc_period,
+	))?;
 	to_py(py, &out)
 }
 
 #[pyfunction]
 #[pyo3(signature = (values, period = None))]
-pub fn ulcer_index<'py>(
-	py: Python<'py>,
-	values: F64Arr1<'py>,
-	period: Option<u32>,
-) -> PyResultO {
+pub fn ulcer_index<'py>(py: Python<'py>, values: F64Arr1<'py>, period: Option<u32>) -> PyResultO {
 	let values = values.as_array().to_vec();
 	let out = result_or_err(ulcer_index_core(&values, period))?;
 	Ok(f64_out(py, &out))
@@ -1885,7 +1822,12 @@ pub fn accumulation_distribution<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let out = accumulation_distribution_core(&h, &l, &c, &v);
 	Ok(f64_out(py, &out))
 }
@@ -1904,7 +1846,12 @@ pub fn ad<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let out = ad_core(&h, &l, &c, &v);
 	Ok(f64_out(py, &out))
 }
@@ -1925,7 +1872,12 @@ pub fn anchored_vwap<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let anchor = anchor_index.unwrap_or(0);
 	let out = anchored_vwap_core(&h, &l, &c, &v, anchor);
 	Ok(f64_out(py, &out))
@@ -1947,7 +1899,12 @@ pub fn chaikin_money_flow<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let period = period.unwrap_or(20);
 	validate_period(period, "period")?;
 	let out = chaikin_money_flow_core(&h, &l, &c, &v, period);
@@ -1970,7 +1927,12 @@ pub fn cmf<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let period = period.unwrap_or(20);
 	validate_period(period, "period")?;
 	let out = cmf_core(&h, &l, &c, &v, period);
@@ -2071,7 +2033,12 @@ pub fn mfi<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	validate_period(cfg_u32(&cfg, "period", 14), "period")?;
 	let cfg = deserialize_cfg::<MFIConfig>(cfg)?;
@@ -2095,7 +2062,12 @@ pub fn money_flow_index<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	validate_period(cfg_u32(&cfg, "period", 14), "period")?;
 	let cfg = deserialize_cfg::<MFIConfig>(cfg)?;
@@ -2134,11 +2106,7 @@ pub fn nvi<'py>(
 }
 
 #[pyfunction]
-pub fn obv<'py>(
-	py: Python<'py>,
-	closings: F64Arr1<'py>,
-	volumes: F64Arr1<'py>,
-) -> PyResultO {
+pub fn obv<'py>(py: Python<'py>, closings: F64Arr1<'py>, volumes: F64Arr1<'py>) -> PyResultO {
 	let closings = closings.as_array().to_vec();
 	let volumes = volumes.as_array().to_vec();
 	validate_arrays([(&closings, "closings"), (&volumes, "volumes")])?;
@@ -2173,11 +2141,7 @@ pub fn volume_price_trend<'py>(
 }
 
 #[pyfunction]
-pub fn vpt<'py>(
-	py: Python<'py>,
-	closings: F64Arr1<'py>,
-	volumes: F64Arr1<'py>,
-) -> PyResultO {
+pub fn vpt<'py>(py: Python<'py>, closings: F64Arr1<'py>, volumes: F64Arr1<'py>) -> PyResultO {
 	let closings = closings.as_array().to_vec();
 	let volumes = volumes.as_array().to_vec();
 	validate_arrays([(&closings, "closings"), (&volumes, "volumes")])?;
@@ -2250,7 +2214,12 @@ pub fn vwap<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	let period = cfg_u32(&cfg, "period", 0);
 	if period != 0 {
@@ -2281,7 +2250,12 @@ pub fn volume_weighted_average_price<'py>(
 		closings.as_array().to_vec(),
 		volumes.as_array().to_vec(),
 	);
-	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closings"), (&v, "volumes")])?;
+	validate_arrays([
+		(&h, "highs"),
+		(&l, "lows"),
+		(&c, "closings"),
+		(&v, "volumes"),
+	])?;
 	let cfg = config.map(|c| normalize_config(c.0));
 	let period = cfg_u32(&cfg, "period", 0);
 	if period != 0 {

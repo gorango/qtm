@@ -3,15 +3,15 @@ use serde_json::{json, Map, Value};
 
 use crate::convert::{err, i8_out, json_to_py, normalize_config};
 use crate::convert::{Json, PyObject};
-use strategies_core::registry::{get_strategy_descriptors, get_strategy_registry_impl, StrategyInput};
+use strategies_core::registry::{
+	get_strategy_descriptors, get_strategy_registry_impl, StrategyInput,
+};
 
 type PyResultO = PyResult<PyObject>;
 
 fn strategy_input_from_py(obj: &Bound<'_, PyAny>) -> PyResult<StrategyInput> {
 	let v: Value = crate::convert::any_to_json(obj)?;
-	let m = v
-		.as_object()
-		.ok_or_else(|| err("input must be a dict"))?;
+	let m = v.as_object().ok_or_else(|| err("input must be a dict"))?;
 
 	let get = |key: &str| -> PyResult<Option<Vec<f64>>> {
 		match m.get(key) {
@@ -90,7 +90,10 @@ pub fn get_strategy_registry(py: Python<'_>) -> PyResultO {
 pub fn get_strategy_by_id(py: Python<'_>, id: String) -> PyResultO {
 	let reg = strategies_core::registry::get_strategy_registry();
 	match reg.strategies.get(&id) {
-		Some(def) => json_to_py(py, &serde_json::to_value(def).map_err(|e| err(e.to_string()))?),
+		Some(def) => json_to_py(
+			py,
+			&serde_json::to_value(def).map_err(|e| err(e.to_string()))?,
+		),
 		None => Ok(py.None()),
 	}
 }
@@ -117,9 +120,10 @@ pub fn get_all_categories(py: Python<'_>) -> PyResultO {
 		.collect();
 	categories.sort();
 	categories.dedup();
-	json_to_py(py, &Value::Array(
-		categories.into_iter().map(Value::String).collect(),
-	))
+	json_to_py(
+		py,
+		&Value::Array(categories.into_iter().map(Value::String).collect()),
+	)
 }
 
 /// Defaults for every `#[strategy]`-registered strategy, keyed by id.
@@ -198,9 +202,10 @@ pub fn get_all_factor_categories(py: Python<'_>) -> PyResultO {
 		.collect();
 	categories.sort();
 	categories.dedup();
-	json_to_py(py, &Value::Array(
-		categories.into_iter().map(Value::String).collect(),
-	))
+	json_to_py(
+		py,
+		&Value::Array(categories.into_iter().map(Value::String).collect()),
+	)
 }
 
 // ── Indicator registry ────────────────────────────────────────
@@ -266,7 +271,8 @@ pub fn get_all_indicator_categories(py: Python<'_>) -> PyResultO {
 		.collect();
 	categories.sort();
 	categories.dedup();
-	json_to_py(py, &Value::Array(
-		categories.into_iter().map(Value::String).collect(),
-	))
+	json_to_py(
+		py,
+		&Value::Array(categories.into_iter().map(Value::String).collect()),
+	)
 }

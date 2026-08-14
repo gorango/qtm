@@ -76,7 +76,17 @@ pub fn calculate_kst_warmup(
 	sma4: u32,
 	signal_period: u32,
 ) -> u32 {
-	indicators_core::calculate_kst_warmup(roc1, roc2, roc3, roc4, sma1, sma2, sma3, sma4, signal_period)
+	indicators_core::calculate_kst_warmup(
+		roc1,
+		roc2,
+		roc3,
+		roc4,
+		sma1,
+		sma2,
+		sma3,
+		sma4,
+		signal_period,
+	)
 }
 
 #[pyfunction]
@@ -162,7 +172,8 @@ pub fn calculate_indicator_warmup(
 	indicator_type: String,
 	params: Option<Json>,
 ) -> PyResult<PyObject> {
-	let params = params.map(|c| normalize_config(c.0))
+	let params = params
+		.map(|c| normalize_config(c.0))
 		.unwrap_or(serde_json::Value::Object(Default::default()));
 	let out = indicators_core::calculate_indicator_warmup(indicator_type, params)
 		.map_err(|e| err(e.to_string()))?;
