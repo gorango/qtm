@@ -76,7 +76,7 @@ jobs:
       - name: Install built wheel
         run: |
           pip install --quiet numpy pytest
-          pip install --quiet --prefer-binary dist/quantamental_py*.whl
+          pip install --quiet --find-links dist "quantamental-py==0.1.0"
       - name: Run tests
         run: python -m pytest bindings/py/tests -q
 
