@@ -29,114 +29,72 @@ pub fn triangles(
 		return Ok(results);
 	}
 
-	let filtered_peaks: Vec<usize> = peaks
-		.iter()
-		.copied()
-		.filter(|&p| p > (highs.len() as f64 * 0.3) as usize)
-		.collect();
-	let recent_peaks: Vec<usize> = filtered_peaks
-		.iter()
-		.rev()
-		.take(min_points)
-		.copied()
-		.collect();
+	// Sliding-window scan: at every bar, fit the min_points most recent
+	// peaks/troughs inside the lookback, classify, and fire on a breakout
+	// CROSSING of the fitted lines.  Previously the detector was
+	// end-anchored — it examined only the final min_points peaks after an
+	// arbitrary `index > len*0.3` cutoff, then required the breakout in the
+	// few remaining bars, so mid-history triangles were never detected.
+	let lookback = 120usize;
+	for i in lookback..highs.len() {
+		let win_peaks: Vec<usize> = peaks
+			.iter()
+			.copied()
+			.filter(|&p| p >= i - lookback && p < i)
+			.collect();
+		let win_troughs: Vec<usize> = troughs
+			.iter()
+			.copied()
+			.filter(|&t| t >= i - lookback && t < i)
+			.collect();
 
-	let filtered_troughs: Vec<usize> = troughs
-		.iter()
-		.copied()
-		.filter(|&t| t > (lows.len() as f64 * 0.3) as usize)
-		.collect();
-	let recent_troughs: Vec<usize> = filtered_troughs
-		.iter()
-		.rev()
-		.take(min_points)
-		.copied()
-		.collect();
-
-	if recent_peaks.len() < 2 || recent_troughs.len() < 2 {
-		return Ok(results);
-	}
-
-	let mut peak_points = Vec::new();
-	for &p in &recent_peaks {
-		peak_points.push(p as f64);
-		peak_points.push(highs[p]);
-	}
-
-	let mut trough_points = Vec::new();
-	for &t in &recent_troughs {
-		trough_points.push(t as f64);
-		trough_points.push(lows[t]);
-	}
-
-	let high_line = crate::patterns::helpers::linear_regression_internal(&peak_points);
-	let low_line = crate::patterns::helpers::linear_regression_internal(&trough_points);
-
-	let high_slope = high_line[0].abs();
-	let low_slope = low_line[0].abs();
-
-	let triangle_type = if high_slope < tolerance && low_slope > convergence_tolerance {
-		Some("ascending")
-	} else if low_slope < tolerance && high_slope > convergence_tolerance {
-		Some("descending")
-	} else if high_line[0] < -convergence_tolerance && low_line[0] > convergence_tolerance {
-		let convergence = high_line[0].abs() + low_line[0];
-		if convergence > convergence_tolerance {
-			Some("symmetrical")
-		} else {
-			None
+		if win_peaks.len() < min_points || win_troughs.len() < min_points {
+			continue;
 		}
-	} else {
-		None
-	};
 
-	let triangle_type = match triangle_type {
-		Some(t) => t,
-		None => return Ok(results),
-	};
+		let mut peak_points = Vec::with_capacity(min_points * 2);
+		for &p in win_peaks.iter().rev().take(min_points).rev() {
+			peak_points.push(p as f64);
+			peak_points.push(highs[p]);
+		}
 
-	let end_index = match (recent_peaks.last(), recent_troughs.last()) {
-		(Some(&p), Some(&t)) => p.max(t),
-		_ => return Ok(results),
-	};
+		let mut trough_points = Vec::with_capacity(min_points * 2);
+		for &t in win_troughs.iter().rev().take(min_points).rev() {
+			trough_points.push(t as f64);
+			trough_points.push(lows[t]);
+		}
 
-	for i in (end_index + 1)..highs.len() {
-		let close = closes[i];
+		let high_line = crate::patterns::helpers::linear_regression_internal(&peak_points);
+		let low_line = crate::patterns::helpers::linear_regression_internal(&trough_points);
 
-		let breakout = match triangle_type {
-			"ascending" => {
-				let resistance = high_line[1] + high_line[0] * i as f64;
-				if close > resistance {
-					Some(1.0)
-				} else {
-					None
-				}
+		let high_slope = high_line[0];
+		let low_slope = low_line[0];
+
+		let resistance = high_line[1] + high_slope * i as f64;
+		let support = low_line[1] + low_slope * i as f64;
+		let prev_resistance = high_line[1] + high_slope * (i - 1) as f64;
+		let prev_support = low_line[1] + low_slope * (i - 1) as f64;
+
+		let buy_cross = closes[i - 1] <= prev_resistance && closes[i] > resistance;
+		let sell_cross = closes[i - 1] >= prev_support && closes[i] < support;
+
+		if high_slope.abs() < tolerance && low_slope > convergence_tolerance {
+			// ascending: flat highs, rising lows — bullish
+			if buy_cross {
+				results[i] = 1.0;
 			}
-			"descending" => {
-				let support = low_line[1] + low_line[0] * i as f64;
-				if close < support {
-					Some(-1.0)
-				} else {
-					None
-				}
+		} else if low_slope.abs() < tolerance && high_slope < -convergence_tolerance {
+			// descending: flat lows, falling highs — bearish
+			if sell_cross {
+				results[i] = -1.0;
 			}
-			"symmetrical" => {
-				let resistance = high_line[1] + high_line[0] * i as f64;
-				let support = low_line[1] + low_line[0] * i as f64;
-				if close > resistance {
-					Some(1.0)
-				} else if close < support {
-					Some(-1.0)
-				} else {
-					None
-				}
+		} else if high_slope < -convergence_tolerance && low_slope > convergence_tolerance {
+			// symmetrical: converging lines — either direction
+			if buy_cross {
+				results[i] = 1.0;
+			} else if sell_cross {
+				results[i] = -1.0;
 			}
-			_ => None,
-		};
-
-		if let Some(signal) = breakout {
-			results[i] = signal;
-			break;
 		}
 	}
 

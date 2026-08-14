@@ -22,15 +22,11 @@ pub fn cup_and_handle(
 		return Ok(results);
 	}
 
+	// All troughs, not just the last 3: previously `rev().take(3)` meant a
+	// cup that completed mid-history was never examined.
 	let troughs = crate::patterns::helpers::find_troughs_internal(lows, 5);
 
-	if troughs.is_empty() {
-		return Ok(results);
-	}
-
-	for bottom_index in troughs.iter().rev().take(3).rev() {
-		let bottom_index = *bottom_index;
-
+	for &bottom_index in &troughs {
 		if bottom_index < min_duration / 2 || bottom_index > highs.len() - min_duration / 2 {
 			continue;
 		}
@@ -39,7 +35,9 @@ pub fn cup_and_handle(
 
 		let left_shoulder = (bottom_index.saturating_sub(min_duration / 2)..bottom_index)
 			.rev()
-			.max_by_key(|&i| (highs[i] as u64).to_le_bytes())
+			.max_by(|&i, &j| {
+				highs[i].partial_cmp(&highs[j]).unwrap_or(std::cmp::Ordering::Equal)
+			})
 			.map(|i| (i, highs[i]));
 
 		let (_left_shoulder_index, left_shoulder_price) = match left_shoulder {
@@ -48,7 +46,9 @@ pub fn cup_and_handle(
 		};
 
 		let right_shoulder = (bottom_index + 1..(bottom_index + min_duration / 2).min(highs.len()))
-			.max_by_key(|&i| (highs[i] as u64).to_le_bytes())
+			.max_by(|&i, &j| {
+				highs[i].partial_cmp(&highs[j]).unwrap_or(std::cmp::Ordering::Equal)
+			})
 			.map(|i| (i, highs[i]));
 
 		let (right_shoulder_index, right_shoulder_price) = match right_shoulder {
@@ -63,7 +63,10 @@ pub fn cup_and_handle(
 			continue;
 		}
 
-		let handle_start = right_shoulder_index;
+		// Handle window EXCLUDES the right-shoulder bar: starting at the
+		// shoulder would make handle_high >= right_shoulder_price, forcing
+		// retracement >= 1.0 and rejecting every cup.
+		let handle_start = right_shoulder_index + 1;
 		let handle_end = (handle_start + min_duration / 4).min(highs.len() - 1);
 
 		if handle_end - handle_start < 5 {

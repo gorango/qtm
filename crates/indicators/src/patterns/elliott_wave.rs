@@ -32,7 +32,9 @@ pub fn elliott_wave(
 	let peaks = crate::patterns::helpers::find_peaks_internal(highs, lookaround);
 	let troughs = crate::patterns::helpers::find_troughs_internal(lows, lookaround);
 
-	if peaks.len() < 5 && troughs.len() < 5 {
+	// Corrective waves need only 2 peaks + 2 troughs; impulse checks no-op
+	// below 3.  Block only when BOTH are too small to form anything.
+	if peaks.len() < 2 || troughs.len() < 2 {
 		return Ok(results);
 	}
 
@@ -89,6 +91,37 @@ pub fn elliott_wave(
 	Ok(results)
 }
 
+/// Max peak index in `(lo, hi)`, or None.
+fn max_peak_in(peaks: &[usize], highs: &[f64], lo: usize, hi: usize) -> Option<usize> {
+	peaks
+		.iter()
+		.copied()
+		.filter(|&p| p > lo && p < hi)
+		.max_by(|&a, &b| highs[a].partial_cmp(&highs[b]).unwrap_or(std::cmp::Ordering::Equal))
+}
+
+/// Min trough index in `(lo, hi)`, or None.
+fn min_trough_in(troughs: &[usize], lows: &[f64], lo: usize, hi: usize) -> Option<usize> {
+	troughs
+		.iter()
+		.copied()
+		.filter(|&t| t > lo && t < hi)
+		.min_by(|&a, &b| lows[a].partial_cmp(&lows[b]).unwrap_or(std::cmp::Ordering::Equal))
+}
+
+/// Nearest (largest) index strictly below `idx` in `xs`, or None.
+fn nearest_below(xs: &[usize], idx: usize) -> Option<usize> {
+	xs.iter().copied().filter(|&x| x < idx).max()
+}
+
+fn in_range(v: f64, target: f64, tol: f64) -> bool {
+	v >= target * (1.0 - tol) && v <= target * (1.0 + tol)
+}
+
+// A real 5-wave impulse has THREE troughs (w1-start, w2-low, w4-low) and THREE
+// peaks (w1-top, w3-top, w5-top).  The previous detector indexed FIVE troughs
+// per sequence (t0-p1-t1-p2-t2-p3-t3-p4-t4 — 4 up-legs + 4 down-legs), which
+// no impulse structure can satisfy, so it never fired on any data.
 #[allow(clippy::too_many_arguments)]
 fn check_bullish_impulse_wave(
 	peaks: &[usize],
@@ -97,80 +130,67 @@ fn check_bullish_impulse_wave(
 	lows: &[f64],
 	closes: &[f64],
 	results: &mut [f64],
-	_min_wave_separation: usize,
+	min_wave_separation: usize,
 	wave2_retracement: f64,
 	wave4_retracement: f64,
 	wave3_min_extension: f64,
 	retracement_tolerance: f64,
 ) {
-	for i in 0..troughs.len().saturating_sub(5) {
-		let w1_low = troughs[i];
-		let w1_high = match peaks.iter().find(|&&p| p > w1_low && p < troughs[i + 1]) {
-			Some(&p) => p,
+	// Consecutive trough triples: t0 = w1 start, t1 = w2 low, t2 = w4 low.
+	for i in 0..troughs.len().saturating_sub(2) {
+		let t0 = troughs[i];
+		let t1 = troughs[i + 1];
+		let t2 = troughs[i + 2];
+
+		// w1 top = max peak between t0 and t1; w3 top = max peak between t1 and t2.
+		let p1 = match max_peak_in(peaks, highs, t0, t1) {
+			Some(p) => p,
+			None => continue,
+		};
+		let p2 = match max_peak_in(peaks, highs, t1, t2) {
+			Some(p) => p,
 			None => continue,
 		};
 
-		let w2_low = troughs[i + 1];
-		let w2_high = match peaks.iter().find(|&&p| p > w2_low && p < troughs[i + 2]) {
-			Some(&p) => p,
-			None => continue,
-		};
-
-		let w3_low = troughs[i + 2];
-		let w3_high = match peaks.iter().find(|&&p| p > w3_low && p < troughs[i + 3]) {
-			Some(&p) => p,
-			None => continue,
-		};
-
-		let w4_low = troughs[i + 3];
-		let w4_high = match peaks.iter().find(|&&p| p > w4_low && p < troughs[i + 4]) {
-			Some(&p) => p,
-			None => continue,
-		};
-
-		let w5_low = troughs[i + 4];
-		let w1_price = lows[w1_low];
-		let w1_top_price = highs[w1_high];
-		let w2_price = lows[w2_low];
-		let w2_top_price = highs[w2_high];
-		let w3_price = lows[w3_low];
-		let w3_top_price = highs[w3_high];
-		let w4_price = lows[w4_low];
-		let w4_top_price = highs[w4_high];
-
-		if w2_price >= w1_price || w4_price >= w3_price {
-			continue;
-		}
-		let w1_range = w1_top_price - w1_price;
-		let w2_retracement = (w1_top_price - w2_price) / w1_range;
-		let w3_range = w3_top_price - w3_price;
-		let w4_retracement = (w3_top_price - w4_price) / w3_range;
-		let w3_extension = w3_range / w1_range;
-
-		let w2_retracement_expected = wave2_retracement * (1.0 - retracement_tolerance);
-		let w2_retracement_max = wave2_retracement * (1.0 + retracement_tolerance);
-		let w4_retracement_expected = wave4_retracement * (1.0 - retracement_tolerance);
-		let w4_retracement_max = wave4_retracement * (1.0 + retracement_tolerance);
-
-		if w2_retracement < w2_retracement_expected
-			|| w2_retracement > w2_retracement_max
-			|| w4_retracement < w4_retracement_expected
-			|| w4_retracement > w4_retracement_max
+		// legs must be non-degenerate (min_wave_separation bars)
+		if p1 - t0 < min_wave_separation
+			|| t1 - p1 < min_wave_separation
+			|| p2 - t1 < min_wave_separation
+			|| t2 - p2 < min_wave_separation
 		{
 			continue;
 		}
 
-		if w3_extension < wave3_min_extension {
+		let w1_price = lows[t0];
+		let w1_top_price = highs[p1];
+		let w2_price = lows[t1];
+		let w3_top_price = highs[p2];
+		let w4_price = lows[t2];
+
+		// structure: lows rising (w2 > w1, w4 > w2), w3 top above w1 top
+		if w2_price <= w1_price || w4_price <= w2_price || w3_top_price <= w1_top_price {
 			continue;
 		}
 
-		if w2_top_price >= w1_top_price || w4_top_price >= w3_top_price {
+		let w1_range = w1_top_price - w1_price;
+		let w3_range = w3_top_price - w2_price;
+		if w1_range <= 0.0 || w3_range <= 0.0 {
+			continue;
+		}
+
+		let w2_retracement = (w1_top_price - w2_price) / w1_range;
+		let w4_retracement = (w3_top_price - w4_price) / w3_range;
+		let w3_extension = w3_range / w1_range;
+
+		if !in_range(w2_retracement, wave2_retracement, retracement_tolerance)
+			|| !in_range(w4_retracement, wave4_retracement, retracement_tolerance)
+			|| w3_extension < wave3_min_extension
+		{
 			continue;
 		}
 
 		let breakout_level = w1_top_price;
-
-		for j in (w5_low + 1)..closes.len() {
+		for j in (t2 + 1)..closes.len() {
 			if closes[j] > breakout_level {
 				results[j] = 1.0;
 				break;
@@ -187,80 +207,65 @@ fn check_bearish_impulse_wave(
 	lows: &[f64],
 	closes: &[f64],
 	results: &mut [f64],
-	_min_wave_separation: usize,
+	min_wave_separation: usize,
 	wave2_retracement: f64,
 	wave4_retracement: f64,
 	wave3_min_extension: f64,
 	retracement_tolerance: f64,
 ) {
-	for i in 0..peaks.len().saturating_sub(5) {
-		let w1_high = peaks[i];
-		let w1_low = match troughs.iter().find(|&&t| t > w1_high && t < peaks[i + 1]) {
-			Some(&t) => t,
+	for i in 0..peaks.len().saturating_sub(2) {
+		let p0 = peaks[i];
+		let p1 = peaks[i + 1];
+		let p2 = peaks[i + 2];
+
+		// w1 low = min trough between p0 and p1; w3 low = min trough between p1 and p2.
+		let t1 = match min_trough_in(troughs, lows, p0, p1) {
+			Some(t) => t,
+			None => continue,
+		};
+		let t2 = match min_trough_in(troughs, lows, p1, p2) {
+			Some(t) => t,
 			None => continue,
 		};
 
-		let w2_high = peaks[i + 1];
-		let w2_low = match troughs.iter().find(|&&t| t > w2_high && t < peaks[i + 2]) {
-			Some(&t) => t,
-			None => continue,
-		};
-
-		let w3_high = peaks[i + 2];
-		let w3_low = match troughs.iter().find(|&&t| t > w3_high && t < peaks[i + 3]) {
-			Some(&t) => t,
-			None => continue,
-		};
-
-		let w4_high = peaks[i + 3];
-		let w4_low = match troughs.iter().find(|&&t| t > w4_high && t < peaks[i + 4]) {
-			Some(&t) => t,
-			None => continue,
-		};
-
-		let w5_high = peaks[i + 4];
-		let w1_price = highs[w1_high];
-		let w1_bottom_price = lows[w1_low];
-		let w2_price = highs[w2_high];
-		let w2_bottom_price = lows[w2_low];
-		let w3_price = highs[w3_high];
-		let w3_bottom_price = lows[w3_low];
-		let w4_price = highs[w4_high];
-		let w4_bottom_price = lows[w4_low];
-
-		if w2_price <= w1_price || w4_price <= w3_price {
-			continue;
-		}
-		let w1_range = w1_price - w1_bottom_price;
-		let w2_retracement = (w2_price - w1_bottom_price) / w1_range;
-		let w3_range = w3_price - w3_bottom_price;
-		let w4_retracement = (w4_price - w3_bottom_price) / w3_range;
-		let w3_extension = w3_range / w1_range;
-
-		let w2_retracement_expected = wave2_retracement * (1.0 - retracement_tolerance);
-		let w2_retracement_max = wave2_retracement * (1.0 + retracement_tolerance);
-		let w4_retracement_expected = wave4_retracement * (1.0 - retracement_tolerance);
-		let w4_retracement_max = wave4_retracement * (1.0 + retracement_tolerance);
-
-		if w2_retracement < w2_retracement_expected
-			|| w2_retracement > w2_retracement_max
-			|| w4_retracement < w4_retracement_expected
-			|| w4_retracement > w4_retracement_max
+		if t1 - p0 < min_wave_separation
+			|| p1 - t1 < min_wave_separation
+			|| t2 - p1 < min_wave_separation
+			|| p2 - t2 < min_wave_separation
 		{
 			continue;
 		}
 
-		if w3_extension < wave3_min_extension {
+		let w1_price = highs[p0];
+		let w1_bottom_price = lows[t1];
+		let w2_price = highs[p1];
+		let w3_bottom_price = lows[t2];
+		let w4_price = highs[p2];
+
+		// structure: highs falling (w2 < w1, w4 < w2), w3 low below w1 low
+		if w2_price >= w1_price || w4_price >= w2_price || w3_bottom_price >= w1_bottom_price {
 			continue;
 		}
 
-		if w2_bottom_price <= w1_bottom_price || w4_bottom_price <= w3_bottom_price {
+		let w1_range = w1_price - w1_bottom_price;
+		let w3_range = w2_price - w3_bottom_price;
+		if w1_range <= 0.0 || w3_range <= 0.0 {
+			continue;
+		}
+
+		let w2_retracement = (w2_price - w1_bottom_price) / w1_range;
+		let w4_retracement = (w4_price - w3_bottom_price) / w3_range;
+		let w3_extension = w3_range / w1_range;
+
+		if !in_range(w2_retracement, wave2_retracement, retracement_tolerance)
+			|| !in_range(w4_retracement, wave4_retracement, retracement_tolerance)
+			|| w3_extension < wave3_min_extension
+		{
 			continue;
 		}
 
 		let breakdown_level = w1_bottom_price;
-
-		for j in (w5_high + 1)..closes.len() {
+		for j in (p2 + 1)..closes.len() {
 			if closes[j] < breakdown_level {
 				results[j] = -1.0;
 				break;
@@ -277,48 +282,45 @@ fn check_bullish_corrective_wave(
 	lows: &[f64],
 	closes: &[f64],
 	results: &mut [f64],
-	_min_wave_separation: usize,
+	min_wave_separation: usize,
 	retracement_tolerance: f64,
 ) {
-	for i in 0..peaks.len().saturating_sub(3) {
-		let wave_a_high = peaks[i];
-		let wave_a_low = match troughs.iter().find(|&&t| t < wave_a_high) {
-			Some(&t) => t,
-			None => continue,
+	// A-B-C: A up (trough -> a_high), B retrace (a_high -> b_low), C up
+	// (b_low -> c_high); buy on breakout above the B retracement high.
+	for (i, &a_high) in peaks.iter().enumerate() {
+		let a_low = nearest_below(troughs, a_high);
+		let c_high = peaks.get(i + 1).copied();
+		let b_low = c_high.and_then(|c| min_trough_in(troughs, lows, a_high, c));
+
+		let (a_low, c_high, b_low) = match (a_low, c_high, b_low) {
+			(Some(a), Some(b), Some(c)) => (a, b, c),
+			_ => continue,
 		};
 
-		let wave_b_high = match peaks.iter().find(|&&p| p > wave_a_high && p < peaks[i + 1]) {
-			Some(&p) => p,
-			None => continue,
-		};
-
-		let wave_c_low = match troughs
-			.iter()
-			.find(|&&t| t > wave_b_high && t < peaks[i + 1])
-		{
-			Some(&t) => t,
-			None => continue,
-		};
-		let a_price = highs[wave_a_high];
-		let b_price = highs[wave_b_high];
-		let c_price = lows[wave_c_low];
-
-		if b_price <= a_price {
-			continue;
-		}
-		let a_range = a_price - lows[wave_a_low];
-		let c_range = b_price - c_price;
-		let c_retracement = c_range / a_range;
-
-		if c_retracement < 0.618 * (1.0 - retracement_tolerance)
-			|| c_retracement > 1.0 * (1.0 + retracement_tolerance)
+		if a_high - a_low < min_wave_separation || b_low - a_high < min_wave_separation
+			|| c_high - b_low < min_wave_separation
 		{
 			continue;
 		}
 
-		let breakout_level = b_price;
+		let a_price = highs[a_high];
+		let a_range = a_price - lows[a_low];
+		let b_price = lows[b_low];
+		let c_price = highs[c_high];
+		if a_range <= 0.0 || c_price <= a_price {
+			continue;
+		}
 
-		for j in (wave_c_low + 1)..closes.len() {
+		// B retraces 0.618-1.0 of A's range (measured low-to-low)
+		let b_retracement = (a_price - b_price) / a_range;
+		if b_retracement < 0.618 * (1.0 - retracement_tolerance)
+			|| b_retracement > 1.0 * (1.0 + retracement_tolerance)
+		{
+			continue;
+		}
+
+		let breakout_level = a_price;
+		for j in (c_high + 1)..closes.len() {
 			if closes[j] > breakout_level {
 				results[j] = 2.0;
 				break;
@@ -335,48 +337,44 @@ fn check_bearish_corrective_wave(
 	lows: &[f64],
 	closes: &[f64],
 	results: &mut [f64],
-	_min_wave_separation: usize,
+	min_wave_separation: usize,
 	retracement_tolerance: f64,
 ) {
-	for i in 0..troughs.len().saturating_sub(3) {
-		let wave_a_low = troughs[i];
-		let wave_a_high = match peaks.iter().find(|&&p| p > wave_a_low) {
-			Some(&p) => p,
-			None => continue,
+	// A-B-C down: A down (peak -> a_low), B retrace (a_low -> b_high), C down
+	// (b_high -> c_low); sell on breakdown below the B retracement low.
+	for (i, &a_low) in troughs.iter().enumerate() {
+		let a_high = nearest_below(peaks, a_low);
+		let c_low = troughs.get(i + 1).copied();
+		let b_high = c_low.and_then(|c| max_peak_in(peaks, highs, a_low, c));
+
+		let (a_high, c_low, b_high) = match (a_high, c_low, b_high) {
+			(Some(a), Some(b), Some(c)) => (a, b, c),
+			_ => continue,
 		};
 
-		let wave_b_low = match troughs
-			.iter()
-			.find(|&&t| t < wave_a_low && t > troughs[i + 1])
-		{
-			Some(&t) => t,
-			None => continue,
-		};
-
-		let wave_c_high = match peaks.iter().find(|&&p| p > wave_a_high && p < peaks[i + 1]) {
-			Some(&p) => p,
-			None => continue,
-		};
-		let a_price = lows[wave_a_low];
-		let b_price = lows[wave_b_low];
-		let c_price = highs[wave_c_high];
-
-		if b_price >= a_price {
-			continue;
-		}
-		let a_range = highs[wave_a_high] - a_price;
-		let c_range = c_price - b_price;
-		let c_retracement = c_range / a_range;
-
-		if c_retracement < 0.618 * (1.0 - retracement_tolerance)
-			|| c_retracement > 1.0 * (1.0 + retracement_tolerance)
+		if a_low - a_high < min_wave_separation || b_high - a_low < min_wave_separation
+			|| c_low - b_high < min_wave_separation
 		{
 			continue;
 		}
 
-		let breakdown_level = b_price;
+		let a_price = lows[a_low];
+		let a_range = highs[a_high] - a_price;
+		let b_price = highs[b_high];
+		let c_price = lows[c_low];
+		if a_range <= 0.0 || c_price >= a_price {
+			continue;
+		}
 
-		for j in (wave_c_high + 1)..closes.len() {
+		let b_retracement = (b_price - a_price) / a_range;
+		if b_retracement < 0.618 * (1.0 - retracement_tolerance)
+			|| b_retracement > 1.0 * (1.0 + retracement_tolerance)
+		{
+			continue;
+		}
+
+		let breakdown_level = a_price;
+		for j in (c_low + 1)..closes.len() {
 			if closes[j] < breakdown_level {
 				results[j] = -2.0;
 				break;

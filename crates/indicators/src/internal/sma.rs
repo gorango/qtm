@@ -24,13 +24,23 @@ pub fn sma_internal(values: &[f64], period: usize) -> Vec<f64> {
 
 	let mut result = vec![f64::NAN; len];
 	let mut sum = 0.0;
+	let mut nan_in_window = 0usize;
 
 	for i in 0..len {
-		sum += values[i];
-		if i >= period {
-			sum -= values[i - period];
+		if values[i].is_nan() {
+			nan_in_window += 1;
+		} else {
+			sum += values[i];
 		}
-		if i >= period - 1 {
+		if i >= period {
+			let leaving = values[i - period];
+			if leaving.is_nan() {
+				nan_in_window -= 1;
+			} else {
+				sum -= leaving;
+			}
+		}
+		if i >= period - 1 && nan_in_window == 0 {
 			result[i] = sum / period as f64;
 		}
 	}

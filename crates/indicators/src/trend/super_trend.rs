@@ -36,6 +36,8 @@ pub fn super_trend(
 
 	let mut super_trend_values = vec![0.0; len];
 	let mut direction = vec![0; len];
+	let mut final_upper = vec![0.0; len];
+	let mut final_lower = vec![0.0; len];
 
 	for i in 0..len {
 		if i < period - 1 {
@@ -48,42 +50,43 @@ pub fn super_trend(
 		let basic_upper_band = hl2 + multiplier * atr_line[i];
 		let basic_lower_band = hl2 - multiplier * atr_line[i];
 
-		let (final_upper_band, final_lower_band) = if i == period - 1 {
+		// Ratchet each final band against ITS OWN previous value (canonical
+		// supertrend).  Previously both ratcheted against `super_trend_values
+		// [i-1]` — a single line — which collapsed the upper band onto the
+		// lower band during an uptrend and froze the direction at +1.
+		let (fu, fl) = if i == period - 1 {
 			(basic_upper_band, basic_lower_band)
 		} else {
-			let fu = if closes[i - 1] > super_trend_values[i - 1] {
-				basic_upper_band.min(super_trend_values[i - 1])
-			} else {
+			let fu = if basic_upper_band < final_upper[i - 1]
+				|| closes[i - 1] > final_upper[i - 1]
+			{
 				basic_upper_band
+			} else {
+				final_upper[i - 1]
 			};
 
-			let fl = if closes[i - 1] < super_trend_values[i - 1] {
-				basic_lower_band.max(super_trend_values[i - 1])
-			} else {
+			let fl = if basic_lower_band > final_lower[i - 1]
+				|| closes[i - 1] < final_lower[i - 1]
+			{
 				basic_lower_band
+			} else {
+				final_lower[i - 1]
 			};
 
 			(fu, fl)
 		};
+		final_upper[i] = fu;
+		final_lower[i] = fl;
 
-		let trend = if closes[i] > final_upper_band {
-			1
-		} else if closes[i] < final_lower_band {
-			-1
-		} else if direction[i - 1] != 0 {
-			direction[i - 1]
+		// Line = upper band while price was below it (downtrend regime),
+		// lower band otherwise; direction flips when close crosses the line.
+		let trend_line = if i == period - 1 || closes[i - 1] <= final_upper[i - 1] {
+			fu
 		} else {
-			1
+			fl
 		};
-
-		let super_trend_value = if trend == 1 {
-			final_lower_band
-		} else {
-			final_upper_band
-		};
-
-		super_trend_values[i] = super_trend_value;
-		direction[i] = trend;
+		super_trend_values[i] = trend_line;
+		direction[i] = if closes[i] > trend_line { 1 } else { -1 };
 	}
 
 	Ok(SuperTrendResult {
