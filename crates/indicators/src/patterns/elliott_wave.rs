@@ -97,7 +97,11 @@ fn max_peak_in(peaks: &[usize], highs: &[f64], lo: usize, hi: usize) -> Option<u
 		.iter()
 		.copied()
 		.filter(|&p| p > lo && p < hi)
-		.max_by(|&a, &b| highs[a].partial_cmp(&highs[b]).unwrap_or(std::cmp::Ordering::Equal))
+		.max_by(|&a, &b| {
+			highs[a]
+				.partial_cmp(&highs[b])
+				.unwrap_or(std::cmp::Ordering::Equal)
+		})
 }
 
 /// Min trough index in `(lo, hi)`, or None.
@@ -106,7 +110,11 @@ fn min_trough_in(troughs: &[usize], lows: &[f64], lo: usize, hi: usize) -> Optio
 		.iter()
 		.copied()
 		.filter(|&t| t > lo && t < hi)
-		.min_by(|&a, &b| lows[a].partial_cmp(&lows[b]).unwrap_or(std::cmp::Ordering::Equal))
+		.min_by(|&a, &b| {
+			lows[a]
+				.partial_cmp(&lows[b])
+				.unwrap_or(std::cmp::Ordering::Equal)
+		})
 }
 
 /// Nearest (largest) index strictly below `idx` in `xs`, or None.
@@ -297,7 +305,8 @@ fn check_bullish_corrective_wave(
 			_ => continue,
 		};
 
-		if a_high - a_low < min_wave_separation || b_low - a_high < min_wave_separation
+		if a_high - a_low < min_wave_separation
+			|| b_low - a_high < min_wave_separation
 			|| c_high - b_low < min_wave_separation
 		{
 			continue;
@@ -352,7 +361,8 @@ fn check_bearish_corrective_wave(
 			_ => continue,
 		};
 
-		if a_low - a_high < min_wave_separation || b_high - a_low < min_wave_separation
+		if a_low - a_high < min_wave_separation
+			|| b_high - a_low < min_wave_separation
 			|| c_low - b_high < min_wave_separation
 		{
 			continue;

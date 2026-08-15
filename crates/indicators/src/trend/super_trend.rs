@@ -57,16 +57,14 @@ pub fn super_trend(
 		let (fu, fl) = if i == period - 1 {
 			(basic_upper_band, basic_lower_band)
 		} else {
-			let fu = if basic_upper_band < final_upper[i - 1]
-				|| closes[i - 1] > final_upper[i - 1]
+			let fu = if basic_upper_band < final_upper[i - 1] || closes[i - 1] > final_upper[i - 1]
 			{
 				basic_upper_band
 			} else {
 				final_upper[i - 1]
 			};
 
-			let fl = if basic_lower_band > final_lower[i - 1]
-				|| closes[i - 1] < final_lower[i - 1]
+			let fl = if basic_lower_band > final_lower[i - 1] || closes[i - 1] < final_lower[i - 1]
 			{
 				basic_lower_band
 			} else {

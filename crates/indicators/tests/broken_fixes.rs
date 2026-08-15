@@ -5,9 +5,7 @@
 //! See research/validation/traditional/BROKEN-STRATEGIES.md for the
 //! investigation.
 
-use indicators_core::{
-	cup_and_handle, elliott_wave, kst, sma_internal, super_trend, triangles,
-};
+use indicators_core::{cup_and_handle, elliott_wave, kst, sma_internal, super_trend, triangles};
 
 fn crash_series() -> Vec<f64> {
 	// rise for 200 bars, then crash ~40% and keep sliding — a supertrend
@@ -28,7 +26,11 @@ fn super_trend_direction_flips_on_downtrend() {
 	let res = super_trend(&h, &l, &c, Some(14), Some(3.0)).unwrap();
 	let has_up = res.direction.iter().any(|&d| d == 1);
 	let has_down = res.direction.iter().any(|&d| d == -1);
-	assert!(has_up && has_down, "direction must contain both 1 and -1, got {:?}", res.direction);
+	assert!(
+		has_up && has_down,
+		"direction must contain both 1 and -1, got {:?}",
+		res.direction
+	);
 }
 
 #[test]
@@ -55,7 +57,11 @@ fn kst_has_finite_values_and_crossovers() {
 	}
 	let res = kst(&closes, None);
 	let finite = res.kst.iter().filter(|v| v.is_finite()).count();
-	assert!(finite > 300, "kst should be finite after warmup, got {finite}/{}", res.kst.len());
+	assert!(
+		finite > 300,
+		"kst should be finite after warmup, got {finite}/{}",
+		res.kst.len()
+	);
 	// at least one crossover of kst over/under signal
 	let mut crosses = 0;
 	for i in 1..res.kst.len() {
@@ -74,7 +80,9 @@ fn noisy_ascending_triangle() -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>) {
 	// Deterministic noise via a fixed LCG.
 	let mut seed = 42u64;
 	let mut noise = || {
-		seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+		seed = seed
+			.wrapping_mul(6364136223846793005)
+			.wrapping_add(1442695040888963407);
 		(seed >> 33) as f64 / (1u64 << 31) as f64 - 1.0
 	};
 	let mut highs = Vec::with_capacity(310);
@@ -101,7 +109,10 @@ fn triangles_fires_on_sliding_window() {
 	let (o, h, l, c) = noisy_ascending_triangle();
 	let out = triangles(&o, &h, &l, &c, Some(4), Some(0.01), Some(0.001)).unwrap();
 	let fired = out.iter().filter(|&&v| v != 0.0).count();
-	assert!(fired >= 1, "triangles must fire on a mid-series triangle, got all zeros");
+	assert!(
+		fired >= 1,
+		"triangles must fire on a mid-series triangle, got all zeros"
+	);
 	assert!(out.iter().any(|&v| v == 1.0), "breakout should be bullish");
 }
 
@@ -131,7 +142,10 @@ fn cup_and_handle_fires_on_mid_history_cup() {
 	// cup rims, and the handle (60 bars) fits inside min_duration/4.
 	let out = cup_and_handle(&o, &h, &l, &c, Some(0.1), Some(0.3), Some(200)).unwrap();
 	let fired = out.iter().filter(|&&v| v != 0.0).count();
-	assert!(fired >= 1, "cup_and_handle must fire on a mid-history cup, got all zeros");
+	assert!(
+		fired >= 1,
+		"cup_and_handle must fire on a mid-history cup, got all zeros"
+	);
 }
 
 fn impulse_series() -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>) {
@@ -167,9 +181,26 @@ fn impulse_series() -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>) {
 #[test]
 fn elliott_wave_fires_on_clean_impulse() {
 	let (o, h, l, c) = impulse_series();
-	let out = elliott_wave(&o, &h, &l, &c, Some(0.618), Some(0.382), Some(1.618), Some(5), Some(2), Some(0.1))
-		.unwrap();
+	let out = elliott_wave(
+		&o,
+		&h,
+		&l,
+		&c,
+		Some(0.618),
+		Some(0.382),
+		Some(1.618),
+		Some(5),
+		Some(2),
+		Some(0.1),
+	)
+	.unwrap();
 	let fired = out.iter().filter(|&&v| v != 0.0).count();
-	assert!(fired >= 1, "elliott_wave must fire on a clean impulse, got all zeros");
-	assert!(out.iter().any(|&v| v == 1.0), "impulse breakout should be bullish (1.0)");
+	assert!(
+		fired >= 1,
+		"elliott_wave must fire on a clean impulse, got all zeros"
+	);
+	assert!(
+		out.iter().any(|&v| v == 1.0),
+		"impulse breakout should be bullish (1.0)"
+	);
 }

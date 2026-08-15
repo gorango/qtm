@@ -36,7 +36,9 @@ pub fn cup_and_handle(
 		let left_shoulder = (bottom_index.saturating_sub(min_duration / 2)..bottom_index)
 			.rev()
 			.max_by(|&i, &j| {
-				highs[i].partial_cmp(&highs[j]).unwrap_or(std::cmp::Ordering::Equal)
+				highs[i]
+					.partial_cmp(&highs[j])
+					.unwrap_or(std::cmp::Ordering::Equal)
 			})
 			.map(|i| (i, highs[i]));
 
@@ -47,7 +49,9 @@ pub fn cup_and_handle(
 
 		let right_shoulder = (bottom_index + 1..(bottom_index + min_duration / 2).min(highs.len()))
 			.max_by(|&i, &j| {
-				highs[i].partial_cmp(&highs[j]).unwrap_or(std::cmp::Ordering::Equal)
+				highs[i]
+					.partial_cmp(&highs[j])
+					.unwrap_or(std::cmp::Ordering::Equal)
 			})
 			.map(|i| (i, highs[i]));
 

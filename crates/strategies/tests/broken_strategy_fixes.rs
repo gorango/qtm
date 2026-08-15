@@ -24,7 +24,10 @@ fn super_trend_strategy_fires_on_downtrend() {
 	let l: Vec<f64> = c.iter().map(|x| x - 1.0).collect();
 	let out = super_trend_strategy(&h, &l, &c, None).unwrap();
 	let fired = out.iter().filter(|&&s| s != 0).count();
-	assert!(fired >= 1, "super_trend strategy must fire on a downtrend, got all zeros");
+	assert!(
+		fired >= 1,
+		"super_trend strategy must fire on a downtrend, got all zeros"
+	);
 }
 
 #[test]
@@ -34,7 +37,10 @@ fn donchian_breakout_strategy_fires_on_breakout() {
 	closes.extend(std::iter::repeat(105.0).take(30));
 	let out = donchian_breakout_strategy(&closes, None).unwrap();
 	let buys = out.iter().filter(|&&s| s == 1).count();
-	assert!(buys >= 1, "donchian_breakout must fire a buy on a step-up, got all zeros");
+	assert!(
+		buys >= 1,
+		"donchian_breakout must fire a buy on a step-up, got all zeros"
+	);
 }
 
 #[test]
@@ -47,7 +53,10 @@ fn kst_strategy_fires_on_random_walk() {
 	}
 	let out = kst_strategy(&closes, None).unwrap();
 	let fired = out.iter().filter(|&&s| s != 0).count();
-	assert!(fired >= 1, "kst strategy must fire on a trending random walk, got all zeros");
+	assert!(
+		fired >= 1,
+		"kst strategy must fire on a trending random walk, got all zeros"
+	);
 }
 
 #[test]
@@ -63,7 +72,10 @@ fn vwap_ema_rsi_strategy_fires_on_trend() {
 	let v: Vec<f64> = closes.iter().map(|_| 1.0).collect();
 	let out = vwap_ema_rsi_strategy(&h, &l, &closes, &v, None).unwrap();
 	let buys = out.iter().filter(|&&s| s == 1).count();
-	assert!(buys >= 1, "vwap_ema_rsi must fire a buy on a rally, got all zeros");
+	assert!(
+		buys >= 1,
+		"vwap_ema_rsi must fire a buy on a rally, got all zeros"
+	);
 }
 
 fn double_top_series() -> Vec<f64> {
@@ -82,7 +94,10 @@ fn double_top_stochastic_strategy_fires_on_double_top() {
 	let l: Vec<f64> = c.iter().map(|x| x - 0.3).collect();
 	let out = double_top_stochastic_strategy(&h, &l, &c, None).unwrap();
 	let fired = out.iter().filter(|&&s| s != 0).count();
-	assert!(fired >= 1, "double_top_stochastic must fire on a double top, got all zeros");
+	assert!(
+		fired >= 1,
+		"double_top_stochastic must fire on a double top, got all zeros"
+	);
 }
 
 fn cup_series() -> (Vec<f64>, Vec<f64>, Vec<f64>) {
@@ -110,7 +125,10 @@ fn cup_and_handle_strategy_fires_on_cup() {
 	};
 	let out = cup_and_handle_strategy(&o, &h, &l, &c, Some(cfg)).unwrap();
 	let fired = out.iter().filter(|&&s| s != 0).count();
-	assert!(fired >= 1, "cup_and_handle strategy must fire on a cup, got all zeros");
+	assert!(
+		fired >= 1,
+		"cup_and_handle strategy must fire on a cup, got all zeros"
+	);
 }
 
 fn impulse_series() -> (Vec<f64>, Vec<f64>, Vec<f64>) {
@@ -141,5 +159,8 @@ fn elliott_wave_strategy_fires_on_impulse() {
 	let o = c.iter().map(|x| x - 0.05).collect::<Vec<f64>>();
 	let out = elliott_wave_strategy(&o, &h, &l, &c, None).unwrap();
 	let fired = out.iter().filter(|&&s| s != 0).count();
-	assert!(fired >= 1, "elliott_wave strategy must fire on an impulse, got all zeros");
+	assert!(
+		fired >= 1,
+		"elliott_wave strategy must fire on an impulse, got all zeros"
+	);
 }
