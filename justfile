@@ -23,6 +23,10 @@ test:
 lint:
     cargo clippy --workspace
 
+# Format the Rust code.
+fmt:
+    cargo fmt
+
 # Fast compile check (no tests).
 check:
     cargo check --workspace
