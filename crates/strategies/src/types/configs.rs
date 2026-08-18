@@ -347,6 +347,204 @@ impl Default for WedgeConfig {
 	}
 }
 
+/// Broadening Formation Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct BroadeningConfig {
+	pub min_points: Option<u32>,
+	pub tolerance: Option<f64>,
+	pub lookback: Option<u32>,
+}
+
+impl Default for BroadeningConfig {
+	fn default() -> Self {
+		Self {
+			min_points: Some(3),
+			tolerance: Some(0.0005),
+			lookback: Some(120),
+		}
+	}
+}
+
+/// Bump and Run Reversal Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct BumpAndRunConfig {
+	pub lead_in_bars: Option<u32>,
+	pub min_slope: Option<f64>,
+	pub bump_threshold: Option<f64>,
+	pub lookback: Option<u32>,
+}
+
+impl Default for BumpAndRunConfig {
+	fn default() -> Self {
+		Self {
+			lead_in_bars: Some(20),
+			min_slope: Some(0.001),
+			bump_threshold: Some(0.03),
+			lookback: Some(80),
+		}
+	}
+}
+
+/// Channels Breakout Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ChannelsConfig {
+	pub min_points: Option<u32>,
+	pub min_slope: Option<f64>,
+	pub parallelism_tolerance: Option<f64>,
+	pub lookback: Option<u32>,
+}
+
+impl Default for ChannelsConfig {
+	fn default() -> Self {
+		Self {
+			min_points: Some(3),
+			min_slope: Some(0.0005),
+			parallelism_tolerance: Some(0.5),
+			lookback: Some(120),
+		}
+	}
+}
+
+/// Diamond Reversal Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct DiamondConfig {
+	pub min_points: Option<u32>,
+	pub tolerance: Option<f64>,
+	pub breakout_threshold: Option<f64>,
+	pub lookback: Option<u32>,
+}
+
+impl Default for DiamondConfig {
+	fn default() -> Self {
+		Self {
+			min_points: Some(2),
+			tolerance: Some(0.0005),
+			breakout_threshold: Some(0.0),
+			lookback: Some(150),
+		}
+	}
+}
+
+/// Island Reversal Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct IslandReversalConfig {
+	pub min_island_bars: Option<u32>,
+	pub max_island_bars: Option<u32>,
+}
+
+impl Default for IslandReversalConfig {
+	fn default() -> Self {
+		Self {
+			min_island_bars: Some(2),
+			max_island_bars: Some(15),
+		}
+	}
+}
+
+/// Rectangle Breakout Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RectangleConfig {
+	pub min_points: Option<u32>,
+	pub slope_tolerance: Option<f64>,
+	pub min_spread: Option<f64>,
+	pub lookback: Option<u32>,
+	pub trend_bars: Option<u32>,
+	pub min_trend: Option<f64>,
+}
+
+impl Default for RectangleConfig {
+	fn default() -> Self {
+		Self {
+			min_points: Some(3),
+			slope_tolerance: Some(0.0002),
+			min_spread: Some(0.01),
+			lookback: Some(120),
+			trend_bars: Some(30),
+			min_trend: Some(0.03),
+		}
+	}
+}
+
+/// Rounding Reversal Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RoundingConfig {
+	pub curvature_tolerance: Option<f64>,
+	pub lookback: Option<u32>,
+}
+
+impl Default for RoundingConfig {
+	fn default() -> Self {
+		Self {
+			curvature_tolerance: Some(0.01),
+			lookback: Some(120),
+		}
+	}
+}
+
+/// Triple Top/Bottom Reversal Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct TripleTopBottomConfig {
+	pub tolerance: Option<f64>,
+	pub min_separation: Option<u32>,
+	pub lookaround: Option<u32>,
+}
+
+impl Default for TripleTopBottomConfig {
+	fn default() -> Self {
+		Self {
+			tolerance: Some(0.03),
+			min_separation: Some(8),
+			lookaround: Some(2),
+		}
+	}
+}
+
+/// Candlestick Reversal Strategy configuration
+///
+/// `pattern` selects which candlestick pattern to detect (e.g. `"hammer"`,
+/// `"shooting_star"`, `"three_white_soldiers"`, ...). `None`-valued numeric
+/// fields fall through to each detector's own per-pattern defaults.
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CandlestickConfig {
+	pub pattern: Option<String>,
+	pub body_ratio: Option<f64>,
+	pub shadow_multiplier: Option<f64>,
+	pub trend_bars: Option<u32>,
+	pub min_body_ratio: Option<f64>,
+	pub shadow_tolerance: Option<f64>,
+}
+
+impl Default for CandlestickConfig {
+	fn default() -> Self {
+		Self {
+			pattern: Some("hammer".to_string()),
+			body_ratio: None,
+			shadow_multiplier: None,
+			trend_bars: None,
+			min_body_ratio: None,
+			shadow_tolerance: None,
+		}
+	}
+}
+
 /// Z-Score Strategy configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
