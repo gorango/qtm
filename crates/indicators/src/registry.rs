@@ -414,6 +414,108 @@ inventory::submit! {
 	IndicatorDescriptor { id: "zig_zag_filter", name: "Zig Zag Filter", category: "patterns", description: "Filters out noise by percentage deviation", params_schema: "{\"type\":\"object\",\"properties\":{\"deviation\":{\"type\":\"number\",\"description\":\"Minimum deviation to register a pivot\",\"default\":0.01}}}", output_type: "indicator" }
 }
 
+// ── chart patterns (added) ───────────────────────
+
+inventory::submit! {
+	IndicatorDescriptor { id: "diamond_top", name: "Diamond Top", category: "patterns", description: "Diamond top reversal pattern: broadening then contracting range with downside breakout", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "diamond_bottom", name: "Diamond Bottom", category: "patterns", description: "Diamond bottom reversal pattern: broadening then contracting range with upside breakout", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "triple_top", name: "Triple Top", category: "patterns", description: "Triple top reversal pattern: three peaks at similar levels followed by breakdown", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "triple_bottom", name: "Triple Bottom", category: "patterns", description: "Triple bottom reversal pattern: three troughs at similar levels followed by breakout", params_schema: "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "rectangle", name: "Rectangle", category: "patterns", description: "Rectangle continuation pattern: horizontal range breakout in the direction of the prior trend", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0002},\"minSpread\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120},\"trendBars\":{\"type\":\"integer\",\"default\":30},\"minTrend\":{\"type\":\"number\",\"default\":0.03}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "channels", name: "Price Channels", category: "patterns", description: "Rising/falling parallel price channels with breakout in channel direction", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"minSlope\":{\"type\":\"number\",\"default\":0.0005},\"parallelismTolerance\":{\"type\":\"number\",\"default\":0.5},\"lookback\":{\"type\":\"integer\",\"default\":120}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "broadening", name: "Broadening Pattern", category: "patterns", description: "Broadening/megaphone pattern: diverging trendlines with breakout in either direction", params_schema: "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"lookback\":{\"type\":\"integer\",\"default\":120}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "rounding_bottom", name: "Rounding Bottom", category: "patterns", description: "Rounding bottom/saucer reversal pattern with breakout above the rim", params_schema: "{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "rounding_top", name: "Rounding Top", category: "patterns", description: "Rounding top reversal pattern with breakdown below the floor", params_schema: "{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "bump_and_run", name: "Bump and Run Reversal", category: "patterns", description: "Bump-and-run reversal: steep lead-in trendline, bump away, and return through the line", params_schema: "{\"type\":\"object\",\"properties\":{\"leadInBars\":{\"type\":\"integer\",\"default\":20},\"minSlope\":{\"type\":\"number\",\"default\":0.001},\"bumpThreshold\":{\"type\":\"number\",\"default\":0.03},\"lookback\":{\"type\":\"integer\",\"default\":80}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "island_reversal", name: "Island Reversal", category: "patterns", description: "Island reversal: gap away, isolated cluster, then covering gap back", params_schema: "{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}", output_type: "indicator" }
+}
+
+// ── candlestick patterns (added) ─────────────────
+
+inventory::submit! {
+	IndicatorDescriptor { id: "hammer", name: "Hammer", category: "patterns", description: "Hammer candlestick: long lower shadow after a decline", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "inverted_hammer", name: "Inverted Hammer", category: "patterns", description: "Inverted hammer candlestick: long upper shadow after a decline", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "hanging_man", name: "Hanging Man", category: "patterns", description: "Hanging man candlestick: hammer shape after an advance", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "shooting_star", name: "Shooting Star", category: "patterns", description: "Shooting star candlestick: inverted-hammer shape after an advance", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "spinning_top", name: "Spinning Top", category: "patterns", description: "Spinning top candlestick: indecision with small body and both shadows", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "long_legged_doji", name: "Long Legged Doji", category: "patterns", description: "Doji with long shadows on both sides, direction follows prior trend", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "dragonfly_doji", name: "Dragonfly Doji", category: "patterns", description: "Doji with long lower shadow after a decline", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "gravestone_doji", name: "Gravestone Doji", category: "patterns", description: "Doji with long upper shadow after an advance", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "bullish_harami", name: "Bullish Harami", category: "patterns", description: "Small bullish candle inside a prior bearish body", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "bearish_harami", name: "Bearish Harami", category: "patterns", description: "Small bearish candle inside a prior bullish body", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "piercing_line", name: "Piercing Line", category: "patterns", description: "Bullish candle closes above midpoint of prior bearish body after gapping below", params_schema: "", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "dark_cloud_cover", name: "Dark Cloud Cover", category: "patterns", description: "Bearish candle closes below midpoint of prior bullish body after gapping above", params_schema: "", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "tweezer_bottom", name: "Tweezer Bottom", category: "patterns", description: "Two candles with equal lows after a decline", params_schema: "{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "tweezer_top", name: "Tweezer Top", category: "patterns", description: "Two candles with equal highs after an advance", params_schema: "{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_white_soldiers", name: "Three White Soldiers", category: "patterns", description: "Three consecutive strong bullish candles with rising closes", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_black_crows", name: "Three Black Crows", category: "patterns", description: "Three consecutive strong bearish candles with falling closes", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_inside_up", name: "Three Inside Up", category: "patterns", description: "Bearish candle, small bullish inside, then bullish close above first open", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_inside_down", name: "Three Inside Down", category: "patterns", description: "Bullish candle, small bearish inside, then bearish close below first close", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_outside_up", name: "Three Outside Up", category: "patterns", description: "Bearish candle engulfed by bullish, then bullish close higher", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "three_outside_down", name: "Three Outside Down", category: "patterns", description: "Bullish candle engulfed by bearish, then bearish close lower", params_schema: "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "abandoned_baby", name: "Abandoned Baby", category: "patterns", description: "Gap, doji star, and covering gap in the opposite direction", params_schema: "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}", output_type: "indicator" }
+}
+
 // ── market ────────────────────────────────────────
 
 inventory::submit! {
