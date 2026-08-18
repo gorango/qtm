@@ -57,9 +57,9 @@ pub fn head_and_shoulders_strategy(
 	let mut result = Vec::with_capacity(data_len);
 	for &s in signals.iter().take(data_len) {
 		let signal = if s < -0.5 {
-			1 // Inverse head & shoulders (bullish)
-		} else if s > 0.5 {
 			-1 // Regular head & shoulders (bearish)
+		} else if s > 0.5 {
+			1 // Inverse head & shoulders (bullish)
 		} else {
 			0
 		};

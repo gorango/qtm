@@ -483,7 +483,7 @@ pub fn value_momentum_pattern_strategy(
 		let pfcf_val = latest_factor_at_or_before(&pfcf, t).unwrap_or(f64::MAX);
 		let pfcf_ok = pfcf_val < pfcf_thresh;
 
-		let inverse_hs = i < hns.len() && (hns[i] - (-1.0)).abs() < 0.5;
+		let inverse_hs = i < hns.len() && (hns[i] - 1.0).abs() < 0.5;
 
 		if pfcf_ok && inverse_hs {
 			signals[i] = 1;
