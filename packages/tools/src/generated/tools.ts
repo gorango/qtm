@@ -9,8 +9,8 @@ import type { WorkflowTool, ToolResult } from '../types'
 export const registryVersion = 1
 
 export const factorCount = 72
-export const indicatorCount = 131
-export const strategyCount = 97
+export const indicatorCount = 163
+export const strategyCount = 106
 
 export const registryData = {
   factors: {
@@ -89,6 +89,7 @@ export const registryData = {
   } as const,
   indicators: {
     "ab": {"id":"ab","name":"Acceleration Bands","category":"volatility","description":"Alias for Acceleration Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}","output_type":"indicator"},
+    "abandoned_baby": {"id":"abandoned_baby","name":"Abandoned Baby","category":"patterns","description":"Gap, doji star, and covering gap in the opposite direction","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}","output_type":"indicator"},
     "absolute_price_oscillator": {"id":"absolute_price_oscillator","name":"Absolute Price Oscillator","category":"trend","description":"Absolute difference between fast and slow EMA","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":14},\"slowPeriod\":{\"type\":\"integer\",\"default\":30}}}","output_type":"indicator"},
     "acceleration_bands": {"id":"acceleration_bands","name":"Acceleration Bands","category":"volatility","description":"Volatility bands based on price acceleration","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}","output_type":"indicator"},
     "accumulation_distribution": {"id":"accumulation_distribution","name":"Accumulation Distribution","category":"volume","description":"Accumulation/distribution line","params_schema":"","output_type":"indicator"},
@@ -106,9 +107,13 @@ export const registryData = {
     "bb": {"id":"bb","name":"Bollinger Bands","category":"volatility","description":"Bollinger Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"stdDev\":{\"type\":\"number\",\"default\":2}}}","output_type":"indicator"},
     "bbw": {"id":"bbw","name":"Bollinger Bands Width","category":"volatility","description":"Alias for Bollinger Bands Width","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}","output_type":"indicator"},
     "bearish_engulfing": {"id":"bearish_engulfing","name":"Bearish Engulfing","category":"patterns","description":"Bearish engulfing candlestick pattern","params_schema":"","output_type":"indicator"},
+    "bearish_harami": {"id":"bearish_harami","name":"Bearish Harami","category":"patterns","description":"Small bearish candle inside a prior bullish body","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
     "bollinger_bands": {"id":"bollinger_bands","name":"Bollinger Bands","category":"volatility","description":"Bollinger Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"stdDev\":{\"type\":\"number\",\"default\":2}}}","output_type":"indicator"},
     "bollinger_bands_width": {"id":"bollinger_bands_width","name":"Bollinger Bands Width","category":"volatility","description":"Normalized width of Bollinger Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}","output_type":"indicator"},
+    "broadening": {"id":"broadening","name":"Broadening Pattern","category":"patterns","description":"Broadening/megaphone pattern: diverging trendlines with breakout in either direction","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "bullish_engulfing": {"id":"bullish_engulfing","name":"Bullish Engulfing","category":"patterns","description":"Bullish engulfing candlestick pattern","params_schema":"","output_type":"indicator"},
+    "bullish_harami": {"id":"bullish_harami","name":"Bullish Harami","category":"patterns","description":"Small bullish candle inside a prior bearish body","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
+    "bump_and_run": {"id":"bump_and_run","name":"Bump and Run Reversal","category":"patterns","description":"Bump-and-run reversal: steep lead-in trendline, bump away, and return through the line","params_schema":"{\"type\":\"object\",\"properties\":{\"leadInBars\":{\"type\":\"integer\",\"default\":20},\"minSlope\":{\"type\":\"number\",\"default\":0.001},\"bumpThreshold\":{\"type\":\"number\",\"default\":0.03},\"lookback\":{\"type\":\"integer\",\"default\":80}}}","output_type":"indicator"},
     "camarilla_pivot_points": {"id":"camarilla_pivot_points","name":"Camarilla Pivot Points","category":"trend","description":"Camarilla-style pivot point levels","params_schema":"","output_type":"indicator"},
     "cci": {"id":"cci","name":"CCI","category":"trend","description":"Commodity Channel Index","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
     "ce": {"id":"ce","name":"Chandelier Exit","category":"volatility","description":"Alias for Chandelier Exit","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"ATR and lookback period\",\"default\":22}}}","output_type":"indicator"},
@@ -116,18 +121,23 @@ export const registryData = {
     "chaikin_oscillator": {"id":"chaikin_oscillator","name":"Chaikin Oscillator","category":"momentum","description":"Measures accumulation/distribution momentum as EMA difference of ADL","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":3},\"slowPeriod\":{\"type\":\"integer\",\"default\":10}}}","output_type":"indicator"},
     "chande_forecast_oscillator": {"id":"chande_forecast_oscillator","name":"Chande Forecast Oscillator","category":"trend","description":"Forecast oscillator using linear regression","params_schema":"","output_type":"indicator"},
     "chandelier_exit": {"id":"chandelier_exit","name":"Chandelier Exit","category":"volatility","description":"ATR-based trailing stop","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"ATR and lookback period\",\"default\":22}}}","output_type":"indicator"},
+    "channels": {"id":"channels","name":"Price Channels","category":"patterns","description":"Rising/falling parallel price channels with breakout in channel direction","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"minSlope\":{\"type\":\"number\",\"default\":0.0005},\"parallelismTolerance\":{\"type\":\"number\",\"default\":0.5},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "classify_market_trend": {"id":"classify_market_trend","name":"Classify Market Trend","category":"trend","description":"Classifies market as trending, ranging, or volatile","params_schema":"{\"type\":\"object\",\"properties\":{\"trailingPeriodLength\":{\"type\":\"integer\",\"description\":\"Trailing period length\",\"default\":0}}}","output_type":"indicator"},
     "cmf": {"id":"cmf","name":"Chaikin Money Flow","category":"volume","description":"Alias for Chaikin Money Flow","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period\",\"default\":20}}}","output_type":"indicator"},
     "cmo": {"id":"cmo","name":"Chaikin Oscillator","category":"momentum","description":"Alias for Chaikin Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":3},\"slowPeriod\":{\"type\":\"integer\",\"default\":10}}}","output_type":"indicator"},
     "cointegration": {"id":"cointegration","name":"Cointegration","category":"shared","description":"Cointegration test between two series","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"betaPeriod\":{\"type\":\"integer\",\"default\":60}}}","output_type":"indicator"},
     "correlation": {"id":"correlation","name":"Correlation","category":"shared","description":"Correlation coefficient between two series","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Rolling window for correlation\",\"default\":14}}}","output_type":"indicator"},
     "cup_and_handle": {"id":"cup_and_handle","name":"Cup and Handle","category":"patterns","description":"Cup and handle pattern recognition","params_schema":"{\"type\":\"object\",\"properties\":{\"cupDepth\":{\"type\":\"number\",\"default\":0.15},\"handleRetracement\":{\"type\":\"number\",\"default\":0.3},\"minDuration\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
+    "dark_cloud_cover": {"id":"dark_cloud_cover","name":"Dark Cloud Cover","category":"patterns","description":"Bearish candle closes below midpoint of prior bullish body after gapping above","params_schema":"","output_type":"indicator"},
     "dc": {"id":"dc","name":"Donchian Channel","category":"volatility","description":"Alias for Donchian Channel","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "dema": {"id":"dema","name":"DEMA","category":"trend","description":"Double Exponential Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}","output_type":"indicator"},
     "dev": {"id":"dev","name":"Mean Absolute Deviation","category":"volatility","description":"Alias for Mean Absolute Deviation","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
+    "diamond_bottom": {"id":"diamond_bottom","name":"Diamond Bottom","category":"patterns","description":"Diamond bottom reversal pattern: broadening then contracting range with upside breakout","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}","output_type":"indicator"},
+    "diamond_top": {"id":"diamond_top","name":"Diamond Top","category":"patterns","description":"Diamond top reversal pattern: broadening then contracting range with downside breakout","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}","output_type":"indicator"},
     "donchian_channel": {"id":"donchian_channel","name":"Donchian Channel","category":"volatility","description":"Channel based on highest high and lowest low","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "double_bottom": {"id":"double_bottom","name":"Double Bottom","category":"patterns","description":"Double bottom reversal pattern","params_schema":"{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
     "double_top": {"id":"double_top","name":"Double Top","category":"patterns","description":"Double top reversal pattern","params_schema":"{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
+    "dragonfly_doji": {"id":"dragonfly_doji","name":"Dragonfly Doji","category":"patterns","description":"Doji with long lower shadow after a decline","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "ease_of_movement": {"id":"ease_of_movement","name":"Ease of Movement","category":"volume","description":"Relates price movement to volume","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA smoothing period\",\"default\":14}}}","output_type":"indicator"},
     "elliott_wave": {"id":"elliott_wave","name":"Elliott Wave","category":"patterns","description":"Elliott Wave pattern detection","params_schema":"{\"type\":\"object\",\"properties\":{\"wave2Retracement\":{\"type\":\"number\",\"default\":0.618},\"wave4Retracement\":{\"type\":\"number\",\"default\":0.382},\"wave3MinExtension\":{\"type\":\"number\",\"default\":1.618},\"minWaveSeparation\":{\"type\":\"integer\",\"default\":5},\"lookaround\":{\"type\":\"integer\",\"default\":2},\"retracementTolerance\":{\"type\":\"number\",\"default\":0.1}}}","output_type":"indicator"},
     "ema": {"id":"ema","name":"EMA","category":"trend","description":"Exponential Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}","output_type":"indicator"},
@@ -138,16 +148,22 @@ export const registryData = {
     "find_troughs": {"id":"find_troughs","name":"Find Troughs","category":"patterns","description":"Locates local minima in price data","params_schema":"{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"description\":\"Bars on each side to confirm trough\",\"default\":2}}}","output_type":"indicator"},
     "flags_pennants": {"id":"flags_pennants","name":"Flags and Pennants","category":"patterns","description":"Flag and pennant pattern recognition","params_schema":"{\"type\":\"object\",\"properties\":{\"poleLength\":{\"type\":\"integer\",\"default\":10},\"consolidationBars\":{\"type\":\"integer\",\"default\":10},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0.02}}}","output_type":"indicator"},
     "force_index": {"id":"force_index","name":"Force Index","category":"volume","description":"Price change multiplied by volume","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}","output_type":"indicator"},
+    "gravestone_doji": {"id":"gravestone_doji","name":"Gravestone Doji","category":"patterns","description":"Doji with long upper shadow after an advance","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
+    "hammer": {"id":"hammer","name":"Hammer","category":"patterns","description":"Hammer candlestick: long lower shadow after a decline","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
+    "hanging_man": {"id":"hanging_man","name":"Hanging Man","category":"patterns","description":"Hanging man candlestick: hammer shape after an advance","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "head_and_shoulders": {"id":"head_and_shoulders","name":"Head and Shoulders","category":"patterns","description":"Head and shoulders pattern recognition","params_schema":"{\"type\":\"object\",\"properties\":{\"minDistance\":{\"type\":\"integer\",\"default\":5},\"tolerance\":{\"type\":\"number\",\"default\":0.02},\"deviation\":{\"type\":\"number\",\"default\":0}}}","output_type":"indicator"},
     "hma": {"id":"hma","name":"HMA","category":"trend","description":"Hull Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":16}}}","output_type":"indicator"},
     "ichimoku": {"id":"ichimoku","name":"Ichimoku","category":"momentum","description":"Alias for Ichimoku Cloud","params_schema":"{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}","output_type":"indicator"},
     "ichimoku_cloud": {"id":"ichimoku_cloud","name":"Ichimoku Cloud","category":"momentum","description":"Comprehensive indicator showing support, resistance, and momentum","params_schema":"{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}","output_type":"indicator"},
+    "inverted_hammer": {"id":"inverted_hammer","name":"Inverted Hammer","category":"patterns","description":"Inverted hammer candlestick: long upper shadow after a decline","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
+    "island_reversal": {"id":"island_reversal","name":"Island Reversal","category":"patterns","description":"Island reversal: gap away, isolated cluster, then covering gap back","params_schema":"{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}","output_type":"indicator"},
     "kc": {"id":"kc","name":"Keltner Channel","category":"volatility","description":"Alias for Keltner Channel","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
     "keltner_channel": {"id":"keltner_channel","name":"Keltner Channel","category":"volatility","description":"ATR-based volatility channel","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
     "kst": {"id":"kst","name":"Know Sure Thing","category":"momentum","description":"KST oscillator based on four rate-of-change periods","params_schema":"{\"type\":\"object\",\"properties\":{\"roc1Period\":{\"type\":\"integer\",\"default\":10},\"roc2Period\":{\"type\":\"integer\",\"default\":15},\"roc3Period\":{\"type\":\"integer\",\"default\":20},\"roc4Period\":{\"type\":\"integer\",\"default\":30},\"sma1Period\":{\"type\":\"integer\",\"default\":10},\"sma2Period\":{\"type\":\"integer\",\"default\":10},\"sma3Period\":{\"type\":\"integer\",\"default\":10},\"sma4Period\":{\"type\":\"integer\",\"default\":15},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
     "larsson": {"id":"larsson","name":"Larsson","category":"momentum","description":"Larsson signal indicator using SMMA crossovers","params_schema":"","output_type":"indicator"},
     "linear_regression": {"id":"linear_regression","name":"Linear Regression","category":"patterns","description":"Linear regression slope and intercept","params_schema":"","output_type":"indicator"},
     "linreg": {"id":"linreg","name":"Linear Regression","category":"trend","description":"Linear regression line over a period","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"offset\":{\"type\":\"integer\",\"default\":0}}}","output_type":"indicator"},
+    "long_legged_doji": {"id":"long_legged_doji","name":"Long Legged Doji","category":"patterns","description":"Doji with long shadows on both sides, direction follows prior trend","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "macd": {"id":"macd","name":"MACD","category":"momentum","description":"Moving Average Convergence Divergence","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
     "mass_index": {"id":"mass_index","name":"Mass Index","category":"trend","description":"Mass Index for trend reversal detection","params_schema":"{\"type\":\"object\",\"properties\":{\"emaPeriod\":{\"type\":\"integer\",\"default\":9},\"miPeriod\":{\"type\":\"integer\",\"default\":25}}}","output_type":"indicator"},
     "max_drawdown": {"id":"max_drawdown","name":"Max Drawdown","category":"volatility","description":"Maximum peak-to-trough decline","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback window period\",\"default\":0}}}","output_type":"indicator"},
@@ -173,6 +189,7 @@ export const registryData = {
     "percentage_volume_oscillator": {"id":"percentage_volume_oscillator","name":"Percentage Volume Oscillator","category":"momentum","description":"Percentage-based MACD applied to volume","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
     "percentile_linear_interpolation": {"id":"percentile_linear_interpolation","name":"Percentile Linear Interpolation","category":"shared","description":"Percentile using linear interpolation","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"percentage\":{\"type\":\"number\",\"default\":50}}}","output_type":"indicator"},
     "percentile_nearest_rank": {"id":"percentile_nearest_rank","name":"Percentile Nearest Rank","category":"shared","description":"Percentile using nearest rank","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"percentage\":{\"type\":\"number\",\"default\":50}}}","output_type":"indicator"},
+    "piercing_line": {"id":"piercing_line","name":"Piercing Line","category":"patterns","description":"Bullish candle closes above midpoint of prior bearish body after gapping below","params_schema":"","output_type":"indicator"},
     "pivot_points": {"id":"pivot_points","name":"Pivot Points","category":"trend","description":"Standard pivot point levels","params_schema":"","output_type":"indicator"},
     "po": {"id":"po","name":"Projection Oscillator","category":"volatility","description":"Alias for Projection Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}","output_type":"indicator"},
     "price_rate_of_change": {"id":"price_rate_of_change","name":"Price Rate of Change","category":"momentum","description":"Percentage price change over a period","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
@@ -180,23 +197,38 @@ export const registryData = {
     "pvo": {"id":"pvo","name":"Percentage Volume Oscillator","category":"momentum","description":"Alias for Percentage Volume Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
     "qstick": {"id":"qstick","name":"Qstick","category":"momentum","description":"SMA of the close-open differential","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "random_index": {"id":"random_index","name":"Random Index","category":"trend","description":"Random walk index for mean reversion","params_schema":"{\"type\":\"object\",\"properties\":{\"rPeriod\":{\"type\":\"integer\",\"default\":9},\"kPeriod\":{\"type\":\"integer\",\"default\":3},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
+    "rectangle": {"id":"rectangle","name":"Rectangle","category":"patterns","description":"Rectangle continuation pattern: horizontal range breakout in the direction of the prior trend","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0002},\"minSpread\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120},\"trendBars\":{\"type\":\"integer\",\"default\":30},\"minTrend\":{\"type\":\"number\",\"default\":0.03}}}","output_type":"indicator"},
     "rma": {"id":"rma","name":"RMA","category":"trend","description":"Rolling Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "rolling_moving_average": {"id":"rolling_moving_average","name":"Rolling Moving Average","category":"trend","description":"Alias for RMA","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "rolling_variance": {"id":"rolling_variance","name":"Rolling Variance","category":"volatility","description":"Rolling variance over a window","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
+    "rounding_bottom": {"id":"rounding_bottom","name":"Rounding Bottom","category":"patterns","description":"Rounding bottom/saucer reversal pattern with breakout above the rim","params_schema":"{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
+    "rounding_top": {"id":"rounding_top","name":"Rounding Top","category":"patterns","description":"Rounding top reversal pattern with breakdown below the floor","params_schema":"{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "rsi": {"id":"rsi","name":"RSI","category":"momentum","description":"Relative Strength Index","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}","output_type":"indicator"},
+    "shooting_star": {"id":"shooting_star","name":"Shooting Star","category":"patterns","description":"Shooting star candlestick: inverted-hammer shape after an advance","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "since": {"id":"since","name":"Since","category":"trend","description":"Counts periods since last condition","params_schema":"","output_type":"indicator"},
     "sma": {"id":"sma","name":"SMA","category":"trend","description":"Simple Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
     "smoothed_moving_average": {"id":"smoothed_moving_average","name":"Smoothed Moving Average","category":"trend","description":"Smoothed variant of SMMA","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
+    "spinning_top": {"id":"spinning_top","name":"Spinning Top","category":"patterns","description":"Spinning top candlestick: indecision with small body and both shadows","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "stars": {"id":"stars","name":"Stars","category":"patterns","description":"Morning star and evening star patterns","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatioThreshold\":{\"type\":\"number\",\"default\":0.3},\"gapThreshold\":{\"type\":\"number\",\"default\":0.001}}}","output_type":"indicator"},
     "stochastic_oscillator": {"id":"stochastic_oscillator","name":"Stochastic Oscillator","category":"momentum","description":"Compares close to the high-low range over a period","params_schema":"{\"type\":\"object\",\"properties\":{\"kPeriod\":{\"type\":\"integer\",\"default\":14},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
     "super_trend": {"id":"super_trend","name":"Super Trend","category":"trend","description":"Super Trend for trend direction and stop levels","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"multiplier\":{\"type\":\"number\",\"description\":\"ATR multiplier for band width\",\"default\":3}}}","output_type":"indicator"},
     "tema": {"id":"tema","name":"TEMA","category":"trend","description":"Triple Exponential Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
+    "three_black_crows": {"id":"three_black_crows","name":"Three Black Crows","category":"patterns","description":"Three consecutive strong bearish candles with falling closes","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
+    "three_inside_down": {"id":"three_inside_down","name":"Three Inside Down","category":"patterns","description":"Bullish candle, small bearish inside, then bearish close below first close","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}","output_type":"indicator"},
+    "three_inside_up": {"id":"three_inside_up","name":"Three Inside Up","category":"patterns","description":"Bearish candle, small bullish inside, then bullish close above first open","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}","output_type":"indicator"},
+    "three_outside_down": {"id":"three_outside_down","name":"Three Outside Down","category":"patterns","description":"Bullish candle engulfed by bearish, then bearish close lower","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
+    "three_outside_up": {"id":"three_outside_up","name":"Three Outside Up","category":"patterns","description":"Bearish candle engulfed by bullish, then bullish close higher","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
+    "three_white_soldiers": {"id":"three_white_soldiers","name":"Three White Soldiers","category":"patterns","description":"Three consecutive strong bullish candles with rising closes","params_schema":"{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
     "tma": {"id":"tma","name":"TMA","category":"trend","description":"Triangular Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "tr": {"id":"tr","name":"True Range","category":"volatility","description":"Alias for True Range","params_schema":"","output_type":"indicator"},
     "triangles": {"id":"triangles","name":"Triangles","category":"patterns","description":"Triangle pattern recognition","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":4},\"tolerance\":{\"type\":\"number\",\"default\":0.01},\"convergenceTolerance\":{\"type\":\"number\",\"default\":0.001}}}","output_type":"indicator"},
+    "triple_bottom": {"id":"triple_bottom","name":"Triple Bottom","category":"patterns","description":"Triple bottom reversal pattern: three troughs at similar levels followed by breakout","params_schema":"{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
+    "triple_top": {"id":"triple_top","name":"Triple Top","category":"patterns","description":"Triple top reversal pattern: three peaks at similar levels followed by breakdown","params_schema":"{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
     "trix": {"id":"trix","name":"TRIX","category":"trend","description":"Triple-smoothed EMA oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "true_range": {"id":"true_range","name":"True Range","category":"volatility","description":"True Range","params_schema":"","output_type":"indicator"},
     "ttm_squeeze": {"id":"ttm_squeeze","name":"TTM Squeeze","category":"volatility","description":"Detects Bollinger/Keltner squeeze setups","params_schema":"{\"type\":\"object\",\"properties\":{\"bbPeriod\":{\"type\":\"integer\",\"default\":20},\"bbStdDev\":{\"type\":\"number\",\"default\":2},\"kcPeriod\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
+    "tweezer_bottom": {"id":"tweezer_bottom","name":"Tweezer Bottom","category":"patterns","description":"Two candles with equal lows after a decline","params_schema":"{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}","output_type":"indicator"},
+    "tweezer_top": {"id":"tweezer_top","name":"Tweezer Top","category":"patterns","description":"Two candles with equal highs after an advance","params_schema":"{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}","output_type":"indicator"},
     "typical_price": {"id":"typical_price","name":"Typical Price","category":"trend","description":"Average of high, low, and close","params_schema":"","output_type":"indicator"},
     "ui": {"id":"ui","name":"Ulcer Index","category":"volatility","description":"Alias for Ulcer Index","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "ulcer_index": {"id":"ulcer_index","name":"Ulcer Index","category":"volatility","description":"Drawdown-based volatility measure","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
@@ -236,14 +268,19 @@ export const registryData = {
     "bb_rsi_breakout": { "id":"bb_rsi_breakout","name":"Bollinger Bands + RSI Breakout","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Bollinger Bands + RSI breakout confirmation","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BbRsiConfig\",\"description\":\"BB RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"bbPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"bbStdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"bbPeriod":20,"bbStdDev":2,"rsiOverbought":70,"rsiOversold":30,"rsiPeriod":14} },
     "bollinger_bands": { "id":"bollinger_bands","name":"Bollinger Bands Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses above upper band and sell signals when price crosses below lower band","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"stdDev":2} },
     "bollinger_bands_mean_reversion": { "id":"bollinger_bands_mean_reversion","name":"Bollinger Bands Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price falls below lower band and sell signals when price rises above upper band","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"stdDev":2} },
+    "broadening_breakout": { "id":"broadening_breakout","name":"Broadening Formation Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects broadening (expanding range) formations and generates breakout signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BroadeningConfig\",\"description\":\"Broadening Formation Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"tolerance":0.0005} },
+    "bump_and_run_reversal": { "id":"bump_and_run_reversal","name":"Bump and Run Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects bump and run reversals and generates signals when price returns through the trend line","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BumpAndRunConfig\",\"description\":\"Bump and Run Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"bumpThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"leadInBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSlope\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"bumpThreshold":0.03,"leadInBars":20,"lookback":80,"minSlope":0.001} },
     "buy_and_hold": { "id":"buy_and_hold","name":"Buy and Hold","category":"special","default_timeframes":["1d","1w","1M"],"description":"Buy on first bar and hold position forever","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BuyAndHoldConfig\",\"description\":\"Buy and Hold Strategy configuration\",\"type\":\"object\",\"additionalProperties\":false}","output_type":"signal", defaults: {} },
+    "candlestick_reversal": { "id":"candlestick_reversal","name":"Candlestick Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects Japanese candlestick reversal patterns selected via the pattern parameter","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CandlestickConfig\",\"description\":\"Candlestick Reversal Strategy configuration\\n\\n`pattern` selects which candlestick pattern to detect (e.g. `\\\"hammer\\\"`, `\\\"shooting_star\\\"`, `\\\"three_white_soldiers\\\"`, ...). `None`-valued numeric fields fall through to each detector's own per-pattern defaults.\",\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minBodyRatio\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"pattern\":{\"type\":[\"string\",\"null\"]},\"shadowMultiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"shadowTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"bodyRatio":null,"minBodyRatio":null,"pattern":"hammer","shadowMultiplier":null,"shadowTolerance":null,"trendBars":null} },
     "cci": { "id":"cci","name":"CCI Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when CCI crosses below oversold level and sell signals when CCI crosses above overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CciConfig\",\"description\":\"CCI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":100,"oversold":-100,"period":20} },
     "chaikin_money_flow": { "id":"chaikin_money_flow","name":"Chaikin Money Flow","category":"volume","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when CMF crosses above zero, sell signals when CMF crosses below zero","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChaikinMoneyFlowConfig\",\"description\":\"Chaikin Money Flow Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
     "chande_forecast_oscillator": { "id":"chande_forecast_oscillator","name":"Chande Forecast Oscillator Trend","category":"trend","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when CFO crosses under oversold level and sell signals when CFO crosses over overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChandeForecastOscillatorConfig\",\"description\":\"Chande Forecast Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":70,"oversold":30,"period":14} },
+    "channels_breakout": { "id":"channels_breakout","name":"Channels Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects parallel price channels and generates breakout/breakdown signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChannelsConfig\",\"description\":\"Channels Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSlope\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"parallelismTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"minSlope":0.0005,"parallelismTolerance":0.5} },
     "cointegration_pair_trading": { "id":"cointegration_pair_trading","name":"Cointegration Pair Trading Strategy","category":"statistics","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when spread z-score crosses under negative entry threshold and sell signals when spread z-score crosses over entry threshold","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CointegrationConfig\",\"description\":\"Cointegration Strategy configuration\",\"type\":\"object\",\"properties\":{\"betaPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"entryThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"secondCloses\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}}},\"additionalProperties\":false}","output_type":"signal", defaults: {"betaPeriod":60,"entryThreshold":2,"period":20,"secondCloses":[]} },
     "correlation_mean_reversion": { "id":"correlation_mean_reversion","name":"Correlation Mean Reversion Strategy","category":"statistics","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when correlation drops below reversion threshold and sell signals when correlation exceeds 1.5x reversion threshold","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CorrelationReversionConfig\",\"description\":\"Correlation Reversion Strategy configuration\",\"type\":\"object\",\"properties\":{\"holdingPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"reversionThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"secondCloses\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}}},\"additionalProperties\":false}","output_type":"signal", defaults: {"holdingPeriod":5,"period":20,"reversionThreshold":0.2,"secondCloses":[]} },
     "correlation_pair_trading": { "id":"correlation_pair_trading","name":"Correlation Pair Trading Strategy","category":"statistics","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when correlation between two assets crosses over entry threshold and sell signals when correlation crosses under exit threshold","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CorrelationPairConfig\",\"description\":\"Correlation Pair Strategy configuration\",\"type\":\"object\",\"properties\":{\"entryThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exitThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"secondCloses\":{\"type\":[\"array\",\"null\"],\"items\":{\"type\":\"number\",\"format\":\"double\"}},\"spreadMethod\":{\"type\":[\"string\",\"null\"]}},\"additionalProperties\":false}","output_type":"signal", defaults: {"entryThreshold":0.7,"exitThreshold":0.3,"period":20,"secondCloses":[],"spreadMethod":"ratio"} },
     "cup_and_handle_breakout": { "id":"cup_and_handle_breakout","name":"Cup and Handle Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects bullish continuation cup and handle pattern","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CupAndHandleConfig\",\"description\":\"Cup and Handle Strategy configuration\",\"type\":\"object\",\"properties\":{\"cupDepth\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"handleRetracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minDuration\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"cupDepth":0.15,"handleRetracement":0.3,"minDuration":20} },
+    "diamond_reversal": { "id":"diamond_reversal","name":"Diamond Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects diamond top and diamond bottom reversal patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DiamondConfig\",\"description\":\"Diamond Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"breakoutThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"breakoutThreshold":0,"lookback":150,"minPoints":2,"tolerance":0.0005} },
     "dmi": { "id":"dmi","name":"DMI Trend","category":"trend","default_timeframes":["1h","4h","1d"],"description":"Uses ADX and Directional Indicators for trend signals when ADX crosses over threshold with directional bias","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DmiConfig\",\"description\":\"DMI Strategy configuration\",\"type\":\"object\",\"properties\":{\"adxThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"periodAdx\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodDi\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"adxThreshold":25,"periodAdx":14,"periodDi":14} },
     "donchian_breakout": { "id":"donchian_breakout","name":"Donchian Breakout Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"True Turtle Trading strategy: generates buy signals when price crosses over upper channel and sell signals when price crosses under lower channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DonchianTurtleConfig\",\"description\":\"Donchian Turtle Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
     "donchian_reversion": { "id":"donchian_reversion","name":"Donchian Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Counter-trend strategy: generates buy signals when price crosses over lower channel and sell signals when price crosses under upper channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DonchianTurtleConfig\",\"description\":\"Donchian Turtle Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
@@ -258,6 +295,7 @@ export const registryData = {
     "head_and_shoulders_reversal": { "id":"head_and_shoulders_reversal","name":"Head and Shoulders Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects head and shoulders (bearish) and inverse head and shoulders (bullish) patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"HeadAndShouldersConfig\",\"description\":\"Head and Shoulders Strategy configuration\",\"type\":\"object\",\"properties\":{\"deviation\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minDataLength\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minDistance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"deviation":0.005,"minDataLength":15,"minDistance":5,"tolerance":0.02} },
     "hma_trend": { "id":"hma_trend","name":"HMA Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when HMA is rising and sell signals when HMA is falling","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"HmaTrendConfig\",\"description\":\"HMA Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":21} },
     "ichimoku": { "id":"ichimoku","name":"Ichimoku Cloud Trend","category":"momentum","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when price crosses above cloud top and sell signals when price crosses below cloud bottom","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IchimokuCloudConfig\",\"description\":\"Ichimoku Cloud Strategy configuration\",\"type\":\"object\",\"properties\":{\"close\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"long\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"medium\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"short\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"close":26,"long":52,"medium":26,"short":9} },
+    "island_reversal": { "id":"island_reversal","name":"Island Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects island reversals and generates signals on the covering gap","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IslandReversalConfig\",\"description\":\"Island Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"maxIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"maxIslandBars":15,"minIslandBars":2} },
     "kdj": { "id":"kdj","name":"KDJ Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when J crosses above oversold level and sell signals when J crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KdjConfig\",\"description\":\"KDJ Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period1\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period2\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":80,"oversold":20,"period":14,"period1":3,"period2":3} },
     "keltner_channel_breakout": { "id":"keltner_channel_breakout","name":"Keltner Channel Breakout Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses over upper Keltner channel and sell signals when price crosses under lower channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
     "keltner_channel_reversion": { "id":"keltner_channel_reversion","name":"Keltner Channel Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses over lower Keltner channel and sell signals when price crosses under upper channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
@@ -286,8 +324,10 @@ export const registryData = {
     "percent_rank_ranking": { "id":"percent_rank_ranking","name":"Percent Rank Strategy","category":"statistics","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when percent rank crosses over entry percentile and sell signals when percent rank crosses under exit percentile","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PercentRankConfig\",\"description\":\"Percent Rank Strategy configuration\",\"type\":\"object\",\"properties\":{\"entryPercentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exitPercentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"entryPercentile":80,"exitPercentile":50,"period":20} },
     "pivot_points": { "id":"pivot_points","name":"Pivot Points Trend","category":"trend","default_timeframes":["1h","4h","1d"],"description":"Generates signals based on price position relative to pivot levels","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PivotPointsConfig\",\"description\":\"Pivot Points Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodHigh\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodLow\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"periodHigh":20,"periodLow":20} },
     "projection_oscillator": { "id":"projection_oscillator","name":"Projection Oscillator Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ProjectionOscillatorConfig\",\"description\":\"Projection Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"smooth\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14,"smooth":3} },
+    "rectangle_breakout": { "id":"rectangle_breakout","name":"Rectangle Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects rectangle continuation patterns and generates breakout/breakdown signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RectangleConfig\",\"description\":\"Rectangle Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSpread\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minTrend\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"minSpread":0.01,"minTrend":0.03,"slopeTolerance":0.0002,"trendBars":30} },
     "roc": { "id":"roc","name":"ROC Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when ROC crosses above oversold level and sell signals when ROC crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocConfig\",\"description\":\"ROC Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":10,"oversold":-10,"period":14} },
     "roc_obv_rsi_momentum": { "id":"roc_obv_rsi_momentum","name":"ROC OBV + RSI Momentum","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Complex: ROC of OBV + RSI","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocObvRsiConfig\",\"description\":\"ROC OBV RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"obvRocPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"obvRocPeriod":3,"rsiOverbought":70,"rsiOversold":30,"rsiPeriod":14} },
+    "rounding_reversal": { "id":"rounding_reversal","name":"Rounding Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects rounding bottom (saucer) and rounding top (dome) reversal patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RoundingConfig\",\"description\":\"Rounding Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"curvatureTolerance":0.01,"lookback":120} },
     "rsi": { "id":"rsi","name":"RSI Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RSIConfig\",\"description\":\"RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":70,"oversold":30,"period":14} },
     "rsi2": { "id":"rsi2","name":"RSI2 Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when RSI crosses above oversold level and sell signals when RSI crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"Rsi2Config\",\"description\":\"RSI2 Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":70,"oversold":30,"period":14} },
     "rsi_macd_confirmation": { "id":"rsi_macd_confirmation","name":"RSI + MACD Confirmation","category":"composite","default_timeframes":["15m","1h","4h"],"description":"RSI + MACD confirmation","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RsiMacdConfig\",\"description\":\"RSI MACD Strategy configuration\",\"type\":\"object\",\"properties\":{\"macdFastPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macdSignalPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"macdSlowPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"macdFastPeriod":12,"macdSignalPeriod":9,"macdSlowPeriod":26,"rsiOverbought":70,"rsiOversold":30,"rsiPeriod":14} },
@@ -297,6 +337,7 @@ export const registryData = {
     "super_trend": { "id":"super_trend","name":"Super Trend Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when trend changes to up and sell signals when trend changes to down","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"SuperTrendConfig\",\"description\":\"Super Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"multiplier":3,"period":3} },
     "triangle_breakout": { "id":"triangle_breakout","name":"Triangle Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects triangle patterns and generates breakout signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TriangleConfig\",\"description\":\"Triangle Strategy configuration\",\"type\":\"object\",\"properties\":{\"angleTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minDataLength\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"angleTolerance":0.001,"minDataLength":20,"minPoints":4,"slopeTolerance":0.01} },
     "triangle_rsi_breakout": { "id":"triangle_rsi_breakout","name":"Triangle + RSI Breakout","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Triangle pattern + RSI breakout","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TriangleRsiConfig\",\"description\":\"Triangle RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"minPoints":4,"overbought":70,"oversold":30,"rsiPeriod":14,"slopeTolerance":0.01} },
+    "triple_top_bottom_reversal": { "id":"triple_top_bottom_reversal","name":"Triple Top/Bottom Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects triple top and triple bottom reversal patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TripleTopBottomConfig\",\"description\":\"Triple Top/Bottom Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSeparation\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookaround":2,"minSeparation":8,"tolerance":0.03} },
     "typical_price": { "id":"typical_price","name":"Typical Price Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when close is above typical price and sell signals when close is below typical price","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TypicalPriceConfig\",\"description\":\"Typical Price Strategy configuration\",\"type\":\"object\",\"additionalProperties\":false}","output_type":"signal", defaults: {} },
     "ultimate_oscillator": { "id":"ultimate_oscillator","name":"Ultimate Oscillator Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when UO crosses above oversold level and sell signals when UO crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"UltimateOscillatorConfig\",\"description\":\"Ultimate Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period1\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period2\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period3\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":70,"oversold":30,"period1":7,"period2":14,"period3":28} },
     "variance_stop": { "id":"variance_stop","name":"Variance Stop Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when variance is below multiplier and sell signals when it exceeds multiplier","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VarianceStopConfig\",\"description\":\"Variance Stop Strategy configuration\",\"type\":\"object\",\"properties\":{\"multiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"multiplier":2,"period":14} },
@@ -540,6 +581,34 @@ export function createStrategyTools(
     execute: async (params) => execute("bollinger_bands_mean_reversion", params),
   }))
 
+  // Broadening Formation Breakout Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "broadening_breakout",
+    description: "Detects broadening (expanding range) formations and generates breakout signals" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ lookback: z.number().int().nullable().optional().default(120), minPoints: z.number().int().nullable().optional().default(3), tolerance: z.number().nullable().optional().default(0.0005) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("broadening_breakout", params),
+  }))
+
+  // Bump and Run Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "bump_and_run_reversal",
+    description: "Detects bump and run reversals and generates signals when price returns through the trend line" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ bumpThreshold: z.number().nullable().optional().default(0.03), leadInBars: z.number().int().nullable().optional().default(20), lookback: z.number().int().nullable().optional().default(80), minSlope: z.number().nullable().optional().default(0.001) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("bump_and_run_reversal", params),
+  }))
+
   // Buy and Hold (special)
   tools.push(createWorkflowTool({
     name: "buy_and_hold",
@@ -552,6 +621,20 @@ export function createStrategyTools(
       config: z.object({}).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("buy_and_hold", params),
+  }))
+
+  // Candlestick Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "candlestick_reversal",
+    description: "Detects Japanese candlestick reversal patterns selected via the pattern parameter" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ bodyRatio: z.number().nullable().optional().default(null), minBodyRatio: z.number().nullable().optional().default(null), pattern: z.string().nullable().optional().default("hammer"), shadowMultiplier: z.number().nullable().optional().default(null), shadowTolerance: z.number().nullable().optional().default(null), trendBars: z.number().int().nullable().optional().default(null) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("candlestick_reversal", params),
   }))
 
   // CCI Momentum Strategy (momentum)
@@ -594,6 +677,20 @@ export function createStrategyTools(
       config: z.object({ overbought: z.number().nullable().optional().default(70), oversold: z.number().nullable().optional().default(30), period: z.number().int().nullable().optional().default(14) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("chande_forecast_oscillator", params),
+  }))
+
+  // Channels Breakout Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "channels_breakout",
+    description: "Detects parallel price channels and generates breakout/breakdown signals" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ lookback: z.number().int().nullable().optional().default(120), minPoints: z.number().int().nullable().optional().default(3), minSlope: z.number().nullable().optional().default(0.0005), parallelismTolerance: z.number().nullable().optional().default(0.5) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("channels_breakout", params),
   }))
 
   // Cointegration Pair Trading Strategy (statistics)
@@ -650,6 +747,20 @@ export function createStrategyTools(
       config: z.object({ cupDepth: z.number().nullable().optional().default(0.15), handleRetracement: z.number().nullable().optional().default(0.3), minDuration: z.number().int().nullable().optional().default(20) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("cup_and_handle_breakout", params),
+  }))
+
+  // Diamond Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "diamond_reversal",
+    description: "Detects diamond top and diamond bottom reversal patterns" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ breakoutThreshold: z.number().nullable().optional().default(0), lookback: z.number().int().nullable().optional().default(150), minPoints: z.number().int().nullable().optional().default(2), tolerance: z.number().nullable().optional().default(0.0005) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("diamond_reversal", params),
   }))
 
   // DMI Trend (trend)
@@ -846,6 +957,20 @@ export function createStrategyTools(
       config: z.object({ close: z.number().int().nullable().optional().default(26), long: z.number().int().nullable().optional().default(52), medium: z.number().int().nullable().optional().default(26), short: z.number().int().nullable().optional().default(9) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("ichimoku", params),
+  }))
+
+  // Island Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "island_reversal",
+    description: "Detects island reversals and generates signals on the covering gap" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ maxIslandBars: z.number().int().nullable().optional().default(15), minIslandBars: z.number().int().nullable().optional().default(2) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("island_reversal", params),
   }))
 
   // KDJ Trend (trend)
@@ -1240,6 +1365,20 @@ export function createStrategyTools(
     execute: async (params) => execute("projection_oscillator", params),
   }))
 
+  // Rectangle Breakout Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "rectangle_breakout",
+    description: "Detects rectangle continuation patterns and generates breakout/breakdown signals" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ lookback: z.number().int().nullable().optional().default(120), minPoints: z.number().int().nullable().optional().default(3), minSpread: z.number().nullable().optional().default(0.01), minTrend: z.number().nullable().optional().default(0.03), slopeTolerance: z.number().nullable().optional().default(0.0002), trendBars: z.number().int().nullable().optional().default(30) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("rectangle_breakout", params),
+  }))
+
   // ROC Momentum Strategy (momentum)
   tools.push(createWorkflowTool({
     name: "roc",
@@ -1266,6 +1405,20 @@ export function createStrategyTools(
       config: z.object({ obvRocPeriod: z.number().int().nullable().optional().default(3), rsiOverbought: z.number().nullable().optional().default(70), rsiOversold: z.number().nullable().optional().default(30), rsiPeriod: z.number().int().nullable().optional().default(14) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("roc_obv_rsi_momentum", params),
+  }))
+
+  // Rounding Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "rounding_reversal",
+    description: "Detects rounding bottom (saucer) and rounding top (dome) reversal patterns" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ curvatureTolerance: z.number().nullable().optional().default(0.01), lookback: z.number().int().nullable().optional().default(120) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("rounding_reversal", params),
   }))
 
   // RSI Momentum Strategy (momentum)
@@ -1392,6 +1545,20 @@ export function createStrategyTools(
       config: z.object({ minPoints: z.number().int().nullable().optional().default(4), overbought: z.number().nullable().optional().default(70), oversold: z.number().nullable().optional().default(30), rsiPeriod: z.number().int().nullable().optional().default(14), slopeTolerance: z.number().nullable().optional().default(0.01) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("triangle_rsi_breakout", params),
+  }))
+
+  // Triple Top/Bottom Reversal Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "triple_top_bottom_reversal",
+    description: "Detects triple top and triple bottom reversal patterns" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ lookaround: z.number().int().nullable().optional().default(2), minSeparation: z.number().int().nullable().optional().default(8), tolerance: z.number().nullable().optional().default(0.03) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("triple_top_bottom_reversal", params),
   }))
 
   // Typical Price Trend (trend)
@@ -1708,6 +1875,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "abandoned_baby",
+    description: "Gap, doji star, and covering gap in the opposite direction" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("abandoned_baby", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "absolute_price_oscillator",
     description: "Absolute difference between fast and slow EMA" + " (returns: indicator)",
     parameters: z.object({
@@ -1861,6 +2037,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "bearish_harami",
+    description: "Small bearish candle inside a prior bullish body" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("bearish_harami", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "bollinger_bands",
     description: "Bollinger Bands" + " (returns: indicator)",
     parameters: z.object({
@@ -1879,12 +2064,39 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "broadening",
+    description: "Broadening/megaphone pattern: diverging trendlines with breakout in either direction" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("broadening", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "bullish_engulfing",
     description: "Bullish engulfing candlestick pattern" + " (returns: indicator)",
     parameters: z.object({
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("bullish_engulfing", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "bullish_harami",
+    description: "Small bullish candle inside a prior bearish body" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("bullish_harami", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "bump_and_run",
+    description: "Bump-and-run reversal: steep lead-in trendline, bump away, and return through the line" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("bump_and_run", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -1951,6 +2163,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "channels",
+    description: "Rising/falling parallel price channels with breakout in channel direction" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("channels", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "classify_market_trend",
     description: "Classifies market as trending, ranging, or volatile" + " (returns: indicator)",
     parameters: z.object({
@@ -2005,6 +2226,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "dark_cloud_cover",
+    description: "Bearish candle closes below midpoint of prior bullish body after gapping above" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("dark_cloud_cover", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "dc",
     description: "Alias for Donchian Channel" + " (returns: indicator)",
     parameters: z.object({
@@ -2032,6 +2262,24 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "diamond_bottom",
+    description: "Diamond bottom reversal pattern: broadening then contracting range with upside breakout" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("diamond_bottom", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "diamond_top",
+    description: "Diamond top reversal pattern: broadening then contracting range with downside breakout" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("diamond_top", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "donchian_channel",
     description: "Channel based on highest high and lowest low" + " (returns: indicator)",
     parameters: z.object({
@@ -2056,6 +2304,15 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("double_top", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "dragonfly_doji",
+    description: "Doji with long lower shadow after a decline" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("dragonfly_doji", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2149,6 +2406,33 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "gravestone_doji",
+    description: "Doji with long upper shadow after an advance" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("gravestone_doji", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "hammer",
+    description: "Hammer candlestick: long lower shadow after a decline" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("hammer", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "hanging_man",
+    description: "Hanging man candlestick: hammer shape after an advance" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("hanging_man", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "head_and_shoulders",
     description: "Head and shoulders pattern recognition" + " (returns: indicator)",
     parameters: z.object({
@@ -2182,6 +2466,24 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("ichimoku_cloud", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "inverted_hammer",
+    description: "Inverted hammer candlestick: long upper shadow after a decline" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("inverted_hammer", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "island_reversal",
+    description: "Island reversal: gap away, isolated cluster, then covering gap back" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("island_reversal", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2236,6 +2538,15 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("linreg", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "long_legged_doji",
+    description: "Doji with long shadows on both sides, direction follows prior trend" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("long_legged_doji", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2464,6 +2775,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "piercing_line",
+    description: "Bullish candle closes above midpoint of prior bearish body after gapping below" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("piercing_line", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "pivot_points",
     description: "Standard pivot point levels" + " (returns: indicator)",
     parameters: z.object({
@@ -2527,6 +2847,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "rectangle",
+    description: "Rectangle continuation pattern: horizontal range breakout in the direction of the prior trend" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("rectangle", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "rma",
     description: "Rolling Moving Average" + " (returns: indicator)",
     parameters: z.object({
@@ -2554,12 +2883,39 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "rounding_bottom",
+    description: "Rounding bottom/saucer reversal pattern with breakout above the rim" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("rounding_bottom", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "rounding_top",
+    description: "Rounding top reversal pattern with breakdown below the floor" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("rounding_top", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "rsi",
     description: "Relative Strength Index" + " (returns: indicator)",
     parameters: z.object({
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("rsi", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "shooting_star",
+    description: "Shooting star candlestick: inverted-hammer shape after an advance" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("shooting_star", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2587,6 +2943,15 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("smoothed_moving_average", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "spinning_top",
+    description: "Spinning top candlestick: indecision with small body and both shadows" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("spinning_top", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2626,6 +2991,60 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "three_black_crows",
+    description: "Three consecutive strong bearish candles with falling closes" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_black_crows", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "three_inside_down",
+    description: "Bullish candle, small bearish inside, then bearish close below first close" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_inside_down", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "three_inside_up",
+    description: "Bearish candle, small bullish inside, then bullish close above first open" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_inside_up", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "three_outside_down",
+    description: "Bullish candle engulfed by bearish, then bearish close lower" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_outside_down", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "three_outside_up",
+    description: "Bearish candle engulfed by bullish, then bullish close higher" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_outside_up", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "three_white_soldiers",
+    description: "Three consecutive strong bullish candles with rising closes" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("three_white_soldiers", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "tma",
     description: "Triangular Moving Average" + " (returns: indicator)",
     parameters: z.object({
@@ -2653,6 +3072,24 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "triple_bottom",
+    description: "Triple bottom reversal pattern: three troughs at similar levels followed by breakout" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("triple_bottom", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "triple_top",
+    description: "Triple top reversal pattern: three peaks at similar levels followed by breakdown" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("triple_top", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "trix",
     description: "Triple-smoothed EMA oscillator" + " (returns: indicator)",
     parameters: z.object({
@@ -2677,6 +3114,24 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("ttm_squeeze", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "tweezer_bottom",
+    description: "Two candles with equal lows after a decline" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("tweezer_bottom", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "tweezer_top",
+    description: "Two candles with equal highs after an advance" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("tweezer_top", params),
   }))
 
   tools.push(createWorkflowTool({

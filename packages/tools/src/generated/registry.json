@@ -659,6 +659,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"multiplier\":{\"type\":\"number\",\"default\":4}}}",
       "output_type": "indicator"
     },
+    "abandoned_baby": {
+      "id": "abandoned_baby",
+      "name": "Abandoned Baby",
+      "category": "patterns",
+      "description": "Gap, doji star, and covering gap in the opposite direction",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}",
+      "output_type": "indicator"
+    },
     "absolute_price_oscillator": {
       "id": "absolute_price_oscillator",
       "name": "Absolute Price Oscillator",
@@ -795,6 +803,14 @@
       "params_schema": "",
       "output_type": "indicator"
     },
+    "bearish_harami": {
+      "id": "bearish_harami",
+      "name": "Bearish Harami",
+      "category": "patterns",
+      "description": "Small bearish candle inside a prior bullish body",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
     "bollinger_bands": {
       "id": "bollinger_bands",
       "name": "Bollinger Bands",
@@ -811,12 +827,36 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}",
       "output_type": "indicator"
     },
+    "broadening": {
+      "id": "broadening",
+      "name": "Broadening Pattern",
+      "category": "patterns",
+      "description": "Broadening/megaphone pattern: diverging trendlines with breakout in either direction",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"lookback\":{\"type\":\"integer\",\"default\":120}}}",
+      "output_type": "indicator"
+    },
     "bullish_engulfing": {
       "id": "bullish_engulfing",
       "name": "Bullish Engulfing",
       "category": "patterns",
       "description": "Bullish engulfing candlestick pattern",
       "params_schema": "",
+      "output_type": "indicator"
+    },
+    "bullish_harami": {
+      "id": "bullish_harami",
+      "name": "Bullish Harami",
+      "category": "patterns",
+      "description": "Small bullish candle inside a prior bearish body",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
+    "bump_and_run": {
+      "id": "bump_and_run",
+      "name": "Bump and Run Reversal",
+      "category": "patterns",
+      "description": "Bump-and-run reversal: steep lead-in trendline, bump away, and return through the line",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"leadInBars\":{\"type\":\"integer\",\"default\":20},\"minSlope\":{\"type\":\"number\",\"default\":0.001},\"bumpThreshold\":{\"type\":\"number\",\"default\":0.03},\"lookback\":{\"type\":\"integer\",\"default\":80}}}",
       "output_type": "indicator"
     },
     "camarilla_pivot_points": {
@@ -875,6 +915,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"ATR and lookback period\",\"default\":22}}}",
       "output_type": "indicator"
     },
+    "channels": {
+      "id": "channels",
+      "name": "Price Channels",
+      "category": "patterns",
+      "description": "Rising/falling parallel price channels with breakout in channel direction",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"minSlope\":{\"type\":\"number\",\"default\":0.0005},\"parallelismTolerance\":{\"type\":\"number\",\"default\":0.5},\"lookback\":{\"type\":\"integer\",\"default\":120}}}",
+      "output_type": "indicator"
+    },
     "classify_market_trend": {
       "id": "classify_market_trend",
       "name": "Classify Market Trend",
@@ -923,6 +971,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"cupDepth\":{\"type\":\"number\",\"default\":0.15},\"handleRetracement\":{\"type\":\"number\",\"default\":0.3},\"minDuration\":{\"type\":\"integer\",\"default\":20}}}",
       "output_type": "indicator"
     },
+    "dark_cloud_cover": {
+      "id": "dark_cloud_cover",
+      "name": "Dark Cloud Cover",
+      "category": "patterns",
+      "description": "Bearish candle closes below midpoint of prior bullish body after gapping above",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
     "dc": {
       "id": "dc",
       "name": "Donchian Channel",
@@ -947,6 +1003,22 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
       "output_type": "indicator"
     },
+    "diamond_bottom": {
+      "id": "diamond_bottom",
+      "name": "Diamond Bottom",
+      "category": "patterns",
+      "description": "Diamond bottom reversal pattern: broadening then contracting range with upside breakout",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}",
+      "output_type": "indicator"
+    },
+    "diamond_top": {
+      "id": "diamond_top",
+      "name": "Diamond Top",
+      "category": "patterns",
+      "description": "Diamond top reversal pattern: broadening then contracting range with downside breakout",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":2},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"breakoutThreshold\":{\"type\":\"number\",\"default\":0},\"lookback\":{\"type\":\"integer\",\"default\":150}}}",
+      "output_type": "indicator"
+    },
     "donchian_channel": {
       "id": "donchian_channel",
       "name": "Donchian Channel",
@@ -969,6 +1041,14 @@
       "category": "patterns",
       "description": "Double top reversal pattern",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":10},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "dragonfly_doji": {
+      "id": "dragonfly_doji",
+      "name": "Dragonfly Doji",
+      "category": "patterns",
+      "description": "Doji with long lower shadow after a decline",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
       "output_type": "indicator"
     },
     "ease_of_movement": {
@@ -1051,6 +1131,30 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}",
       "output_type": "indicator"
     },
+    "gravestone_doji": {
+      "id": "gravestone_doji",
+      "name": "Gravestone Doji",
+      "category": "patterns",
+      "description": "Doji with long upper shadow after an advance",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
+    "hammer": {
+      "id": "hammer",
+      "name": "Hammer",
+      "category": "patterns",
+      "description": "Hammer candlestick: long lower shadow after a decline",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
+    "hanging_man": {
+      "id": "hanging_man",
+      "name": "Hanging Man",
+      "category": "patterns",
+      "description": "Hanging man candlestick: hammer shape after an advance",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
     "head_and_shoulders": {
       "id": "head_and_shoulders",
       "name": "Head and Shoulders",
@@ -1081,6 +1185,22 @@
       "category": "momentum",
       "description": "Comprehensive indicator showing support, resistance, and momentum",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}",
+      "output_type": "indicator"
+    },
+    "inverted_hammer": {
+      "id": "inverted_hammer",
+      "name": "Inverted Hammer",
+      "category": "patterns",
+      "description": "Inverted hammer candlestick: long upper shadow after a decline",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
+    "island_reversal": {
+      "id": "island_reversal",
+      "name": "Island Reversal",
+      "category": "patterns",
+      "description": "Island reversal: gap away, isolated cluster, then covering gap back",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}",
       "output_type": "indicator"
     },
     "kc": {
@@ -1129,6 +1249,14 @@
       "category": "trend",
       "description": "Linear regression line over a period",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"offset\":{\"type\":\"integer\",\"default\":0}}}",
+      "output_type": "indicator"
+    },
+    "long_legged_doji": {
+      "id": "long_legged_doji",
+      "name": "Long Legged Doji",
+      "category": "patterns",
+      "description": "Doji with long shadows on both sides, direction follows prior trend",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.1},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
       "output_type": "indicator"
     },
     "macd": {
@@ -1331,6 +1459,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"percentage\":{\"type\":\"number\",\"default\":50}}}",
       "output_type": "indicator"
     },
+    "piercing_line": {
+      "id": "piercing_line",
+      "name": "Piercing Line",
+      "category": "patterns",
+      "description": "Bullish candle closes above midpoint of prior bearish body after gapping below",
+      "params_schema": "",
+      "output_type": "indicator"
+    },
     "pivot_points": {
       "id": "pivot_points",
       "name": "Pivot Points",
@@ -1387,6 +1523,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"rPeriod\":{\"type\":\"integer\",\"default\":9},\"kPeriod\":{\"type\":\"integer\",\"default\":3},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}",
       "output_type": "indicator"
     },
+    "rectangle": {
+      "id": "rectangle",
+      "name": "Rectangle",
+      "category": "patterns",
+      "description": "Rectangle continuation pattern: horizontal range breakout in the direction of the prior trend",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0002},\"minSpread\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120},\"trendBars\":{\"type\":\"integer\",\"default\":30},\"minTrend\":{\"type\":\"number\",\"default\":0.03}}}",
+      "output_type": "indicator"
+    },
     "rma": {
       "id": "rma",
       "name": "RMA",
@@ -1411,12 +1555,36 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
       "output_type": "indicator"
     },
+    "rounding_bottom": {
+      "id": "rounding_bottom",
+      "name": "Rounding Bottom",
+      "category": "patterns",
+      "description": "Rounding bottom/saucer reversal pattern with breakout above the rim",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}",
+      "output_type": "indicator"
+    },
+    "rounding_top": {
+      "id": "rounding_top",
+      "name": "Rounding Top",
+      "category": "patterns",
+      "description": "Rounding top reversal pattern with breakdown below the floor",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}",
+      "output_type": "indicator"
+    },
     "rsi": {
       "id": "rsi",
       "name": "RSI",
       "category": "momentum",
       "description": "Relative Strength Index",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "shooting_star": {
+      "id": "shooting_star",
+      "name": "Shooting Star",
+      "category": "patterns",
+      "description": "Shooting star candlestick: inverted-hammer shape after an advance",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
       "output_type": "indicator"
     },
     "since": {
@@ -1441,6 +1609,14 @@
       "category": "trend",
       "description": "Smoothed variant of SMMA",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "spinning_top": {
+      "id": "spinning_top",
+      "name": "Spinning Top",
+      "category": "patterns",
+      "description": "Spinning top candlestick: indecision with small body and both shadows",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}",
       "output_type": "indicator"
     },
     "stars": {
@@ -1475,6 +1651,54 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}",
       "output_type": "indicator"
     },
+    "three_black_crows": {
+      "id": "three_black_crows",
+      "name": "Three Black Crows",
+      "category": "patterns",
+      "description": "Three consecutive strong bearish candles with falling closes",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
+    "three_inside_down": {
+      "id": "three_inside_down",
+      "name": "Three Inside Down",
+      "category": "patterns",
+      "description": "Bullish candle, small bearish inside, then bearish close below first close",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}",
+      "output_type": "indicator"
+    },
+    "three_inside_up": {
+      "id": "three_inside_up",
+      "name": "Three Inside Up",
+      "category": "patterns",
+      "description": "Bearish candle, small bullish inside, then bullish close above first open",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.3}}}",
+      "output_type": "indicator"
+    },
+    "three_outside_down": {
+      "id": "three_outside_down",
+      "name": "Three Outside Down",
+      "category": "patterns",
+      "description": "Bullish candle engulfed by bearish, then bearish close lower",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
+    "three_outside_up": {
+      "id": "three_outside_up",
+      "name": "Three Outside Up",
+      "category": "patterns",
+      "description": "Bearish candle engulfed by bullish, then bullish close higher",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
+    "three_white_soldiers": {
+      "id": "three_white_soldiers",
+      "name": "Three White Soldiers",
+      "category": "patterns",
+      "description": "Three consecutive strong bullish candles with rising closes",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"minBodyRatio\":{\"type\":\"number\",\"default\":0.5}}}",
+      "output_type": "indicator"
+    },
     "tma": {
       "id": "tma",
       "name": "TMA",
@@ -1499,6 +1723,22 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":4},\"tolerance\":{\"type\":\"number\",\"default\":0.01},\"convergenceTolerance\":{\"type\":\"number\",\"default\":0.001}}}",
       "output_type": "indicator"
     },
+    "triple_bottom": {
+      "id": "triple_bottom",
+      "name": "Triple Bottom",
+      "category": "patterns",
+      "description": "Triple bottom reversal pattern: three troughs at similar levels followed by breakout",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
+    "triple_top": {
+      "id": "triple_top",
+      "name": "Triple Top",
+      "category": "patterns",
+      "description": "Triple top reversal pattern: three peaks at similar levels followed by breakdown",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"tolerance\":{\"type\":\"number\",\"default\":0.03},\"minSeparation\":{\"type\":\"integer\",\"default\":8},\"lookaround\":{\"type\":\"integer\",\"default\":2}}}",
+      "output_type": "indicator"
+    },
     "trix": {
       "id": "trix",
       "name": "TRIX",
@@ -1521,6 +1761,22 @@
       "category": "volatility",
       "description": "Detects Bollinger/Keltner squeeze setups",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"bbPeriod\":{\"type\":\"integer\",\"default\":20},\"bbStdDev\":{\"type\":\"number\",\"default\":2},\"kcPeriod\":{\"type\":\"integer\",\"default\":20}}}",
+      "output_type": "indicator"
+    },
+    "tweezer_bottom": {
+      "id": "tweezer_bottom",
+      "name": "Tweezer Bottom",
+      "category": "patterns",
+      "description": "Two candles with equal lows after a decline",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}",
+      "output_type": "indicator"
+    },
+    "tweezer_top": {
+      "id": "tweezer_top",
+      "name": "Tweezer Top",
+      "category": "patterns",
+      "description": "Two candles with equal highs after an advance",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"shadowTolerance\":{\"type\":\"number\",\"default\":0.001}}}",
       "output_type": "indicator"
     },
     "typical_price": {
@@ -1964,6 +2220,43 @@
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
+    "broadening_breakout": {
+      "id": "broadening_breakout",
+      "name": "Broadening Formation Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects broadening (expanding range) formations and generates breakout signals",
+      "defaults": {
+        "lookback": 120,
+        "minPoints": 3,
+        "tolerance": 0.0005
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BroadeningConfig\",\"description\":\"Broadening Formation Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "bump_and_run_reversal": {
+      "id": "bump_and_run_reversal",
+      "name": "Bump and Run Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects bump and run reversals and generates signals when price returns through the trend line",
+      "defaults": {
+        "bumpThreshold": 0.03,
+        "leadInBars": 20,
+        "lookback": 80,
+        "minSlope": 0.001
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BumpAndRunConfig\",\"description\":\"Bump and Run Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"bumpThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"leadInBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSlope\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
     "buy_and_hold": {
       "id": "buy_and_hold",
       "name": "Buy and Hold",
@@ -1976,6 +2269,27 @@
       "description": "Buy on first bar and hold position forever",
       "defaults": {},
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BuyAndHoldConfig\",\"description\":\"Buy and Hold Strategy configuration\",\"type\":\"object\",\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "candlestick_reversal": {
+      "id": "candlestick_reversal",
+      "name": "Candlestick Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects Japanese candlestick reversal patterns selected via the pattern parameter",
+      "defaults": {
+        "bodyRatio": null,
+        "minBodyRatio": null,
+        "pattern": "hammer",
+        "shadowMultiplier": null,
+        "shadowTolerance": null,
+        "trendBars": null
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CandlestickConfig\",\"description\":\"Candlestick Reversal Strategy configuration\\n\\n`pattern` selects which candlestick pattern to detect (e.g. `\\\"hammer\\\"`, `\\\"shooting_star\\\"`, `\\\"three_white_soldiers\\\"`, ...). `None`-valued numeric fields fall through to each detector's own per-pattern defaults.\",\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minBodyRatio\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"pattern\":{\"type\":[\"string\",\"null\"]},\"shadowMultiplier\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"shadowTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "cci": {
@@ -2028,6 +2342,25 @@
         "period": 14
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChandeForecastOscillatorConfig\",\"description\":\"Chande Forecast Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "channels_breakout": {
+      "id": "channels_breakout",
+      "name": "Channels Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects parallel price channels and generates breakout/breakdown signals",
+      "defaults": {
+        "lookback": 120,
+        "minPoints": 3,
+        "minSlope": 0.0005,
+        "parallelismTolerance": 0.5
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ChannelsConfig\",\"description\":\"Channels Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSlope\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"parallelismTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "cointegration_pair_trading": {
@@ -2104,6 +2437,25 @@
         "minDuration": 20
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"CupAndHandleConfig\",\"description\":\"Cup and Handle Strategy configuration\",\"type\":\"object\",\"properties\":{\"cupDepth\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"handleRetracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minDuration\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "diamond_reversal": {
+      "id": "diamond_reversal",
+      "name": "Diamond Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects diamond top and diamond bottom reversal patterns",
+      "defaults": {
+        "breakoutThreshold": 0.0,
+        "lookback": 150,
+        "minPoints": 2,
+        "tolerance": 0.0005
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DiamondConfig\",\"description\":\"Diamond Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"breakoutThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "dmi": {
@@ -2360,6 +2712,23 @@
         "short": 9
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IchimokuCloudConfig\",\"description\":\"Ichimoku Cloud Strategy configuration\",\"type\":\"object\",\"properties\":{\"close\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"long\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"medium\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"short\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "island_reversal": {
+      "id": "island_reversal",
+      "name": "Island Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects island reversals and generates signals on the covering gap",
+      "defaults": {
+        "maxIslandBars": 15,
+        "minIslandBars": 2
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IslandReversalConfig\",\"description\":\"Island Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"maxIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "kdj": {
@@ -2863,6 +3232,27 @@
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ProjectionOscillatorConfig\",\"description\":\"Projection Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"smooth\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
+    "rectangle_breakout": {
+      "id": "rectangle_breakout",
+      "name": "Rectangle Breakout Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects rectangle continuation patterns and generates breakout/breakdown signals",
+      "defaults": {
+        "lookback": 120,
+        "minPoints": 3,
+        "minSpread": 0.01,
+        "minTrend": 0.03,
+        "slopeTolerance": 0.0002,
+        "trendBars": 30
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RectangleConfig\",\"description\":\"Rectangle Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSpread\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minTrend\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
     "roc": {
       "id": "roc",
       "name": "ROC Momentum Strategy",
@@ -2898,6 +3288,23 @@
         "rsiPeriod": 14
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocObvRsiConfig\",\"description\":\"ROC OBV RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"obvRocPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "rounding_reversal": {
+      "id": "rounding_reversal",
+      "name": "Rounding Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects rounding bottom (saucer) and rounding top (dome) reversal patterns",
+      "defaults": {
+        "curvatureTolerance": 0.01,
+        "lookback": 120
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RoundingConfig\",\"description\":\"Rounding Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "rsi": {
@@ -3067,6 +3474,24 @@
         "slopeTolerance": 0.01
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TriangleRsiConfig\",\"description\":\"Triangle RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "triple_top_bottom_reversal": {
+      "id": "triple_top_bottom_reversal",
+      "name": "Triple Top/Bottom Reversal Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Detects triple top and triple bottom reversal patterns",
+      "defaults": {
+        "lookaround": 2,
+        "minSeparation": 8,
+        "tolerance": 0.03
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"TripleTopBottomConfig\",\"description\":\"Triple Top/Bottom Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSeparation\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "typical_price": {
