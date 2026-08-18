@@ -1,0 +1,17 @@
+[project]
+name = "qtm-traditional"
+version = "0.1.0"
+description = "Standalone traditional-TA strategy screens over Binance OHLCV — the quantamental catalog, zero external infra"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.21",
+    "polars>=0.20",
+    "optuna>=3.0",
+    "lightgbm>=4.0",
+]
+
+# Scripts-only project: sibling modules (binance_loader, screen, ...) are
+# imported from the repo layout, and `quantamental` is installed from
+# ../../bindings/py (see the research-setup justfile recipe).
+[tool.setuptools]
+packages = []

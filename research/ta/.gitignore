@@ -1,0 +1,8 @@
+# Local Python env (see the research-setup justfile recipe)
+.venv/
+
+# Hydrated 1m OHLCV parquet per symbol (binance_loader writes here; it IS the cache)
+data/
+
+__pycache__/
+*.pyc

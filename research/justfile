@@ -1,0 +1,29 @@
+# Standalone traditional-strategy research (research/ta):
+# the quantamental catalog screened over Binance OHLCV with zero infra.
+# Run recipes from this directory:  just -C research <recipe>
+
+set shell := ["bash", "-cu"]
+
+default: setup
+
+# Create the Python env: third-party deps + the quantamental wheel from bindings/py.
+setup:
+    cd ta && python3 -m venv .venv
+    cd ta && ./.venv/bin/pip install numpy polars optuna lightgbm
+    cd ta && ./.venv/bin/pip install ../../bindings/py
+
+# (Re)generate config/symbols.yaml — the hydration universe (CoinGecko × Binance Futures).
+symbols:
+    cd ta && ./.venv/bin/python config/symbols-sync.py
+
+# Full OHLCV hydration: vision monthly backfill + REST tail.
+data-sync:
+    cd ta && ./.venv/bin/python binance_loader.py --sync
+
+# Daily incremental tail refresh (REST only).
+data-update:
+    cd ta && ./.venv/bin/python binance_loader.py --update
+
+# Screen the strategy catalog (IC over the universe).
+screen:
+    cd ta && ./.venv/bin/python screen.py --all
