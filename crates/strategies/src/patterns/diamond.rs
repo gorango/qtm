@@ -119,7 +119,10 @@ mod tests {
 		let result = diamond_strategy(&opens, &highs, &lows, &closes, config).unwrap();
 		let idx = result.iter().position(|&s| s < 0).unwrap();
 		assert_eq!(result[idx], -1);
-		assert!(idx > 80, "signal should fire after the diamond completes, got {idx}");
+		assert!(
+			idx > 80,
+			"signal should fire after the diamond completes, got {idx}"
+		);
 	}
 
 	#[test]
@@ -150,6 +153,9 @@ mod tests {
 		let result = diamond_strategy(&opens, &highs, &lows, &closes, config).unwrap();
 		let idx = result.iter().position(|&s| s > 0).unwrap();
 		assert_eq!(result[idx], 1);
-		assert!(idx > 80, "signal should fire after the diamond completes, got {idx}");
+		assert!(
+			idx > 80,
+			"signal should fire after the diamond completes, got {idx}"
+		);
 	}
 }

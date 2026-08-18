@@ -51,7 +51,15 @@ pub fn island_reversal_strategy(
 
 	Ok(signals
 		.iter()
-		.map(|&s| if s > 0.5 { 1 } else if s < -0.5 { -1 } else { 0 })
+		.map(|&s| {
+			if s > 0.5 {
+				1
+			} else if s < -0.5 {
+				-1
+			} else {
+				0
+			}
+		})
 		.collect())
 }
 
@@ -87,7 +95,10 @@ mod tests {
 			max_island_bars: Some(10),
 		});
 		let result = island_reversal_strategy(&opens, &highs, &lows, &closes, config).unwrap();
-		let idx = result.iter().position(|&s| s > 0).expect("no bullish signal");
+		let idx = result
+			.iter()
+			.position(|&s| s > 0)
+			.expect("no bullish signal");
 		assert_eq!(result[idx], 1);
 		assert_eq!(idx, 15, "signal should fire on the covering gap-up");
 	}
@@ -112,7 +123,10 @@ mod tests {
 			max_island_bars: Some(10),
 		});
 		let result = island_reversal_strategy(&opens, &highs, &lows, &closes, config).unwrap();
-		let idx = result.iter().position(|&s| s < 0).expect("no bearish signal");
+		let idx = result
+			.iter()
+			.position(|&s| s < 0)
+			.expect("no bearish signal");
 		assert_eq!(result[idx], -1);
 		assert_eq!(idx, 15, "signal should fire on the covering gap-down");
 	}

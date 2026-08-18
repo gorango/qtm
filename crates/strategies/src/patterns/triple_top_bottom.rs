@@ -105,7 +105,10 @@ mod tests {
 		let result = triple_top_bottom_strategy(&opens, &highs, &lows, &closes, config).unwrap();
 		let idx = result.iter().position(|&s| s < 0).unwrap();
 		assert_eq!(result[idx], -1);
-		assert!(idx > 50, "signal should fire after the third peak, got {idx}");
+		assert!(
+			idx > 50,
+			"signal should fire after the third peak, got {idx}"
+		);
 	}
 
 	#[test]
@@ -129,6 +132,9 @@ mod tests {
 		let result = triple_top_bottom_strategy(&opens, &highs, &lows, &closes, config).unwrap();
 		let idx = result.iter().position(|&s| s > 0).unwrap();
 		assert_eq!(result[idx], 1);
-		assert!(idx > 50, "signal should fire after the third trough, got {idx}");
+		assert!(
+			idx > 50,
+			"signal should fire after the third trough, got {idx}"
+		);
 	}
 }

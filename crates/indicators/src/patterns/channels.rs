@@ -128,8 +128,7 @@ mod tests {
 		let closes = series_from_pivots(&pivots, 80);
 		let (opens, highs, lows, closes) = ohlc_from_series(&closes);
 
-		let signals = channels(&opens, &highs, &lows, &closes, None, None, None, Some(60))
-			.unwrap();
+		let signals = channels(&opens, &highs, &lows, &closes, None, None, None, Some(60)).unwrap();
 
 		assert!(signals.iter().any(|&s| s > 0.5), "no bullish signal");
 		let idx = signals.iter().position(|&s| s > 0.5).unwrap();
@@ -156,8 +155,7 @@ mod tests {
 		let closes = series_from_pivots(&pivots, 80);
 		let (opens, highs, lows, closes) = ohlc_from_series(&closes);
 
-		let signals = channels(&opens, &highs, &lows, &closes, None, None, None, Some(60))
-			.unwrap();
+		let signals = channels(&opens, &highs, &lows, &closes, None, None, None, Some(60)).unwrap();
 
 		assert!(signals.iter().any(|&s| s < -0.5), "no bearish signal");
 		let idx = signals.iter().position(|&s| s < -0.5).unwrap();

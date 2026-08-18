@@ -90,7 +90,10 @@ mod tests {
 		let (opens, highs, lows, closes) = ohlc(&bars);
 		let signals = island_reversal(&opens, &highs, &lows, &closes, Some(3), Some(10)).unwrap();
 
-		let idx = signals.iter().position(|&s| s > 0.5).expect("no bullish signal");
+		let idx = signals
+			.iter()
+			.position(|&s| s > 0.5)
+			.expect("no bullish signal");
 		assert_eq!(idx, 15, "signal should fire on the covering gap-up");
 	}
 
@@ -111,7 +114,10 @@ mod tests {
 		let (opens, highs, lows, closes) = ohlc(&bars);
 		let signals = island_reversal(&opens, &highs, &lows, &closes, Some(3), Some(10)).unwrap();
 
-		let idx = signals.iter().position(|&s| s < -0.5).expect("no bearish signal");
+		let idx = signals
+			.iter()
+			.position(|&s| s < -0.5)
+			.expect("no bearish signal");
 		assert_eq!(idx, 15, "signal should fire on the covering gap-down");
 	}
 }

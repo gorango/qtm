@@ -53,7 +53,15 @@ pub fn broadening_strategy(
 
 	Ok(signals
 		.iter()
-		.map(|&s| if s > 0.5 { 1 } else if s < -0.5 { -1 } else { 0 })
+		.map(|&s| {
+			if s > 0.5 {
+				1
+			} else if s < -0.5 {
+				-1
+			} else {
+				0
+			}
+		})
 		.collect())
 }
 

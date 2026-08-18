@@ -66,7 +66,15 @@ pub fn hammer(
 	trend_bars: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	single_candle_signal(
-		opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars, true, true,
+		opens,
+		highs,
+		lows,
+		closes,
+		body_ratio,
+		shadow_multiplier,
+		trend_bars,
+		true,
+		true,
 	)
 }
 
@@ -82,7 +90,15 @@ pub fn inverted_hammer(
 	trend_bars: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	single_candle_signal(
-		opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars, true, false,
+		opens,
+		highs,
+		lows,
+		closes,
+		body_ratio,
+		shadow_multiplier,
+		trend_bars,
+		true,
+		false,
 	)
 }
 
@@ -98,7 +114,15 @@ pub fn hanging_man(
 	trend_bars: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	single_candle_signal(
-		opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars, false, true,
+		opens,
+		highs,
+		lows,
+		closes,
+		body_ratio,
+		shadow_multiplier,
+		trend_bars,
+		false,
+		true,
 	)
 }
 
@@ -113,7 +137,15 @@ pub fn shooting_star(
 	trend_bars: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	single_candle_signal(
-		opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars, false, false,
+		opens,
+		highs,
+		lows,
+		closes,
+		body_ratio,
+		shadow_multiplier,
+		trend_bars,
+		false,
+		false,
 	)
 }
 
@@ -540,9 +572,21 @@ fn soldiers_internal(
 		for k in 0..3 {
 			let idx = i - 2 + k;
 			let strong = if bullish {
-				is_strong_bull(opens[idx], highs[idx], lows[idx], closes[idx], min_body_ratio)
+				is_strong_bull(
+					opens[idx],
+					highs[idx],
+					lows[idx],
+					closes[idx],
+					min_body_ratio,
+				)
 			} else {
-				is_strong_bear(opens[idx], highs[idx], lows[idx], closes[idx], min_body_ratio)
+				is_strong_bear(
+					opens[idx],
+					highs[idx],
+					lows[idx],
+					closes[idx],
+					min_body_ratio,
+				)
 			};
 			if !strong {
 				valid = false;
@@ -680,12 +724,24 @@ fn outside_internal(
 			is_bear(opens[i - 2], closes[i - 2])
 				&& opens[i - 1] <= closes[i - 2]
 				&& closes[i - 1] >= opens[i - 2]
-				&& is_strong_bull(opens[i - 1], highs[i - 1], lows[i - 1], closes[i - 1], min_body_ratio)
+				&& is_strong_bull(
+					opens[i - 1],
+					highs[i - 1],
+					lows[i - 1],
+					closes[i - 1],
+					min_body_ratio,
+				)
 		} else {
 			is_bull(opens[i - 2], closes[i - 2])
 				&& opens[i - 1] >= closes[i - 2]
 				&& closes[i - 1] <= opens[i - 2]
-				&& is_strong_bear(opens[i - 1], highs[i - 1], lows[i - 1], closes[i - 1], min_body_ratio)
+				&& is_strong_bear(
+					opens[i - 1],
+					highs[i - 1],
+					lows[i - 1],
+					closes[i - 1],
+					min_body_ratio,
+				)
 		};
 
 		let confirmation = if bullish {
@@ -730,13 +786,23 @@ pub fn abandoned_baby(
 			continue;
 		}
 
-		let bullish = is_strong_bear(first_open, highs[i - 2], lows[i - 2], first_close, min_body_ratio)
-			&& highs[i - 1] < first_close
+		let bullish = is_strong_bear(
+			first_open,
+			highs[i - 2],
+			lows[i - 2],
+			first_close,
+			min_body_ratio,
+		) && highs[i - 1] < first_close
 			&& lows[i] > highs[i - 1]
 			&& is_strong_bull(third_open, highs[i], lows[i], third_close, min_body_ratio);
 
-		let bearish = is_strong_bull(first_open, highs[i - 2], lows[i - 2], first_close, min_body_ratio)
-			&& lows[i - 1] > first_close
+		let bearish = is_strong_bull(
+			first_open,
+			highs[i - 2],
+			lows[i - 2],
+			first_close,
+			min_body_ratio,
+		) && lows[i - 1] > first_close
 			&& highs[i] < lows[i - 1]
 			&& is_strong_bear(third_open, highs[i], lows[i], third_close, min_body_ratio);
 
@@ -805,44 +871,73 @@ mod tests {
 		// (upper shadow 0.05 is clearly below the 0.1 body so the float
 		// comparison `short_shadow > b` can't misfire.)
 		let (o, h, l, c) = after_downtrend(bar(9.1, 9.25, 8.5, 9.2));
-		signal_at(&hammer(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, 1.0);
+		signal_at(
+			&hammer(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			1.0,
+		);
 
 		// Inverted hammer after a decline -> bullish.
 		let (o, h, l, c) = after_downtrend(bar(9.1, 9.9, 9.05, 9.2));
-		signal_at(&inverted_hammer(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, 1.0);
+		signal_at(
+			&inverted_hammer(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			1.0,
+		);
 
 		// Hanging man after an advance -> bearish.
 		let (o, h, l, c) = after_uptrend(bar(10.8, 10.87, 10.5, 10.85));
-		signal_at(&hanging_man(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, -1.0);
+		signal_at(
+			&hanging_man(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			-1.0,
+		);
 
 		// Shooting star after an advance -> bearish.
 		let (o, h, l, c) = after_uptrend(bar(10.8, 11.7, 10.75, 10.86));
-		signal_at(&shooting_star(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, -1.0);
+		signal_at(
+			&shooting_star(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			-1.0,
+		);
 
 		// Spinning top after a decline -> bullish.
 		let (o, h, l, c) = after_downtrend(bar(9.1, 9.8, 8.85, 9.2));
-		signal_at(&spinning_top(&o, &h, &l, &c, None, Some(3)).unwrap(), 4, 1.0);
+		signal_at(
+			&spinning_top(&o, &h, &l, &c, None, Some(3)).unwrap(),
+			4,
+			1.0,
+		);
 
 		// Long-legged doji after a decline -> bullish.
 		let (o, h, l, c) = after_downtrend(bar(9.05, 9.95, 8.9, 9.1));
-		signal_at(&long_legged_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, 1.0);
+		signal_at(
+			&long_legged_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			1.0,
+		);
 
 		// Dragonfly doji after a decline -> bullish.
 		let (o, h, l, c) = after_downtrend(bar(9.08, 9.11, 8.9, 9.1));
-		signal_at(&dragonfly_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, 1.0);
+		signal_at(
+			&dragonfly_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			1.0,
+		);
 
 		// Gravestone doji after an advance -> bearish.
 		let (o, h, l, c) = after_uptrend(bar(9.10, 9.30, 9.095, 9.09));
-		signal_at(&gravestone_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(), 4, -1.0);
+		signal_at(
+			&gravestone_doji(&o, &h, &l, &c, None, None, Some(3)).unwrap(),
+			4,
+			-1.0,
+		);
 	}
 
 	#[test]
 	fn two_candle_patterns() {
 		// Bullish harami: small bull inside a prior bear body.
-		let (o, h, l, c) = ohlc(&[
-			bar(10.0, 10.5, 9.5, 9.6),
-			bar(9.6, 9.75, 9.55, 9.7),
-		]);
+		let (o, h, l, c) = ohlc(&[bar(10.0, 10.5, 9.5, 9.6), bar(9.6, 9.75, 9.55, 9.7)]);
 		signal_at(&bullish_harami(&o, &h, &l, &c, None).unwrap(), 1, 1.0);
 
 		// Bearish harami: small bear inside a prior bull body.
@@ -850,17 +945,11 @@ mod tests {
 		signal_at(&bearish_harami(&o, &h, &l, &c, None).unwrap(), 1, -1.0);
 
 		// Piercing line.
-		let (o, h, l, c) = ohlc(&[
-			bar(10.0, 10.3, 9.4, 9.5),
-			bar(9.3, 9.8, 9.2, 9.85),
-		]);
+		let (o, h, l, c) = ohlc(&[bar(10.0, 10.3, 9.4, 9.5), bar(9.3, 9.8, 9.2, 9.85)]);
 		signal_at(&piercing_line(&o, &h, &l, &c).unwrap(), 1, 1.0);
 
 		// Dark cloud cover.
-		let (o, h, l, c) = ohlc(&[
-			bar(9.5, 9.8, 9.2, 10.0),
-			bar(10.3, 10.4, 9.6, 9.7),
-		]);
+		let (o, h, l, c) = ohlc(&[bar(9.5, 9.8, 9.2, 10.0), bar(10.3, 10.4, 9.6, 9.7)]);
 		signal_at(&dark_cloud_cover(&o, &h, &l, &c).unwrap(), 1, -1.0);
 
 		// Tweezer bottom after a decline.
@@ -948,6 +1037,10 @@ mod tests {
 			bar(9.78, 9.83, 9.72, 9.775),
 			bar(9.6, 9.62, 9.1, 9.2),
 		]);
-		signal_at(&abandoned_baby(&o, &h, &l, &c, None, None).unwrap(), 2, -1.0);
+		signal_at(
+			&abandoned_baby(&o, &h, &l, &c, None, None).unwrap(),
+			2,
+			-1.0,
+		);
 	}
 }

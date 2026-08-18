@@ -82,15 +82,9 @@ pub fn rectangle(
 		// Prior trend direction before the rectangle.
 		let prior_move = (closes[start] - closes[trend_start]) / closes[trend_start];
 
-		if prior_move > min_trend
-			&& closes[i - 1] <= resistance
-			&& closes[i] > resistance
-		{
+		if prior_move > min_trend && closes[i - 1] <= resistance && closes[i] > resistance {
 			results[i] = 1.0;
-		} else if prior_move < -min_trend
-			&& closes[i - 1] >= support
-			&& closes[i] < support
-		{
+		} else if prior_move < -min_trend && closes[i - 1] >= support && closes[i] < support {
 			results[i] = -1.0;
 		}
 	}

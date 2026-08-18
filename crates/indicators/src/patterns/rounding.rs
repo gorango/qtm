@@ -16,7 +16,15 @@ pub fn rounding_bottom(
 	curvature_tolerance: Option<f64>,
 	lookback: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
-	rounding_internal(opens, highs, lows, closes, true, curvature_tolerance, lookback)
+	rounding_internal(
+		opens,
+		highs,
+		lows,
+		closes,
+		true,
+		curvature_tolerance,
+		lookback,
+	)
 }
 
 /// Rounding top (bearish reversal).
@@ -31,7 +39,15 @@ pub fn rounding_top(
 	curvature_tolerance: Option<f64>,
 	lookback: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
-	rounding_internal(opens, highs, lows, closes, false, curvature_tolerance, lookback)
+	rounding_internal(
+		opens,
+		highs,
+		lows,
+		closes,
+		false,
+		curvature_tolerance,
+		lookback,
+	)
 }
 
 fn rounding_internal(
@@ -122,7 +138,10 @@ mod tests {
 
 		assert!(signals.iter().any(|&s| s > 0.5), "no bullish signal");
 		let idx = signals.iter().position(|&s| s > 0.5).unwrap();
-		assert!(idx >= 80, "signal should fire after the saucer completes, got {idx}");
+		assert!(
+			idx >= 80,
+			"signal should fire after the saucer completes, got {idx}"
+		);
 	}
 
 	#[test]
@@ -145,6 +164,9 @@ mod tests {
 
 		assert!(signals.iter().any(|&s| s < -0.5), "no bearish signal");
 		let idx = signals.iter().position(|&s| s < -0.5).unwrap();
-		assert!(idx >= 80, "signal should fire after the rounding top completes, got {idx}");
+		assert!(
+			idx >= 80,
+			"signal should fire after the rounding top completes, got {idx}"
+		);
 	}
 }

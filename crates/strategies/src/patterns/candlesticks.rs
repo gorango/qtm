@@ -71,28 +71,70 @@ pub fn candlestick_reversal_strategy(
 	// already encodes direction in the sign (+1 bullish, -1 bearish).
 	let signals: Vec<f64> = match pattern {
 		"hammer" => indicators_core::hammer(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"inverted_hammer" => indicators_core::inverted_hammer(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"hanging_man" => indicators_core::hanging_man(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"shooting_star" => indicators_core::shooting_star(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"spinning_top" => {
 			indicators_core::spinning_top(opens, highs, lows, closes, body_ratio, trend_bars)?
 		}
 		"long_legged_doji" => indicators_core::long_legged_doji(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"dragonfly_doji" => indicators_core::dragonfly_doji(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"gravestone_doji" => indicators_core::gravestone_doji(
-			opens, highs, lows, closes, body_ratio, shadow_multiplier, trend_bars,
+			opens,
+			highs,
+			lows,
+			closes,
+			body_ratio,
+			shadow_multiplier,
+			trend_bars,
 		)?,
 		"bullish_harami" => {
 			indicators_core::bullish_harami(opens, highs, lows, closes, body_ratio)?
@@ -126,9 +168,9 @@ pub fn candlestick_reversal_strategy(
 		"three_outside_down" => {
 			indicators_core::three_outside_down(opens, highs, lows, closes, min_body_ratio)?
 		}
-		"abandoned_baby" => indicators_core::abandoned_baby(
-			opens, highs, lows, closes, body_ratio, min_body_ratio,
-		)?,
+		"abandoned_baby" => {
+			indicators_core::abandoned_baby(opens, highs, lows, closes, body_ratio, min_body_ratio)?
+		}
 		other => {
 			return Err(StrategyError::ConfigError(format!(
 				"Unknown candlestick pattern '{other}'. Valid patterns: {}",
@@ -139,7 +181,15 @@ pub fn candlestick_reversal_strategy(
 
 	Ok(signals
 		.iter()
-		.map(|&s| if s > 0.5 { 1 } else if s < -0.5 { -1 } else { 0 })
+		.map(|&s| {
+			if s > 0.5 {
+				1
+			} else if s < -0.5 {
+				-1
+			} else {
+				0
+			}
+		})
 		.collect())
 }
 

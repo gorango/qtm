@@ -15,7 +15,16 @@ pub fn triple_top(
 	min_separation: Option<u32>,
 	lookaround: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
-	triple_top_bottom_internal(opens, highs, lows, closes, false, tolerance, min_separation, lookaround)
+	triple_top_bottom_internal(
+		opens,
+		highs,
+		lows,
+		closes,
+		false,
+		tolerance,
+		min_separation,
+		lookaround,
+	)
 }
 
 /// Triple bottom (bullish reversal).
@@ -31,7 +40,16 @@ pub fn triple_bottom(
 	min_separation: Option<u32>,
 	lookaround: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
-	triple_top_bottom_internal(opens, highs, lows, closes, true, tolerance, min_separation, lookaround)
+	triple_top_bottom_internal(
+		opens,
+		highs,
+		lows,
+		closes,
+		true,
+		tolerance,
+		min_separation,
+		lookaround,
+	)
 }
 
 fn triple_top_bottom_internal(
@@ -95,7 +113,9 @@ fn triple_top_bottom_internal(
 		}
 
 		let neckline = if bullish {
-			highs[p1..=p3].iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b))
+			highs[p1..=p3]
+				.iter()
+				.fold(f64::NEG_INFINITY, |a, &b| a.max(b))
 		} else {
 			lows[p1..=p3].iter().fold(f64::INFINITY, |a, &b| a.min(b))
 		};
@@ -140,7 +160,10 @@ mod tests {
 
 		assert!(signals.iter().any(|&s| s < -0.5), "no bearish signal");
 		let idx = signals.iter().position(|&s| s < -0.5).unwrap();
-		assert!(idx > 50, "signal should fire after the third peak, got {idx}");
+		assert!(
+			idx > 50,
+			"signal should fire after the third peak, got {idx}"
+		);
 	}
 
 	#[test]
@@ -157,10 +180,14 @@ mod tests {
 		let closes = series_from_pivots(&pivots, 80);
 		let (opens, highs, lows, closes) = ohlc_from_series(&closes);
 
-		let signals = triple_bottom(&opens, &highs, &lows, &closes, None, Some(5), Some(2)).unwrap();
+		let signals =
+			triple_bottom(&opens, &highs, &lows, &closes, None, Some(5), Some(2)).unwrap();
 
 		assert!(signals.iter().any(|&s| s > 0.5), "no bullish signal");
 		let idx = signals.iter().position(|&s| s > 0.5).unwrap();
-		assert!(idx > 50, "signal should fire after the third trough, got {idx}");
+		assert!(
+			idx > 50,
+			"signal should fire after the third trough, got {idx}"
+		);
 	}
 }

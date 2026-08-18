@@ -18,7 +18,15 @@ pub fn diamond_top(
 	lookback: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	diamond_internal(
-		opens, highs, lows, closes, false, min_points, tolerance, breakout_threshold, lookback,
+		opens,
+		highs,
+		lows,
+		closes,
+		false,
+		min_points,
+		tolerance,
+		breakout_threshold,
+		lookback,
 	)
 }
 
@@ -38,7 +46,15 @@ pub fn diamond_bottom(
 	lookback: Option<u32>,
 ) -> IndicatorResult<Vec<f64>> {
 	diamond_internal(
-		opens, highs, lows, closes, true, min_points, tolerance, breakout_threshold, lookback,
+		opens,
+		highs,
+		lows,
+		closes,
+		true,
+		min_points,
+		tolerance,
+		breakout_threshold,
+		lookback,
 	)
 }
 
@@ -150,7 +166,8 @@ fn diamond_internal(
 
 		if bullish {
 			let prev_resistance = high_right[1] + high_right[0] * (i - 1) as f64;
-			if closes[i - 1] <= prev_resistance && closes[i] > resistance * (1.0 + breakout_threshold)
+			if closes[i - 1] <= prev_resistance
+				&& closes[i] > resistance * (1.0 + breakout_threshold)
 			{
 				results[i] = 1.0;
 			}
@@ -212,21 +229,15 @@ mod tests {
 		let closes = series_from_pivots(&pivots, 110);
 		let (opens, highs, lows, closes) = ohlc_from_series(&closes);
 
-		let signals = diamond_top(
-			&opens,
-			&highs,
-			&lows,
-			&closes,
-			None,
-			None,
-			None,
-			Some(60),
-		)
-		.unwrap();
+		let signals =
+			diamond_top(&opens, &highs, &lows, &closes, None, None, None, Some(60)).unwrap();
 
 		assert!(signals.iter().any(|&s| s < -0.5), "no bearish signal");
 		let idx = signals.iter().position(|&s| s < -0.5).unwrap();
-		assert!(idx > 80, "signal should fire after the diamond completes, got {idx}");
+		assert!(
+			idx > 80,
+			"signal should fire after the diamond completes, got {idx}"
+		);
 	}
 
 	#[test]
@@ -252,20 +263,14 @@ mod tests {
 		let closes = series_from_pivots(&pivots, 110);
 		let (opens, highs, lows, closes) = ohlc_from_series(&closes);
 
-		let signals = diamond_bottom(
-			&opens,
-			&highs,
-			&lows,
-			&closes,
-			None,
-			None,
-			None,
-			Some(60),
-		)
-		.unwrap();
+		let signals =
+			diamond_bottom(&opens, &highs, &lows, &closes, None, None, None, Some(60)).unwrap();
 
 		assert!(signals.iter().any(|&s| s > 0.5), "no bullish signal");
 		let idx = signals.iter().position(|&s| s > 0.5).unwrap();
-		assert!(idx > 80, "signal should fire after the diamond completes, got {idx}");
+		assert!(
+			idx > 80,
+			"signal should fire after the diamond completes, got {idx}"
+		);
 	}
 }
