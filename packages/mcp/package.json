@@ -1,0 +1,54 @@
+{
+	"name": "@quantamental/mcp",
+	"version": "0.1.0",
+	"description": "MCP server exposing quantamental analysis tools — indicators, factors, and strategies — over stdio",
+	"keywords": [
+		"quant",
+		"quantamental",
+		"finance",
+		"indicators",
+		"factors",
+		"strategies",
+		"mcp",
+		"model-context-protocol"
+	],
+	"homepage": "https://github.com/gorango/qtm",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gorango/qtm",
+		"directory": "packages/mcp"
+	},
+	"bin": {
+		"quantamental-mcp": "./src/index.ts"
+	},
+	"files": [
+		"src"
+	],
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"start": "bun run src/index.ts",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.32.0",
+		"@quantamental/core": "workspace:*",
+		"@quantamental/tools": "workspace:*",
+		"zod": "^4.6.5"
+	},
+	"devDependencies": {
+		"@types/node": "^25.9.9",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.3"
+	},
+	"engines": {
+		"node": ">=22",
+		"bun": ">=1.0.0"
+	}
+}
