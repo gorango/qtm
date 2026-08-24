@@ -8,10 +8,15 @@ dependencies = [
     "polars>=0.20",
     "optuna>=3.0",
     "lightgbm>=4.0",
+    "quantamental",
 ]
 
 # Scripts-only project: sibling modules (binance_loader, screen, ...) are
-# imported from the repo layout, and `quantamental` is installed from
-# ../../bindings/py (see the research-setup justfile recipe).
+# imported from the repo layout, and `quantamental` builds from this
+# repository's own bindings/py (NOT PyPI: the 0.1.0 wheel predates the
+# pattern-detector batch and several bug fixes).  First `uv run` compiles
+# it via maturin (~1-3 min, cached after).
+[tool.uv.sources]
+quantamental = { path = "../../bindings/py" }
 [tool.setuptools]
 packages = []

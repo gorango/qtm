@@ -4,5 +4,8 @@
 # Hydrated 1m OHLCV parquet per symbol (binance_loader writes here; it IS the cache)
 data/
 
+# Sweep checkpoints / optuna study DBs
+_cache/
+
 __pycache__/
 *.pyc
