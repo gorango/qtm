@@ -33,13 +33,13 @@ test('strategy registry is populated', () => {
 	assert.ok(registry && typeof registry === 'object')
 	const ids = Object.keys(registry.strategies ?? {})
 	assert.ok(ids.length > 0, 'expected at least one registered strategy')
-	assert.ok(ids.includes('buyAndHold'), 'expected buyAndHold to be registered')
+	assert.ok(ids.includes('buy_and_hold'), 'expected buyAndHold to be registered')
 })
 
 test('registry strategies are dispatchable by id via runStrategy', () => {
 	assert.equal(typeof binding.runStrategy, 'function')
 
-	const signals = binding.runStrategy('buyAndHold', { closes: [100, 101, 102, 103, 104] }, null)
+	const signals = binding.runStrategy('buy_and_hold', { closes: [100, 101, 102, 103, 104] }, null)
 	assert.deepEqual(signals, [1, 0, 0, 0, 0])
 
 	assert.throws(
@@ -120,7 +120,7 @@ test('runStrategy applies camelCase config keys (no silent drop)', () => {
 
 	// Correct-length camelCase key must be honored and produce a signal array.
 	const out = binding.runStrategy(
-		'correlation-pair-trading',
+		'correlation_pair_trading',
 		{ closes },
 		{ secondCloses },
 	)
@@ -130,14 +130,14 @@ test('runStrategy applies camelCase config keys (no silent drop)', () => {
 	// Deliberately wrong-length `secondCloses` must be applied (not dropped) and
 	// therefore surface the length-mismatch validation error.
 	assert.throws(
-		() => binding.runStrategy('correlation-pair-trading', { closes }, { secondCloses: [1, 2, 3] }),
+		() => binding.runStrategy('correlation_pair_trading', { closes }, { secondCloses: [1, 2, 3] }),
 		/secondCloses must have the same length as closes/,
 	)
 
 	// The snake_case key is outside the strict config contract and now hard-fails
 	// instead of being silently dropped.
 	assert.throws(
-		() => binding.runStrategy('correlation-pair-trading', { closes }, { second_closes: secondCloses }),
+		() => binding.runStrategy('correlation_pair_trading', { closes }, { second_closes: secondCloses }),
 		/Invalid config/,
 	)
 })
@@ -146,7 +146,7 @@ test('runStrategy rejects unknown config keys', () => {
 	// serde deny_unknown_fields: a config key that is not a struct field must
 	// throw rather than silently run with defaults.
 	assert.throws(
-		() => binding.runStrategy('buyAndHold', { closes: [1, 2, 3] }, { noSuchKey: 1 }),
+		() => binding.runStrategy('buy_and_hold', { closes: [1, 2, 3] }, { noSuchKey: 1 }),
 		/Invalid config/,
 	)
 })
