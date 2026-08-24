@@ -44,9 +44,7 @@ INDICATOR_FEATURES = {
     "bbpos": lambda h, low, c, v: _band_pos(q.bollinger_bands(c), c),
     "bbwidth": lambda h, low, c, v: _band_width(q.bollinger_bands(c)),
     "atrp": lambda h, low, c, v: (
-        np.asarray(
-            q.atr(h, low, c)["atr_line"], dtype=float
-        )
+        np.asarray(q.atr(h, low, c)["atr_line"], dtype=float)
         / np.asarray(c, dtype=float)
     ),
     "mfi": lambda h, low, c, v: q.money_flow_index(h, low, c, v),
@@ -55,9 +53,7 @@ INDICATOR_FEATURES = {
     "stochd": lambda h, low, c, v: q.stochastic_oscillator(h, low, c)["d"],
     "adx": lambda h, low, c, v: q.adx(h, low, c)["adx"],
     "dispread": lambda h, low, c, v: (
-        np.asarray(
-            q.adx(h, low, c)["plus_di"], dtype=float
-        )
+        np.asarray(q.adx(h, low, c)["plus_di"], dtype=float)
         - np.asarray(q.adx(h, low, c)["minus_di"], dtype=float)
     ),
     "macdh": lambda h, low, c, v: q.macd(c)["histogram"],

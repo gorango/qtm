@@ -75,9 +75,7 @@ def main() -> None:
         share = S.lottery_share(rets)
         pos = neg = 0
         for (_y, _m), lo, hi in ranges:
-            m_nb, _ = S.net_bps(
-                fwd, anchor, ts_by, sigs, [((_y, _m), lo, hi)], COST
-            )
+            m_nb, _ = S.net_bps(fwd, anchor, ts_by, sigs, [((_y, _m), lo, hi)], COST)
             if m_nb > 0:
                 pos += 1
             elif m_nb < 0:

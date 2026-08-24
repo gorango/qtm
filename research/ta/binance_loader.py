@@ -144,7 +144,9 @@ def _fetch(url: str, retries: int = 3) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "qtm-traditional/0.1"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "qtm-traditional/0.1"}
+            )
             with urllib.request.urlopen(req, timeout=60) as resp:
                 return resp.read()
         except urllib.error.HTTPError as e:
@@ -222,8 +224,13 @@ def _covered_months(df: pl.DataFrame) -> set[tuple[int, int]]:
         return set()
     ts = df["timestamp"].to_numpy()
     # month anchor from the ms epoch, UTC
-    months = {(datetime.fromtimestamp(t / 1000, tz=timezone.utc).year,
-               datetime.fromtimestamp(t / 1000, tz=timezone.utc).month) for t in ts}
+    months = {
+        (
+            datetime.fromtimestamp(t / 1000, tz=timezone.utc).year,
+            datetime.fromtimestamp(t / 1000, tz=timezone.utc).month,
+        )
+        for t in ts
+    }
     return months
 
 
@@ -304,11 +311,16 @@ def _clean(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def hydrate_all(start: str, end: str, rest_only: bool = False, universe: str | None = None) -> None:
+def hydrate_all(
+    start: str, end: str, rest_only: bool = False, universe: str | None = None
+) -> None:
     syms = symbols(universe)
-    print(f"hydrating {len(syms)} symbols over {start}..{end} "
-          f"({'REST tail' if rest_only else 'vision backfill + REST tail'})",
-          file=sys.stderr, flush=True)
+    print(
+        f"hydrating {len(syms)} symbols over {start}..{end} "
+        f"({'REST tail' if rest_only else 'vision backfill + REST tail'})",
+        file=sys.stderr,
+        flush=True,
+    )
     ok, failed = 0, []
     for i, canon in enumerate(syms, 1):
         try:
@@ -348,7 +360,9 @@ def _resample(df: pl.DataFrame, tf: str, drop_partial: bool) -> pl.DataFrame:
         .with_columns((pl.col("_b") * bar).alias("timestamp"))
         .drop("_b")
     )
-    rs = rs.with_columns([pl.col(c).cast(pl.Float32) for c in ("open", "high", "low", "close", "volume")])
+    rs = rs.with_columns(
+        [pl.col(c).cast(pl.Float32) for c in ("open", "high", "low", "close", "volume")]
+    )
     return rs.sort("timestamp")
 
 
@@ -381,9 +395,8 @@ def load_price_bars(
         if not os.path.exists(path):
             missing.append(canon)
             continue
-        df = (
-            pl.read_parquet(path)
-            .filter((pl.col("timestamp") >= sm) & (pl.col("timestamp") <= em))
+        df = pl.read_parquet(path).filter(
+            (pl.col("timestamp") >= sm) & (pl.col("timestamp") <= em)
         )
         if df.is_empty():
             continue
@@ -447,7 +460,9 @@ def main() -> None:
         action="store_true",
         help="REST-only incremental tail refresh (daily maintenance)",
     )
-    ap.add_argument("--start", default="2023-01-01", help="backfill start (default 2023-01-01)")
+    ap.add_argument(
+        "--start", default="2023-01-01", help="backfill start (default 2023-01-01)"
+    )
     ap.add_argument("--end", default=None, help="backfill end date (default: today)")
     ap.add_argument(
         "--universe",

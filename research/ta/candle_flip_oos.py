@@ -81,7 +81,9 @@ def main() -> None:
         flush=True,
     )
     uni_d = S.load_universe("1h", args.discovery_start, args.discovery_end)
-    print(f"Loading OOS {args.oos_start}..{args.oos_end}...", file=sys.stderr, flush=True)
+    print(
+        f"Loading OOS {args.oos_start}..{args.oos_end}...", file=sys.stderr, flush=True
+    )
     uni_o = S.load_universe("1h", args.oos_start, args.oos_end)
 
     print(

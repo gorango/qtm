@@ -26,6 +26,7 @@ lint:
 # Format the Rust code.
 fmt:
 	cargo fmt
+	cd research/ta && uv run ruff format .
 
 # Fast compile check (no tests).
 check:

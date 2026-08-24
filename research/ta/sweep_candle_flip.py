@@ -146,7 +146,8 @@ def main() -> None:
             pos = sum(
                 1
                 for (_y, _m), lo, hi in fwd_ranges
-                if S.net_bps(fwd, anchor, ts_by, sigs, [((_y, _m), lo, hi)], COST)[0] > 0
+                if S.net_bps(fwd, anchor, ts_by, sigs, [((_y, _m), lo, hi)], COST)[0]
+                > 0
             )
             print(
                 f"      forward lottery {S.lottery_share(rets_f) * 100:.0f}% "
