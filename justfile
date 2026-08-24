@@ -31,11 +31,47 @@ fmt:
 check:
 	cargo check --workspace
 
+# Release pre-flight: everything that must be true before stamping a tag.
+# Runs standalone too: clean tree, rust tests under -D warnings (CI
+# parity), python binding tests, codegen snapshot freshness, js build
+# with a duplicate-export scan of the generated index.js (the node smoke
+# tests require the .node binary directly, so they never see index.js
+# problems), then the js smoke suite.
+preflight:
+	#!/bin/bash
+	set -euo pipefail
+	git diff-index --quiet HEAD -- || {
+		echo "working tree is dirty -- commit or stash before releasing" >&2
+		exit 1
+	}
+	echo "pre-flight: tree clean"
+	RUSTFLAGS="-D warnings" cargo test --workspace --all-features --quiet
+	echo "pre-flight: rust tests green (-D warnings)"
+	(cd bindings/py && uv sync && uv run python -m pytest -q)
+	echo "pre-flight: python bindings green"
+	cargo run -p codegen -- --check
+	echo "pre-flight: codegen snapshot fresh"
+	(cd bindings/js && bun install --frozen-lockfile && bun run build)
+	node -e "
+		const fs = require('fs')
+		const js = fs.readFileSync('bindings/js/index.js', 'utf8')
+		const m = js.match(/const \{([\s\S]*?)\} = nativeBinding/)
+		const names = m[1].split(',').map((s) => s.trim().split(':')[0].trim()).filter(Boolean)
+		const dups = [...new Set(names.filter((n, i) => names.indexOf(n) !== i))]
+		if (dups.length) {
+			console.error('duplicate exports:', dups.join(', '))
+			process.exit(1)
+		}
+		console.log('exports:', names.length, '(unique)')
+	"
+	(cd bindings/js && node --test ./index.test.js)
+	echo "pre-flight: js smoke green"
+
 # Stamp <version> across every manifest, refresh the uv lockfiles, and
 # verify agreement. Then: commit, `git tag v<version>`, push with tags --
 # the three publish workflows fire on the tag.
 #   just release 0.2.0
-release version:
+release version: preflight
 	#!/bin/bash
 	set -euo pipefail
 	if ! [[ "{{version}}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -54,6 +90,8 @@ release version:
 	for f in bindings/js/package.json packages/tools/package.json; do
 		sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"{{version}}\"/" "$f"
 	done
+	# sync member versions into the workspace lockfile (external pins untouched)
+	cargo update --workspace --quiet
 	(cd bindings/py && uv lock)
 	(cd research/ta && uv lock)
 	fail=0
