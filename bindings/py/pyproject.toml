@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "quantamental"
-version = "0.2.1"
+version = "0.2.2"
 description = "Unified native Rust quantamental analysis — factors, indicators, and strategies"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.21"]
