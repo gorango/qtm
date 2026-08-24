@@ -926,6 +926,7 @@ pub fn triangles<'py>(
 }
 
 #[pyfunction]
+#[pyo3(signature = (opens, highs, lows, closes, min_points = None, slope_tolerance = None, lookback = None))]
 #[allow(clippy::too_many_arguments)]
 pub fn wedges<'py>(
 	py: Python<'py>,
@@ -935,6 +936,7 @@ pub fn wedges<'py>(
 	closes: F64Arr1<'py>,
 	min_points: Option<u32>,
 	slope_tolerance: Option<f64>,
+	lookback: Option<u32>,
 ) -> PyResultO {
 	let (o, h, l, c) = (
 		opens.as_array().to_vec(),
@@ -943,7 +945,15 @@ pub fn wedges<'py>(
 		closes.as_array().to_vec(),
 	);
 	validate_arrays([(&o, "opens"), (&h, "highs"), (&l, "lows"), (&c, "closes")])?;
-	let out = result_or_err(wedges_core(&o, &h, &l, &c, min_points, slope_tolerance))?;
+	let out = result_or_err(wedges_core(
+		&o,
+		&h,
+		&l,
+		&c,
+		min_points,
+		slope_tolerance,
+		lookback,
+	))?;
 	Ok(f64_out(py, &out))
 }
 

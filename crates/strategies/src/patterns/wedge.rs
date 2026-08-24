@@ -23,7 +23,8 @@ use strategies_proc_macro::strategy;
 	opt_params = r#"[
 		{"param_name": "minPoints", "min": 3, "max": 10, "step": 1},
 		{"param_name": "slopeTolerance", "min": 0.0, "max": 0.01, "step": 0.0001},
-		{"param_name": "minDataLength", "min": 15, "max": 50, "step": 5}
+		{"param_name": "minDataLength", "min": 15, "max": 50, "step": 5},
+		{"param_name": "lookback", "min": 60, "max": 240, "step": 20}
 	]"#
 )]
 pub fn wedge_strategy(
@@ -37,6 +38,7 @@ pub fn wedge_strategy(
 	let min_points = config.min_points.unwrap_or(4) as usize;
 	let slope_tolerance = config.slope_tolerance.unwrap_or(0.0001);
 	let min_data_length = config.min_data_length.unwrap_or(20) as usize;
+	let lookback = config.lookback.unwrap_or(120);
 
 	let data_len = highs.len();
 
@@ -51,6 +53,7 @@ pub fn wedge_strategy(
 		closes,
 		Some(min_points as u32),
 		Some(slope_tolerance),
+		Some(lookback),
 	)?;
 
 	let mut result = Vec::with_capacity(data_len);

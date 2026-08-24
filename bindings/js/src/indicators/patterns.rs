@@ -242,6 +242,7 @@ pub fn wedges(
 	closes: Float64Array,
 	min_points: Option<u32>,
 	slope_tolerance: Option<f64>,
+	lookback: Option<u32>,
 ) -> Result<Vec<f64>> {
 	indicators_core::wedges(
 		opens.as_ref(),
@@ -250,6 +251,7 @@ pub fn wedges(
 		closes.as_ref(),
 		min_points,
 		slope_tolerance,
+		lookback,
 	)
 	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

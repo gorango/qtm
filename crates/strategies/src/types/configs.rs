@@ -335,6 +335,7 @@ pub struct WedgeConfig {
 	pub min_points: Option<u32>,
 	pub slope_tolerance: Option<f64>,
 	pub min_data_length: Option<u32>,
+	pub lookback: Option<u32>,
 }
 
 impl Default for WedgeConfig {
@@ -343,6 +344,7 @@ impl Default for WedgeConfig {
 			min_points: Some(4),
 			slope_tolerance: Some(0.0001),
 			min_data_length: Some(20),
+			lookback: Some(120),
 		}
 	}
 }
