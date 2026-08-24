@@ -23,9 +23,7 @@ use indicators_core::{
 		po as po_core, projection_oscillator as po_alias, POResult,
 	},
 	volatility::true_range::{tr as tr_core, true_range as tr_alias, TrueRangeResult},
-	volatility::ttm_squeeze::{
-		ttm_squeeze as tts_core, TTMSqueezeResult,
-	},
+	volatility::ttm_squeeze::{ttm_squeeze as tts_core, TTMSqueezeResult},
 	volatility::variance::{rolling_variance as rv_core, variance as var_core, VarianceConfig},
 	volatility::z_score::{z_score as zscore_alias, zs as zs_core, ZScoreConfig},
 };
