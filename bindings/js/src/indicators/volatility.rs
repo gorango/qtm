@@ -24,7 +24,7 @@ use indicators_core::{
 	},
 	volatility::true_range::{tr as tr_core, true_range as tr_alias, TrueRangeResult},
 	volatility::ttm_squeeze::{
-		ttm_squeeze as tts_core, ttm_squeeze as tts_alias, TTMSqueezeResult,
+		ttm_squeeze as tts_core, TTMSqueezeResult,
 	},
 	volatility::variance::{rolling_variance as rv_core, variance as var_core, VarianceConfig},
 	volatility::z_score::{z_score as zscore_alias, zs as zs_core, ZScoreConfig},
@@ -302,28 +302,6 @@ pub fn ttm_squeeze(
 	kc_period: Option<u32>,
 ) -> Result<TTMSqueezeResult> {
 	tts_core(
-		highs.as_ref(),
-		lows.as_ref(),
-		closes.as_ref(),
-		bb_period,
-		bb_std_dev,
-		kc_period,
-	)
-	.map_err(|e| napi::Error::from_reason(e.to_string()))
-}
-
-/// Ttm Squeeze (camelCase alias)
-#[napi]
-#[allow(non_snake_case)]
-pub fn ttmSqueeze(
-	highs: Float64Array,
-	lows: Float64Array,
-	closes: Float64Array,
-	bb_period: Option<u32>,
-	bb_std_dev: Option<f64>,
-	kc_period: Option<u32>,
-) -> Result<TTMSqueezeResult> {
-	tts_alias(
 		highs.as_ref(),
 		lows.as_ref(),
 		closes.as_ref(),
