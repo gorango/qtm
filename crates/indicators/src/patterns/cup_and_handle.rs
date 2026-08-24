@@ -121,7 +121,7 @@ mod tests {
 	/// `rim_price`, then `handle` bars pulling back, then a breakout bar.
 	fn cup_series(bottom: f64, rim_price: f64, handle_low: f64) -> Vec<[f64; 4]> {
 		let mut bars: Vec<[f64; 4]> = Vec::new();
-		let mut price = rim_price + 3.0;
+		let price = rim_price + 3.0;
 		// Descent (bars 0..10): drift down to the bottom.
 		for i in 0..10 {
 			let p = price - (price - bottom) * ((i + 1) as f64 / 11.0);
