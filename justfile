@@ -1,23 +1,23 @@
 set shell := ["bash", "-cu"]
 
-default: test
+default:
+	@just --list
 
-# Create the Python dev environment (first-time setup).
+# Create/sync the bindings/py dev env (uv: wheel build + dev deps).
 setup:
-    python3 -m venv bindings/py/.venv
-    bindings/py/.venv/bin/pip install maturin pytest numpy
+	cd bindings/py && uv sync
 
 # Build everything: Rust core + js (napi) + py (maturin) bindings.
 build:
-    cargo build --workspace --release
-    cd bindings/js && bun run build
-    cd bindings/py && ./.venv/bin/maturin build --features pyo3/abi3-py39
+	cargo build --workspace --release
+	cd bindings/js && bun run build
+	cd bindings/py && uv run maturin build --features pyo3/abi3-py39
 
 # Run all tests: Rust workspace, Python, Node.
 test:
-    cargo test --workspace
-    cd bindings/py && ./.venv/bin/python -m pytest -q
-    cd bindings/js && node --test ./index.test.js
+	cargo test --workspace
+	cd bindings/py && uv run python -m pytest -q
+	cd bindings/js && node --test ./index.test.js
 
 # Lint the Rust code.
 lint:

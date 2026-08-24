@@ -9,6 +9,14 @@ description = "Unified native Rust quantamental analysis — factors, indicators
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.21"]
 
+# Dev environment is uv-managed: `uv sync` builds this project via maturin
+# into .venv and installs the dev group (just setup / just test).
+[dependency-groups]
+dev = [
+	"maturin>=1.7,<2.0",
+	"pytest>=8",
+]
+
 [tool.maturin]
 module-name = "quantamental"
 features = ["pyo3/extension-module", "pyo3/abi3-py39"]
