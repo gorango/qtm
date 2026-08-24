@@ -1,0 +1,33 @@
+# Standalone traditional-strategy screens over Binance OHLCV — zero infra.
+#
+# The justfile lives in research/ta, so recipes run there directly:
+#     cd research/ta && just <recipe>
+#     just -C research/ta <recipe>        # from the repository root
+#
+# `uv run` creates/uses .venv here, installs deps from pyproject.toml and
+# builds the quantamental wheel from ../../bindings/py on first use.
+
+set shell := ["bash", "-cu"]
+
+default:
+	@just --list
+
+# Create/sync the Python env (deps + the quantamental wheel from ../../bindings/py).
+setup:
+	uv sync
+
+# (Re)generate config/symbols.yaml — the hydration universe (CoinGecko × Binance Futures).
+symbols:
+	uv run python config/symbols-sync.py
+
+# Full OHLCV hydration: vision monthly backfill + REST tail.
+data-sync:
+	uv run python binance_loader.py --sync
+
+# Daily incremental tail refresh (REST only).
+data-update:
+	uv run python binance_loader.py --update
+
+# Screen the strategy catalog (IC over the universe).
+screen:
+	uv run python screen.py --all

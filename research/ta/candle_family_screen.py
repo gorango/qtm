@@ -20,7 +20,7 @@ import sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
-import screen as S  # noqa: E402
+import screen as S
 
 PATTERNS = [
     "hammer",

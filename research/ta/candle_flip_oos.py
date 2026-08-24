@@ -24,9 +24,9 @@ import sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
-import numpy as np  # noqa: E402
+import numpy as np
 
-import screen as S  # noqa: E402
+import screen as S
 
 # Candidates pre-registered by their discovery-era bleeds (orig net bps,
 # 2025-07..2026-08 defaults screen — see findings-pattern-batch.md).

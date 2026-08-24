@@ -52,19 +52,17 @@ for _p in (_HERE, _RESEARCH):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from binance_loader import load_price_bars  # noqa: E402
-from indicators import (  # noqa: E402
-    HOUR_MS,
-    ADX_PERIODS,
-    BAR_SECS,
-    FEATURES,
-    INDICATOR_FEATURES,
-    default_warmup,
-    adx_at,
-)
-from screen import rank_ic  # noqa: E402
 
-import quantamental as q  # noqa: E402
+from binance_loader import load_price_bars
+from indicators import (
+    ADX_PERIODS,
+    FEATURES,
+    HOUR_MS,
+    INDICATOR_FEATURES,
+    adx_at,
+    default_warmup,
+)
+from screen import rank_ic
 
 
 def _ms(date_str: str) -> int:
@@ -156,7 +154,6 @@ def volume_tiers(uni: pl.DataFrame) -> dict[str, str]:
     hardcode guesses).  Terciles on the cross-section of symbols."""
     vols = uni.group_by("fsym").agg(pl.col("volume").median().alias("med")).sort("med")
     arr = vols["fsym"].to_numpy()
-    meds = vols["med"].to_numpy()
     n = len(arr)
     lo, hi = int(n * 0.33), int(n * 0.67)
     return {
@@ -399,7 +396,6 @@ def screen_tf(tf: str, args) -> None:
     uni = load_pooled(tf, args.start, args.end, warmup, args.horizon)
     print(f"  bars: {uni.height} symbols-total", file=sys.stderr)
     train, split_ms = split_mask(uni)
-    ts = uni["timestamp"].to_numpy()
     print(f"  train/test split at {split_ms} (60/40 by time)")
 
     tiers = None
@@ -409,13 +405,12 @@ def screen_tf(tf: str, args) -> None:
         tiers = volume_tiers(uni)
 
     feats: dict[str, np.ndarray] = {n: uni[n].to_numpy() for n in FEATURES}
-    fwd = uni["fwd"].to_numpy()
     fwdz = uni["fwdz"].to_numpy()
     cont = uni["cont"].to_numpy()
 
     # ── A. single-feature screen ──
     print(
-        f"\n-- single features: rank IC (fwd) + tail gates (fwdz = vol-norm, cont = trend) --"
+        "\n-- single features: rank IC (fwd) + tail gates (fwdz = vol-norm, cont = trend) --"
     )
     print(
         f"{'feature':12s} {'ic_train':>9s} {'ic_test':>9s} {'stab':>5s} | "
@@ -482,7 +477,7 @@ def screen_tf(tf: str, args) -> None:
         )
 
     # ── C. ridge linear gate ──
-    print(f"\n-- ridge linear gate over all features --")
+    print("\n-- ridge linear gate over all features --")
     for target, y in (("fwdz", fwdz), ("cont", cont)):
         lin = linear_gate(feats, y, train)
         if lin:

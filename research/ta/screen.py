@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from itertools import pairwise
 
 import numpy as np
 import polars as pl
@@ -37,7 +38,7 @@ for _p in (_HERE, _RESEARCH, _VALIDATION):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import quantamental as q  # noqa: E402
+import quantamental as q
 
 HOUR_MS = 3600000
 # Reference symbol for pair/statistics strategies that need a second series.
@@ -165,7 +166,7 @@ def fwd_cols(sig: pl.DataFrame, horizons) -> dict[int, np.ndarray]:
     out = {h: np.full(len(sig), np.nan) for h in horizons}
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(sig)]))
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         t = ts[a:b]
         c = close[a:b]
         for h in horizons:
@@ -204,7 +205,7 @@ def strategy_signals(strategy_id: str, uni: pl.DataFrame) -> pl.DataFrame:
     out = np.zeros(len(uni), dtype=np.int8)
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(uni)]))
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         out[a:b] = sig[sym[a]]
     return pl.DataFrame({"fsym": sym, "timestamp": ts, "signal": out})
 
@@ -236,7 +237,7 @@ def run_strategy_symbol(
     except ValueError as e:
         if "second" not in str(e) or ref_ts.size == 0:
             raise NeedsTwoAssetsError(
-                f"{strategy_id} requires a second asset series ({str(e)})"
+                f"{strategy_id} requires a second asset series ({e!s})"
             ) from e
         # retry with the reference symbol's closes as the second series,
         # as-of aligned to this symbol's bars (gap-safe)
@@ -259,7 +260,7 @@ def signals_by_symbol(
     close = uni["close"].to_numpy()
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(uni)]))
-    by_sym = [(sym[a], a, b) for a, b in zip(bounds[:-1], bounds[1:])]
+    by_sym = [(sym[a], a, b) for a, b in pairwise(bounds)]
 
     ref_mask = sym == REF_SYMBOL
     ref_ts = ts[ref_mask]
@@ -288,7 +289,7 @@ def precompute(uni: pl.DataFrame, horizon: int):
     fwd: dict[str, np.ndarray] = {}
     anchor: dict[str, np.ndarray] = {}
     ts_by: dict[str, np.ndarray] = {}
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         s = sym[a]
         t = ts[a:b]
         c = close[a:b]
@@ -459,9 +460,10 @@ def run_sweep(
             nb = nb * frac - 20.0 * (1.0 - frac)
         return nb
 
-    study_kwargs = dict(
-        direction="maximize", sampler=optuna.samplers.TPESampler(seed=42)
-    )
+    study_kwargs = {
+        "direction": "maximize",
+        "sampler": optuna.samplers.TPESampler(seed=42),
+    }
     if args.storage:
         study = optuna.create_study(
             storage=args.storage,
@@ -585,7 +587,7 @@ def signals_column(
     out = np.zeros(len(uni), dtype=np.int8)
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(uni)]))
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         out[a:b] = sigs[sym[a]]
     return out
 

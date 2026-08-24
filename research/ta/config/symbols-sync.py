@@ -5,7 +5,6 @@ for the standalone Binance OHLCV pipeline (binance_loader.py)."""
 
 import json
 import os
-import sys
 import urllib.request
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

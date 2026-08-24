@@ -118,13 +118,14 @@ def symbols(universe: str | None = None) -> list[str]:
             "(writes config/symbols.yaml) or pass --universe FILE"
         )
     canon: set[str] = set()
-    for ln in open(path):
-        ln = ln.split("#")[0].strip()
-        if ln.startswith("-"):  # yaml list marker "- "SYM/USDT:PERP""
-            ln = ln[1:].strip()
-        ln = ln.strip('"').strip("'").strip()
-        if ln and "/USDT:PERP" in ln:
-            canon.add(ln)
+    with open(path) as fh:
+        for ln in fh:
+            ln = ln.split("#")[0].strip()
+            if ln.startswith("-"):  # yaml list marker "- "SYM/USDT:PERP""
+                ln = ln[1:].strip()
+            ln = ln.strip('"').strip("'").strip()
+            if ln and "/USDT:PERP" in ln:
+                canon.add(ln)
     return sorted(canon)
 
 

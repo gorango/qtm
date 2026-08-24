@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from itertools import pairwise
 
 import numpy as np
 import polars as pl
@@ -44,24 +45,24 @@ for _p in (_HERE, _RESEARCH):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import quantamental as q  # noqa: E402
+import quantamental as q
 
-import screen  # noqa: E402
-from screen import (  # noqa: E402
+import screen
+from indicators import (
+    INDICATOR_FEATURES,
+    adx_at,
+    default_warmup,
+)
+from screen import (
+    _tf_ms,
     load_universe,
-    rank_ic,
-    signals_column,
-    precompute,
+    lottery_share,
     month_ranges,
     net_bps,
+    precompute,
+    rank_ic,
+    signals_column,
     trade_rets,
-    lottery_share,
-    _tf_ms,
-)
-from indicators import (  # noqa: E402
-    INDICATOR_FEATURES,
-    default_warmup,
-    adx_at,
 )
 
 FEATURE_SETS = ("signals", "indicators")
@@ -112,12 +113,11 @@ def build_signal_matrix(uni: pl.DataFrame, win_mask: np.ndarray, ids: list[str])
 def indicator_matrix(uni: pl.DataFrame) -> dict[str, np.ndarray]:
     """Continuous indicator features per symbol (aligned to ``uni`` rows), the
     gate_combos feature set: 13 indicators + ADX at 7/14/28."""
-    ts = uni["timestamp"].to_numpy()
     sym = uni["fsym"].to_numpy()
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(uni)]))
     out: dict[str, np.ndarray] = {n: np.full(len(uni), np.nan) for n in FEATURE_NAMES}
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         sub = uni.slice(a, b - a)
         h = sub["high"].to_numpy().astype(np.float64)
         low = sub["low"].to_numpy().astype(np.float64)
@@ -154,7 +154,7 @@ def forward_return(uni: pl.DataFrame, horizon_h: int) -> np.ndarray:
     out = np.full(len(uni), np.nan)
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(uni)]))
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         t = ts[a:b]
         c = close[a:b]
         idx = np.searchsorted(t, t + H, side="right") - 1
@@ -185,11 +185,12 @@ def relevance_grades(fwd: np.ndarray, ts: np.ndarray) -> np.ndarray:
     )
     r = df["r"].to_numpy()
     nb = df["nbar"].to_numpy()
+    nan = np.isnan(fwd)
     grad = np.where(
-        fwd != fwd, -1, np.floor((r - 1.0) / np.maximum(nb - 1, 1) * 5).astype(np.int8)
+        nan, -1, np.floor((r - 1.0) / np.maximum(nb - 1, 1) * 5).astype(np.int8)
     )
     grad = np.clip(grad, 0, 4)
-    grad[fwd != fwd] = -1
+    grad[nan] = -1
     return grad
 
 
@@ -211,7 +212,7 @@ def scores_to_sigs(ts: np.ndarray, sym: np.ndarray, score: np.ndarray, k: int) -
     sigs: dict[str, np.ndarray] = {}
     starts = np.flatnonzero(sym[1:] != sym[:-1]) + 1
     bounds = np.concatenate(([0], starts, [len(sym)]))
-    for a, b in zip(bounds[:-1], bounds[1:]):
+    for a, b in pairwise(bounds):
         arr = np.zeros(b - a, dtype=np.int8)
         arr[long[a:b]] = 1
         arr[short[a:b]] = -1

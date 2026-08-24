@@ -27,9 +27,9 @@ import sys
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 
-import numpy as np  # noqa: E402
+import numpy as np
 
-import screen as S  # noqa: E402
+import screen as S
 
 STRATEGY = "candlestick_reversal"
 TF = "1h"
@@ -38,7 +38,7 @@ MIN_TRADES = 100
 FORWARD_MONTHS = 6
 
 
-def flip(sigs: dict[str, "np.ndarray"]) -> dict[str, "np.ndarray"]:
+def flip(sigs: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
     return {s: (-v).astype(np.int8) for s, v in sigs.items()}
 
 
@@ -99,9 +99,10 @@ def main() -> None:
     cache_dir = os.path.join(_HERE, "_cache")
     os.makedirs(cache_dir, exist_ok=True)
     storage = f"sqlite:///{cache_dir}/sweep_{pattern}_flip.db"
-    study_kwargs = dict(
-        direction="maximize", sampler=optuna.samplers.TPESampler(seed=42)
-    )
+    study_kwargs = {
+        "direction": "maximize",
+        "sampler": optuna.samplers.TPESampler(seed=42),
+    }
     study = optuna.create_study(
         storage=storage,
         study_name=f"flip_{pattern}",

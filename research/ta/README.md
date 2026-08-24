@@ -1,4 +1,4 @@
-# Traditional Indicators & Strategies — standalone (quantamental)
+# Traditional Indicators & Strategies
 
 Screen the catalog from the native Rust `quantamental` PyPI package (pyo3
 bindings) against the shared validation protocol, **with zero external
@@ -27,7 +27,7 @@ Layout:
 
     uv sync                            # from research/ta: creates .venv, installs deps,
                                        # and builds the quantamental wheel (maturin, ~1-3 min first run)
-    # or: just -C research setup
+    # or: just -C research/ta setup
 
 Verify the wheel: `uv run python -c "import quantamental as q; print(len(q.get_strategy_registry()['strategies']), 'strategies')"` → 106.
 

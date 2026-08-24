@@ -39,29 +39,29 @@ def _band_width(bands):
 
 # Continuous indicator features computed per (symbol, bar) from OHLCV arrays.
 INDICATOR_FEATURES = {
-    "rsi": lambda h, low, c, v: q.rsi(c),  # noqa: ARG005
-    "z_score": lambda h, low, c, v: q.z_score(c),  # noqa: ARG005
-    "bbpos": lambda h, low, c, v: _band_pos(q.bollinger_bands(c), c),  # noqa: ARG005
-    "bbwidth": lambda h, low, c, v: _band_width(q.bollinger_bands(c)),  # noqa: ARG005
+    "rsi": lambda h, low, c, v: q.rsi(c),
+    "z_score": lambda h, low, c, v: q.z_score(c),
+    "bbpos": lambda h, low, c, v: _band_pos(q.bollinger_bands(c), c),
+    "bbwidth": lambda h, low, c, v: _band_width(q.bollinger_bands(c)),
     "atrp": lambda h, low, c, v: (
-        np.asarray(  # noqa: ARG005
+        np.asarray(
             q.atr(h, low, c)["atr_line"], dtype=float
         )
         / np.asarray(c, dtype=float)
     ),
     "mfi": lambda h, low, c, v: q.money_flow_index(h, low, c, v),
-    "cci": lambda h, low, c, v: q.cci(h, low, c),  # noqa: ARG005
-    "stochk": lambda h, low, c, v: q.stochastic_oscillator(h, low, c)["k"],  # noqa: ARG005
-    "stochd": lambda h, low, c, v: q.stochastic_oscillator(h, low, c)["d"],  # noqa: ARG005
-    "adx": lambda h, low, c, v: q.adx(h, low, c)["adx"],  # noqa: ARG005
+    "cci": lambda h, low, c, v: q.cci(h, low, c),
+    "stochk": lambda h, low, c, v: q.stochastic_oscillator(h, low, c)["k"],
+    "stochd": lambda h, low, c, v: q.stochastic_oscillator(h, low, c)["d"],
+    "adx": lambda h, low, c, v: q.adx(h, low, c)["adx"],
     "dispread": lambda h, low, c, v: (
-        np.asarray(  # noqa: ARG005
+        np.asarray(
             q.adx(h, low, c)["plus_di"], dtype=float
         )
         - np.asarray(q.adx(h, low, c)["minus_di"], dtype=float)
     ),
-    "macdh": lambda h, low, c, v: q.macd(c)["histogram"],  # noqa: ARG005
-    "keltpos": lambda h, low, c, v: _band_pos(q.keltner_channel(h, low, c), c),  # noqa: ARG005
+    "macdh": lambda h, low, c, v: q.macd(c)["histogram"],
+    "keltpos": lambda h, low, c, v: _band_pos(q.keltner_channel(h, low, c), c),
 }
 
 DEFAULT_INDICATORS = ",".join(sorted(INDICATOR_FEATURES))
@@ -81,5 +81,5 @@ def default_warmup(tf: str, start: str) -> str:
     return (start_dt - timedelta(seconds=secs)).strftime("%Y-%m-%d")
 
 
-def adx_at(h, low, c, v, period: int):  # noqa: ARG001
+def adx_at(h, low, c, v, period: int):
     return np.asarray(q.adx(h, low, c, {"period": period})["adx"], dtype=float)
