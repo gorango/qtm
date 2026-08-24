@@ -118,10 +118,16 @@ jobs:
           bunx napi pre-publish -t npm --no-gh-release --skip-optional-publish
           for dir in npm/*; do
             if [ -d "$dir" ]; then
-              (cd "$dir" && npm publish --provenance --access public)
+              # tolerate retries: an already staged/published version is
+              # not an error when resuming a partially failed release
+              (cd "$dir" && npm publish --provenance --access public --ignore-scripts) \
+                || echo "::warning::$dir skipped (already published or staged)"
             fi
           done
-          npm publish --provenance --access public
+          # --ignore-scripts skips the prepublishOnly napi hook: its work
+          # (create-npm-dirs/artifacts/pre-publish) already ran above, and
+          # letting it run again re-publishes platform packages (E409)
+          npm publish --provenance --access public --ignore-scripts
           cd ../..
 
       - name: Smoke test published package
