@@ -14,16 +14,22 @@ Layout:
     config/symbols-sync.py  (re)generate config/symbols.yaml (CoinGecko × Binance Futures)
     config/symbols.yaml   the hydration universe (canonical {BASE}/USDT:PERP)
     screen.py             per-strategy rank-IC screen + stability gate + optuna sweep
+    candle_family_screen.py  stability-gate all 21 candlestick_reversal patterns in one load
+    candle_flip_oos.py    contrarian-flip OOS confirmation for uniformly-bleeding patterns
+    sweep_candle_flip.py  flipped-objective optuna sweep (sign-negated candidate)
     gate_combos.py        bar-level discovery screen (constraint 1.5, engine-free)
     lgbm_stack.py         2x2 LightGBM stack over the catalog
     indicators.py         shared continuous-indicator features (consolidated from the screen modules)
-    BROKEN-STRATEGIES.md  upstream catalog bugs + fixes (historical)
+    broken-strategies.md  upstream catalog bugs + fixes (incl. the Aug-18 batch defects)
+    findings-pattern-batch.md  results of the Aug-18 chart-pattern campaign
 
 ## Setup
 
-    just -f research/justfile setup   # venv + pip installs + the quantamental wheel (maturin build)
+    uv sync                            # from research/ta: creates .venv, installs deps,
+                                       # and builds the quantamental wheel (maturin, ~1-3 min first run)
+    # or: just -C research setup
 
-Verify the wheel: `./.venv/bin/python -c "import quantamental as q; print(len(q.get_strategy_registry()['strategies']), 'strategies')"`.
+Verify the wheel: `uv run python -c "import quantamental as q; print(len(q.get_strategy_registry()['strategies']), 'strategies')"` → 106.
 
 Data is hydrated independently of this (see below) and cached under
 `data/` (gitignored).
@@ -34,13 +40,13 @@ The universe lives in `config/symbols.yaml` — top Binance-Futures USDT
 perpetuals by CoinGecko market cap, canonical `{BASE}/USDT:PERP` spelling.
 Regenerate it when the top-200 shifts:
 
-    ./.venv/bin/python config/symbols-sync.py
+    uv run python config/symbols-sync.py
 
 Hydrate OHLCV (1m resolution, one parquet per symbol under `data/`):
 
-    ./.venv/bin/python binance_loader.py --sync              # vision monthly backfill + REST tail
-    ./.venv/bin/python binance_loader.py --sync --start 2023-01-01
-    ./.venv/bin/python binance_loader.py --update            # REST-only daily tail refresh
+    uv run python binance_loader.py --sync              # vision monthly backfill + REST tail
+    uv run python binance_loader.py --sync --start 2023-01-01
+    uv run python binance_loader.py --update            # REST-only daily tail refresh
 
 Then load any resampled window with the pg_loader-compatible contract:
 
@@ -60,11 +66,11 @@ per-month coverage report and pick windows whose months are complete.
 
 ## Screen the catalog
 
-    ./.venv/bin/python screen.py                                # curated default set
-    ./.venv/bin/python screen.py --all                          # all 97 strategies
-    ./.venv/bin/python screen.py --category trend,volume
-    ./.venv/bin/python screen.py --strategies ma-crossover,rsi
-    ./.venv/bin/python screen.py --tf 4h --start 2023-01-01     # other timeframe / deeper window
+    uv run python screen.py                                # curated default set
+    uv run python screen.py --all                          # all 97 strategies
+    uv run python screen.py --category trend,volume
+    uv run python screen.py --strategies ma-crossover,rsi
+    uv run python screen.py --tf 4h --start 2023-01-01     # other timeframe / deeper window
 
 Per-bar cross-sectional Spearman rank IC of each strategy's discrete
 signal vs timestamp-based forward returns at 6/12/24h (the protocol's
@@ -76,15 +82,15 @@ anything at/below the 10 bps cost floor is dead on arrival).
 Per-month net bps + trade counts for one strategy, plus the lottery-alpha
 share (constraint 1.4), over the window:
 
-    ./.venv/bin/python screen.py --stability z_score_reversion --start 2025-07-01 --end 2026-08-01
-    ./.venv/bin/python screen.py --stability rsi --config '{"period": 3}'
+    uv run python screen.py --stability z_score_reversion --start 2025-07-01 --end 2026-08-01
+    uv run python screen.py --stability rsi --config '{"period": 3}'
 
 Month-to-month spread = stability; ≥6/9 positive months = the walk-forward
 gate; a top-3-trade PnL share near/exceeding 100% = lottery-alpha, not edge.
 
 ### Correlation (independent-bet check)
 
-    ./.venv/bin/python screen.py --correlate --strategies z_score_reversion,bollinger_bands_mean_reversion,donchian_reversion
+    uv run python screen.py --correlate --strategies z_score_reversion,bollinger_bands_mean_reversion,donchian_reversion
 
 High corr/agreement = the same bet twice.  Low-correlation survivors are
 the candidates for the separator/gate test (constraint 1.5), not
@@ -98,9 +104,9 @@ net bps after `--cost` (default 10 bps round-trip), **train months only**;
 the last `--forward-months` (default 6) are held out entirely and are the
 arbiter (a strategy is not promotable if best forward net bps ≤ 0):
 
-    ./.venv/bin/python screen.py --sweep z_score_reversion --trials 300 --start 2025-07-01 --end 2026-08-01
-    ./.venv/bin/python screen.py --sweep rsi --tf 4h --trials 300
-    ./.venv/bin/python screen.py --sweep volume_profile_rsi --min-trades 100 --storage sqlite:///sweep.db --cap-tiers caps.csv
+    uv run python screen.py --sweep z_score_reversion --trials 300 --start 2025-07-01 --end 2026-08-01
+    uv run python screen.py --sweep rsi --tf 4h --trials 300
+    uv run python screen.py --sweep volume_profile_rsi --min-trades 100 --storage sqlite:///sweep.db --cap-tiers caps.csv
 
 `--min-trades` floors sparse "lucky" configs; `--storage` persists/resumes
 the study; `--cap-tiers symbol,tier.csv` breaks the best trial out by
@@ -113,8 +119,8 @@ for sizing.
 Discovery-stage separator test — pure OHLCV, no engine, no pool replay.
 The sample is every (symbol, bar) with a finite forward return:
 
-    ./.venv/bin/python gate_combos.py --tf 1h,4h,12h --horizon 12    # default
-    ./.venv/bin/python gate_combos.py --tf 15m,30m,1d --cap-volume
+    uv run python gate_combos.py --tf 1h,4h,12h --horizon 12    # default
+    uv run python gate_combos.py --tf 15m,30m,1d --cap-volume
 
 16 continuous indicators (incl. ADX at periods 7/14/28) scored two ways:
 **directional** (cross-sectional rank IC + train-selected tail gate on
@@ -131,9 +137,9 @@ Does a non-linear combination of the catalog extract what individual
 screens could not?  2x2 grid {discrete signals, continuous indicators} ×
 {lambdarank, regression}, 2025-01..2026-08 1h, last 6 months held out:
 
-    ./.venv/bin/python lgbm_stack.py                                     # full grid
-    ./.venv/bin/python lgbm_stack.py --features signals --objectives lambdarank
-    ./.venv/bin/python lgbm_stack.py --strategies rsi,ma_crossover \
+    uv run python lgbm_stack.py                                     # full grid
+    uv run python lgbm_stack.py --features signals --objectives lambdarank
+    uv run python lgbm_stack.py --strategies rsi,ma_crossover \
         --features indicators --objectives regression --max-rounds 5  # smoke test
 
 Judged the protocol's way: per-bar rank IC (train|val|forward), net bps
@@ -206,6 +212,19 @@ and the bar-level discovery screen:
   mechanism — and even that failed month-stability at bar level here.
   (Pool-conditioned follow-ups — `gate_separators.py`, `adx_*` — live in
   the parent repo's validation tree, not here.)
+- **Aug-18 chart-pattern batch (`findings-pattern-batch.md`): one survivor.**
+  The ~30 new pattern detectors + 12 strategy wrappers ran this full
+  pipeline. Every natural-direction path died (hammer passed stability then
+  lost its sweep's forward window −65 bps; TPE basin collapse again). Source
+  audit + fire-rate forensics found two real detector defects — `wedges`
+  non-causal whole-series fit (fires only at each symbol's final bar) and
+  `cup_and_handle` unsatisfiable handle-retracement gate (0 fires at every
+  parameterization) — both fixed with regression tests; `island_reversal` is
+  instrument-inapplicable (perps never gap); diamond/broadening are
+  threshold-starved on order-1 pivot noise, left as-is. The sole promotable
+  candidate is the contrarian flip of shooting_star (+22/+10/+28 bps net
+  across three windows incl. two untouched ones) — pending formalization
+  into a trading layer + pool separator test.
 
 ## API notes (learned while wiring this up)
 
@@ -219,10 +238,22 @@ and the bar-level discovery screen:
   `adx` → `adx/+di/-di`, `bollinger_bands` → `upper/middle/lower`, …).
   Coerce with `np.asarray(v)` / handle the dict.
 - **Defaults**: `get_strategy_defaults()` returns every strategy's `params` +
-  `optimization_bounds` in one call (97 entries, keyed by id) — pass `params`
-  as the `config` dict to `run_strategy`.  (`strategy_defaults(name)` /
-  `strategy_metadata(name)` are a *separate* API for the hand-written
-  fundamental strategies like `value_strategy`, not the TA catalog.)
+  `optimization_bounds` in one call (106 entries after the Aug-18 pattern
+  batch) — pass `params` as the `config` dict to `run_strategy`.  Note the
+  bounds SHAPE changed from early builds: `optimization_bounds` is now a
+  **list** of `{param_name, min, max, step}` objects (not a dict keyed by
+  param name); `screen.suggest_config` consumes exactly this shape.
+  (`strategy_defaults(name)` / `strategy_metadata(name)` are a *separate*
+  API for the hand-written fundamental strategies like `value_strategy`,
+  not the TA catalog.)
+- **Import gotcha** (`get_strategy_registry` / `get_strategy_defaults`
+  "missing"): these only look broken when the module resolves wrong.  Two
+  ways that happens: (a) running a stale PyPI wheel instead of the source
+  build, or (b) importing with cwd = repo root before anything is installed
+  — Python then treats the `quantamental/` *source directory itself* as an
+  empty namespace package and shadows nothing but yields no attributes.
+  Fix: install from this repo's bindings/py (`uv sync` here) and check
+  `q.__file__` points into site-packages.
 - Quirk (PyPI 0.1.0 wheel — now stale): 11 strategies never fired — 6 hard
   logic bugs (`super_trend` band ratchet, `donchian_breakout` current-bar
   channel, `kst` NaN-poisoned SMA, the `vwap_ema_rsi_trend` self-
@@ -230,7 +261,7 @@ and the bar-level discovery screen:
   `elliott_wave_pattern`'s mis-modeled impulse), 2 end-anchored pattern
   detectors (`triangles`, `cup_and_handle`), and the 3 statistics pair
   strategies (the wheel's bindings had no `secondCloses`).  Root causes +
-  upstream fixes: `BROKEN-STRATEGIES.md`.  **The local source build fixes
+  upstream fixes: `broken-strategies.md`.  **The local source build fixes
   these — all 97 strategies fire**, so an all-zero signal column now
   genuinely means "tested and weak", not "broken".
 
