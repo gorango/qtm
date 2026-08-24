@@ -1,6 +1,6 @@
 {
 	"name": "@quantamental/core",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Unified native Rust quantamental analysis — factors, indicators, and strategies",
 	"type": "module",
 	"main": "index.js",
