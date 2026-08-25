@@ -89,6 +89,63 @@ impl Default for MaCrossoverConfig {
 	}
 }
 
+/// KAMA Trend configuration: price × KAMA cross gated by efficiency ratio
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct KamaTrendConfig {
+	/// KAMA / efficiency-ratio lookback period
+	pub period: Option<u32>,
+	/// Minimum efficiency ratio for crossings to fire (0 disables the gate)
+	pub er_threshold: Option<f64>,
+}
+
+impl Default for KamaTrendConfig {
+	fn default() -> Self {
+		Self {
+			period: Some(10),
+			er_threshold: Some(0.3),
+		}
+	}
+}
+
+/// Dual KAMA crossover configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct DualKamaCrossoverConfig {
+	pub fast_period: Option<u32>,
+	pub slow_period: Option<u32>,
+}
+
+impl Default for DualKamaCrossoverConfig {
+	fn default() -> Self {
+		Self {
+			fast_period: Some(5),
+			slow_period: Some(20),
+		}
+	}
+}
+
+/// KAMA slope state-machine configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct KamaSlopeConfig {
+	pub period: Option<u32>,
+	/// Consecutive rising/falling KAMA bars required to arm a signal
+	pub consecutive_bars: Option<u32>,
+}
+
+impl Default for KamaSlopeConfig {
+	fn default() -> Self {
+		Self {
+			period: Some(10),
+			consecutive_bars: Some(3),
+		}
+	}
+}
+
 /// Stochastic Oscillator configuration
 #[cfg_attr(feature = "napi", napi(object))]
 #[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]

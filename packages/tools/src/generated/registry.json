@@ -1083,6 +1083,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA smoothing period\",\"default\":14}}}",
       "output_type": "indicator"
     },
+    "er": {
+      "id": "er",
+      "name": "Efficiency Ratio",
+      "category": "trend",
+      "description": "Alias for Kaufman Efficiency Ratio",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}",
+      "output_type": "indicator"
+    },
     "fi": {
       "id": "fi",
       "name": "Force Index",
@@ -1201,6 +1209,30 @@
       "category": "patterns",
       "description": "Island reversal: gap away, isolated cluster, then covering gap back",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}",
+      "output_type": "indicator"
+    },
+    "kama": {
+      "id": "kama",
+      "name": "Kaufman Adaptive Moving Average",
+      "category": "trend",
+      "description": "Moving average whose smoothing adapts to the Kaufman efficiency ratio",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}",
+      "output_type": "indicator"
+    },
+    "kaufman_adaptive_moving_average": {
+      "id": "kaufman_adaptive_moving_average",
+      "name": "Kaufman Adaptive Moving Average",
+      "category": "trend",
+      "description": "Alias for KAMA",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}",
+      "output_type": "indicator"
+    },
+    "kaufman_efficiency_ratio": {
+      "id": "kaufman_efficiency_ratio",
+      "name": "Kaufman Efficiency Ratio",
+      "category": "trend",
+      "description": "Net price change over path length; 1 is pure trend, 0 is pure noise",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}",
       "output_type": "indicator"
     },
     "kc": {
@@ -2547,6 +2579,23 @@
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DoubleTopStochasticConfig\",\"description\":\"Double Top Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"dPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"kPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minDistance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
+    "dual_kama_crossover": {
+      "id": "dual_kama_crossover",
+      "name": "Dual KAMA Crossover",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when the fast Kaufman adaptive moving average crosses above the slow one and sell signals on the opposite cross, with both smoothing constants adapting to trend efficiency",
+      "defaults": {
+        "fastPeriod": 5,
+        "slowPeriod": 20
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DualKamaCrossoverConfig\",\"description\":\"Dual KAMA crossover configuration\",\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slowPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
     "ease_of_movement": {
       "id": "ease_of_movement",
       "name": "Ease of Movement",
@@ -2729,6 +2778,40 @@
         "minIslandBars": 2
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IslandReversalConfig\",\"description\":\"Island Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"maxIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "kama_slope": {
+      "id": "kama_slope",
+      "name": "KAMA Slope State Machine",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals once the Kaufman adaptive moving average has risen for N consecutive bars and sell signals after N consecutive falling bars, using slope persistence as a noise filter",
+      "defaults": {
+        "consecutiveBars": 3,
+        "period": 10
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KamaSlopeConfig\",\"description\":\"KAMA slope state-machine configuration\",\"type\":\"object\",\"properties\":{\"consecutiveBars\":{\"description\":\"Consecutive rising/falling KAMA bars required to arm a signal\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "kama_trend": {
+      "id": "kama_trend",
+      "name": "KAMA Trend",
+      "category": "trend",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Generates buy signals when price crosses above the Kaufman adaptive moving average and sell signals on crosses below it, gated by the Kaufman efficiency ratio so signals only fire in trending regimes",
+      "defaults": {
+        "erThreshold": 0.3,
+        "period": 10
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KamaTrendConfig\",\"description\":\"KAMA Trend configuration: price × KAMA cross gated by efficiency ratio\",\"type\":\"object\",\"properties\":{\"erThreshold\":{\"description\":\"Minimum efficiency ratio for crossings to fire (0 disables the gate)\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"description\":\"KAMA / efficiency-ratio lookback period\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "kdj": {

@@ -9,8 +9,8 @@ import type { WorkflowTool, ToolResult } from '../types'
 export const registryVersion = 1
 
 export const factorCount = 72
-export const indicatorCount = 163
-export const strategyCount = 106
+export const indicatorCount = 167
+export const strategyCount = 109
 
 export const registryData = {
   factors: {
@@ -142,6 +142,7 @@ export const registryData = {
     "elliott_wave": {"id":"elliott_wave","name":"Elliott Wave","category":"patterns","description":"Elliott Wave pattern detection","params_schema":"{\"type\":\"object\",\"properties\":{\"wave2Retracement\":{\"type\":\"number\",\"default\":0.618},\"wave4Retracement\":{\"type\":\"number\",\"default\":0.382},\"wave3MinExtension\":{\"type\":\"number\",\"default\":1.618},\"minWaveSeparation\":{\"type\":\"integer\",\"default\":5},\"lookaround\":{\"type\":\"integer\",\"default\":2},\"retracementTolerance\":{\"type\":\"number\",\"default\":0.1}}}","output_type":"indicator"},
     "ema": {"id":"ema","name":"EMA","category":"trend","description":"Exponential Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":12}}}","output_type":"indicator"},
     "emv": {"id":"emv","name":"Ease of Movement","category":"volume","description":"Alias for Ease of Movement","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"SMA smoothing period\",\"default\":14}}}","output_type":"indicator"},
+    "er": {"id":"er","name":"Efficiency Ratio","category":"trend","description":"Alias for Kaufman Efficiency Ratio","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}","output_type":"indicator"},
     "fi": {"id":"fi","name":"Force Index","category":"volume","description":"Alias for Force Index","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":13}}}","output_type":"indicator"},
     "fibonacci_pivot_points": {"id":"fibonacci_pivot_points","name":"Fibonacci Pivot Points","category":"trend","description":"Fibonacci-based pivot point levels","params_schema":"","output_type":"indicator"},
     "find_peaks": {"id":"find_peaks","name":"Find Peaks","category":"patterns","description":"Locates local maxima in price data","params_schema":"{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"description\":\"Bars on each side to confirm peak\",\"default\":2}}}","output_type":"indicator"},
@@ -157,6 +158,9 @@ export const registryData = {
     "ichimoku_cloud": {"id":"ichimoku_cloud","name":"Ichimoku Cloud","category":"momentum","description":"Comprehensive indicator showing support, resistance, and momentum","params_schema":"{\"type\":\"object\",\"properties\":{\"short\":{\"type\":\"integer\",\"default\":9},\"medium\":{\"type\":\"integer\",\"default\":26},\"long\":{\"type\":\"integer\",\"default\":52},\"close\":{\"type\":\"integer\",\"default\":26}}}","output_type":"indicator"},
     "inverted_hammer": {"id":"inverted_hammer","name":"Inverted Hammer","category":"patterns","description":"Inverted hammer candlestick: long upper shadow after a decline","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "island_reversal": {"id":"island_reversal","name":"Island Reversal","category":"patterns","description":"Island reversal: gap away, isolated cluster, then covering gap back","params_schema":"{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}","output_type":"indicator"},
+    "kama": {"id":"kama","name":"Kaufman Adaptive Moving Average","category":"trend","description":"Moving average whose smoothing adapts to the Kaufman efficiency ratio","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}","output_type":"indicator"},
+    "kaufman_adaptive_moving_average": {"id":"kaufman_adaptive_moving_average","name":"Kaufman Adaptive Moving Average","category":"trend","description":"Alias for KAMA","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}","output_type":"indicator"},
+    "kaufman_efficiency_ratio": {"id":"kaufman_efficiency_ratio","name":"Kaufman Efficiency Ratio","category":"trend","description":"Net price change over path length; 1 is pure trend, 0 is pure noise","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}","output_type":"indicator"},
     "kc": {"id":"kc","name":"Keltner Channel","category":"volatility","description":"Alias for Keltner Channel","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
     "keltner_channel": {"id":"keltner_channel","name":"Keltner Channel","category":"volatility","description":"ATR-based volatility channel","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}","output_type":"indicator"},
     "kst": {"id":"kst","name":"Know Sure Thing","category":"momentum","description":"KST oscillator based on four rate-of-change periods","params_schema":"{\"type\":\"object\",\"properties\":{\"roc1Period\":{\"type\":\"integer\",\"default\":10},\"roc2Period\":{\"type\":\"integer\",\"default\":15},\"roc3Period\":{\"type\":\"integer\",\"default\":20},\"roc4Period\":{\"type\":\"integer\",\"default\":30},\"sma1Period\":{\"type\":\"integer\",\"default\":10},\"sma2Period\":{\"type\":\"integer\",\"default\":10},\"sma3Period\":{\"type\":\"integer\",\"default\":10},\"sma4Period\":{\"type\":\"integer\",\"default\":15},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
@@ -286,6 +290,7 @@ export const registryData = {
     "donchian_reversion": { "id":"donchian_reversion","name":"Donchian Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Counter-trend strategy: generates buy signals when price crosses over lower channel and sell signals when price crosses under upper channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DonchianTurtleConfig\",\"description\":\"Donchian Turtle Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
     "double_top_bottom_reversal": { "id":"double_top_bottom_reversal","name":"Double Top/Bottom Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects double top (bearish) and double bottom (bullish) reversal patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DoubleTopBottomConfig\",\"description\":\"Double Top/Bottom Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minDistance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookaround":2,"minDistance":10,"tolerance":0.03} },
     "double_top_stochastic_reversal": { "id":"double_top_stochastic_reversal","name":"Double Top/Bottom + Stochastic Reversal","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Double Top/Bottom pattern + Stochastic confirmation","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DoubleTopStochasticConfig\",\"description\":\"Double Top Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"dPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"kPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minDistance\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"dPeriod":3,"kPeriod":14,"minDistance":10,"overbought":80,"oversold":20,"tolerance":0.03} },
+    "dual_kama_crossover": { "id":"dual_kama_crossover","name":"Dual KAMA Crossover","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when the fast Kaufman adaptive moving average crosses above the slow one and sell signals on the opposite cross, with both smoothing constants adapting to trend efficiency","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"DualKamaCrossoverConfig\",\"description\":\"Dual KAMA crossover configuration\",\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slowPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"fastPeriod":5,"slowPeriod":20} },
     "ease_of_movement": { "id":"ease_of_movement","name":"Ease of Movement","category":"volume","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when EOM crosses above zero, sell signals when EOM crosses below zero","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"EaseOfMovementConfig\",\"description\":\"Ease of Movement Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14} },
     "elliott_wave_pattern": { "id":"elliott_wave_pattern","name":"Elliott Wave Pattern Strategy","category":"patterns","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals for impulse waves and sell signals for corrective waves","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ElliottWaveConfig\",\"description\":\"Elliott Wave Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minWaveSeparation\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"retracementTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave2Retracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave3MinExtension\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"wave4Retracement\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookaround":2,"minWaveSeparation":5,"retracementTolerance":0.1,"wave2Retracement":0.618,"wave3MinExtension":1.618,"wave4Retracement":0.382} },
     "fibonacci_retracement": { "id":"fibonacci_retracement","name":"Fibonacci Retracement Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price is above Fibonacci level and sell signals when price is below Fibonacci level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"FibonacciRetracementConfig\",\"description\":\"Fibonacci Retracement Strategy configuration\",\"type\":\"object\",\"properties\":{\"fibLevel\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"fibLevel":0.618,"period":50} },
@@ -296,6 +301,8 @@ export const registryData = {
     "hma_trend": { "id":"hma_trend","name":"HMA Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when HMA is rising and sell signals when HMA is falling","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"HmaTrendConfig\",\"description\":\"HMA Trend Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":21} },
     "ichimoku": { "id":"ichimoku","name":"Ichimoku Cloud Trend","category":"momentum","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when price crosses above cloud top and sell signals when price crosses below cloud bottom","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IchimokuCloudConfig\",\"description\":\"Ichimoku Cloud Strategy configuration\",\"type\":\"object\",\"properties\":{\"close\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"long\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"medium\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"short\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"close":26,"long":52,"medium":26,"short":9} },
     "island_reversal": { "id":"island_reversal","name":"Island Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects island reversals and generates signals on the covering gap","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"IslandReversalConfig\",\"description\":\"Island Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"maxIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minIslandBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"maxIslandBars":15,"minIslandBars":2} },
+    "kama_slope": { "id":"kama_slope","name":"KAMA Slope State Machine","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals once the Kaufman adaptive moving average has risen for N consecutive bars and sell signals after N consecutive falling bars, using slope persistence as a noise filter","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KamaSlopeConfig\",\"description\":\"KAMA slope state-machine configuration\",\"type\":\"object\",\"properties\":{\"consecutiveBars\":{\"description\":\"Consecutive rising/falling KAMA bars required to arm a signal\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"consecutiveBars":3,"period":10} },
+    "kama_trend": { "id":"kama_trend","name":"KAMA Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses above the Kaufman adaptive moving average and sell signals on crosses below it, gated by the Kaufman efficiency ratio so signals only fire in trending regimes","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KamaTrendConfig\",\"description\":\"KAMA Trend configuration: price × KAMA cross gated by efficiency ratio\",\"type\":\"object\",\"properties\":{\"erThreshold\":{\"description\":\"Minimum efficiency ratio for crossings to fire (0 disables the gate)\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"description\":\"KAMA / efficiency-ratio lookback period\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"erThreshold":0.3,"period":10} },
     "kdj": { "id":"kdj","name":"KDJ Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when J crosses above oversold level and sell signals when J crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KdjConfig\",\"description\":\"KDJ Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period1\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"period2\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":80,"oversold":20,"period":14,"period1":3,"period2":3} },
     "keltner_channel_breakout": { "id":"keltner_channel_breakout","name":"Keltner Channel Breakout Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses over upper Keltner channel and sell signals when price crosses under lower channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
     "keltner_channel_reversion": { "id":"keltner_channel_reversion","name":"Keltner Channel Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses over lower Keltner channel and sell signals when price crosses under upper channel","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"KeltnerChannelConfig\",\"description\":\"Keltner Channel Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
@@ -353,7 +360,7 @@ export const registryData = {
     "vwap_rsi_breakout": { "id":"vwap_rsi_breakout","name":"VWAP + RSI Breakout","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Combine VWAP + RSI breakout","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapRsiConfig\",\"description\":\"VWAP RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"vwapPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":70,"oversold":30,"rsiPeriod":14,"vwapPeriod":14} },
     "vwap_stochastic_confirmation": { "id":"vwap_stochastic_confirmation","name":"VWAP + Stochastic Confirmation","category":"composite","default_timeframes":["15m","1h","4h"],"description":"VWAP + Stochastic confirmation","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwapStochasticConfig\",\"description\":\"VWAP Stochastic Strategy configuration\",\"type\":\"object\",\"properties\":{\"dPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"kPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"vwapPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"dPeriod":3,"kPeriod":14,"overbought":80,"oversold":20,"vwapPeriod":14} },
     "vwma": { "id":"vwma","name":"VWMA Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses above VWMA and sell signals when price crosses below VWMA","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"VwmaConfig\",\"description\":\"VWMA Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20} },
-    "wedge_breakout": { "id":"wedge_breakout","name":"Wedge Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects wedge patterns and generates breakout signals opposite to wedge direction","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WedgeConfig\",\"description\":\"Wedge Strategy configuration\",\"type\":\"object\",\"properties\":{\"minDataLength\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"minDataLength":20,"minPoints":4,"slopeTolerance":0.0001} },
+    "wedge_breakout": { "id":"wedge_breakout","name":"Wedge Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects wedge patterns and generates breakout signals opposite to wedge direction","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WedgeConfig\",\"description\":\"Wedge Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minDataLength\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minDataLength":20,"minPoints":4,"slopeTolerance":0.0001} },
     "williams_r": { "id":"williams_r","name":"Williams %R Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when Williams %R crosses above oversold level and sell signals when Williams %R crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WilliamsRConfig\",\"description\":\"Williams R Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":-20,"oversold":-80,"period":14} },
     "wma_confirmation": { "id":"wma_confirmation","name":"WMA Confirmation Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when WMA slope is above threshold and sell signals when WMA slope is below negative threshold","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WmaConfirmationConfig\",\"description\":\"WMA Confirmation Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"threshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14,"threshold":0.02} },
     "wma_momentum": { "id":"wma_momentum","name":"WMA Momentum Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when WMA is increasing and sell signals when WMA is decreasing","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"WmaMomentumConfig\",\"description\":\"WMA Momentum Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14} },
@@ -833,6 +840,20 @@ export function createStrategyTools(
     execute: async (params) => execute("double_top_stochastic_reversal", params),
   }))
 
+  // Dual KAMA Crossover (trend)
+  tools.push(createWorkflowTool({
+    name: "dual_kama_crossover",
+    description: "Generates buy signals when the fast Kaufman adaptive moving average crosses above the slow one and sell signals on the opposite cross, with both smoothing constants adapting to trend efficiency" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ fastPeriod: z.number().int().nullable().optional().default(5), slowPeriod: z.number().int().nullable().optional().default(20) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("dual_kama_crossover", params),
+  }))
+
   // Ease of Movement (volume)
   tools.push(createWorkflowTool({
     name: "ease_of_movement",
@@ -971,6 +992,34 @@ export function createStrategyTools(
       config: z.object({ maxIslandBars: z.number().int().nullable().optional().default(15), minIslandBars: z.number().int().nullable().optional().default(2) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("island_reversal", params),
+  }))
+
+  // KAMA Slope State Machine (trend)
+  tools.push(createWorkflowTool({
+    name: "kama_slope",
+    description: "Generates buy signals once the Kaufman adaptive moving average has risen for N consecutive bars and sell signals after N consecutive falling bars, using slope persistence as a noise filter" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ consecutiveBars: z.number().int().nullable().describe("Consecutive rising/falling KAMA bars required to arm a signal").optional().default(3), period: z.number().int().nullable().optional().default(10) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("kama_slope", params),
+  }))
+
+  // KAMA Trend (trend)
+  tools.push(createWorkflowTool({
+    name: "kama_trend",
+    description: "Generates buy signals when price crosses above the Kaufman adaptive moving average and sell signals on crosses below it, gated by the Kaufman efficiency ratio so signals only fire in trending regimes" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ erThreshold: z.number().nullable().describe("Minimum efficiency ratio for crossings to fire (0 disables the gate)").optional().default(0.3), period: z.number().int().nullable().describe("KAMA / efficiency-ratio lookback period").optional().default(10) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("kama_trend", params),
   }))
 
   // KDJ Trend (trend)
@@ -1780,7 +1829,7 @@ export function createStrategyTools(
       highs: z.array(z.number()).optional().describe("Array of high prices"),
       lows: z.array(z.number()).optional().describe("Array of low prices"),
       volumes: z.array(z.number()).optional().describe("Array of volume data"),
-      config: z.object({ minDataLength: z.number().int().nullable().optional().default(20), minPoints: z.number().int().nullable().optional().default(4), slopeTolerance: z.number().nullable().optional().default(0.0001) }).optional().describe("Strategy configuration parameters"),
+      config: z.object({ lookback: z.number().int().nullable().optional().default(120), minDataLength: z.number().int().nullable().optional().default(20), minPoints: z.number().int().nullable().optional().default(4), slopeTolerance: z.number().nullable().optional().default(0.0001) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("wedge_breakout", params),
   }))
@@ -2352,6 +2401,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "er",
+    description: "Alias for Kaufman Efficiency Ratio" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("er", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "fi",
     description: "Alias for Force Index" + " (returns: indicator)",
     parameters: z.object({
@@ -2484,6 +2542,33 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("island_reversal", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "kama",
+    description: "Moving average whose smoothing adapts to the Kaufman efficiency ratio" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("kama", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "kaufman_adaptive_moving_average",
+    description: "Alias for KAMA" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("kaufman_adaptive_moving_average", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "kaufman_efficiency_ratio",
+    description: "Net price change over path length; 1 is pure trend, 0 is pure noise" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("kaufman_efficiency_ratio", params),
   }))
 
   tools.push(createWorkflowTool({
