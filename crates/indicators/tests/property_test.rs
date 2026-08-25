@@ -17,12 +17,12 @@ proptest! {
 	fn test_sma_first_valid_index(values in proptest::collection::vec(1.0f64..1000.0, 5..50), period in 2usize..10) {
 		let result = indicators_core::sma_internal(&values, period);
 		// First (period-1) values should be NaN
-		for i in 0..(period-1).min(result.len()) {
-			assert!(result[i].is_nan());
+		for r in result.iter().take((period - 1).min(result.len())) {
+			assert!(r.is_nan());
 		}
 		// From period-1 onwards, values should be finite
-		for i in (period-1)..result.len() {
-			assert!(result[i].is_finite());
+		for r in result.iter().skip(period - 1) {
+			assert!(r.is_finite());
 		}
 	}
 }

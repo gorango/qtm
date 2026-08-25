@@ -228,15 +228,15 @@ pub(crate) mod test_helpers {
 			let (i0, y0) = w[0];
 			let (i1, y1) = w[1];
 			let span = i1 - i0;
-			for i in i0..i1.min(len) {
+			for (i, slot) in series.iter_mut().enumerate().take(i1.min(len)).skip(i0) {
 				let t = (i - i0) as f64 / span as f64;
-				series[i] = y0 + (y1 - y0) * t;
+				*slot = y0 + (y1 - y0) * t;
 			}
 		}
 
 		if let Some(&(last, y)) = pivots.last() {
-			for i in last..len {
-				series[i] = y;
+			for slot in series.iter_mut().take(len).skip(last) {
+				*slot = y;
 			}
 		}
 

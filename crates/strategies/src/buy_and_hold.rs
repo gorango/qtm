@@ -64,8 +64,8 @@ mod tests {
 		let result = buy_and_hold_strategy(&closes, None).unwrap();
 		assert_eq!(result.len(), 5);
 		assert_eq!(result[0], 1);
-		for i in 1..5 {
-			assert_eq!(result[i], 0, "signal[{i}] should be 0");
+		for (i, &signal) in result.iter().enumerate().skip(1) {
+			assert_eq!(signal, 0, "signal[{i}] should be 0");
 		}
 	}
 

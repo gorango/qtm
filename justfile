@@ -21,7 +21,7 @@ test:
 
 # Lint the Rust code.
 lint:
-	cargo clippy --workspace
+	cargo clippy --workspace --all-targets
 
 # Format the Rust code.
 fmt:

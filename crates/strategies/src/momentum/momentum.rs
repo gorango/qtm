@@ -124,8 +124,8 @@ mod tests {
 	fn initial_signals_are_zero() {
 		let closes = vec![100.0; 20];
 		let result = momentum_strategy(&closes, None).unwrap();
-		for i in 0..13 {
-			assert_eq!(result[i], 0, "signal[{i}] should be 0");
+		for (i, &signal) in result.iter().enumerate().take(13) {
+			assert_eq!(signal, 0, "signal[{i}] should be 0");
 		}
 	}
 
