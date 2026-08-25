@@ -1,6 +1,6 @@
 {
 	"name": "@quantamental/tools",
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"description": "AI agent tools for quantamental analysis — wrap indicators, factors, and strategies as typed LLM-callable tools",
 	"type": "module",
 	"files": [

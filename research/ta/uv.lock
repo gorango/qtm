@@ -634,7 +634,7 @@ dev = [{ name = "ruff" }]
 
 [[package]]
 name = "quantamental"
-version = "0.2.3"
+version = "0.3.0"
 source = { directory = "../../bindings/py" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },

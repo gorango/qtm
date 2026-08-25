@@ -76,7 +76,7 @@ jobs:
       - name: Install built wheel
         run: |
           pip install --quiet numpy pytest
-          pip install --quiet --find-links dist "quantamental==0.2.3"
+          pip install --quiet --find-links dist "quantamental==0.3.0"
       - name: Run tests
         run: python -m pytest bindings/py/tests -q
 
