@@ -4,16 +4,18 @@ use indicators_core::{
 	balance_of_power as bop_core, camarilla_pivot_points as cpp_core, cci as cci_core,
 	chande_forecast_oscillator as cfo_core, classify_market_trend as cmt_core, dema as dema_core,
 	fibonacci_pivot_points as fpp_core, hma as hma_core, internal::ema::ema_internal,
-	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, linreg as linreg_core,
-	mass_index as mi_core, parabolic_sar as psar_core, pivot_points as pp_core,
-	random_index as ri_core, rolling_moving_average as rma_core,
-	smoothed_moving_average as smma_core, super_trend as st_core, tema as tema_core,
-	tma as tma_core, trend::moving_max::moving_max_internal,
-	trend::moving_min::moving_min_internal, trend::rma::rma_internal, trend::since::since_internal,
+	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, kama as kama_core,
+	kaufman_efficiency_ratio as ker_core, linreg as linreg_core, mass_index as mi_core,
+	parabolic_sar as psar_core, pivot_points as pp_core, random_index as ri_core,
+	rolling_moving_average as rma_core, smoothed_moving_average as smma_core,
+	super_trend as st_core, tema as tema_core, tma as tma_core,
+	trend::moving_max::moving_max_internal, trend::moving_min::moving_min_internal,
+	trend::rma::rma_internal, trend::since::since_internal,
 	trend::typical_price::typical_price as typical_price_core, trix as trix_core,
 	vortex as vortex_core, vwma as vwma_core, wma as wma_core, ADXConfig, ADXResult, ALMAConfig,
-	AroonConfig, AroonResult, Bar, CCIConfig, FibonacciPivotPointsResult, KDJResult, LinRegConfig,
-	PSARConfig, PSARResult, PivotPointsResult, SuperTrendResult, TrendAnalysis, VortexResult,
+	AroonConfig, AroonResult, Bar, CCIConfig, FibonacciPivotPointsResult, KAMAConfig, KDJResult,
+	LinRegConfig, PSARConfig, PSARResult, PivotPointsResult, SuperTrendResult, TrendAnalysis,
+	VortexResult,
 };
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
@@ -112,6 +114,18 @@ pub fn ema(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
 #[napi]
 pub fn hma(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
 	hma_core(values.as_ref(), period).map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// Kaufman's Adaptive Moving Average
+#[napi]
+pub fn kama(values: Float64Array, config: Option<KAMAConfig>) -> Result<Vec<f64>> {
+	kama_core(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// Kaufman Efficiency Ratio
+#[napi]
+pub fn kaufman_efficiency_ratio(values: Float64Array, period: Option<u32>) -> Result<Vec<f64>> {
+	ker_core(values.as_ref(), period).map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
 /// Linreg

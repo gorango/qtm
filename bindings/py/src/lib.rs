@@ -111,6 +111,8 @@ fn quantamental(m: &Bound<'_, PyModule>) -> PyResult<()> {
 		dema,
 		ema,
 		hma,
+		kama,
+		kaufman_efficiency_ratio,
 		linreg,
 		mass_index,
 		moving_max,

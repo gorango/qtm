@@ -28,6 +28,25 @@ test('indicator returns a numeric array with finite results', () => {
 	assert.ok(out.some((v) => Number.isFinite(v)))
 })
 
+test('kaufmanEfficiencyRatio is 1 on a perfect trend and warms up with NaN', () => {
+	const closes = new Float64Array(Array.from({ length: 30 }, (_, i) => 100 + i))
+	const out = binding.kaufmanEfficiencyRatio(closes)
+	assert.equal(out.length, closes.length)
+	assert.ok(out.slice(0, 10).every((v) => Number.isNaN(v)))
+	assert.ok(out.slice(10).every((v) => Math.abs(v - 1) < 1e-12))
+})
+
+test('kama tracks a rising series and respects config', () => {
+	const closes = new Float64Array(Array.from({ length: 40 }, (_, i) => 50 + i))
+	const out = binding.kama(closes, { period: 5 })
+	assert.equal(out.length, closes.length)
+	assert.ok(out.slice(0, 5).every((v) => Number.isNaN(v)))
+	for (let i = 6; i < out.length; i++) {
+		assert.ok(out[i] > out[i - 1], 'kama must rise on a rising series')
+		assert.ok(out[i] < closes[i], 'kama must lag the rally')
+	}
+})
+
 test('strategy registry is populated', () => {
 	const registry = binding.getStrategyRegistry()
 	assert.ok(registry && typeof registry === 'object')

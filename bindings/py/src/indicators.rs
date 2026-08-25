@@ -18,7 +18,8 @@ use indicators_core::{
 	find_troughs as find_troughs_core, flags_pennants as flags_pennants_core,
 	force_index as force_index_core, head_and_shoulders as head_and_shoulders_core,
 	hma as hma_core, ichimoku_cloud as ichimoku_cloud_core, internal::ema::ema_internal,
-	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, kst as kst_core,
+	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, kama as kama_core,
+	kaufman_efficiency_ratio as kaufman_efficiency_ratio_core, kst as kst_core,
 	larsson as larsson_core, linear_regression as linear_regression_core, linreg as linreg_core,
 	macd as macd_core, market::advance_decline::advance_decline_line as advance_decline_line_core,
 	market::mcclellan_oscillator::mcclellan_oscillator as mcclellan_oscillator_core,
@@ -78,9 +79,9 @@ use indicators_core::{
 	vwap as vwap_core, vwma as vwma_core, wedges as wedges_core, williams_r as williams_r_core,
 	wma as wma_core, zig_zag_filter as zig_zag_filter_core, ADXConfig, ALMAConfig, AroonConfig,
 	AwesomeOscillatorConfig, BBConfig, BBResult, Bar, CCIConfig, ChaikinOscillatorConfig,
-	CointegrationConfig, CorrelationConfig, FIConfig, IchimokuCloudConfig, KSTConfig, LinRegConfig,
-	MACDConfig, MFIConfig, MSTDConfig, MeanAbsoluteDeviationConfig, MomentumIndexConfig,
-	PSARConfig, PercentRankConfig, PercentagePriceOscillatorConfig,
+	CointegrationConfig, CorrelationConfig, FIConfig, IchimokuCloudConfig, KAMAConfig, KSTConfig,
+	LinRegConfig, MACDConfig, MFIConfig, MSTDConfig, MeanAbsoluteDeviationConfig,
+	MomentumIndexConfig, PSARConfig, PercentRankConfig, PercentagePriceOscillatorConfig,
 	PercentageVolumeOscillatorConfig, PercentileLinearInterpolationConfig,
 	PercentileNearestRankConfig, PriceRateOfChangeConfig, QstickConfig, RSIConfig, StochConfig,
 	UltimateOscillatorConfig, VWAPConfig, ValueWhenConfig, VarianceConfig, VolumeSurgeConfig,
@@ -1004,6 +1005,29 @@ pub fn alma<'py>(py: Python<'py>, values: F64Arr1<'py>, config: Option<Json>) ->
 	validate_non_empty(&values, "values")?;
 	let cfg = deserialize_cfg::<ALMAConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(alma_core(&values, cfg))?;
+	Ok(f64_out(py, &out))
+}
+
+#[pyfunction]
+#[pyo3(signature = (values, config = None))]
+pub fn kama<'py>(py: Python<'py>, values: F64Arr1<'py>, config: Option<Json>) -> PyResultO {
+	let values = values.as_array().to_vec();
+	validate_non_empty(&values, "values")?;
+	let cfg = deserialize_cfg::<KAMAConfig>(config.map(|c| normalize_config(c.0)))?;
+	let out = result_or_err(kama_core(&values, cfg))?;
+	Ok(f64_out(py, &out))
+}
+
+#[pyfunction]
+#[pyo3(signature = (values, period = None))]
+pub fn kaufman_efficiency_ratio<'py>(
+	py: Python<'py>,
+	values: F64Arr1<'py>,
+	period: Option<u32>,
+) -> PyResultO {
+	let values = values.as_array().to_vec();
+	validate_non_empty(&values, "values")?;
+	let out = result_or_err(kaufman_efficiency_ratio_core(&values, period))?;
 	Ok(f64_out(py, &out))
 }
 

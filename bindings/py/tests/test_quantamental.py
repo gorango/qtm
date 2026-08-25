@@ -140,3 +140,23 @@ def test_indicator_registry():
 	assert isinstance(registry, dict)
 	assert len(registry["indicators"]) > 0
 	assert "rsi" in registry["indicators"]
+
+
+def test_kaufman_efficiency_ratio_is_one_on_perfect_trend():
+	closes = np.arange(100.0, 130.0)
+	out = q.kaufman_efficiency_ratio(closes)
+	assert isinstance(out, np.ndarray)
+	assert out.shape == closes.shape
+	assert np.all(np.isnan(out[:10]))
+	assert np.allclose(out[10:], 1.0)
+
+
+def test_kama_tracks_rising_series_and_accepts_snake_case_config():
+	closes = np.arange(50.0, 90.0)
+	out = q.kama(closes, {"period": 5})
+	assert isinstance(out, np.ndarray)
+	assert out.dtype == np.float64
+	assert np.all(np.isnan(out[:5]))
+	assert np.all(np.isfinite(out[5:]))
+	assert np.all(np.diff(out[6:]) > 0)
+	assert np.all(out[6:] < closes[6:])
