@@ -113,6 +113,12 @@ pub fn calculate_hma_warmup(period: u32) -> u32 {
 	period
 }
 
+/// KER/KAMA first produce output once a full window plus its base value
+/// exists, i.e. after `period` changes have accumulated.
+pub fn calculate_kama_warmup(period: u32) -> u32 {
+	period + 1
+}
+
 pub fn calculate_wma_warmup(period: u32) -> u32 {
 	period
 }
@@ -227,6 +233,7 @@ pub fn calculate_indicator_warmup(
 		"atr" => calculate_atr_warmup(period),
 		"alma" => calculate_alma_warmup(period),
 		"hma" => calculate_hma_warmup(period),
+		"kama" | "kaufman" | "efficiency" | "er" => calculate_kama_warmup(period),
 		"wma" => calculate_wma_warmup(period),
 		"linreg" => calculate_linreg_warmup(period),
 		"mad" | "meanabsolutedeviation" => calculate_mad_warmup(period),

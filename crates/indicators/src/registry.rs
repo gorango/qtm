@@ -138,6 +138,18 @@ inventory::submit! {
 	IndicatorDescriptor { id: "hma", name: "HMA", category: "trend", description: "Hull Moving Average", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":16}}}", output_type: "indicator" }
 }
 inventory::submit! {
+	IndicatorDescriptor { id: "kama", name: "Kaufman Adaptive Moving Average", category: "trend", description: "Moving average whose smoothing adapts to the Kaufman efficiency ratio", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "kaufman_adaptive_moving_average", name: "Kaufman Adaptive Moving Average", category: "trend", description: "Alias for KAMA", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10},\"fast\":{\"type\":\"integer\",\"default\":2},\"slow\":{\"type\":\"integer\",\"default\":30}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "kaufman_efficiency_ratio", name: "Kaufman Efficiency Ratio", category: "trend", description: "Net price change over path length; 1 is pure trend, 0 is pure noise", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "er", name: "Efficiency Ratio", category: "trend", description: "Alias for Kaufman Efficiency Ratio", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":10}}}", output_type: "indicator" }
+}
+inventory::submit! {
 	IndicatorDescriptor { id: "linreg", name: "Linear Regression", category: "trend", description: "Linear regression line over a period", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14},\"offset\":{\"type\":\"integer\",\"default\":0}}}", output_type: "indicator" }
 }
 inventory::submit! {
