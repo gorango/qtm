@@ -167,6 +167,11 @@ fn quantamental(m: &Bound<'_, PyModule>) -> PyResult<()> {
 		variance,
 		rolling_variance,
 		z_score,
+		revin_ribbons,
+		revin_width_percentile,
+		rwp,
+		revin_momentum_oscillator,
+		rmo,
 		// ── volume ──
 		accumulation_distribution,
 		ad,

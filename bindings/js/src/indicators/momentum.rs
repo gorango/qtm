@@ -2,7 +2,12 @@ use crate::validation::{validate_arrays, validate_non_empty, validate_period};
 use indicators_core::{
 	awesome_oscillator as ao_core, chaikin_oscillator as co_core, cmo as cmo_core,
 	ichimoku as ichimoku_core, ichimoku_cloud as ic_core, kst as kst_core, larsson as larsson_core,
-	macd as macd_core, momentum_index as mi_core, percentage_price_oscillator as ppo_core,
+	macd as macd_core,
+	momentum::revin_momentum_oscillator::{
+		revin_momentum_oscillator as rmo_core, rmo as rmo_alias, RMOResult,
+		RevinMomentumOscillatorConfig,
+	},
+	momentum_index as mi_core, percentage_price_oscillator as ppo_core,
 	percentage_volume_oscillator as pvo_core, price_rate_of_change as proc_core, pvo as pvo_alias,
 	qstick as qstick_core, rsi as rsi_core, stochastic_oscillator as stoch_core,
 	ultimate_oscillator as uo_core, uo as uo_alias, williams_r as wr_core, AwesomeOscillatorConfig,
@@ -387,5 +392,29 @@ pub fn williams_r(
 	config: Option<WilliamsRConfig>,
 ) -> Result<Vec<f64>> {
 	wr_core(highs.as_ref(), lows.as_ref(), closings.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// Revin Momentum Oscillator
+#[napi]
+pub fn revin_momentum_oscillator(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	config: Option<RevinMomentumOscillatorConfig>,
+) -> Result<RMOResult> {
+	rmo_core(highs.as_ref(), lows.as_ref(), closes.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// RMO alias
+#[napi]
+pub fn rmo(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	config: Option<RevinMomentumOscillatorConfig>,
+) -> Result<RMOResult> {
+	rmo_alias(highs.as_ref(), lows.as_ref(), closes.as_ref(), config)
 		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }

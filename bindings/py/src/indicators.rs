@@ -17,13 +17,19 @@ use indicators_core::{
 	fibonacci_pivot_points as fibonacci_pivot_points_core, find_peaks as find_peaks_core,
 	find_troughs as find_troughs_core, flags_pennants as flags_pennants_core,
 	force_index as force_index_core, head_and_shoulders as head_and_shoulders_core,
-	hma as hma_core, ichimoku_cloud as ichimoku_cloud_core, internal::ema::ema_internal,
-	internal::moving_sum::moving_sum_internal, internal::sma::sma_internal, kama as kama_core,
-	kaufman_efficiency_ratio as kaufman_efficiency_ratio_core, kst as kst_core,
+	hma as hma_core, ichimoku_cloud as ichimoku_cloud_core,
+	internal::ema::ema_internal,
+	internal::moving_sum::moving_sum_internal,
+	internal::sma::sma_internal,
+	kama as kama_core, kaufman_efficiency_ratio as kaufman_efficiency_ratio_core, kst as kst_core,
 	larsson as larsson_core, linear_regression as linear_regression_core, linreg as linreg_core,
-	macd as macd_core, market::advance_decline::advance_decline_line as advance_decline_line_core,
+	macd as macd_core,
+	market::advance_decline::advance_decline_line as advance_decline_line_core,
 	market::mcclellan_oscillator::mcclellan_oscillator as mcclellan_oscillator_core,
 	mass_index as mass_index_core, max_drawdown as max_drawdown_core, mfi as mfi_core,
+	momentum::revin_momentum_oscillator::{
+		revin_momentum_oscillator as revin_momentum_oscillator_core, RevinMomentumOscillatorConfig,
+	},
 	momentum_index as momentum_index_core, money_flow_index as money_flow_index_core,
 	parabolic_sar as parabolic_sar_core, percent_rank as percent_rank_core,
 	percentage_price_oscillator as percentage_price_oscillator_core,
@@ -34,10 +40,13 @@ use indicators_core::{
 	random_index as random_index_core, rolling_moving_average as rolling_moving_average_core,
 	rsi as rsi_core, smoothed_moving_average as smoothed_moving_average_core, stars as stars_core,
 	stochastic_oscillator as stochastic_oscillator_core, super_trend as super_trend_core,
-	tema as tema_core, tma as tma_core, trend::moving_max::moving_max_internal,
-	trend::moving_min::moving_min_internal, trend::rma::rma_internal, trend::since::since_internal,
-	trend::typical_price::typical_price as typical_price_core, triangles as triangles_core,
-	trix as trix_core, ulcer_index as ulcer_index_core,
+	tema as tema_core, tma as tma_core,
+	trend::moving_max::moving_max_internal,
+	trend::moving_min::moving_min_internal,
+	trend::rma::rma_internal,
+	trend::since::since_internal,
+	trend::typical_price::typical_price as typical_price_core,
+	triangles as triangles_core, trix as trix_core, ulcer_index as ulcer_index_core,
 	ultimate_oscillator as ultimate_oscillator_core, uo as uo_core, value_when as value_when_core,
 	volatility::acceleration_bands::ab as ab_core,
 	volatility::acceleration_bands::acceleration_bands as acceleration_bands_core,
@@ -59,10 +68,16 @@ use indicators_core::{
 	volatility::moving_standard_deviation::mstd as mstd_core,
 	volatility::projection_oscillator::po as po_core,
 	volatility::projection_oscillator::projection_oscillator as projection_oscillator_core,
-	volatility::true_range::tr as tr_core, volatility::true_range::true_range as true_range_core,
+	volatility::revin_ribbons::{revin_ribbons as revin_ribbons_core, RevinRibbonsConfig},
+	volatility::revin_width_percentile::{
+		revin_width_percentile as revin_width_percentile_core, RevinWidthPercentileConfig,
+	},
+	volatility::true_range::tr as tr_core,
+	volatility::true_range::true_range as true_range_core,
 	volatility::ttm_squeeze::ttm_squeeze as ttm_squeeze_core,
 	volatility::variance::rolling_variance as rolling_variance_core,
-	volatility::variance::variance as variance_core, volatility::z_score::z_score as z_score_core,
+	volatility::variance::variance as variance_core,
+	volatility::z_score::z_score as z_score_core,
 	volume::accumulation_distribution::accumulation_distribution as accumulation_distribution_core,
 	volume::accumulation_distribution::ad as ad_core,
 	volume::anchored_vwap::anchored_vwap as anchored_vwap_core,
@@ -70,11 +85,12 @@ use indicators_core::{
 	volume::chaikin_money_flow::cmf as cmf_core,
 	volume::ease_of_movement::ease_of_movement as ease_of_movement_core,
 	volume::negative_volume_index::negative_volume_index as negative_volume_index_core,
-	volume::negative_volume_index::nvi as nvi_core, volume::obv::obv as obv_core,
+	volume::negative_volume_index::nvi as nvi_core,
+	volume::obv::obv as obv_core,
 	volume::obv::on_balance_volume as on_balance_volume_core,
 	volume::volume_price_trend::volume_price_trend as volume_price_trend_core,
-	volume::volume_price_trend::vpt as vpt_core, volume_profile as volume_profile_core,
-	volume_surge as volume_surge_core,
+	volume::volume_price_trend::vpt as vpt_core,
+	volume_profile as volume_profile_core, volume_surge as volume_surge_core,
 	volume_weighted_average_price as volume_weighted_average_price_core, vortex as vortex_core,
 	vwap as vwap_core, vwma as vwma_core, wedges as wedges_core, williams_r as williams_r_core,
 	wma as wma_core, zig_zag_filter as zig_zag_filter_core, ADXConfig, ALMAConfig, AroonConfig,
@@ -1838,6 +1854,89 @@ pub fn z_score<'py>(py: Python<'py>, values: F64Arr1<'py>, config: Option<Json>)
 	let cfg = deserialize_cfg::<ZScoreConfig>(config.map(|c| normalize_config(c.0)))?;
 	let out = result_or_err(z_score_core(&values, cfg))?;
 	Ok(f64_out(py, &out))
+}
+
+#[pyfunction]
+#[pyo3(signature = (highs, lows, closes, config = None))]
+pub fn revin_ribbons<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	config: Option<Json>,
+) -> PyResultO {
+	let (h, l, c) = (
+		highs.as_array().to_vec(),
+		lows.as_array().to_vec(),
+		closes.as_array().to_vec(),
+	);
+	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
+	let cfg = deserialize_cfg::<RevinRibbonsConfig>(config.map(|c| normalize_config(c.0)))?;
+	let out = result_or_err(revin_ribbons_core(&h, &l, &c, cfg))?;
+	to_py(py, &out)
+}
+
+#[pyfunction]
+#[pyo3(signature = (highs, lows, closes, config = None))]
+pub fn revin_width_percentile<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	config: Option<Json>,
+) -> PyResultO {
+	let (h, l, c) = (
+		highs.as_array().to_vec(),
+		lows.as_array().to_vec(),
+		closes.as_array().to_vec(),
+	);
+	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
+	let cfg = deserialize_cfg::<RevinWidthPercentileConfig>(config.map(|c| normalize_config(c.0)))?;
+	let out = result_or_err(revin_width_percentile_core(&h, &l, &c, cfg))?;
+	Ok(f64_out(py, &out))
+}
+
+#[pyfunction]
+pub fn rwp<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	config: Option<Json>,
+) -> PyResultO {
+	revin_width_percentile(py, highs, lows, closes, config)
+}
+
+#[pyfunction]
+#[pyo3(signature = (highs, lows, closes, config = None))]
+pub fn revin_momentum_oscillator<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	config: Option<Json>,
+) -> PyResultO {
+	let (h, l, c) = (
+		highs.as_array().to_vec(),
+		lows.as_array().to_vec(),
+		closes.as_array().to_vec(),
+	);
+	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
+	let cfg =
+		deserialize_cfg::<RevinMomentumOscillatorConfig>(config.map(|c| normalize_config(c.0)))?;
+	let out = result_or_err(revin_momentum_oscillator_core(&h, &l, &c, cfg))?;
+	to_py(py, &out)
+}
+
+#[pyfunction]
+pub fn rmo<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	config: Option<Json>,
+) -> PyResultO {
+	revin_momentum_oscillator(py, highs, lows, closes, config)
 }
 
 // ── Volume ────────────────────────────────────────────────────

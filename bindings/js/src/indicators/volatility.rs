@@ -22,6 +22,12 @@ use indicators_core::{
 	volatility::projection_oscillator::{
 		po as po_core, projection_oscillator as po_alias, POResult,
 	},
+	volatility::revin_ribbons::{
+		revin_ribbons as revin_ribbons_core, RevinRibbonsConfig, RevinRibbonsResult,
+	},
+	volatility::revin_width_percentile::{
+		revin_width_percentile as rwp_core, RevinWidthPercentileConfig,
+	},
 	volatility::true_range::{tr as tr_core, true_range as tr_alias, TrueRangeResult},
 	volatility::ttm_squeeze::{ttm_squeeze as tts_core, TTMSqueezeResult},
 	volatility::variance::{rolling_variance as rv_core, variance as var_core, VarianceConfig},
@@ -340,4 +346,40 @@ pub fn zs(values: Float64Array, config: Option<ZScoreConfig>) -> Result<Vec<f64>
 #[allow(non_snake_case)]
 pub fn zScore(values: Float64Array, config: Option<ZScoreConfig>) -> Result<Vec<f64>> {
 	zscore_alias(values.as_ref(), config).map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// Revin Ribbons
+#[napi]
+pub fn revin_ribbons(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	config: Option<RevinRibbonsConfig>,
+) -> Result<RevinRibbonsResult> {
+	revin_ribbons_core(highs.as_ref(), lows.as_ref(), closes.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// Revin Width Percentile
+#[napi]
+pub fn revin_width_percentile(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	config: Option<RevinWidthPercentileConfig>,
+) -> Result<Vec<f64>> {
+	rwp_core(highs.as_ref(), lows.as_ref(), closes.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+/// RWP (alias)
+#[napi]
+pub fn rwp(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	config: Option<RevinWidthPercentileConfig>,
+) -> Result<Vec<f64>> {
+	rwp_core(highs.as_ref(), lows.as_ref(), closes.as_ref(), config)
+		.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
