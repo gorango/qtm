@@ -92,6 +92,12 @@ inventory::submit! {
 inventory::submit! {
 	IndicatorDescriptor { id: "williams_r", name: "Williams %R", category: "momentum", description: "Overbought/oversold indicator based on highest high", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
 }
+inventory::submit! {
+	IndicatorDescriptor { id: "revin_momentum_oscillator", name: "Revin Momentum Oscillator", category: "momentum", description: "Revin Momentum Oscillator (RMO) open approximation: duration, priceMove, separation, level, combined", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "rmo", name: "RMO", category: "momentum", description: "Alias for Revin Momentum Oscillator", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}", output_type: "indicator" }
+}
 
 // ── trend ─────────────────────────────────────────
 
@@ -307,6 +313,15 @@ inventory::submit! {
 }
 inventory::submit! {
 	IndicatorDescriptor { id: "z_score", name: "Z-Score", category: "volatility", description: "Number of standard deviations from the mean", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "revin_ribbons", name: "Revin Ribbons", category: "volatility", description: "Revin Ribbons (open approximation): dynamic midline + tiered ATR ribbons S1/R1 S2/R2 S3/R3 with dotted midlines", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"s2Mult\":{\"type\":\"number\",\"default\":2.5},\"s3Mult\":{\"type\":\"number\",\"default\":3.5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "revin_width_percentile", name: "Revin Width Percentile", category: "volatility", description: "Revin Width Percentile (RWP) open approximation: percentile rank of ribbon width vs history", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "rwp", name: "RWP", category: "volatility", description: "Alias for Revin Width Percentile", params_schema: "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}", output_type: "indicator" }
 }
 
 // ── volume ────────────────────────────────────────
