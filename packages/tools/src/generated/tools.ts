@@ -9,8 +9,8 @@ import type { WorkflowTool, ToolResult } from '../types'
 export const registryVersion = 1
 
 export const factorCount = 72
-export const indicatorCount = 167
-export const strategyCount = 109
+export const indicatorCount = 172
+export const strategyCount = 110
 
 export const registryData = {
   factors: {
@@ -202,12 +202,17 @@ export const registryData = {
     "qstick": {"id":"qstick","name":"Qstick","category":"momentum","description":"SMA of the close-open differential","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "random_index": {"id":"random_index","name":"Random Index","category":"trend","description":"Random walk index for mean reversion","params_schema":"{\"type\":\"object\",\"properties\":{\"rPeriod\":{\"type\":\"integer\",\"default\":9},\"kPeriod\":{\"type\":\"integer\",\"default\":3},\"dPeriod\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
     "rectangle": {"id":"rectangle","name":"Rectangle","category":"patterns","description":"Rectangle continuation pattern: horizontal range breakout in the direction of the prior trend","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0002},\"minSpread\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120},\"trendBars\":{\"type\":\"integer\",\"default\":30},\"minTrend\":{\"type\":\"number\",\"default\":0.03}}}","output_type":"indicator"},
+    "revin_momentum_oscillator": {"id":"revin_momentum_oscillator","name":"Revin Momentum Oscillator","category":"momentum","description":"Revin Momentum Oscillator (RMO) open approximation: duration, priceMove, separation, level, combined","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
+    "revin_ribbons": {"id":"revin_ribbons","name":"Revin Ribbons","category":"volatility","description":"Revin Ribbons (open approximation): dynamic midline + tiered ATR ribbons S1/R1 S2/R2 S3/R3 with dotted midlines","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"s2Mult\":{\"type\":\"number\",\"default\":2.5},\"s3Mult\":{\"type\":\"number\",\"default\":3.5}}}","output_type":"indicator"},
+    "revin_width_percentile": {"id":"revin_width_percentile","name":"Revin Width Percentile","category":"volatility","description":"Revin Width Percentile (RWP) open approximation: percentile rank of ribbon width vs history","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}","output_type":"indicator"},
     "rma": {"id":"rma","name":"RMA","category":"trend","description":"Rolling Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
+    "rmo": {"id":"rmo","name":"RMO","category":"momentum","description":"Alias for Revin Momentum Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "rolling_moving_average": {"id":"rolling_moving_average","name":"Rolling Moving Average","category":"trend","description":"Alias for RMA","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}","output_type":"indicator"},
     "rolling_variance": {"id":"rolling_variance","name":"Rolling Variance","category":"volatility","description":"Rolling variance over a window","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "rounding_bottom": {"id":"rounding_bottom","name":"Rounding Bottom","category":"patterns","description":"Rounding bottom/saucer reversal pattern with breakout above the rim","params_schema":"{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "rounding_top": {"id":"rounding_top","name":"Rounding Top","category":"patterns","description":"Rounding top reversal pattern with breakdown below the floor","params_schema":"{\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "rsi": {"id":"rsi","name":"RSI","category":"momentum","description":"Relative Strength Index","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}","output_type":"indicator"},
+    "rwp": {"id":"rwp","name":"RWP","category":"volatility","description":"Alias for Revin Width Percentile","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}","output_type":"indicator"},
     "shooting_star": {"id":"shooting_star","name":"Shooting Star","category":"patterns","description":"Shooting star candlestick: inverted-hammer shape after an advance","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.3},\"shadowMultiplier\":{\"type\":\"number\",\"default\":2},\"trendBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "since": {"id":"since","name":"Since","category":"trend","description":"Counts periods since last condition","params_schema":"","output_type":"indicator"},
     "sma": {"id":"sma","name":"SMA","category":"trend","description":"Simple Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":2}}}","output_type":"indicator"},
@@ -332,6 +337,7 @@ export const registryData = {
     "pivot_points": { "id":"pivot_points","name":"Pivot Points Trend","category":"trend","default_timeframes":["1h","4h","1d"],"description":"Generates signals based on price position relative to pivot levels","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PivotPointsConfig\",\"description\":\"Pivot Points Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodHigh\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodLow\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"periodHigh":20,"periodLow":20} },
     "projection_oscillator": { "id":"projection_oscillator","name":"Projection Oscillator Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ProjectionOscillatorConfig\",\"description\":\"Projection Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"smooth\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14,"smooth":3} },
     "rectangle_breakout": { "id":"rectangle_breakout","name":"Rectangle Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects rectangle continuation patterns and generates breakout/breakdown signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RectangleConfig\",\"description\":\"Rectangle Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSpread\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minTrend\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"minSpread":0.01,"minTrend":0.03,"slopeTolerance":0.0002,"trendBars":30} },
+    "revin_ribbons_strategy": { "id":"revin_ribbons_strategy","name":"Revin Ribbons Strategy","category":"volatility","default_timeframes":["1h","4h","1d"],"description":"Open approximation of Revin Ribbons midline flip system: close>midline long, close<midline short, with forgiveness/cooldown filters and optional flat-on-cooldown. Loses in chop, captures trends.","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RevinRibbonsStrategyConfig\",\"description\":\"Revin Ribbons Strategy configuration — open approximation of the Revinsuite midline trend system.\\n\\nClose above midline = long bias, close below = short bias. Cooldown/max-flip and forgiveness filters are simplified versus the proprietary TradingView strategy: - `midline_forgiveness_pct` is % of band width (not hard percent), as in the TV docs. - `max_consecutive_flips` + `cooldown_bars` gate chop around the midline. - `exit_flat_on_cooldown` controls whether a cooldown forces flat.\",\"type\":\"object\",\"properties\":{\"atrPeriod\":{\"description\":\"ATR period (default 14).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"cooldownBars\":{\"description\":\"Bars to wait after max flips (default 5).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"exitFlatOnCooldown\":{\"description\":\"If true, exit to flat during cooldown; if false, hold position through cooldown (default true).\",\"type\":[\"boolean\",\"null\"]},\"maxConsecutiveFlips\":{\"description\":\"Max direction flips before cooldown triggers (default 3).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"midlineForgivenessPct\":{\"description\":\"Forgiveness as % of band width before a midline flip counts (default 0 = no forgiveness).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"description\":\"Midline EMA period (default 20).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"s1Mult\":{\"description\":\"S1/R1 multiplier (default 1.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s2Mult\":{\"description\":\"S2/R2 multiplier (default 2.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s3Mult\":{\"description\":\"S3/R3 multiplier (default 3.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"atrPeriod":14,"cooldownBars":5,"exitFlatOnCooldown":true,"maxConsecutiveFlips":3,"midlineForgivenessPct":0,"period":20,"s1Mult":1.5,"s2Mult":2.5,"s3Mult":3.5} },
     "roc": { "id":"roc","name":"ROC Momentum Strategy","category":"momentum","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when ROC crosses above oversold level and sell signals when ROC crosses below overbought level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocConfig\",\"description\":\"ROC Strategy configuration\",\"type\":\"object\",\"properties\":{\"overbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"oversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"overbought":10,"oversold":-10,"period":14} },
     "roc_obv_rsi_momentum": { "id":"roc_obv_rsi_momentum","name":"ROC OBV + RSI Momentum","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Complex: ROC of OBV + RSI","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RocObvRsiConfig\",\"description\":\"ROC OBV RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"obvRocPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"obvRocPeriod":3,"rsiOverbought":70,"rsiOversold":30,"rsiPeriod":14} },
     "rounding_reversal": { "id":"rounding_reversal","name":"Rounding Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects rounding bottom (saucer) and rounding top (dome) reversal patterns","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RoundingConfig\",\"description\":\"Rounding Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"curvatureTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"curvatureTolerance":0.01,"lookback":120} },
@@ -1426,6 +1432,20 @@ export function createStrategyTools(
       config: z.object({ lookback: z.number().int().nullable().optional().default(120), minPoints: z.number().int().nullable().optional().default(3), minSpread: z.number().nullable().optional().default(0.01), minTrend: z.number().nullable().optional().default(0.03), slopeTolerance: z.number().nullable().optional().default(0.0002), trendBars: z.number().int().nullable().optional().default(30) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("rectangle_breakout", params),
+  }))
+
+  // Revin Ribbons Strategy (volatility)
+  tools.push(createWorkflowTool({
+    name: "revin_ribbons_strategy",
+    description: "Open approximation of Revin Ribbons midline flip system: close>midline long, close<midline short, with forgiveness/cooldown filters and optional flat-on-cooldown. Loses in chop, captures trends." + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ atrPeriod: z.number().int().nullable().describe("ATR period (default 14).").optional().default(14), cooldownBars: z.number().int().nullable().describe("Bars to wait after max flips (default 5).").optional().default(5), exitFlatOnCooldown: z.boolean().nullable().describe("If true, exit to flat during cooldown; if false, hold position through cooldown (default true).").optional().default(true), maxConsecutiveFlips: z.number().int().nullable().describe("Max direction flips before cooldown triggers (default 3).").optional().default(3), midlineForgivenessPct: z.number().nullable().describe("Forgiveness as % of band width before a midline flip counts (default 0 = no forgiveness).").optional().default(0), period: z.number().int().nullable().describe("Midline EMA period (default 20).").optional().default(20), s1Mult: z.number().nullable().describe("S1/R1 multiplier (default 1.5).").optional().default(1.5), s2Mult: z.number().nullable().describe("S2/R2 multiplier (default 2.5).").optional().default(2.5), s3Mult: z.number().nullable().describe("S3/R3 multiplier (default 3.5).").optional().default(3.5) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("revin_ribbons_strategy", params),
   }))
 
   // ROC Momentum Strategy (momentum)
@@ -2941,12 +2961,48 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "revin_momentum_oscillator",
+    description: "Revin Momentum Oscillator (RMO) open approximation: duration, priceMove, separation, level, combined" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("revin_momentum_oscillator", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "revin_ribbons",
+    description: "Revin Ribbons (open approximation): dynamic midline + tiered ATR ribbons S1/R1 S2/R2 S3/R3 with dotted midlines" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("revin_ribbons", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "revin_width_percentile",
+    description: "Revin Width Percentile (RWP) open approximation: percentile rank of ribbon width vs history" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("revin_width_percentile", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "rma",
     description: "Rolling Moving Average" + " (returns: indicator)",
     parameters: z.object({
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("rma", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "rmo",
+    description: "Alias for Revin Momentum Oscillator" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("rmo", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2992,6 +3048,15 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("rsi", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "rwp",
+    description: "Alias for Revin Width Percentile" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("rwp", params),
   }))
 
   tools.push(createWorkflowTool({

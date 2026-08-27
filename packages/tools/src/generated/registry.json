@@ -1563,12 +1563,44 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"slopeTolerance\":{\"type\":\"number\",\"default\":0.0002},\"minSpread\":{\"type\":\"number\",\"default\":0.01},\"lookback\":{\"type\":\"integer\",\"default\":120},\"trendBars\":{\"type\":\"integer\",\"default\":30},\"minTrend\":{\"type\":\"number\",\"default\":0.03}}}",
       "output_type": "indicator"
     },
+    "revin_momentum_oscillator": {
+      "id": "revin_momentum_oscillator",
+      "name": "Revin Momentum Oscillator",
+      "category": "momentum",
+      "description": "Revin Momentum Oscillator (RMO) open approximation: duration, priceMove, separation, level, combined",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "revin_ribbons": {
+      "id": "revin_ribbons",
+      "name": "Revin Ribbons",
+      "category": "volatility",
+      "description": "Revin Ribbons (open approximation): dynamic midline + tiered ATR ribbons S1/R1 S2/R2 S3/R3 with dotted midlines",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"s2Mult\":{\"type\":\"number\",\"default\":2.5},\"s3Mult\":{\"type\":\"number\",\"default\":3.5}}}",
+      "output_type": "indicator"
+    },
+    "revin_width_percentile": {
+      "id": "revin_width_percentile",
+      "name": "Revin Width Percentile",
+      "category": "volatility",
+      "description": "Revin Width Percentile (RWP) open approximation: percentile rank of ribbon width vs history",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}",
+      "output_type": "indicator"
+    },
     "rma": {
       "id": "rma",
       "name": "RMA",
       "category": "trend",
       "description": "Rolling Moving Average",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":4}}}",
+      "output_type": "indicator"
+    },
+    "rmo": {
+      "id": "rmo",
+      "name": "RMO",
+      "category": "momentum",
+      "description": "Alias for Revin Momentum Oscillator",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"fastPeriod\":{\"type\":\"integer\",\"default\":10},\"slowPeriod\":{\"type\":\"integer\",\"default\":30},\"rsiPeriod\":{\"type\":\"integer\",\"default\":14}}}",
       "output_type": "indicator"
     },
     "rolling_moving_average": {
@@ -1609,6 +1641,14 @@
       "category": "momentum",
       "description": "Relative Strength Index",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for RSI calculation\",\"default\":14}}}",
+      "output_type": "indicator"
+    },
+    "rwp": {
+      "id": "rwp",
+      "name": "RWP",
+      "category": "volatility",
+      "description": "Alias for Revin Width Percentile",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"atrPeriod\":{\"type\":\"integer\",\"default\":14},\"s1Mult\":{\"type\":\"number\",\"default\":1.5},\"lookback\":{\"type\":\"integer\",\"default\":100}}}",
       "output_type": "indicator"
     },
     "shooting_star": {
@@ -3334,6 +3374,30 @@
         "trendBars": 30
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RectangleConfig\",\"description\":\"Rectangle Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSpread\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minTrend\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "revin_ribbons_strategy": {
+      "id": "revin_ribbons_strategy",
+      "name": "Revin Ribbons Strategy",
+      "category": "volatility",
+      "default_timeframes": [
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Open approximation of Revin Ribbons midline flip system: close>midline long, close<midline short, with forgiveness/cooldown filters and optional flat-on-cooldown. Loses in chop, captures trends.",
+      "defaults": {
+        "atrPeriod": 14,
+        "cooldownBars": 5,
+        "exitFlatOnCooldown": true,
+        "maxConsecutiveFlips": 3,
+        "midlineForgivenessPct": 0.0,
+        "period": 20,
+        "s1Mult": 1.5,
+        "s2Mult": 2.5,
+        "s3Mult": 3.5
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RevinRibbonsStrategyConfig\",\"description\":\"Revin Ribbons Strategy configuration — open approximation of the Revinsuite midline trend system.\\n\\nClose above midline = long bias, close below = short bias. Cooldown/max-flip and forgiveness filters are simplified versus the proprietary TradingView strategy: - `midline_forgiveness_pct` is % of band width (not hard percent), as in the TV docs. - `max_consecutive_flips` + `cooldown_bars` gate chop around the midline. - `exit_flat_on_cooldown` controls whether a cooldown forces flat.\",\"type\":\"object\",\"properties\":{\"atrPeriod\":{\"description\":\"ATR period (default 14).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"cooldownBars\":{\"description\":\"Bars to wait after max flips (default 5).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"exitFlatOnCooldown\":{\"description\":\"If true, exit to flat during cooldown; if false, hold position through cooldown (default true).\",\"type\":[\"boolean\",\"null\"]},\"maxConsecutiveFlips\":{\"description\":\"Max direction flips before cooldown triggers (default 3).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"midlineForgivenessPct\":{\"description\":\"Forgiveness as % of band width before a midline flip counts (default 0 = no forgiveness).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"description\":\"Midline EMA period (default 20).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"s1Mult\":{\"description\":\"S1/R1 multiplier (default 1.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s2Mult\":{\"description\":\"S2/R2 multiplier (default 2.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s3Mult\":{\"description\":\"S3/R3 multiplier (default 3.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "roc": {

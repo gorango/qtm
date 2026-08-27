@@ -2088,3 +2088,50 @@ impl Default for ElliottWaveConfig {
 		}
 	}
 }
+
+/// Revin Ribbons Strategy configuration — open approximation of the Revinsuite midline trend system.
+///
+/// Close above midline = long bias, close below = short bias. Cooldown/max-flip
+/// and forgiveness filters are simplified versus the proprietary TradingView strategy:
+/// - `midline_forgiveness_pct` is % of band width (not hard percent), as in the TV docs.
+/// - `max_consecutive_flips` + `cooldown_bars` gate chop around the midline.
+/// - `exit_flat_on_cooldown` controls whether a cooldown forces flat.
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RevinRibbonsStrategyConfig {
+	/// Midline EMA period (default 20).
+	pub period: Option<u32>,
+	/// ATR period (default 14).
+	pub atr_period: Option<u32>,
+	/// S1/R1 multiplier (default 1.5).
+	pub s1_mult: Option<f64>,
+	/// S2/R2 multiplier (default 2.5).
+	pub s2_mult: Option<f64>,
+	/// S3/R3 multiplier (default 3.5).
+	pub s3_mult: Option<f64>,
+	/// Forgiveness as % of band width before a midline flip counts (default 0 = no forgiveness).
+	pub midline_forgiveness_pct: Option<f64>,
+	/// Max direction flips before cooldown triggers (default 3).
+	pub max_consecutive_flips: Option<u32>,
+	/// Bars to wait after max flips (default 5).
+	pub cooldown_bars: Option<u32>,
+	/// If true, exit to flat during cooldown; if false, hold position through cooldown (default true).
+	pub exit_flat_on_cooldown: Option<bool>,
+}
+
+impl Default for RevinRibbonsStrategyConfig {
+	fn default() -> Self {
+		Self {
+			period: Some(20),
+			atr_period: Some(14),
+			s1_mult: Some(1.5),
+			s2_mult: Some(2.5),
+			s3_mult: Some(3.5),
+			midline_forgiveness_pct: Some(0.0),
+			max_consecutive_flips: Some(3),
+			cooldown_bars: Some(5),
+			exit_flat_on_cooldown: Some(true),
+		}
+	}
+}
