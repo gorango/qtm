@@ -7,11 +7,15 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Money Flow Index (MFI) config.
 pub struct MFIConfig {
+	/// MFI period (default 14). Valid 2..=100.
 	pub period: Option<u32>,
 	pub price_source: Option<String>,
 }
 
+/// Money Flow Index (MFI) — volume-weighted RSI (0..100).
+/// `MFI = 100 - 100/(1 + positive_MF/negative_MF)` over `period` bars. >80 overbought.
 pub fn mfi(
 	highs: &[f64],
 	lows: &[f64],
@@ -78,6 +82,7 @@ pub fn mfi(
 	result
 }
 
+/// Alias `money_flow_index` for MFI (full name).
 pub fn money_flow_index(
 	highs: &[f64],
 	lows: &[f64],

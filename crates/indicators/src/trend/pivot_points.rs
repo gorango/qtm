@@ -3,17 +3,25 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct PivotPointsResult {
+	/// Pivot point `(high+low+close)/3`.
 	pub pivot: f64,
+	/// Resistance 1: `2*pivot - low`.
 	pub r1: f64,
+	/// Resistance 2: `pivot + (high - low)`.
 	pub r2: f64,
+	/// Resistance 3: `high + 2*(pivot - low)`.
 	pub r3: f64,
+	/// Support 1: `2*pivot - high`.
 	pub s1: f64,
+	/// Support 2: `pivot - (high - low)`.
 	pub s2: f64,
+	/// Support 3: `low - 2*(high - pivot)`.
 	pub s3: f64,
 }
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+/// Fibonacci pivot points — same pivot but R/S scaled by 0.382/0.618/1.0.
 pub struct FibonacciPivotPointsResult {
 	pub pivot: f64,
 	pub r1: f64,
@@ -28,6 +36,9 @@ pub struct FibonacciPivotPointsResult {
 	pub s5: f64,
 }
 
+/// Standard floor pivot points for a single bar.
+///
+/// `pivot = (high+low+close)/3`; R1/S1 etc. are textbook formulas. No warmup (single-bar output).
 pub fn pivot_points(high: f64, low: f64, close: f64) -> PivotPointsResult {
 	let pivot = (high + low + close) / 3.0;
 
@@ -50,6 +61,7 @@ pub fn pivot_points(high: f64, low: f64, close: f64) -> PivotPointsResult {
 	}
 }
 
+/// Fibonacci pivot points — same pivot, R/S levels scaled by 38.2%/61.8%/100% of the range.
 pub fn fibonacci_pivot_points(high: f64, low: f64, close: f64) -> FibonacciPivotPointsResult {
 	let pivot = (high + low + close) / 3.0;
 	let range = high - low;
@@ -81,6 +93,8 @@ pub fn fibonacci_pivot_points(high: f64, low: f64, close: f64) -> FibonacciPivot
 	}
 }
 
+/// Camarilla Pivot Points — 8 levels scaled by 1.1/12 around the close.
+/// More granular than floor pivots; intraday use. Direct definition.
 pub fn camarilla_pivot_points(high: f64, low: f64, close: f64) -> PivotPointsResult {
 	let range = high - low;
 

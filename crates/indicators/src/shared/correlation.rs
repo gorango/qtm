@@ -6,7 +6,9 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Pearson correlation config.
 pub struct CorrelationConfig {
+	/// Lookback period (default 20-60). Valid 2..=500.
 	pub period: Option<u32>,
 }
 
@@ -61,6 +63,7 @@ fn correlation_internal(values1: &[f64], values2: &[f64], period: usize) -> Vec<
 	result
 }
 
+/// Pearson correlation — rolling correlation between two series over `period` bars. Range -1..1.
 pub fn correlation(
 	values1: &[f64],
 	values2: &[f64],
@@ -75,6 +78,7 @@ pub fn correlation(
 	Ok(correlation_internal(values1, values2, period))
 }
 
+/// Alias `pearson_correlation` for `correlation`.
 pub fn pearson_correlation(
 	values1: &[f64],
 	values2: &[f64],

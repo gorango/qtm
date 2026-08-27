@@ -1,6 +1,12 @@
 use crate::trend::wma::wma_internal;
 use crate::IndicatorResult;
 
+/// Hull Moving Average (HMA).
+///
+/// HMA(period) = WMA(2*WMA(period/2) - WMA(period), sqrt(period)). Very responsive with reduced lag. Defined by Alan Hull. Period defaults to 16.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn hma(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(16) as usize;
 	crate::utils::validation::validate_period(period)?;

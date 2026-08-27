@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Triangles — ascending/descending/symmetrical via converging peaks/troughs.
+/// Returns scores per bar. Heuristic linear-regression based.
 pub fn triangles(
 	opens: &[f64],
 	highs: &[f64],

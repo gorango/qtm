@@ -6,11 +6,15 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DCResult {
+	/// Upper channel — rolling max of closes over `period` bars.
 	pub upper: Vec<f64>,
+	/// Middle — `(upper + lower) / 2`.
 	pub middle: Vec<f64>,
+	/// Lower channel — rolling min of closes.
 	pub lower: Vec<f64>,
 }
 
+/// Donchian Channel — `dc` short alias. Upper = rolling max, lower = rolling min, middle = (upper+lower)/2.
 pub fn dc(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 	let len = closings.len();
 
@@ -42,6 +46,14 @@ pub fn dc(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 	})
 }
 
+/// Donchian Channel — price channel from rolling highs/lows.
+///
+/// Upper = max(closes, period), lower = min(closes, period), middle = (upper+lower)/2.
+/// Breakouts above upper / below lower are trend signals. Defined by Richard Donchian.
+/// Period defaults to 20. `NaN` for first `period - 1` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn donchian_channel(closings: &[f64], period: Option<u32>) -> IndicatorResult<DCResult> {
 	dc(closings, period)
 }

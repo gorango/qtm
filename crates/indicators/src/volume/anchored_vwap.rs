@@ -1,5 +1,8 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 
+/// Anchored VWAP — VWAP computed from `anchor_idx` forward.
+/// `VWAP = Σ(price*volume)/Σ(volume)` from anchor. Useful for event-anchored levels.
+/// Returns `NaN` before anchor.
 pub fn anchored_vwap(
 	highs: &[f64],
 	lows: &[f64],

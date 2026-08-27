@@ -14,6 +14,7 @@ impl Default for MSTDConfig {
 	}
 }
 
+/// Moving Standard Deviation — `mstd` short alias. Rolling population std over `period` bars. `NaN` for first `period - 1` bars.
 pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
@@ -49,6 +50,8 @@ pub fn mstd(values: &[f64], config: Option<MSTDConfig>) -> IndicatorResult<Vec<f
 	Ok(result)
 }
 
+/// Moving Standard Deviation — rolling population standard deviation. Full-name alias for `mstd`.
+/// Welford's method per window. Period defaults to 4. See `mstd`.
 pub fn moving_standard_deviation(
 	values: &[f64],
 	config: Option<MSTDConfig>,

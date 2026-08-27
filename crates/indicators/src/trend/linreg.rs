@@ -9,6 +9,13 @@ pub struct LinRegConfig {
 	pub offset: Option<u32>,
 }
 
+/// Linear Regression (LinReg) — endpoint of the least-squares line over `period` bars.
+///
+/// Fits `y = a + b*x` to the last `period` values and returns the fitted value at the last bar.
+/// Equivalent to the moving linear regression forecast.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn linreg(values: &[f64], config: Option<LinRegConfig>) -> IndicatorResult<Vec<f64>> {
 	let config = config.unwrap_or(LinRegConfig {
 		period: Some(14),

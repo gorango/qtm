@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// ValueWhen config.
 pub struct ValueWhenConfig {
 	pub occurrence: Option<u32>,
 }
@@ -29,6 +30,7 @@ fn value_when_internal(condition: &[f64], source: &[f64], occurrence: usize) -> 
 	result
 }
 
+/// Value When — value of `source` at the most recent bar where `condition` was true.
 pub fn value_when(
 	condition: &[f64],
 	source: &[f64],

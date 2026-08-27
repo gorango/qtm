@@ -1,6 +1,8 @@
 use crate::internal::ema::ema_internal;
 use crate::{IndicatorError, IndicatorResult};
 
+/// McClellan Oscillator — `EMA19(advances-declines) - EMA39(advances-declines)` normalized.
+/// Breadth momentum; positive = bullish breadth. Defined by Sherman & Marian McClellan.
 pub fn mcclellan_oscillator(advances: &[f64], declines: &[f64]) -> IndicatorResult<Vec<f64>> {
 	if advances.is_empty() || declines.is_empty() {
 		return Ok(vec![]);

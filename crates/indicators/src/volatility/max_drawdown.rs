@@ -1,4 +1,10 @@
 use crate::IndicatorResult;
+/// Maximum Drawdown — largest peak-to-trough decline over `period` bars.
+///
+/// `max(peak - trough) / peak` within rolling window. 0..1. Risk measure; `NaN` until `period` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn max_drawdown(prices: &[f64], period: u32) -> IndicatorResult<Vec<f64>> {
 	let len = prices.len();
 	let period = period as usize;

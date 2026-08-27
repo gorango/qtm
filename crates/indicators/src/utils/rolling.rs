@@ -1,3 +1,4 @@
+/// Rolling sum over `period` bars. `NaN` for first `period - 1` bars.
 pub fn rolling_sum(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len < period || period == 0 {
@@ -22,6 +23,7 @@ pub fn rolling_sum(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Rolling mean over `period` bars.
 pub fn rolling_mean(values: &[f64], period: usize) -> Vec<f64> {
 	let sums = rolling_sum(values, period);
 	let len = sums.len();
@@ -36,6 +38,7 @@ pub fn rolling_mean(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Rolling max over `period` bars.
 pub fn rolling_max(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len < period || period == 0 {
@@ -55,6 +58,7 @@ pub fn rolling_max(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Rolling min over `period` bars.
 pub fn rolling_min(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len < period || period == 0 {
@@ -74,6 +78,7 @@ pub fn rolling_min(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Growing rolling min — min from start to each bar.
 pub fn rolling_min_growing(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len == 0 {
@@ -91,6 +96,7 @@ pub fn rolling_min_growing(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Growing rolling max — max from start to each bar.
 pub fn rolling_max_growing(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len == 0 {

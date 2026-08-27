@@ -20,6 +20,11 @@ pub struct PercentagePriceOscillatorResult {
 	pub histogram: Vec<f64>,
 }
 
+/// Percentage Price Oscillator (PPO) — `100*(EMA12 - EMA26)/EMA26` with EMA9 signal.
+/// Percentage version of MACD; bounded. Direct definition. Period defaults 12/26/9.
+///
+/// # Errors
+/// Returns an error if periods are 0 or inputs invalid.
 pub fn percentage_price_oscillator(
 	prices: &[f64],
 	config: Option<PercentagePriceOscillatorConfig>,

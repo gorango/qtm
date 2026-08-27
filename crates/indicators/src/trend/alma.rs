@@ -5,11 +5,20 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ALMAConfig {
+	/// Lookback period (default 9). Valid range 2..=100.
 	pub period: Option<u32>,
+	/// Offset controlling Gaussian center within the window, 0..1 (default 0.85). 0.85 biases toward recent prices.
 	pub offset: Option<f64>,
+	/// Gaussian sigma divisor (default 6.0). Larger sigma = smoother. Must be > 0.
 	pub sigma: Option<f64>,
 }
 
+/// Arnaud Legoux Moving Average (ALMA).
+///
+/// Gaussian-weighted MA with offset and sigma. More responsive than SMA, smoother than EMA. Config: `period` (default 9), `offset` (0-1, default 0.85), `sigma` (default 6).
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn alma(values: &[f64], config: Option<ALMAConfig>) -> IndicatorResult<Vec<f64>> {
 	let config = config.unwrap_or(ALMAConfig {
 		period: Some(9),

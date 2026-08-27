@@ -61,6 +61,7 @@ pub struct POResult {
 	pub spo_result: Vec<f64>,
 }
 
+/// Projection Oscillator — `po` short alias. Bounded 0..100.
 pub fn po(
 	highs: &[f64],
 	lows: &[f64],
@@ -124,6 +125,8 @@ pub fn po(
 	})
 }
 
+/// Projection Oscillator — normalized position of close within projected highs/lows. Full name.
+/// `PO = 100*(close - min_proj)/(max_proj - min_proj)` via linear regression over period. `NaN` until warmup.
 pub fn projection_oscillator(
 	highs: &[f64],
 	lows: &[f64],

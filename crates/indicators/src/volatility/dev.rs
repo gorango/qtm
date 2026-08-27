@@ -14,6 +14,8 @@ impl Default for MeanAbsoluteDeviationConfig {
 	}
 }
 
+/// Mean Absolute Deviation — `dev` short alias.
+/// Mean of `|value - SMA(value, period)|` over `period` bars. Used inside CCI.
 pub fn dev(
 	values: &[f64],
 	config: Option<MeanAbsoluteDeviationConfig>,
@@ -48,6 +50,13 @@ pub fn dev(
 	Ok(result)
 }
 
+/// Mean Absolute Deviation (MAD) — average absolute deviation from the SMA.
+///
+/// `MAD = mean(|value[i] - SMA(value, period)|)` over `period` bars. Used as denominator in CCI.
+/// Period defaults to 20. `NaN` for first `period - 1` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn mean_absolute_deviation(
 	values: &[f64],
 	config: Option<MeanAbsoluteDeviationConfig>,

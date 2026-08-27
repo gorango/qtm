@@ -17,6 +17,14 @@ pub struct PSARConfig {
 	pub max: Option<f64>,
 }
 
+/// Parabolic SAR (Stop and Reverse).
+///
+/// Wilder's trailing stop that flips when price crosses the PSAR level.
+/// Acceleration starts at `acceleration` and increments by that step up to `max_acceleration`.
+/// Returns PSAR levels and trend direction. Used for stop placement and trend identification.
+///
+/// # Errors
+/// Returns an error if inputs invalid or acceleration values out of range.
 pub fn parabolic_sar(
 	highs: &[f64],
 	lows: &[f64],

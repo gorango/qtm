@@ -1,6 +1,7 @@
 use crate::{IndicatorError, IndicatorResult};
 use std::collections::VecDeque;
 
+/// Least-squares linear regression fit — internal helper for Chande Forecast.
 fn linear_regression_least_squares(x: &[f64], y: &[f64]) -> Vec<f64> {
 	let n = x.len();
 	if n == 0 || n != y.len() {
@@ -30,6 +31,7 @@ fn linear_regression_least_squares(x: &[f64], y: &[f64]) -> Vec<f64> {
 	x.iter().map(|&xi| m * xi + b).collect()
 }
 
+/// Rolling linear regression — per-bar fitted value over `period` bars.
 fn moving_linear_regression_least_squares(period: usize, x: &[f64], y: &[f64]) -> Vec<f64> {
 	let len = y.len();
 	let mut result = vec![0.0; len];
@@ -76,6 +78,8 @@ fn moving_linear_regression_least_squares(period: usize, x: &[f64], y: &[f64]) -
 	result
 }
 
+/// Chande Forecast Oscillator — `100*(close - linear_reg_forecast)/close`.
+/// Measures deviation from linear trend. Bounded roughly -100..100. Defined by Tushar Chande.
 pub fn chande_forecast_oscillator(closings: &[f64]) -> IndicatorResult<Vec<f64>> {
 	if closings.is_empty() {
 		return Err(IndicatorError::Custom("Array cannot be empty".into()));
@@ -102,6 +106,8 @@ pub fn chande_forecast_oscillator(closings: &[f64]) -> IndicatorResult<Vec<f64>>
 	Ok(result)
 }
 
+/// Moving Chande Forecast Oscillator — rolling version over `period` bars.
+/// Same formula but forecast is rolling regression. Period defaults to 14.
 pub fn moving_chande_forecast_oscillator(
 	closings: &[f64],
 	period: Option<u32>,

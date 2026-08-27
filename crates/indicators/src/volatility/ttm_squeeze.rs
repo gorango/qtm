@@ -8,11 +8,16 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+/// TTM Squeeze result — squeeze flag plus momentum histogram.
 pub struct TTMSqueezeResult {
 	pub in_squeeze: Vec<bool>,
 	pub breakout: Vec<Option<String>>,
 }
 
+/// TTM Squeeze — Bollinger Bands inside Keltner indicates low volatility (squeeze).
+/// Squeeze = BB(20,2) inside KC(20,1.5). Histogram is linear regression slope. Contraction before expansion (John Carter).
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn ttm_squeeze(
 	highs: &[f64],
 	lows: &[f64],

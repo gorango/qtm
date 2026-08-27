@@ -14,6 +14,11 @@ impl Default for VarianceConfig {
 	}
 }
 
+/// Rolling Variance — variance over `period` bars. Thin wrapper with validation.
+/// Population variance (`/ period`). `NaN` for first `period - 1` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
@@ -43,6 +48,7 @@ pub fn variance(values: &[f64], config: Option<VarianceConfig>) -> IndicatorResu
 	Ok(result)
 }
 
+/// Alias for `variance` — rolling variance (full name).
 pub fn rolling_variance(
 	values: &[f64],
 	config: Option<VarianceConfig>,

@@ -11,6 +11,11 @@ pub struct WilliamsRConfig {
 	pub period: Option<u32>,
 }
 
+/// Williams %R — `100*(highest_high - close)/(highest_high - lowest_low)` over `period` bars.
+/// Bounded -100..0; -20 overbought. Inverse of Stochastic. Defined by Larry Williams.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn williams_r(
 	highs: &[f64],
 	lows: &[f64],

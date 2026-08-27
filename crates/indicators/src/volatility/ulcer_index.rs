@@ -2,6 +2,8 @@ use crate::internal::sma::sma_internal;
 use crate::utils::rolling::rolling_max;
 use crate::{IndicatorError, IndicatorResult};
 
+/// Ulcer Index — `ui` short alias. `sqrt(mean(drawdown%^2))` over `period` bars.
+/// Measures downside volatility; `0` = no drawdown. Defined by Peter Martin.
 pub fn ui(closings: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let len = closings.len();
 
@@ -49,6 +51,8 @@ pub fn ui(closings: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	Ok(result)
 }
 
+/// Ulcer Index — `sqrt(mean(drawdown%^2))` over `period` bars. Full-name alias for `ui`.
+/// See `ui` for details.
 pub fn ulcer_index(closings: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	ui(closings, period)
 }

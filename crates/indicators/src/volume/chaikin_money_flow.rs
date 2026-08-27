@@ -1,6 +1,8 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 use crate::utils::validation::validate_period;
 
+/// Chaikin Money Flow (CMF) — `Σ(MFV)/Σ(volume)` over `period` bars. `MFV = ((close-low)-(high-close))/(high-low)*volume`.
+/// Range -1..1; positive = buying pressure. Period defaults to 20.
 pub fn chaikin_money_flow(
 	highs: &[f64],
 	lows: &[f64],
@@ -60,6 +62,7 @@ pub fn chaikin_money_flow(
 	result
 }
 
+/// Alias `cmf` for Chaikin Money Flow.
 pub fn cmf(
 	highs: &[f64],
 	lows: &[f64],

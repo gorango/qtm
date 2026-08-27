@@ -9,6 +9,13 @@ pub struct VortexResult {
 	pub minus: Vec<f64>,
 }
 
+/// Vortex Indicator (VI).
+///
+/// `+VI = sum(|high - low_prev|) / sum(TR)`, `-VI = sum(|low - high_prev|) / sum(TR)` over `period` bars.
+/// Cross of +VI above -VI signals uptrend. Defined by Etienne Botes and Douglas Siepman.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn vortex(
 	highs: &[f64],
 	lows: &[f64],

@@ -2,6 +2,8 @@ use crate::types::configs::RocObvRsiConfig;
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Roc Obv Rsi Momentum — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "roc_obv_rsi_momentum",
     name = "ROC OBV + RSI Momentum",

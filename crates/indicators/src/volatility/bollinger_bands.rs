@@ -6,8 +6,11 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct BBResult {
+	/// Upper band — `middle + std_dev * sigma`.
 	pub upper: Vec<f64>,
+	/// Middle band — SMA(closes, period).
 	pub middle: Vec<f64>,
+	/// Lower band — `middle - std_dev * sigma`.
 	pub lower: Vec<f64>,
 }
 
@@ -15,7 +18,9 @@ pub struct BBResult {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BBConfig {
+	/// SMA/std period (default 20). Valid 2..=100.
 	pub period: Option<u32>,
+	/// Standard deviation multiplier (default 2.0). Must be >0.
 	pub std_dev: Option<f64>,
 }
 
@@ -74,6 +79,7 @@ pub fn bb(closings: &[f64], config: Option<BBConfig>) -> IndicatorResult<BBResul
 	})
 }
 
+/// Alias for `bb` — Bollinger Bands (full name).
 pub fn bollinger_bands(closings: &[f64], config: Option<BBConfig>) -> IndicatorResult<BBResult> {
 	bb(closings, config)
 }

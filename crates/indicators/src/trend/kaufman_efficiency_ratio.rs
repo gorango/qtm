@@ -8,6 +8,7 @@ use crate::IndicatorResult;
 /// 0 means the price traveled a lot and got nowhere (pure noise). The first
 /// `period` bars have no full window and are NaN. A completely flat window
 /// has zero path length, which we report as 0 rather than dividing by zero.
+/// Efficiency Ratio kernel — `|close[i]-close[i-period]| / Σ|close[j]-close[j-1]|`.
 pub fn er_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![f64::NAN; len];
@@ -31,6 +32,9 @@ pub fn er_internal(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Kaufman Efficiency Ratio — `0..1`; 1 = perfect trend, 0 = noise.
+/// Numerator = net change over period, denominator = sum of absolute bar changes.
+/// Used inside KAMA. Period defaults to 10. Direct Kaufman definition.
 pub fn kaufman_efficiency_ratio(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(10) as usize;
 	crate::utils::validation::validate_period(period)?;

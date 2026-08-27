@@ -1,6 +1,13 @@
 use crate::internal::moving_sum::moving_sum_internal;
 use crate::{IndicatorError, IndicatorResult};
 
+/// Volume-Weighted Moving Average (VWMA).
+///
+/// `sum(close * volume) / sum(volume)` over `period` bars. Like VWAP but rolling window on closes.
+/// Period defaults to 20. `NaN` for first `period - 1` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid/mismatched.
 pub fn vwma(closings: &[f64], volumes: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(20) as usize;
 

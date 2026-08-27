@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Stars — doji-like indecision patterns (morning/evening stars).
+/// Returns per-bar scores. Direct candlestick definition.
 pub fn stars(
 	opens: &[f64],
 	highs: &[f64],

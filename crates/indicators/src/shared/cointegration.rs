@@ -6,7 +6,9 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Cointegration config — lookback and significance.
 pub struct CointegrationConfig {
+	/// Lookback period (default 20-60). Valid 2..=500.
 	pub period: Option<u32>,
 	pub beta_period: Option<u32>,
 }
@@ -94,6 +96,8 @@ fn cointegration_internal(
 	result
 }
 
+/// Cointegration — Engle-Granger test on two price series.
+/// Returns hedge ratio, p-value and residual. Period defaults to 60.
 pub fn cointegration(
 	values1: &[f64],
 	values2: &[f64],

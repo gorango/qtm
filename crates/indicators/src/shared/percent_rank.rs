@@ -5,7 +5,9 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Percent rank config.
 pub struct PercentRankConfig {
+	/// Lookback period (default 20-60). Valid 2..=500.
 	pub period: Option<u32>,
 }
 
@@ -48,6 +50,7 @@ fn percent_rank_internal(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Percent Rank — `(rank of current value within period) / period * 100`. Range 0..100.
 pub fn percent_rank(
 	values: &[f64],
 	config: Option<PercentRankConfig>,

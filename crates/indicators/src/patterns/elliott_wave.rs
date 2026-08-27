@@ -2,6 +2,7 @@ use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
 #[allow(clippy::too_many_arguments)]
+/// Elliott Wave — chart pattern detector. Returns per-bar scores 0..100; higher = cleaner pattern. Heuristic.
 pub fn elliott_wave(
 	opens: &[f64],
 	highs: &[f64],

@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Percentile (nearest rank) config.
 pub struct PercentileNearestRankConfig {
 	pub period: Option<u32>,
 	pub percentage: Option<f64>,
@@ -35,6 +36,7 @@ fn percentile_nearest_rank_internal(values: &[f64], period: usize, percentage: f
 	result
 }
 
+/// Percentile (nearest rank) — `p`th percentile as the nearest-rank order statistic.
 pub fn percentile_nearest_rank(
 	values: &[f64],
 	config: Option<PercentileNearestRankConfig>,

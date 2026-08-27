@@ -2,6 +2,8 @@ use crate::types::configs::TriangleRsiConfig;
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Triangle Rsi Breakout — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "triangle_rsi_breakout",
     name = "Triangle + RSI Breakout",

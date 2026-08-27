@@ -1,3 +1,4 @@
+/// True range kernel — `max(high-low, |high-prev_close|, |low-prev_close|)` per bar.
 pub fn tr_internal(highs: &[f64], lows: &[f64], closes: &[f64]) -> Vec<f64> {
 	let len = highs.len();
 	if len == 0 {

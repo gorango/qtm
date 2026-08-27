@@ -7,11 +7,15 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct KCResult {
+	/// Upper band — `middle + multiplier*ATR`.
 	pub upper: Vec<f64>,
+	/// Middle — EMA(closes, period).
 	pub middle: Vec<f64>,
+	/// Lower band — `middle - multiplier*ATR`.
 	pub lower: Vec<f64>,
 }
 
+/// Keltner Channel — `kc` short alias. EMA midline ± multiplier*ATR.
 pub fn kc(
 	highs: &[f64],
 	lows: &[f64],
@@ -52,6 +56,13 @@ pub fn kc(
 	})
 }
 
+/// Keltner Channel — EMA midline with ATR bands.
+///
+/// Middle = EMA(closes, period), upper/lower = middle ± multiplier*ATR(period).
+/// Narrower than Bollinger (ATR vs std). Defined by Chester Keltner, modernized with ATR.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn keltner_channel(
 	highs: &[f64],
 	lows: &[f64],

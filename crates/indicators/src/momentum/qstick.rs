@@ -10,6 +10,11 @@ pub struct QstickConfig {
 	pub period: Option<u32>,
 }
 
+/// Qstick — `SMA(close - open, period)`.
+/// Positive = buying pressure dominates. Defined by Tushar Chande. Period defaults to 14.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn qstick(opens: &[f64], closes: &[f64], config: Option<QstickConfig>) -> Vec<f64> {
 	let config_obj = config.unwrap_or(QstickConfig { period: None });
 	let period = config_obj.period.unwrap_or(14) as usize;

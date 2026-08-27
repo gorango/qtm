@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// VWAP config — lookback or session-based.
 pub struct VWAPConfig {
 	pub period: Option<u32>,
 	pub price_source: Option<String>,
@@ -14,6 +15,8 @@ pub struct VWAPConfig {
 	pub session_length: Option<u32>,
 }
 
+/// Volume-Weighted Average Price (VWAP) — `Σ(typical_price * volume)/Σ(volume)` intra-day or rolling.
+/// Benchmark for execution quality. `NaN` until first volume.
 pub fn vwap(
 	highs: &[f64],
 	lows: &[f64],
@@ -109,6 +112,7 @@ pub fn vwap(
 	result
 }
 
+/// Alias `volume_weighted_average_price` for VWAP (full name).
 pub fn volume_weighted_average_price(
 	highs: &[f64],
 	lows: &[f64],

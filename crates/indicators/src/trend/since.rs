@@ -1,4 +1,5 @@
 use crate::IndicatorResult;
+/// Bars-since kernel — counts bars since last truthy value. No validation; internal use.
 pub fn since_internal(values: &[f64]) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![0.0; len];
@@ -24,6 +25,12 @@ pub fn since_internal(values: &[f64]) -> Vec<f64> {
 	result
 }
 
+/// Bars Since — per-bar count of bars since last non-zero value.
+///
+/// Resets to 0 on truthy bars, increments otherwise. Useful for Aroon and similar lookback counters.
+///
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn since(values: &[f64]) -> IndicatorResult<Vec<f64>> {
 	crate::utils::validation::validate_finite(&[values])?;
 	Ok(since_internal(values))

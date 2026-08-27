@@ -1,6 +1,12 @@
 use crate::internal::ema::ema_internal;
 use crate::IndicatorResult;
 
+/// Triple Exponential Moving Average (TEMA).
+///
+/// TEMA = 3*EMA1 - 3*EMA2 + EMA3 where EMA1/2/3 are successive EMAs. Even less lag than DEMA. Defined by Mulloy (1994). Period defaults to 12.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn tema(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(2) as usize;
 	crate::utils::validation::validate_period(period)?;

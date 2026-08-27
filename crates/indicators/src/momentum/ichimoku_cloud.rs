@@ -109,6 +109,12 @@ pub struct IchimokuCloudResult {
 	pub lagging_span: Vec<f64>,
 }
 
+/// Ichimoku Cloud — trend, support/resistance and momentum in one view.
+/// Conversion = (high+low)/2 over 9 bars, base over 26, span B over 52, displaced 26 bars forward.
+/// Defined by Goichi Hosoda. `NaN` until 52 bars.
+///
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn ichimoku_cloud(
 	highs: &[f64],
 	lows: &[f64],
@@ -157,6 +163,7 @@ pub fn ichimoku_cloud(
 	}
 }
 
+/// Alias `ichimoku` for Ichimoku Cloud (short name).
 pub fn ichimoku(
 	highs: &[f64],
 	lows: &[f64],

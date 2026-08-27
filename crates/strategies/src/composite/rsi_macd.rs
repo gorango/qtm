@@ -5,6 +5,8 @@ use indicators_core::macd;
 use indicators_core::rsi;
 use strategies_proc_macro::strategy;
 
+/// Rsi Macd Confirmation — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "rsi_macd_confirmation",
     name = "RSI + MACD Confirmation",

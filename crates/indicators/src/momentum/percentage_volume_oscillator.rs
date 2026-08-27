@@ -18,6 +18,11 @@ pub struct PercentageVolumeOscillatorResult {
 	pub histogram: Vec<f64>,
 }
 
+/// Percentage Volume Oscillator — `100*(EMA12(vol) - EMA26(vol))/EMA26(vol)` with signal.
+/// Volume analog of PPO. Period defaults 12/26/9.
+///
+/// # Errors
+/// Returns an error if periods are 0 or inputs invalid.
 pub fn percentage_volume_oscillator(
 	volumes: &[f64],
 	config: Option<PercentageVolumeOscillatorConfig>,
@@ -61,6 +66,7 @@ pub fn percentage_volume_oscillator(
 	}
 }
 
+/// Alias `pvo` for Percentage Volume Oscillator.
 pub fn pvo(
 	volumes: &[f64],
 	config: Option<PercentageVolumeOscillatorConfig>,

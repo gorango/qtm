@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Cup and Handle — detects cup shape via trough and handle via flag.
+/// Scores 0..100 per bar; higher = cleaner pattern. Heuristic; no canonical formula.
 pub fn cup_and_handle(
 	opens: &[f64],
 	highs: &[f64],

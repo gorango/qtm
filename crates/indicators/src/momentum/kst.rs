@@ -24,6 +24,11 @@ pub struct KSTResult {
 	pub signal: Vec<f64>,
 }
 
+/// Know Sure Thing (KST) — weighted sum of four ROCs (Martin Pring).
+/// `KST = Σ weight_i * ROC(period_i)`, signal = SMA(KST, signal_period). Bounded roughly -100..100.
+///
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn kst(prices: &[f64], config: Option<KSTConfig>) -> KSTResult {
 	let config_obj = config.unwrap_or(KSTConfig {
 		roc1_period: None,

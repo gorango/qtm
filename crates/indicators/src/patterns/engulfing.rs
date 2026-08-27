@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Bullish Engulfing — two-candle reversal where a green candle engulfs the prior red.
+/// Returns per-bar boolean/score. Direct candlestick definition.
 pub fn bullish_engulfing(
 	opens: &[f64],
 	_highs: &[f64],
@@ -41,6 +43,7 @@ pub fn bullish_engulfing(
 	Ok(results)
 }
 
+/// Bearish Engulfing — inverse of bullish: red engulfs prior green.
 pub fn bearish_engulfing(
 	opens: &[f64],
 	_highs: &[f64],

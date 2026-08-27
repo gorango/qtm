@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Double Bottom — W-shaped reversal with two troughs near same level.
+/// Returns scores 0..100 per bar. Heuristic.
 pub fn double_bottom(
 	opens: &[f64],
 	highs: &[f64],

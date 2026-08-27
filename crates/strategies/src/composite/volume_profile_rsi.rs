@@ -4,6 +4,8 @@ use indicators_core::rsi;
 use indicators_core::volume_profile;
 use strategies_proc_macro::strategy;
 
+/// Volume Profile Rsi — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "volume_profile_rsi",
     name = "Volume Profile + RSI",

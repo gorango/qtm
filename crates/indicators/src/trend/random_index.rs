@@ -2,6 +2,7 @@ use crate::internal::sma::sma_internal;
 use crate::IndicatorResult;
 use serde::{Deserialize, Serialize};
 
+/// KDJ internal rolling max — same as moving_max but initialized to current value (no NaN prefix).
 fn kdj_moving_max_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![0.0; len];
@@ -22,6 +23,7 @@ fn kdj_moving_max_internal(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// KDJ internal rolling min — same duality as above for lows.
 fn kdj_moving_min_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	let mut result = vec![0.0; len];
@@ -45,11 +47,22 @@ fn kdj_moving_min_internal(values: &[f64], period: usize) -> Vec<f64> {
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct KDJResult {
+	/// %K — SMA of RSV (0..100).
 	pub k: Vec<f64>,
+	/// %D — SMA of %K (0..100).
 	pub d: Vec<f64>,
+	/// %J — `3*K - 2*D` (can exceed 0..100).
 	pub j: Vec<f64>,
 }
 
+/// KDJ / Random Index (Stochastic variant).
+///
+/// RSV = `100*(close - lowest_low)/(highest_high - lowest_low)` over `r_period`;
+/// K = SMA(RSV, k_period), D = SMA(K, d_period), J = 3K - 2D.
+/// Widely used in Asian markets. Defaults: r 9, k 3, d 3. Direct definition.
+///
+/// # Errors
+/// Returns an error if inputs mismatched or periods invalid.
 pub fn random_index(
 	highs: &[f64],
 	lows: &[f64],

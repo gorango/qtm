@@ -18,6 +18,13 @@ pub struct AroonConfig {
 	pub period: Option<u32>,
 }
 
+/// Aroon — trend strength via time since highest high / lowest low.
+///
+/// `AroonUp/Down = 100*(period - bars_since_extreme)/period`. Both 0..100.
+/// High Up with low Down = uptrend. Direct definition. `NaN` for first `period` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or data too short.
 pub fn aroon(
 	highs: &[f64],
 	lows: &[f64],

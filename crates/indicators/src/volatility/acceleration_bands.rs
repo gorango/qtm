@@ -5,11 +5,18 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ABResult {
+	/// Upper band — `SMA(high) * (1 + width)`.
 	pub upper: Vec<f64>,
+	/// Middle band — `SMA(close)`.
 	pub middle: Vec<f64>,
+	/// Lower band — `SMA(low) * (1 - width)`.
 	pub lower: Vec<f64>,
 }
 
+/// Acceleration Bands — `ab` short alias.
+///
+/// Bands widen with volatility via high/low SMAs scaled by `width`.
+/// Defined by Price Headley. Period defaults to 20, width to 0.04.
 pub fn ab(
 	highs: &[f64],
 	lows: &[f64],
@@ -66,6 +73,13 @@ pub fn ab(
 	})
 }
 
+/// Acceleration Bands — volatility envelope around price.
+///
+/// Middle = SMA(close), upper = SMA(high)*(1+width), lower = SMA(low)*(1-width).
+/// Breakout above upper = bullish momentum.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn acceleration_bands(
 	highs: &[f64],
 	lows: &[f64],

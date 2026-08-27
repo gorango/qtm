@@ -1,3 +1,5 @@
+/// Advance-Decline Line — cumulative `advances - declines` or derived from price.
+/// Breadth measure; rising = more advancers. Direct definition.
 pub fn advance_decline_line(opens: &[f64], closes: &[f64]) -> Vec<f64> {
 	if opens.is_empty() || closes.is_empty() {
 		return vec![];

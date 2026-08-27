@@ -1,3 +1,4 @@
+/// Moving sum kernel — sum over `period` bars. `O(n)`, no validation.
 pub fn moving_sum_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	let mut result = Vec::with_capacity(len);

@@ -37,14 +37,25 @@ pub enum TrendVolatility {
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct TrendAnalysis {
+	/// Combined regime enum.
 	pub regime: TrendVolatility,
+	/// Trend label: `bullish` | `bearish` | `sideways`.
 	pub trend: String,
+	/// Total price change `(last-first)/first`.
 	pub change: f64,
+	/// Volatility label: `low` | `medium` | `high`.
 	pub volatility: String,
+	/// Z-score derived intensity clamped to [0, 1].
 	pub intensity: f64,
+	/// Combined trend × volatility confidence in [0, 1].
 	pub confidence: f64,
 }
 
+/// Classifies market regime from a slice of bars.
+///
+/// Computes full-sample return/volatility to get a z-score for trend, and trailing-window
+/// volatility for the vol bucket. Returns `TrendVolatility` and confidence scores.
+/// Heuristic; no single canonical definition. Used for labeling only.
 pub fn classify_market_trend(
 	market_data: Vec<Bar>,
 	trailing_period_length: Option<u32>,

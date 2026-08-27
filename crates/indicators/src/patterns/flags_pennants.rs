@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Flags and Pennants — continuation after a sharp move (pole) then tight consolidation.
+/// Returns scores per bar. Heuristic.
 pub fn flags_pennants(
 	opens: &[f64],
 	highs: &[f64],

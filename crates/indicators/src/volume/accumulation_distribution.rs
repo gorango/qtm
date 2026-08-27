@@ -1,5 +1,7 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 
+/// Accumulation/Distribution — `AD = Σ ((close-low)-(high-close))/(high-low) * volume`.
+/// Cumulative money flow. Rising = accumulation. Direct definition (Chaikin).
 pub fn accumulation_distribution(
 	highs: &[f64],
 	lows: &[f64],
@@ -30,6 +32,7 @@ pub fn accumulation_distribution(
 	result
 }
 
+/// Alias `ad` for Accumulation/Distribution.
 pub fn ad(highs: &[f64], lows: &[f64], closings: &[f64], volume: &[f64]) -> Vec<f64> {
 	accumulation_distribution(highs, lows, closings, volume)
 }

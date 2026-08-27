@@ -9,6 +9,11 @@ pub struct PriceRateOfChangeConfig {
 	pub period: Option<u32>,
 }
 
+/// Price Rate of Change — `100*(close - close[n])/close[n]` over `period` bars.
+/// Percentage change; 0 = no change. Period defaults to 12. `NaN` for first `period` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn price_rate_of_change(
 	values: &[f64],
 	config: Option<PriceRateOfChangeConfig>,

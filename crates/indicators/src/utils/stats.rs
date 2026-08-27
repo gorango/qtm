@@ -1,5 +1,6 @@
 use crate::utils::math::mean;
 
+/// Rolling population variance over `period` bars.
 pub fn variance(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len < period || period == 0 {
@@ -26,6 +27,7 @@ pub fn variance(values: &[f64], period: usize) -> Vec<f64> {
 	result
 }
 
+/// Rolling population standard deviation.
 pub fn standard_deviation(values: &[f64], period: usize) -> Vec<f64> {
 	let vars = variance(values, period);
 	vars.iter()
@@ -33,6 +35,7 @@ pub fn standard_deviation(values: &[f64], period: usize) -> Vec<f64> {
 		.collect()
 }
 
+/// Population standard deviation of a single window.
 pub fn population_std(values: &[f64]) -> f64 {
 	let m = mean(values);
 	if m.is_nan() {
@@ -51,6 +54,7 @@ pub fn population_std(values: &[f64]) -> f64 {
 	variance.sqrt()
 }
 
+/// Sample standard deviation of a single window.
 pub fn sample_std(values: &[f64]) -> f64 {
 	let m = mean(values);
 	if m.is_nan() || values.len() <= 1 {

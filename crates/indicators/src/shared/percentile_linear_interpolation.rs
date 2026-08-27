@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Percentile (linear interpolation) config.
 pub struct PercentileLinearInterpolationConfig {
 	pub period: Option<u32>,
 	pub percentage: Option<f64>,
@@ -51,6 +52,7 @@ fn percentile_linear_interpolation_internal(
 	result
 }
 
+/// Percentile with linear interpolation — `p`th percentile via sorted window and interpolation.
 pub fn percentile_linear_interpolation(
 	values: &[f64],
 	config: Option<PercentileLinearInterpolationConfig>,

@@ -5,11 +5,14 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Volume Surge config — threshold multiplier over moving average.
 pub struct VolumeSurgeConfig {
 	pub period: Option<u32>,
 	pub multiplier: Option<f64>,
 }
 
+/// Volume Surge — `volume > threshold * SMA(volume, period)` per bar.
+/// Boolean surge flag. Period defaults to 20, threshold to 1.5.
 pub fn volume_surge(volumes: &[f64], config: Option<VolumeSurgeConfig>) -> Vec<bool> {
 	if volumes.is_empty() {
 		return vec![];
@@ -46,6 +49,7 @@ pub fn volume_surge(volumes: &[f64], config: Option<VolumeSurgeConfig>) -> Vec<b
 	result
 }
 
+/// Alias `vs` for Volume Surge.
 pub fn vs(volumes: &[f64], config: Option<VolumeSurgeConfig>) -> Vec<bool> {
 	volume_surge(volumes, config)
 }

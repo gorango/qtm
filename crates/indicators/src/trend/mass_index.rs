@@ -2,6 +2,13 @@ use crate::internal::ema::ema_internal;
 use crate::internal::moving_sum::moving_sum_internal;
 use crate::IndicatorResult;
 
+/// Mass Index — sum of `EMA9(high-low) / EMA9(EMA9(high-low))` over `period` bars.
+///
+/// Values >27 then <26.5 signal a reversal setup (Donald Dorsey). High-low range expansion/contraction.
+/// Defaults to 25. Returns `NaN` until enough history for double EMA.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn mass_index(
 	highs: &[f64],
 	lows: &[f64],

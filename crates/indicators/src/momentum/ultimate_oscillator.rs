@@ -12,6 +12,12 @@ pub struct UltimateOscillatorConfig {
 	pub period3: Option<u32>,
 }
 
+/// Ultimate Oscillator — weighted sum of three buying-pressure ratios (Larry Williams).
+/// `BP = close - min(low, prev_close)`, `TR` as in ATR. Combines 7/14/28 period ratios.
+/// Bounded 0..100.
+///
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn ultimate_oscillator(
 	highs: &[f64],
 	lows: &[f64],
@@ -76,6 +82,7 @@ pub fn ultimate_oscillator(
 	result
 }
 
+/// Alias for `ultimate_oscillator` — short name.
 pub fn uo(
 	highs: &[f64],
 	lows: &[f64],

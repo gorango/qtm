@@ -1,4 +1,11 @@
 use crate::IndicatorResult;
+/// Annualized Volatility — `std(log returns) * sqrt(252)` over `period` bars.
+///
+/// Uses 252 trading days/year. Period defaults to 20. `NaN` until `period` bars.
+/// Direct definition from log-return standard deviation.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn annualized_volatility(
 	prices: &[f64],
 	trading_days: Option<u32>,

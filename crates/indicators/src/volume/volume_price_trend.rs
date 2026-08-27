@@ -1,6 +1,8 @@
 use crate::internal::moving_sum::moving_sum_internal;
 use crate::utils::arrays::validate_arrays_equal_length;
 
+/// Volume Price Trend (VPT) — `VPT += volume * (close - prev_close)/prev_close`.
+/// Cumulative price-change-weighted volume. Similar to OBV but proportional.
 pub fn volume_price_trend(closings: &[f64], volumes: &[f64]) -> Vec<f64> {
 	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
 		return vec![];
@@ -22,6 +24,7 @@ pub fn volume_price_trend(closings: &[f64], volumes: &[f64]) -> Vec<f64> {
 	moving_sum_internal(&vpt_values, len)
 }
 
+/// Alias `vpt` for Volume Price Trend.
 pub fn vpt(closings: &[f64], volumes: &[f64]) -> Vec<f64> {
 	volume_price_trend(closings, volumes)
 }

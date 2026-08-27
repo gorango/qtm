@@ -17,6 +17,11 @@ pub struct ChaikinOscillatorResult {
 	pub cmo_result: Vec<f64>,
 }
 
+/// Chaikin Oscillator — `EMA(A/D, fast) - EMA(A/D, slow)` on the Accumulation/Distribution line.
+/// Measures volume-based momentum; positive = accumulation. Defined by Marc Chaikin.
+///
+/// # Errors
+/// Returns an error if periods are 0 or inputs mismatched.
 pub fn chaikin_oscillator(
 	highs: &[f64],
 	lows: &[f64],
@@ -60,6 +65,7 @@ pub fn chaikin_oscillator(
 	}
 }
 
+/// Alias `cmo` for Chaikin Oscillator (alternate short name).
 pub fn cmo(
 	highs: &[f64],
 	lows: &[f64],

@@ -11,6 +11,11 @@ pub struct AwesomeOscillatorConfig {
 	pub slow_period: Option<u32>,
 }
 
+/// Awesome Oscillator (AO) — `SMA(median,5) - SMA(median,34)` where median = (high+low)/2.
+/// Defined by Bill Williams. Positive = bullish momentum. `NaN` for first 33 bars.
+///
+/// # Errors
+/// Returns an error if periods are 0 or inputs mismatched.
 pub fn awesome_oscillator(
 	highs: &[f64],
 	lows: &[f64],

@@ -2,6 +2,8 @@ use crate::types::configs::AdxRsiConfig;
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Adx Rsi Trend Momentum — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "adx_rsi_trend_momentum",
     name = "ADX + RSI Trend Momentum",

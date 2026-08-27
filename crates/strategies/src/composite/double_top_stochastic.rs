@@ -2,6 +2,8 @@ use crate::types::configs::DoubleTopStochasticConfig;
 use crate::StrategyResult;
 use strategies_proc_macro::strategy;
 
+/// Double Top Stochastic Reversal — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "double_top_stochastic_reversal",
     name = "Double Top/Bottom + Stochastic Reversal",

@@ -2,6 +2,8 @@ use crate::internal::sma::sma_internal;
 use crate::utils::arrays::validate_arrays_equal_length;
 use crate::utils::validation::validate_period;
 
+/// Ease of Movement (EOM) — `((high+low)/2 - prev_mid) / (volume/(high-low))` smoothed over `period`.
+/// High EOM = price moved easily on low volume. Defined by Richard Arms.
 pub fn ease_of_movement(highs: &[f64], lows: &[f64], volumes: &[f64], period: u32) -> Vec<f64> {
 	if validate_arrays_equal_length(&[highs, lows, volumes]).is_err() {
 		return vec![];
@@ -44,6 +46,7 @@ pub fn ease_of_movement(highs: &[f64], lows: &[f64], volumes: &[f64], period: u3
 	sma_internal(&emv1, period)
 }
 
+/// Alias `emv` for Ease of Movement.
 pub fn emv(highs: &[f64], lows: &[f64], volumes: &[f64], period: u32) -> Vec<f64> {
 	ease_of_movement(highs, lows, volumes, period)
 }

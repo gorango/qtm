@@ -2,6 +2,8 @@ use crate::types::configs::MfiObvConfig;
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Mfi Obv Volume Flow — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "mfi_obv_volume_flow",
     name = "MFI + OBV Volume Flow",

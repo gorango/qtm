@@ -17,6 +17,11 @@ pub struct LarssonResult {
 	pub signal: Vec<LarssonSignal>,
 }
 
+/// Larsson indicator — price-action trend score from swing highs/lows.
+/// Returns signal and per-bar scores. Heuristic; no single canonical formula.
+///
+/// # Errors
+/// Returns an error if inputs mismatched.
 pub fn larsson(highs: &[f64], lows: &[f64]) -> LarssonResult {
 	let _ = validate_arrays_equal_length(&[highs, lows]);
 

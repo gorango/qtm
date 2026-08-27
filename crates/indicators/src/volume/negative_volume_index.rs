@@ -1,5 +1,7 @@
 use crate::utils::arrays::validate_arrays_equal_length;
 
+/// Negative Volume Index (NVI) — accumulates only on days where volume decreased.
+/// `NVI += (close - prev_close)/prev_close * 100` when volume < prev_volume. Starts at `start` (default 1000).
 pub fn negative_volume_index(closings: &[f64], volumes: &[f64], start: Option<f64>) -> Vec<f64> {
 	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
 		return vec![];
@@ -24,6 +26,7 @@ pub fn negative_volume_index(closings: &[f64], volumes: &[f64], start: Option<f6
 	result
 }
 
+/// Alias `nvi` for Negative Volume Index.
 pub fn nvi(closings: &[f64], volumes: &[f64], start: Option<f64>) -> Vec<f64> {
 	negative_volume_index(closings, volumes, start)
 }

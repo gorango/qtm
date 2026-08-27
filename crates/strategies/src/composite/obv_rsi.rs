@@ -2,6 +2,8 @@ use crate::types::configs::RSIConfig;
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Obv Rsi Volume Confirmation — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "obv_rsi_volume_confirmation",
     name = "OBV + RSI Volume Confirmation",

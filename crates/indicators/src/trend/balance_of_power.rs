@@ -1,4 +1,12 @@
 use crate::IndicatorResult;
+/// Balance of Power (BOP).
+///
+/// `(close - open) / (high - low)` per bar; `0` when `high == low`. Range `[-1, 1]`.
+/// Measures buying vs selling pressure within the bar. Direct definition.
+/// No warmup; outputs `0` for flat bars.
+///
+/// # Errors
+/// Returns an error if input arrays have mismatched lengths.
 pub fn balance_of_power(
 	openings: &[f64],
 	highs: &[f64],

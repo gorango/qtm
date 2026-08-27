@@ -5,6 +5,8 @@ use indicators_core::stochastic_oscillator;
 use indicators_core::vwap;
 use strategies_proc_macro::strategy;
 
+/// Vwap Stochastic Confirmation — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "vwap_stochastic_confirmation",
     name = "VWAP + Stochastic Confirmation",

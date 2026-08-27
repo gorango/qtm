@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct KAMAConfig {
+	/// Lookback period for the efficiency ratio (default 10). Valid range 2..=100.
 	pub period: Option<u32>,
 	/// Fast smoothing constant input (classic value: 2)
 	pub fast: Option<u32>,

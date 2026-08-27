@@ -3,6 +3,8 @@ use crate::utils::signals::{crossed_over_series, crossed_under_series};
 use crate::{StrategyError, StrategyResult};
 use strategies_proc_macro::strategy;
 
+/// Ma Rsi Trend Following — strategy signal: `1` on entry long, `-1` on entry short, `0` otherwise (hold/flat).
+/// See indicator docs for formula and regime notes. This is a thin signal wrapper.
 #[strategy(
     id = "ma_rsi_trend_following",
     name = "MA + RSI Trend Following",

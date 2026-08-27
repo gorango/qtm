@@ -26,6 +26,7 @@ macro_rules! validate_min_data {
 	};
 }
 
+/// Validates `period > 0`. Returns error if 0.
 pub fn validate_period(period: usize) -> IndicatorResult<()> {
 	if period == 0 {
 		return Err(IndicatorError::InvalidPeriod(period));
@@ -33,6 +34,7 @@ pub fn validate_period(period: usize) -> IndicatorResult<()> {
 	Ok(())
 }
 
+/// Validates `len >= min_len`.
 pub fn validate_min_length(len: usize, min_len: usize) -> IndicatorResult<()> {
 	if len < min_len {
 		return Err(IndicatorError::InsufficientData {
@@ -43,6 +45,7 @@ pub fn validate_min_length(len: usize, min_len: usize) -> IndicatorResult<()> {
 	Ok(())
 }
 
+/// Validates that multiple arrays are equal length and finite.
 pub fn validate_multiple_arrays(arrays: &[&[f64]]) -> IndicatorResult<()> {
 	if arrays.is_empty() {
 		return Err(IndicatorError::EmptyInput);
@@ -54,6 +57,7 @@ pub fn validate_multiple_arrays(arrays: &[&[f64]]) -> IndicatorResult<()> {
 ///
 /// This validates INPUT data only. NaN warmup in indicator OUTPUT (the first
 /// `period - 1` values) is standard behavior and must not be treated as an error.
+/// Validates that all values are finite (no NaN/inf).
 pub fn validate_finite(arrays: &[&[f64]]) -> IndicatorResult<()> {
 	for arr in arrays {
 		if arr.iter().any(|v| !v.is_finite()) {

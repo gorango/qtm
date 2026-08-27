@@ -1,6 +1,12 @@
 use crate::internal::ema::ema_internal;
 use crate::IndicatorResult;
 
+/// TRIX.
+///
+/// Triple-smoothed EMA rate-of-change: `100 * (EMA3[i] - EMA3[i-1]) / EMA3[i-1]` where EMA3 is EMA applied three times. Signals momentum; zero-line cross indicates trend change. Period defaults to 14.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn trix(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;

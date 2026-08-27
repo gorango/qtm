@@ -17,6 +17,13 @@ pub struct CCIConfig {
 	pub period: Option<u32>,
 }
 
+/// Commodity Channel Index (CCI).
+///
+/// `(typical_price - SMA(typical_price)) / (0.015 * mean_deviation)`. Unbounded; >100 often overbought, <-100 oversold.
+/// Defined by Donald Lambert. Uses `(high+low+close)/3` as typical price.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn cci(
 	highs: &[f64],
 	lows: &[f64],

@@ -1,6 +1,8 @@
 use crate::utils::validation::validate_multiple_arrays;
 use crate::IndicatorResult;
 
+/// Double Top — M-shaped reversal with two peaks near same level.
+/// Returns scores 0..100 per bar. Heuristic.
 pub fn double_top(
 	opens: &[f64],
 	highs: &[f64],

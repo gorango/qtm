@@ -16,6 +16,8 @@ impl Default for ZScoreConfig {
 	}
 }
 
+/// Z-Score — `zs` short alias. `(value - SMA) / std_dev` over `period` bars.
+/// Standardized distance from the mean. `NaN` where std is 0 or `NaN`.
 pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f64>> {
 	let len = values.len();
 
@@ -48,6 +50,8 @@ pub fn zs(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f
 	Ok(result)
 }
 
+/// Z-Score — `(value - SMA(period)) / std_dev(period)`. Full-name alias for `zs`.
+/// See `zs` for details.
 pub fn z_score(values: &[f64], config: Option<ZScoreConfig>) -> IndicatorResult<Vec<f64>> {
 	zs(values, config)
 }

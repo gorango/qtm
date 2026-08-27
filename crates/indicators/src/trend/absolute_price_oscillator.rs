@@ -1,6 +1,14 @@
 use crate::internal::ema::ema_internal;
 use crate::IndicatorResult;
 
+/// Absolute Price Oscillator (APO).
+///
+/// Difference between two EMAs: `EMA(fast_period) - EMA(slow_period)`.
+/// Positive values indicate bullish momentum. Direct implementation; no normalization.
+/// Defaults: fast 14, slow 30. Returns `NaN` where either EMA is `NaN`.
+///
+/// # Errors
+/// Returns an error if either `period` is 0.
 pub fn absolute_price_oscillator(
 	values: &[f64],
 	fast_period: Option<u32>,

@@ -1,6 +1,12 @@
 use crate::internal::ema::ema_internal;
 use crate::IndicatorResult;
 
+/// Double Exponential Moving Average (DEMA).
+///
+/// DEMA = 2*EMA(period) - EMA(EMA(period)). Less lag than EMA, more responsive. Defined by Mulloy (1994). Period defaults to 12.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn dema(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(12) as usize;
 	crate::utils::validation::validate_period(period)?;

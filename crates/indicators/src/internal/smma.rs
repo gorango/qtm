@@ -1,3 +1,4 @@
+/// SMMA kernel — Wilder's smoothing. `O(n)`, no validation.
 pub fn smma_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if len < period {

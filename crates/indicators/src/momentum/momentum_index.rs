@@ -8,6 +8,11 @@ pub struct MomentumIndexConfig {
 	pub period: Option<u32>,
 }
 
+/// Momentum Index — `100 * close[i] / close[i-period]`.
+/// 100 = no change; >100 bullish momentum. Direct definition. Period defaults to 10.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn momentum_index(prices: &[f64], config: Option<MomentumIndexConfig>) -> Vec<f64> {
 	let config_obj = config.unwrap_or(MomentumIndexConfig { period: None });
 	let period = config_obj.period.unwrap_or(14) as usize;

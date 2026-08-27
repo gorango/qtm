@@ -1,6 +1,13 @@
 use crate::internal::sma::sma_internal;
 use crate::IndicatorResult;
 
+/// Triangular Moving Average (TMA).
+///
+/// Double-smoothed SMA: `SMA(SMA(values, n1), n2)` where `n1,n2` split `period`.
+/// More smoothing than SMA but more lag. Direct implementation. Period defaults to 4.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs contain non-finite values.
 pub fn tma(values: &[f64], period: Option<u32>) -> IndicatorResult<Vec<f64>> {
 	let period = period.unwrap_or(4) as usize;
 	crate::utils::validation::validate_period(period)?;

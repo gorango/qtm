@@ -5,11 +5,19 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+/// SuperTrend result — upper/lower bands and trend direction.
 pub struct SuperTrendResult {
 	pub super_trend: Vec<f64>,
 	pub direction: Vec<i32>,
 }
 
+/// SuperTrend — ATR-based trend filter.
+///
+/// Bands = `(high+low)/2 ± multiplier*ATR`; price closing above/below flips trend.
+/// Widely used as trailing stop and trend filter. `NaN` until `period` bars.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn super_trend(
 	highs: &[f64],
 	lows: &[f64],

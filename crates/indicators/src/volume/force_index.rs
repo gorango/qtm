@@ -6,10 +6,14 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+/// Force Index config.
 pub struct FIConfig {
+	/// EMA period for Force Index (default 13). Valid 2..=100.
 	pub period: Option<u32>,
 }
 
+/// Force Index — `(close - prev_close) * volume` smoothed with EMA(period).
+/// Combines price and volume to measure buying/selling pressure. Defined by Alexander Elder.
 pub fn force_index(closings: &[f64], volumes: &[f64], config: Option<FIConfig>) -> Vec<f64> {
 	if validate_arrays_equal_length(&[closings, volumes]).is_err() {
 		return vec![];
@@ -39,6 +43,7 @@ pub fn force_index(closings: &[f64], volumes: &[f64], config: Option<FIConfig>) 
 	ema_internal(&force, period)
 }
 
+/// Alias `fi` for Force Index.
 pub fn fi(closings: &[f64], volumes: &[f64], config: Option<FIConfig>) -> Vec<f64> {
 	force_index(closings, volumes, config)
 }

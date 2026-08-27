@@ -19,6 +19,11 @@ pub struct StochResult {
 	pub d: Vec<f64>,
 }
 
+/// Stochastic Oscillator — `%K = 100*(close - lowest_low)/(highest_high - lowest_low)`; `%D = SMA(%K, d_period)`.
+/// Bounded 0..100; >80 overbought. Defined by George Lane. `NaN` until warmup.
+///
+/// # Errors
+/// Returns an error if inputs invalid.
 pub fn stochastic_oscillator(
 	highs: &[f64],
 	lows: &[f64],

@@ -1,3 +1,4 @@
+/// Find peaks — indices where value is a local maximum within `lookaround` bars.
 pub fn find_peaks(values: &[f64], lookaround: u32) -> Vec<u32> {
 	find_peaks_internal(values, lookaround as usize)
 		.iter()
@@ -5,6 +6,7 @@ pub fn find_peaks(values: &[f64], lookaround: u32) -> Vec<u32> {
 		.collect()
 }
 
+/// Find troughs — local minima within `lookaround` bars.
 pub fn find_troughs(values: &[f64], lookaround: u32) -> Vec<u32> {
 	find_troughs_internal(values, lookaround as usize)
 		.iter()
@@ -12,6 +14,7 @@ pub fn find_troughs(values: &[f64], lookaround: u32) -> Vec<u32> {
 		.collect()
 }
 
+/// Linear regression — least-squares slope/intercept for a set of points.
 pub fn linear_regression(points: Vec<f64>) -> Vec<f64> {
 	linear_regression_internal(&points)
 }
@@ -46,6 +49,7 @@ pub fn find_peaks_internal(values: &[f64], lookaround: usize) -> Vec<usize> {
 	peaks
 }
 
+/// Internal trough finder — like `find_troughs` but on pre-filtered data.
 pub fn find_troughs_internal(values: &[f64], lookaround: usize) -> Vec<usize> {
 	let mut troughs = Vec::new();
 
@@ -72,6 +76,7 @@ pub fn find_troughs_internal(values: &[f64], lookaround: usize) -> Vec<usize> {
 	troughs
 }
 
+/// Internal linear regression kernel without validation.
 pub fn linear_regression_internal(points: &[f64]) -> Vec<f64> {
 	if points.len() < 4 || !points.len().is_multiple_of(2) {
 		return vec![0.0, 0.0];
@@ -182,10 +187,12 @@ pub fn quadratic_regression_internal(points: &[f64]) -> Vec<f64> {
 	vec![solution[2], solution[1], solution[0]]
 }
 
+/// Zig-zag filter — removes minor swings below threshold to highlight structure.
 pub fn zig_zag_filter(values: &[f64], deviation: f64) -> Vec<f64> {
 	zig_zag_filter_internal(values, deviation)
 }
 
+/// Internal zig-zag kernel.
 pub fn zig_zag_filter_internal(values: &[f64], deviation: f64) -> Vec<f64> {
 	if values.is_empty() {
 		return Vec::new();

@@ -5,8 +5,11 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ADXResult {
+	/// +DI — positive directional index (0..100).
 	pub plus_di: Vec<f64>,
+	/// -DI — negative directional index (0..100).
 	pub minus_di: Vec<f64>,
+	/// ADX — average directional index, smoothed DX (0..100). Higher = stronger trend.
 	pub adx: Vec<f64>,
 }
 
@@ -14,9 +17,17 @@ pub struct ADXResult {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ADXConfig {
+	/// Smoothing period for directional movement (default 14). Valid 2..=100.
 	pub period: Option<u32>,
 }
 
+/// Average Directional Index (ADX) with +DI and -DI.
+///
+/// Wilder's definition: TR/DM via RMA, DI = 100*DM/ATR, DX = 100*|+DI - -DI|/(+DI+ -DI), ADX = RMA(DX).
+/// Range 0..100; >25 often taken as trending. `adx` here also returns the two DIs.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs are mismatched/too short.
 pub fn adx(
 	highs: &[f64],
 	lows: &[f64],

@@ -1,3 +1,4 @@
+/// Rolling std kernel — population std over `period` bars. `O(n*period)`, no validation.
 pub fn std_dev_internal(values: &[f64], period: usize) -> Vec<f64> {
 	let len = values.len();
 	if period == 0 || len < period {

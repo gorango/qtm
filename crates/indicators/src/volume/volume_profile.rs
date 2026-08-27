@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
+/// Volume Profile result — price bins with volume distribution.
 pub struct VolumeProfileResult {
 	pub price_levels: Vec<f64>,
 	pub volumes: Vec<f64>,
@@ -10,6 +11,8 @@ pub struct VolumeProfileResult {
 	pub low_volume_node: f64,
 }
 
+/// Volume Profile — histogram of volume by price level over the lookback.
+/// Bins closes by price and sums volume per bin. `NaN` for empty bins.
 pub fn volume_profile(
 	highs: &[f64],
 	lows: &[f64],

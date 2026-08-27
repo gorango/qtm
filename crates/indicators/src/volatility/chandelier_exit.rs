@@ -8,10 +8,14 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "napi", napi_derive::napi(object))]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct CEResult {
+	/// Long exit — `highest_high(period) - multiplier*ATR`.
 	pub long: Vec<f64>,
+	/// Short exit — `lowest_low(period) + multiplier*ATR`.
 	pub short: Vec<f64>,
 }
 
+/// Chandelier Exit — `ce` short alias.
+/// Volatility trailing stops. Long = highest_high - multiplier*ATR.
 pub fn ce(
 	highs: &[f64],
 	lows: &[f64],
@@ -59,6 +63,14 @@ pub fn ce(
 	Ok(CEResult { long, short })
 }
 
+/// Chandelier Exit — volatility-based trailing stops.
+///
+/// Long stop = `highest_high(period) - multiplier*ATR(period)`;
+/// short stop = `lowest_low(period) + multiplier*ATR(period)`.
+/// Moves only in the favorable direction (ratchets). Defined by Chuck LeBeau.
+///
+/// # Errors
+/// Returns an error if `period` is 0 or inputs invalid.
 pub fn chandelier_exit(
 	highs: &[f64],
 	lows: &[f64],
