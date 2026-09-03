@@ -143,6 +143,14 @@ pub fn calculate_percent_rank_warmup(period: u32) -> u32 {
 	period
 }
 
+pub fn calculate_break_of_structure_warmup(lookaround: u32) -> u32 {
+	lookaround * 2 + 5
+}
+
+pub fn calculate_power_of_three_warmup(accumulation_period: u32, manipulation_bars: u32) -> u32 {
+	accumulation_period + manipulation_bars + 5
+}
+
 pub fn calculate_indicator_warmup(
 	indicator_type: String,
 	params: serde_json::Value,
@@ -240,6 +248,24 @@ pub fn calculate_indicator_warmup(
 		"variance" => calculate_variance_warmup(period),
 		"correlation" => calculate_correlation_warmup(period),
 		"percentrank" => calculate_percent_rank_warmup(period),
+		"breakofstructure" | "bos" => {
+			let lookaround = params
+				.get("lookaround")
+				.and_then(|v| v.as_u64())
+				.unwrap_or(2) as u32;
+			calculate_break_of_structure_warmup(lookaround)
+		}
+		"powerofthree" | "po3" | "amd" => {
+			let ap = params
+				.get("accumulationPeriod")
+				.and_then(|v| v.as_u64())
+				.unwrap_or(20) as u32;
+			let mb = params
+				.get("manipulationBars")
+				.and_then(|v| v.as_u64())
+				.unwrap_or(5) as u32;
+			calculate_power_of_three_warmup(ap, mb)
+		}
 		_ => period * 2,
 	};
 

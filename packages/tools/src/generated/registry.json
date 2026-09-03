@@ -723,6 +723,14 @@
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":9},\"offset\":{\"type\":\"number\",\"default\":0.85},\"sigma\":{\"type\":\"number\",\"default\":6}}}",
       "output_type": "indicator"
     },
+    "amd": {
+      "id": "amd",
+      "name": "AMD",
+      "category": "patterns",
+      "description": "Alias for Power of Three (AMD)",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
     "anchored_vwap": {
       "id": "anchored_vwap",
       "name": "Anchored VWAP",
@@ -825,6 +833,22 @@
       "category": "volatility",
       "description": "Normalized width of Bollinger Bands",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}",
+      "output_type": "indicator"
+    },
+    "bos": {
+      "id": "bos",
+      "name": "BOS",
+      "category": "patterns",
+      "description": "Alias for Break of Structure",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "break_of_structure": {
+      "id": "break_of_structure",
+      "name": "Break of Structure",
+      "category": "patterns",
+      "description": "BOS/CHoCH: close crosses last swing high/low (horizontal) or extrapolated trendline through last N swings (trendline/either); returns 1/-1 BOS, 2/-2 CHoCH",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}",
       "output_type": "indicator"
     },
     "broadening": {
@@ -1513,6 +1537,22 @@
       "category": "volatility",
       "description": "Alias for Projection Oscillator",
       "params_schema": "{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}",
+      "output_type": "indicator"
+    },
+    "po3": {
+      "id": "po3",
+      "name": "PO3",
+      "category": "patterns",
+      "description": "Alias for Power of Three (AMD)",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}",
+      "output_type": "indicator"
+    },
+    "power_of_three": {
+      "id": "power_of_three",
+      "name": "Power of Three (AMD)",
+      "category": "patterns",
+      "description": "Structural AMD: tight accumulation, false-break manipulation that reclaims, then distribution break of opposite range side; session alignment is caller-side",
+      "params_schema": "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}",
       "output_type": "indicator"
     },
     "price_rate_of_change": {
@@ -2290,6 +2330,24 @@
         "stdDev": 2.0
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "break_of_structure": {
+      "id": "break_of_structure",
+      "name": "Break of Structure Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Structural BOS/CHoCH: close crosses last swing high/low (horizontal) or trendline through last N swings; session alignment is caller-side",
+      "defaults": {
+        "lookaround": 2,
+        "mode": "horizontal",
+        "trendlinePoints": 3
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BreakOfStructureConfig\",\"description\":\"Break of Structure Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"mode\":{\"description\":\"\\\"horizontal\\\" | \\\"trendline\\\" | \\\"either\\\"\",\"type\":[\"string\",\"null\"]},\"trendlinePoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "broadening_breakout": {
@@ -3336,6 +3394,25 @@
         "periodLow": 20
       },
       "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PivotPointsConfig\",\"description\":\"Pivot Points Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodHigh\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodLow\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}",
+      "output_type": "signal"
+    },
+    "power_of_three": {
+      "id": "power_of_three",
+      "name": "Power of Three (AMD) Strategy",
+      "category": "patterns",
+      "default_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "description": "Structural Power of Three (AMD): accumulation, manipulation trap that reclaims, then distribution; session alignment is caller-side",
+      "defaults": {
+        "accumulationPeriod": 20,
+        "accumulationThreshold": 0.015,
+        "manipulationBars": 5,
+        "manipulationThreshold": 0.005
+      },
+      "params_schema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PowerOfThreeConfig\",\"description\":\"Power of Three (AMD) Strategy configuration\",\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"accumulationThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"manipulationBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"manipulationThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}",
       "output_type": "signal"
     },
     "projection_oscillator": {

@@ -255,3 +255,45 @@ pub fn wedges(
 	)
 	.map_err(|e| napi::Error::from_reason(e.to_string()))
 }
+
+#[napi]
+pub fn break_of_structure(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	lookaround: Option<u32>,
+	mode: Option<String>,
+	trendline_points: Option<u32>,
+) -> Result<Vec<f64>> {
+	indicators_core::break_of_structure(
+		highs.as_ref(),
+		lows.as_ref(),
+		closes.as_ref(),
+		lookaround,
+		mode,
+		trendline_points,
+	)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
+}
+
+#[napi]
+pub fn power_of_three(
+	highs: Float64Array,
+	lows: Float64Array,
+	closes: Float64Array,
+	accumulation_period: Option<u32>,
+	accumulation_threshold: Option<f64>,
+	manipulation_threshold: Option<f64>,
+	manipulation_bars: Option<u32>,
+) -> Result<Vec<f64>> {
+	indicators_core::power_of_three(
+		highs.as_ref(),
+		lows.as_ref(),
+		closes.as_ref(),
+		accumulation_period,
+		accumulation_threshold,
+		manipulation_threshold,
+		manipulation_bars,
+	)
+	.map_err(|e| napi::Error::from_reason(e.to_string()))
+}

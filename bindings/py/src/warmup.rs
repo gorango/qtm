@@ -164,6 +164,16 @@ pub fn calculate_percent_rank_warmup(period: u32) -> u32 {
 	indicators_core::calculate_percent_rank_warmup(period)
 }
 
+#[pyfunction]
+pub fn calculate_break_of_structure_warmup(lookaround: u32) -> u32 {
+	indicators_core::calculate_break_of_structure_warmup(lookaround)
+}
+
+#[pyfunction]
+pub fn calculate_power_of_three_warmup(accumulation_period: u32, manipulation_bars: u32) -> u32 {
+	indicators_core::calculate_power_of_three_warmup(accumulation_period, manipulation_bars)
+}
+
 /// Warmup required for an arbitrary indicator, resolved by name + params dict.
 #[pyfunction]
 #[pyo3(signature = (indicator_type, params = None))]

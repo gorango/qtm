@@ -477,6 +477,24 @@ inventory::submit! {
 	IndicatorDescriptor { id: "island_reversal", name: "Island Reversal", category: "patterns", description: "Island reversal: gap away, isolated cluster, then covering gap back", params_schema: "{\"type\":\"object\",\"properties\":{\"minIslandBars\":{\"type\":\"integer\",\"default\":2},\"maxIslandBars\":{\"type\":\"integer\",\"default\":15}}}", output_type: "indicator" }
 }
 
+// ── BOS / PO3 ──────────────────────────────────────
+
+inventory::submit! {
+	IndicatorDescriptor { id: "break_of_structure", name: "Break of Structure", category: "patterns", description: "BOS/CHoCH: close crosses last swing high/low (horizontal) or extrapolated trendline through last N swings (trendline/either); returns 1/-1 BOS, 2/-2 CHoCH", params_schema: "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "bos", name: "BOS", category: "patterns", description: "Alias for Break of Structure", params_schema: "{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "power_of_three", name: "Power of Three (AMD)", category: "patterns", description: "Structural AMD: tight accumulation, false-break manipulation that reclaims, then distribution break of opposite range side; session alignment is caller-side", params_schema: "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "po3", name: "PO3", category: "patterns", description: "Alias for Power of Three (AMD)", params_schema: "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+inventory::submit! {
+	IndicatorDescriptor { id: "amd", name: "AMD", category: "patterns", description: "Alias for Power of Three (AMD)", params_schema: "{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}", output_type: "indicator" }
+}
+
 // ── candlestick patterns (added) ─────────────────
 
 inventory::submit! {

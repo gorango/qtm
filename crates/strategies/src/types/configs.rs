@@ -2135,3 +2135,46 @@ impl Default for RevinRibbonsStrategyConfig {
 		}
 	}
 }
+
+/// Break of Structure Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct BreakOfStructureConfig {
+	pub lookaround: Option<u32>,
+	/// "horizontal" | "trendline" | "either"
+	pub mode: Option<String>,
+	pub trendline_points: Option<u32>,
+}
+
+impl Default for BreakOfStructureConfig {
+	fn default() -> Self {
+		Self {
+			lookaround: Some(2),
+			mode: Some("horizontal".to_string()),
+			trendline_points: Some(3),
+		}
+	}
+}
+
+/// Power of Three (AMD) Strategy configuration
+#[cfg_attr(feature = "napi", napi(object))]
+#[derive(Clone, Debug, Serialize, Deserialize, schemars::JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct PowerOfThreeConfig {
+	pub accumulation_period: Option<u32>,
+	pub accumulation_threshold: Option<f64>,
+	pub manipulation_threshold: Option<f64>,
+	pub manipulation_bars: Option<u32>,
+}
+
+impl Default for PowerOfThreeConfig {
+	fn default() -> Self {
+		Self {
+			accumulation_period: Some(20),
+			accumulation_threshold: Some(0.015),
+			manipulation_threshold: Some(0.005),
+			manipulation_bars: Some(5),
+		}
+	}
+}

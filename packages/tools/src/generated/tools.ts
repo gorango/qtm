@@ -9,8 +9,8 @@ import type { WorkflowTool, ToolResult } from '../types'
 export const registryVersion = 1
 
 export const factorCount = 72
-export const indicatorCount = 172
-export const strategyCount = 110
+export const indicatorCount = 177
+export const strategyCount = 112
 
 export const registryData = {
   factors: {
@@ -97,6 +97,7 @@ export const registryData = {
     "advance_decline_line": {"id":"advance_decline_line","name":"Advance-Decline Line","category":"market","description":"Cumulative breadth indicator","params_schema":"","output_type":"indicator"},
     "adx": {"id":"adx","name":"ADX","category":"trend","description":"Average Directional Index for trend strength","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":14}}}","output_type":"indicator"},
     "alma": {"id":"alma","name":"ALMA","category":"trend","description":"Arnaud Legoux Moving Average","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":9},\"offset\":{\"type\":\"number\",\"default\":0.85},\"sigma\":{\"type\":\"number\",\"default\":6}}}","output_type":"indicator"},
+    "amd": {"id":"amd","name":"AMD","category":"patterns","description":"Alias for Power of Three (AMD)","params_schema":"{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "anchored_vwap": {"id":"anchored_vwap","name":"Anchored VWAP","category":"volume","description":"VWAP from a specified start point","params_schema":"{\"type\":\"object\",\"properties\":{\"anchorIndex\":{\"type\":\"integer\",\"description\":\"Index from which to start VWAP calculation\",\"default\":0}}}","output_type":"indicator"},
     "annualized_volatility": {"id":"annualized_volatility","name":"Annualized Volatility","category":"volatility","description":"Annualized standard deviation of returns","params_schema":"{\"type\":\"object\",\"properties\":{\"tradingDays\":{\"type\":\"integer\",\"description\":\"Trading days per year\",\"default\":252}}}","output_type":"indicator"},
     "aroon": {"id":"aroon","name":"Aroon","category":"trend","description":"Aroon indicator for trend direction and strength","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":25}}}","output_type":"indicator"},
@@ -110,6 +111,8 @@ export const registryData = {
     "bearish_harami": {"id":"bearish_harami","name":"Bearish Harami","category":"patterns","description":"Small bearish candle inside a prior bullish body","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
     "bollinger_bands": {"id":"bollinger_bands","name":"Bollinger Bands","category":"volatility","description":"Bollinger Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":20},\"stdDev\":{\"type\":\"number\",\"default\":2}}}","output_type":"indicator"},
     "bollinger_bands_width": {"id":"bollinger_bands_width","name":"Bollinger Bands Width","category":"volatility","description":"Normalized width of Bollinger Bands","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"EMA period for width smoothing\",\"default\":90}}}","output_type":"indicator"},
+    "bos": {"id":"bos","name":"BOS","category":"patterns","description":"Alias for Break of Structure","params_schema":"{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
+    "break_of_structure": {"id":"break_of_structure","name":"Break of Structure","category":"patterns","description":"BOS/CHoCH: close crosses last swing high/low (horizontal) or extrapolated trendline through last N swings (trendline/either); returns 1/-1 BOS, 2/-2 CHoCH","params_schema":"{\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":\"integer\",\"default\":2},\"mode\":{\"type\":\"string\",\"default\":\"horizontal\"},\"trendlinePoints\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
     "broadening": {"id":"broadening","name":"Broadening Pattern","category":"patterns","description":"Broadening/megaphone pattern: diverging trendlines with breakout in either direction","params_schema":"{\"type\":\"object\",\"properties\":{\"minPoints\":{\"type\":\"integer\",\"default\":3},\"tolerance\":{\"type\":\"number\",\"default\":0.0005},\"lookback\":{\"type\":\"integer\",\"default\":120}}}","output_type":"indicator"},
     "bullish_engulfing": {"id":"bullish_engulfing","name":"Bullish Engulfing","category":"patterns","description":"Bullish engulfing candlestick pattern","params_schema":"","output_type":"indicator"},
     "bullish_harami": {"id":"bullish_harami","name":"Bullish Harami","category":"patterns","description":"Small bullish candle inside a prior bearish body","params_schema":"{\"type\":\"object\",\"properties\":{\"bodyRatio\":{\"type\":\"number\",\"default\":0.5}}}","output_type":"indicator"},
@@ -196,6 +199,8 @@ export const registryData = {
     "piercing_line": {"id":"piercing_line","name":"Piercing Line","category":"patterns","description":"Bullish candle closes above midpoint of prior bearish body after gapping below","params_schema":"","output_type":"indicator"},
     "pivot_points": {"id":"pivot_points","name":"Pivot Points","category":"trend","description":"Standard pivot point levels","params_schema":"","output_type":"indicator"},
     "po": {"id":"po","name":"Projection Oscillator","category":"volatility","description":"Alias for Projection Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}","output_type":"indicator"},
+    "po3": {"id":"po3","name":"PO3","category":"patterns","description":"Alias for Power of Three (AMD)","params_schema":"{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
+    "power_of_three": {"id":"power_of_three","name":"Power of Three (AMD)","category":"patterns","description":"Structural AMD: tight accumulation, false-break manipulation that reclaims, then distribution break of opposite range side; session alignment is caller-side","params_schema":"{\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":\"integer\",\"default\":20},\"accumulationThreshold\":{\"type\":\"number\",\"default\":0.015},\"manipulationThreshold\":{\"type\":\"number\",\"default\":0.005},\"manipulationBars\":{\"type\":\"integer\",\"default\":5}}}","output_type":"indicator"},
     "price_rate_of_change": {"id":"price_rate_of_change","name":"Price Rate of Change","category":"momentum","description":"Percentage price change over a period","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"default\":3}}}","output_type":"indicator"},
     "projection_oscillator": {"id":"projection_oscillator","name":"Projection Oscillator","category":"volatility","description":"Oscillator based on linear regression projection","params_schema":"{\"type\":\"object\",\"properties\":{\"period\":{\"type\":\"integer\",\"description\":\"Lookback period for linear regression\",\"default\":14},\"smooth\":{\"type\":\"integer\",\"description\":\"EMA smoothing period\",\"default\":3}}}","output_type":"indicator"},
     "pvo": {"id":"pvo","name":"Percentage Volume Oscillator","category":"momentum","description":"Alias for Percentage Volume Oscillator","params_schema":"{\"type\":\"object\",\"properties\":{\"fastPeriod\":{\"type\":\"integer\",\"default\":12},\"slowPeriod\":{\"type\":\"integer\",\"default\":26},\"signalPeriod\":{\"type\":\"integer\",\"default\":9}}}","output_type":"indicator"},
@@ -277,6 +282,7 @@ export const registryData = {
     "bb_rsi_breakout": { "id":"bb_rsi_breakout","name":"Bollinger Bands + RSI Breakout","category":"composite","default_timeframes":["15m","1h","4h"],"description":"Bollinger Bands + RSI breakout confirmation","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BbRsiConfig\",\"description\":\"BB RSI Strategy configuration\",\"type\":\"object\",\"properties\":{\"bbPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"bbStdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOverbought\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiOversold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"rsiPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"bbPeriod":20,"bbStdDev":2,"rsiOverbought":70,"rsiOversold":30,"rsiPeriod":14} },
     "bollinger_bands": { "id":"bollinger_bands","name":"Bollinger Bands Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price crosses above upper band and sell signals when price crosses below lower band","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"stdDev":2} },
     "bollinger_bands_mean_reversion": { "id":"bollinger_bands_mean_reversion","name":"Bollinger Bands Mean Reversion Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price falls below lower band and sell signals when price rises above upper band","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BollingerBandsConfig\",\"description\":\"Bollinger Bands Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"stdDev\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"stdDev":2} },
+    "break_of_structure": { "id":"break_of_structure","name":"Break of Structure Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Structural BOS/CHoCH: close crosses last swing high/low (horizontal) or trendline through last N swings; session alignment is caller-side","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BreakOfStructureConfig\",\"description\":\"Break of Structure Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookaround\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"mode\":{\"description\":\"\\\"horizontal\\\" | \\\"trendline\\\" | \\\"either\\\"\",\"type\":[\"string\",\"null\"]},\"trendlinePoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookaround":2,"mode":"horizontal","trendlinePoints":3} },
     "broadening_breakout": { "id":"broadening_breakout","name":"Broadening Formation Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects broadening (expanding range) formations and generates breakout signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BroadeningConfig\",\"description\":\"Broadening Formation Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"tolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"tolerance":0.0005} },
     "bump_and_run_reversal": { "id":"bump_and_run_reversal","name":"Bump and Run Reversal Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects bump and run reversals and generates signals when price returns through the trend line","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BumpAndRunConfig\",\"description\":\"Bump and Run Reversal Strategy configuration\",\"type\":\"object\",\"properties\":{\"bumpThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"leadInBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSlope\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"bumpThreshold":0.03,"leadInBars":20,"lookback":80,"minSlope":0.001} },
     "buy_and_hold": { "id":"buy_and_hold","name":"Buy and Hold","category":"special","default_timeframes":["1d","1w","1M"],"description":"Buy on first bar and hold position forever","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"BuyAndHoldConfig\",\"description\":\"Buy and Hold Strategy configuration\",\"type\":\"object\",\"additionalProperties\":false}","output_type":"signal", defaults: {} },
@@ -335,6 +341,7 @@ export const registryData = {
     "parabolic_sar": { "id":"parabolic_sar","name":"Parabolic SAR Trend","category":"trend","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when price is above SAR and sell signals when price is below SAR","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ParabolicSarConfig\",\"description\":\"Parabolic SAR Strategy configuration\",\"type\":\"object\",\"properties\":{\"maxStep\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"step\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"maxStep":0.02,"step":0.02} },
     "percent_rank_ranking": { "id":"percent_rank_ranking","name":"Percent Rank Strategy","category":"statistics","default_timeframes":["1h","4h","1d"],"description":"Generates buy signals when percent rank crosses over entry percentile and sell signals when percent rank crosses under exit percentile","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PercentRankConfig\",\"description\":\"Percent Rank Strategy configuration\",\"type\":\"object\",\"properties\":{\"entryPercentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"exitPercentile\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"entryPercentile":80,"exitPercentile":50,"period":20} },
     "pivot_points": { "id":"pivot_points","name":"Pivot Points Trend","category":"trend","default_timeframes":["1h","4h","1d"],"description":"Generates signals based on price position relative to pivot levels","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PivotPointsConfig\",\"description\":\"Pivot Points Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodHigh\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"periodLow\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":20,"periodHigh":20,"periodLow":20} },
+    "power_of_three": { "id":"power_of_three","name":"Power of Three (AMD) Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Structural Power of Three (AMD): accumulation, manipulation trap that reclaims, then distribution; session alignment is caller-side","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"PowerOfThreeConfig\",\"description\":\"Power of Three (AMD) Strategy configuration\",\"type\":\"object\",\"properties\":{\"accumulationPeriod\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"accumulationThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"manipulationBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"manipulationThreshold\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"accumulationPeriod":20,"accumulationThreshold":0.015,"manipulationBars":5,"manipulationThreshold":0.005} },
     "projection_oscillator": { "id":"projection_oscillator","name":"Projection Oscillator Strategy","category":"volatility","default_timeframes":["15m","1h","4h"],"description":"Generates buy signals when projection oscillator exceeds overbought level and sell signals when it falls below oversold level","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"ProjectionOscillatorConfig\",\"description\":\"Projection Oscillator Strategy configuration\",\"type\":\"object\",\"properties\":{\"period\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"smooth\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"period":14,"smooth":3} },
     "rectangle_breakout": { "id":"rectangle_breakout","name":"Rectangle Breakout Strategy","category":"patterns","default_timeframes":["15m","1h","4h"],"description":"Detects rectangle continuation patterns and generates breakout/breakdown signals","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RectangleConfig\",\"description\":\"Rectangle Breakout Strategy configuration\",\"type\":\"object\",\"properties\":{\"lookback\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minPoints\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"minSpread\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"minTrend\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"slopeTolerance\":{\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"trendBars\":{\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0}},\"additionalProperties\":false}","output_type":"signal", defaults: {"lookback":120,"minPoints":3,"minSpread":0.01,"minTrend":0.03,"slopeTolerance":0.0002,"trendBars":30} },
     "revin_ribbons_strategy": { "id":"revin_ribbons_strategy","name":"Revin Ribbons Strategy","category":"volatility","default_timeframes":["1h","4h","1d"],"description":"Open approximation of Revin Ribbons midline flip system: close>midline long, close<midline short, with forgiveness/cooldown filters and optional flat-on-cooldown. Loses in chop, captures trends.","params_schema":"{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"RevinRibbonsStrategyConfig\",\"description\":\"Revin Ribbons Strategy configuration — open approximation of the Revinsuite midline trend system.\\n\\nClose above midline = long bias, close below = short bias. Cooldown/max-flip and forgiveness filters are simplified versus the proprietary TradingView strategy: - `midline_forgiveness_pct` is % of band width (not hard percent), as in the TV docs. - `max_consecutive_flips` + `cooldown_bars` gate chop around the midline. - `exit_flat_on_cooldown` controls whether a cooldown forces flat.\",\"type\":\"object\",\"properties\":{\"atrPeriod\":{\"description\":\"ATR period (default 14).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"cooldownBars\":{\"description\":\"Bars to wait after max flips (default 5).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"exitFlatOnCooldown\":{\"description\":\"If true, exit to flat during cooldown; if false, hold position through cooldown (default true).\",\"type\":[\"boolean\",\"null\"]},\"maxConsecutiveFlips\":{\"description\":\"Max direction flips before cooldown triggers (default 3).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"midlineForgivenessPct\":{\"description\":\"Forgiveness as % of band width before a midline flip counts (default 0 = no forgiveness).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"period\":{\"description\":\"Midline EMA period (default 20).\",\"type\":[\"integer\",\"null\"],\"format\":\"uint32\",\"minimum\":0.0},\"s1Mult\":{\"description\":\"S1/R1 multiplier (default 1.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s2Mult\":{\"description\":\"S2/R2 multiplier (default 2.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"},\"s3Mult\":{\"description\":\"S3/R3 multiplier (default 3.5).\",\"type\":[\"number\",\"null\"],\"format\":\"double\"}},\"additionalProperties\":false}","output_type":"signal", defaults: {"atrPeriod":14,"cooldownBars":5,"exitFlatOnCooldown":true,"maxConsecutiveFlips":3,"midlineForgivenessPct":0,"period":20,"s1Mult":1.5,"s2Mult":2.5,"s3Mult":3.5} },
@@ -592,6 +599,20 @@ export function createStrategyTools(
       config: z.object({ period: z.number().int().nullable().optional().default(20), stdDev: z.number().nullable().optional().default(2) }).optional().describe("Strategy configuration parameters"),
     }),
     execute: async (params) => execute("bollinger_bands_mean_reversion", params),
+  }))
+
+  // Break of Structure Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "break_of_structure",
+    description: "Structural BOS/CHoCH: close crosses last swing high/low (horizontal) or trendline through last N swings; session alignment is caller-side" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ lookaround: z.number().int().nullable().optional().default(2), mode: z.string().nullable().describe("\"horizontal\" | \"trendline\" | \"either\"").optional().default("horizontal"), trendlinePoints: z.number().int().nullable().optional().default(3) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("break_of_structure", params),
   }))
 
   // Broadening Formation Breakout Strategy (patterns)
@@ -1406,6 +1427,20 @@ export function createStrategyTools(
     execute: async (params) => execute("pivot_points", params),
   }))
 
+  // Power of Three (AMD) Strategy (patterns)
+  tools.push(createWorkflowTool({
+    name: "power_of_three",
+    description: "Structural Power of Three (AMD): accumulation, manipulation trap that reclaims, then distribution; session alignment is caller-side" + " (returns: signal)",
+    parameters: z.object({
+      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),
+      highs: z.array(z.number()).optional().describe("Array of high prices"),
+      lows: z.array(z.number()).optional().describe("Array of low prices"),
+      volumes: z.array(z.number()).optional().describe("Array of volume data"),
+      config: z.object({ accumulationPeriod: z.number().int().nullable().optional().default(20), accumulationThreshold: z.number().nullable().optional().default(0.015), manipulationBars: z.number().int().nullable().optional().default(5), manipulationThreshold: z.number().nullable().optional().default(0.005) }).optional().describe("Strategy configuration parameters"),
+    }),
+    execute: async (params) => execute("power_of_three", params),
+  }))
+
   // Projection Oscillator Strategy (volatility)
   tools.push(createWorkflowTool({
     name: "projection_oscillator",
@@ -2016,6 +2051,15 @@ export function createIndicatorTools(
   }))
 
   tools.push(createWorkflowTool({
+    name: "amd",
+    description: "Alias for Power of Three (AMD)" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("amd", params),
+  }))
+
+  tools.push(createWorkflowTool({
     name: "anchored_vwap",
     description: "VWAP from a specified start point" + " (returns: indicator)",
     parameters: z.object({
@@ -2130,6 +2174,24 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("bollinger_bands_width", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "bos",
+    description: "Alias for Break of Structure" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("bos", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "break_of_structure",
+    description: "BOS/CHoCH: close crosses last swing high/low (horizontal) or extrapolated trendline through last N swings (trendline/either); returns 1/-1 BOS, 2/-2 CHoCH" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("break_of_structure", params),
   }))
 
   tools.push(createWorkflowTool({
@@ -2904,6 +2966,24 @@ export function createIndicatorTools(
       values: z.array(z.number()).describe("Array of input values (oldest first)"),
     }),
     execute: async (params) => execute("po", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "po3",
+    description: "Alias for Power of Three (AMD)" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("po3", params),
+  }))
+
+  tools.push(createWorkflowTool({
+    name: "power_of_three",
+    description: "Structural AMD: tight accumulation, false-break manipulation that reclaims, then distribution break of opposite range side; session alignment is caller-side" + " (returns: indicator)",
+    parameters: z.object({
+      values: z.array(z.number()).describe("Array of input values (oldest first)"),
+    }),
+    execute: async (params) => execute("power_of_three", params),
   }))
 
   tools.push(createWorkflowTool({

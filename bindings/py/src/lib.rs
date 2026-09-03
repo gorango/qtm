@@ -52,6 +52,8 @@ fn quantamental(m: &Bound<'_, PyModule>) -> PyResult<()> {
 		calculate_variance_warmup,
 		calculate_correlation_warmup,
 		calculate_percent_rank_warmup,
+		calculate_break_of_structure_warmup,
+		calculate_power_of_three_warmup,
 		calculate_indicator_warmup,
 		// ── shared ──
 		cointegration,
@@ -100,6 +102,8 @@ fn quantamental(m: &Bound<'_, PyModule>) -> PyResult<()> {
 		stars,
 		triangles,
 		wedges,
+		break_of_structure,
+		power_of_three,
 		// ── trend ──
 		absolute_price_oscillator,
 		adx,

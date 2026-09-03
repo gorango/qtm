@@ -1,3 +1,4 @@
+pub mod break_of_structure;
 pub mod broadening;
 pub mod bump_and_run;
 pub mod candlesticks;
@@ -9,6 +10,7 @@ pub mod elliott_wave;
 pub mod flags_pennants;
 pub mod head_and_shoulders;
 pub mod island_reversal;
+pub mod power_of_three;
 pub mod rectangle;
 pub mod rounding;
 pub mod triangle;
@@ -18,6 +20,7 @@ pub mod wedge;
 #[cfg(test)]
 pub mod test_util;
 
+pub use break_of_structure::*;
 pub use broadening::*;
 pub use bump_and_run::*;
 pub use candlesticks::*;
@@ -29,6 +32,7 @@ pub use elliott_wave::*;
 pub use flags_pennants::*;
 pub use head_and_shoulders::*;
 pub use island_reversal::*;
+pub use power_of_three::*;
 pub use rectangle::*;
 pub use rounding::*;
 pub use triangle::*;

@@ -974,6 +974,65 @@ pub fn wedges<'py>(
 	Ok(f64_out(py, &out))
 }
 
+#[pyfunction]
+#[pyo3(signature = (highs, lows, closes, lookaround = None, mode = None, trendline_points = None))]
+pub fn break_of_structure<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	lookaround: Option<u32>,
+	mode: Option<String>,
+	trendline_points: Option<u32>,
+) -> PyResultO {
+	let (h, l, c) = (
+		highs.as_array().to_vec(),
+		lows.as_array().to_vec(),
+		closes.as_array().to_vec(),
+	);
+	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
+	let out = result_or_err(indicators_core::break_of_structure(
+		&h,
+		&l,
+		&c,
+		lookaround,
+		mode,
+		trendline_points,
+	))?;
+	Ok(f64_out(py, &out))
+}
+
+#[pyfunction]
+#[allow(clippy::too_many_arguments)]
+#[pyo3(signature = (highs, lows, closes, accumulation_period = None, accumulation_threshold = None, manipulation_threshold = None, manipulation_bars = None))]
+pub fn power_of_three<'py>(
+	py: Python<'py>,
+	highs: F64Arr1<'py>,
+	lows: F64Arr1<'py>,
+	closes: F64Arr1<'py>,
+	accumulation_period: Option<u32>,
+	accumulation_threshold: Option<f64>,
+	manipulation_threshold: Option<f64>,
+	manipulation_bars: Option<u32>,
+) -> PyResultO {
+	let (h, l, c) = (
+		highs.as_array().to_vec(),
+		lows.as_array().to_vec(),
+		closes.as_array().to_vec(),
+	);
+	validate_arrays([(&h, "highs"), (&l, "lows"), (&c, "closes")])?;
+	let out = result_or_err(indicators_core::power_of_three(
+		&h,
+		&l,
+		&c,
+		accumulation_period,
+		accumulation_threshold,
+		manipulation_threshold,
+		manipulation_bars,
+	))?;
+	Ok(f64_out(py, &out))
+}
+
 // ── Trend ─────────────────────────────────────────────────────
 
 #[pyfunction]
