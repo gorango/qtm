@@ -13,7 +13,7 @@
     },
     "packages/mcp": {
       "name": "@quantamental/mcp",
-      "version": "0.1.0",
+      "version": "0.5.0",
       "bin": {
         "quantamental-mcp": "./src/index.ts",
       },
