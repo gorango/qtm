@@ -16,6 +16,14 @@ default:
 setup:
 	uv sync
 
+# Format the Python sources (ruff).
+format:
+	uv run ruff format .
+
+# Lint the Python sources (ruff).
+lint:
+	uv run ruff check .
+
 # (Re)generate config/symbols.yaml — the hydration universe (CoinGecko × Binance Futures).
 symbols:
 	uv run python config/symbols-sync.py
