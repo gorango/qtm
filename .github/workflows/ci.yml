@@ -51,3 +51,22 @@ jobs:
       - name: Test generated tools
         working-directory: packages/tools
         run: bun run test
+
+  mcp:
+    name: MCP Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: oven-sh/setup-bun@v2
+      - name: Install JS dependencies
+        run: bun install --frozen-lockfile
+      - name: Build core binding
+        run: bun run build
+        working-directory: bindings/js
+      - name: Typecheck
+        working-directory: packages/mcp
+        run: bun run typecheck
+      - name: Test
+        working-directory: packages/mcp
+        run: bun run test

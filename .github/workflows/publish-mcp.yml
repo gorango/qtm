@@ -1,0 +1,60 @@
+name: Publish MCP Server
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Build core binding
+        run: bun run build
+        working-directory: bindings/js
+      - name: Typecheck
+        run: bun run typecheck
+        working-directory: packages/mcp
+      - name: Test
+        run: bun run test
+        working-directory: packages/mcp
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    environment: npm
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Publish to NPM
+        env:
+          # OIDC trusted publishing is used automatically once configured on
+          # npm; the token is only a fallback for the migration window.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # npm publish does not rewrite the workspace: protocol, so pack
+          # with bun (which does) and publish the resolved tarball instead.
+          bun install --lockfile-only --ignore-scripts
+          (cd packages/mcp && bun pm pack --destination ../../dist)
+          npm publish ./dist/*.tgz --access public

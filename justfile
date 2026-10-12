@@ -67,10 +67,12 @@ preflight:
 	"
 	(cd bindings/js && node --test ./index.test.js)
 	echo "pre-flight: js smoke green"
+	(cd packages/mcp && bun run typecheck && bun run test)
+	echo "pre-flight: mcp green"
 
 # Stamp <version> across every manifest, refresh the uv lockfiles, and
 # verify agreement. Then: commit, `git tag v<version>`, push with tags --
-# the three publish workflows fire on the tag.
+# the publish workflows fire on the tag.
 #   just release 0.2.0
 release version: preflight
 	#!/bin/bash
@@ -88,9 +90,12 @@ release version: preflight
 	done
 	sed -i "0,/^version = \"[^\"]*\"/s//version = \"{{version}}\"/" bindings/py/pyproject.toml
 	sed -i "s/\"quantamental==$old\"/\"quantamental=={{version}}\"/" .github/workflows/publish-python.yml
-	for f in bindings/js/package.json packages/tools/package.json; do
+	for f in bindings/js/package.json packages/tools/package.json packages/mcp/package.json; do
 		sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"{{version}}\"/" "$f"
 	done
+	# refresh workspace versions in bun.lock so `bun pm pack` bakes the new
+	# versions into published manifests (npm does not rewrite workspace:*)
+	bun install --lockfile-only --ignore-scripts
 	# sync member versions into the workspace lockfile (external pins untouched)
 	cargo update --workspace --quiet
 	(cd bindings/py && uv lock)
@@ -109,7 +114,7 @@ release version: preflight
 		v=$(grep -m1 '^version' "$f" | cut -d'"' -f2)
 		check_version "$f" "$v"
 	done
-	for f in bindings/js/package.json packages/tools/package.json; do
+	for f in bindings/js/package.json packages/tools/package.json packages/mcp/package.json; do
 		v=$(grep -m1 '"version"' "$f" | cut -d'"' -f4)
 		check_version "$f" "$v"
 	done
