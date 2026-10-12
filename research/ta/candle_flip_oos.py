@@ -29,7 +29,7 @@ import numpy as np
 import screen as S
 
 # Candidates pre-registered by their discovery-era bleeds (orig net bps,
-# 2025-07..2026-08 defaults screen — see findings-pattern-batch.md).
+# 2025-07..2026-08 defaults screen — see FINDINGS.md).
 CANDIDATES = [
     ("shooting_star", -42.38),
     ("three_inside_up", -25.07),

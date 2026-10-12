@@ -20,8 +20,7 @@ Layout:
     gate_combos.py        bar-level discovery screen (constraint 1.5, engine-free)
     lgbm_stack.py         2x2 LightGBM stack over the catalog
     indicators.py         shared continuous-indicator features (consolidated from the screen modules)
-    broken-strategies.md  upstream catalog bugs + fixes (incl. the Aug-18 batch defects)
-    findings-pattern-batch.md  results of the Aug-18 chart-pattern campaign
+    FINDINGS.md           catalog defect audit + Aug-18 chart-pattern campaign results
 
 ## Setup
 
@@ -212,7 +211,7 @@ and the bar-level discovery screen:
   mechanism — and even that failed month-stability at bar level here.
   (Pool-conditioned follow-ups — `gate_separators.py`, `adx_*` — live in
   the parent repo's validation tree, not here.)
-- **Aug-18 chart-pattern batch (`findings-pattern-batch.md`): one survivor.**
+- **Aug-18 chart-pattern batch (Part 2 of `FINDINGS.md`): one survivor.**
   The ~30 new pattern detectors + 12 strategy wrappers ran this full
   pipeline. Every natural-direction path died (hammer passed stability then
   lost its sweep's forward window −65 bps; TPE basin collapse again). Source
@@ -261,7 +260,7 @@ and the bar-level discovery screen:
   `elliott_wave_pattern`'s mis-modeled impulse), 2 end-anchored pattern
   detectors (`triangles`, `cup_and_handle`), and the 3 statistics pair
   strategies (the wheel's bindings had no `secondCloses`).  Root causes +
-  upstream fixes: `broken-strategies.md`.  **The local source build fixes
+  upstream fixes: Part 1 of `FINDINGS.md`.  **The local source build fixes
   these — all 97 strategies fire**, so an all-zero signal column now
   genuinely means "tested and weak", not "broken".
 
