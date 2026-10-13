@@ -26,11 +26,9 @@ export interface ReitMetrics {
  *
  * FFO/AFFO are approximated because the structured feed omits impairment and
  * gain-on-sale lines (FFO) and the maintenance-vs-growth capex split plus
- * straight-line rent (AFFO). `affoPerShare` is **annual** — matching the
- * P/AFFO semantics used by `high_yield_reit_strategy` (threshold 15, payout
- * < 0.95). Note `factor_reit_dividend_safety` multiplies it by 4, which
- * assumes a quarterly value; that factor appears to be off by 4x and should be
- * reconciled separately rather than worked around here.
+ * straight-line rent (AFFO). `affoPerShare` is **annual** — matching
+ * `price_to_affo`, `reit_dividend_safety`, and `high_yield_reit_strategy`
+ * (P/AFFO threshold 15, payout < 0.95).
  */
 export function deriveReitMetrics(inputs: ReitInputs): ReitMetrics {
 	const warnings: string[] = []

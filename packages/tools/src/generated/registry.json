@@ -518,7 +518,7 @@
       "id": "reit_dividend_safety",
       "name": "REIT Dividend Safety",
       "category": "reit",
-      "description": "REIT Dividend Safety: forwardAnnualDividendRate / (affoPerShare * 4)",
+      "description": "REIT Dividend Safety: forwardAnnualDividendRate / affoPerShare (AFFO payout ratio, lower is safer)",
       "needs_prices": false,
       "params_schema": "",
       "output_type": "factor"

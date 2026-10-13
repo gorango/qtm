@@ -228,7 +228,7 @@ inventory::submit! {
 	FactorDescriptor { id: "price_to_affo", name: "Price to AFFO", category: "reit", description: "Price to AFFO (Adjusted Funds From Operations): price / affoPerShare", needs_prices: true, params_schema: "", output_type: "factor" }
 }
 inventory::submit! {
-	FactorDescriptor { id: "reit_dividend_safety", name: "REIT Dividend Safety", category: "reit", description: "REIT Dividend Safety: forwardAnnualDividendRate / (affoPerShare * 4)", needs_prices: false, params_schema: "", output_type: "factor" }
+	FactorDescriptor { id: "reit_dividend_safety", name: "REIT Dividend Safety", category: "reit", description: "REIT Dividend Safety: forwardAnnualDividendRate / affoPerShare (AFFO payout ratio, lower is safer)", needs_prices: false, params_schema: "", output_type: "factor" }
 }
 
 // ── composite ─────────────────────────────────────

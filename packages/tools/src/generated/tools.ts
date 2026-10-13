@@ -71,7 +71,7 @@ export const registryData = {
     "price_to_sales": {"id":"price_to_sales","name":"Price to Sales","category":"value","description":"Price-to-Sales ratio: marketCap / revenue","needs_prices":false,"params_schema":"","output_type":"factor"},
     "quality_of_earnings_index": {"id":"quality_of_earnings_index","name":"Quality of Earnings Index","category":"quality","description":"Quality of Earnings Index (0-1): composite of accruals, cash flow consistency, revenue quality, and balance sheet strength","needs_prices":false,"params_schema":"","output_type":"factor"},
     "r_and_d_to_revenue": {"id":"r_and_d_to_revenue","name":"R&D to Revenue","category":"quality","description":"R&D-to-Revenue ratio: researchAndDevelopmentExpenses / revenue","needs_prices":false,"params_schema":"","output_type":"factor"},
-    "reit_dividend_safety": {"id":"reit_dividend_safety","name":"REIT Dividend Safety","category":"reit","description":"REIT Dividend Safety: forwardAnnualDividendRate / (affoPerShare * 4)","needs_prices":false,"params_schema":"","output_type":"factor"},
+    "reit_dividend_safety": {"id":"reit_dividend_safety","name":"REIT Dividend Safety","category":"reit","description":"REIT Dividend Safety: forwardAnnualDividendRate / affoPerShare (AFFO payout ratio, lower is safer)","needs_prices":false,"params_schema":"","output_type":"factor"},
     "retained_earnings": {"id":"retained_earnings","name":"Retained Earnings","category":"quality","description":"Retained Earnings Per Share: retainedEarnings / sharesOutstanding","needs_prices":false,"params_schema":"","output_type":"factor"},
     "return_on_assets": {"id":"return_on_assets","name":"Return on Assets","category":"quality","description":"Return on Assets: netIncome / totalAssets","needs_prices":false,"params_schema":"","output_type":"factor"},
     "return_on_equity": {"id":"return_on_equity","name":"Return on Equity","category":"quality","description":"Return on Equity: netIncome / shareholdersEquity","needs_prices":false,"params_schema":"","output_type":"factor"},
@@ -4092,7 +4092,7 @@ export function createFactorTools(
 
   tools.push(createWorkflowTool({
     name: "reit_dividend_safety",
-    description: "REIT Dividend Safety: forwardAnnualDividendRate / (affoPerShare * 4)" + " (returns: factor)",
+    description: "REIT Dividend Safety: forwardAnnualDividendRate / affoPerShare (AFFO payout ratio, lower is safer)" + " (returns: factor)",
     parameters: z.object({
       fundamentals: z.array(z.unknown()).describe("Fundamental data points"),
     }),
