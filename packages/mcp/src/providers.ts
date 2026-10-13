@@ -10,10 +10,7 @@ const SEC_TOOL = 'provider_sec_reit'
 
 const fmpParameters = z.object({
 	symbol: z.string().describe('Stock symbol, e.g. "PLD"'),
-	period: z
-		.enum(['quarter', 'annual'])
-		.optional()
-		.describe('Reporting period (default "quarter")'),
+	period: z.enum(['quarter', 'annual']).optional().describe('Reporting period (default "quarter")'),
 	limit: z.number().int().positive().optional().describe('Maximum number of periods'),
 })
 

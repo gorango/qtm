@@ -15,35 +15,14 @@ export interface StrategyRegistryData {
 }
 
 const strategyInputSchema = z.object({
-	closes: z
-		.array(z.number())
-		.describe('Array of closing prices (oldest first)'),
-	highs: z
-		.array(z.number())
-		.optional()
-		.describe('Array of high prices (oldest first)'),
-	lows: z
-		.array(z.number())
-		.optional()
-		.describe('Array of low prices (oldest first)'),
-	volumes: z
-		.array(z.number())
-		.optional()
-		.describe('Array of volume data (oldest first)'),
+	closes: z.array(z.number()).describe('Array of closing prices (oldest first)'),
+	highs: z.array(z.number()).optional().describe('Array of high prices (oldest first)'),
+	lows: z.array(z.number()).optional().describe('Array of low prices (oldest first)'),
+	volumes: z.array(z.number()).optional().describe('Array of volume data (oldest first)'),
 	config: z
 		.record(z.string(), z.unknown())
 		.optional()
 		.describe('Strategy-specific configuration overrides'),
-})
-
-const indicatorInputSchema = z.object({
-	values: z
-		.array(z.number())
-		.describe('Array of input values (oldest first)'),
-	config: z
-		.record(z.string(), z.unknown())
-		.optional()
-		.describe('Indicator configuration parameters'),
 })
 
 export function createDynamicStrategyTool(
@@ -58,8 +37,7 @@ export function createDynamicStrategyTool(
 ): WorkflowTool<typeof strategyInputSchema> {
 	return createWorkflowTool({
 		name: definition.id.replace(/-/g, '_'),
-		description:
-			definition.description ?? `${definition.name} (${definition.category}) strategy`,
+		description: definition.description ?? `${definition.name} (${definition.category}) strategy`,
 		parameters: strategyInputSchema,
 		execute: async (params) => {
 			const start = Date.now()
@@ -107,18 +85,15 @@ export function createToolRegistry(
 			for (const [id, def] of Object.entries(registry.strategies)) {
 				const strategyId = id
 				tools.push(
-					createDynamicStrategyTool(
-						def,
-						async (params) => {
-							if (!config.resolveStrategy) {
-								throw new Error('No strategy resolver configured')
-							}
-							return config.resolveStrategy(strategyId, {
-								closes: params.closes,
-								config: params.config,
-							})
-						},
-					),
+					createDynamicStrategyTool(def, async (params) => {
+						if (!config.resolveStrategy) {
+							throw new Error('No strategy resolver configured')
+						}
+						return config.resolveStrategy(strategyId, {
+							closes: params.closes,
+							config: params.config,
+						})
+					}),
 				)
 			}
 		} catch {
@@ -137,12 +112,7 @@ export function createToolRegistry(
 			return tools.find((t) => t.name === name)
 		},
 		getManifest(): string {
-			return tools
-				.map(
-					(t) =>
-						`- **${t.name}**: ${t.description}`,
-				)
-				.join('\n')
+			return tools.map((t) => `- **${t.name}**: ${t.description}`).join('\n')
 		},
 	}
 }

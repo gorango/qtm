@@ -4,5 +4,9 @@
 	"workspaces": [
 		"bindings/*",
 		"packages/*"
-	]
+	],
+	"devDependencies": {
+		"oxfmt": "^0.72.0",
+		"oxlint": "^1.87.0"
+	}
 }

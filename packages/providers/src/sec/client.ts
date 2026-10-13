@@ -86,7 +86,10 @@ export function createSecClient(options: SecClientOptions = {}): SecClient {
 		})
 		lastRequest = Date.now()
 		if (!response.ok) {
-			throw new ProviderError('sec', `SEC request failed: ${response.status} ${response.statusText} (${url})`)
+			throw new ProviderError(
+				'sec',
+				`SEC request failed: ${response.status} ${response.statusText} (${url})`,
+			)
 		}
 		return response
 	}

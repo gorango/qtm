@@ -3,14 +3,14 @@
 	"version": "0.5.0",
 	"description": "MCP server exposing quantamental analysis tools — indicators, factors, and strategies — over stdio",
 	"keywords": [
-		"quant",
-		"quantamental",
+		"factors",
 		"finance",
 		"indicators",
-		"factors",
-		"strategies",
 		"mcp",
-		"model-context-protocol"
+		"model-context-protocol",
+		"quant",
+		"quantamental",
+		"strategies"
 	],
 	"homepage": "https://github.com/gorango/qtm",
 	"repository": {
@@ -49,7 +49,7 @@
 		"vitest": "^5.0.3"
 	},
 	"engines": {
-		"node": ">=22",
-		"bun": ">=1.0.0"
+		"bun": ">=1.0.0",
+		"node": ">=22"
 	}
 }

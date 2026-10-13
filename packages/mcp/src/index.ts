@@ -2,11 +2,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import * as core from '@quantamental/core'
-import {
-	createStrategyTools,
-	createIndicatorTools,
-	createFactorTools,
-} from '@quantamental/tools'
+import { createStrategyTools, createIndicatorTools, createFactorTools } from '@quantamental/tools'
 import type { WorkflowTool, ToolResult } from '@quantamental/tools'
 import { registerConfiguredProviders } from './providers'
 
@@ -19,7 +15,11 @@ const resolveFn = (id: string) =>
 const timed = (id: string, fn: () => unknown): ToolResult => {
 	const start = Date.now()
 	try {
-		return { status: 'completed', data: fn(), metadata: { duration: Date.now() - start, toolName: id } }
+		return {
+			status: 'completed',
+			data: fn(),
+			metadata: { duration: Date.now() - start, toolName: id },
+		}
 	} catch (error) {
 		return {
 			status: 'failed',
@@ -30,26 +30,40 @@ const timed = (id: string, fn: () => unknown): ToolResult => {
 }
 
 // ── Dispatch: strategy id → runStrategy ──────────────────
-const strategyExecute = (id: string, params: {
-	closes: number[]
-	highs?: number[]
-	lows?: number[]
-	volumes?: number[]
-	config?: Record<string, unknown>
-}): Promise<ToolResult> => {
-	return Promise.resolve(timed(id, () => core.runStrategy(id, {
-		closes: params.closes,
-		highs: params.highs,
-		lows: params.lows,
-		volumes: params.volumes,
-	}, (params.config ?? null) as never)))
+const strategyExecute = (
+	id: string,
+	params: {
+		closes: number[]
+		highs?: number[]
+		lows?: number[]
+		volumes?: number[]
+		config?: Record<string, unknown>
+	},
+): Promise<ToolResult> => {
+	return Promise.resolve(
+		timed(id, () =>
+			core.runStrategy(
+				id,
+				{
+					closes: params.closes,
+					highs: params.highs,
+					lows: params.lows,
+					volumes: params.volumes,
+				},
+				(params.config ?? null) as never,
+			),
+		),
+	)
 }
 
 // ── Dispatch: indicator id → named core export ───────────
-const indicatorExecute = (id: string, params: {
-	values: number[]
-	config?: Record<string, unknown>
-}): Promise<ToolResult> => {
+const indicatorExecute = (
+	id: string,
+	params: {
+		values: number[]
+		config?: Record<string, unknown>
+	},
+): Promise<ToolResult> => {
 	const fn = resolveFn(id)
 	if (typeof fn !== 'function') {
 		return Promise.resolve({
@@ -58,16 +72,21 @@ const indicatorExecute = (id: string, params: {
 			metadata: { duration: 0, toolName: id },
 		})
 	}
-	return Promise.resolve(timed(id, () => fn(new Float64Array(params.values), params.config ?? null)))
+	return Promise.resolve(
+		timed(id, () => fn(new Float64Array(params.values), params.config ?? null)),
+	)
 }
 
 // ── Dispatch: factor id → named core export ──────────────
 // Factor functions take FundamentalPoint[] (or OnChainDataPoint[] /
 // PredictionMarketPoint[]) and return FactorPoint[]. Some also take prices.
-const factorExecute = (id: string, params: {
-	fundamentals: unknown[]
-	prices?: unknown[]
-}): Promise<ToolResult> => {
+const factorExecute = (
+	id: string,
+	params: {
+		fundamentals: unknown[]
+		prices?: unknown[]
+	},
+): Promise<ToolResult> => {
 	const fn = resolveFn(id)
 	if (typeof fn !== 'function') {
 		return Promise.resolve({
@@ -76,9 +95,11 @@ const factorExecute = (id: string, params: {
 			metadata: { duration: 0, toolName: id },
 		})
 	}
-	return Promise.resolve(timed(id, () =>
-		params.prices ? fn(params.fundamentals, params.prices) : fn(params.fundamentals),
-	))
+	return Promise.resolve(
+		timed(id, () =>
+			params.prices ? fn(params.fundamentals, params.prices) : fn(params.fundamentals),
+		),
+	)
 }
 
 // 35 indicator/strategy ids collide (e.g. "rsi" is both an indicator and a

@@ -2,18 +2,14 @@
 	"name": "@quantamental/tools",
 	"version": "0.5.0",
 	"description": "AI agent tools for quantamental analysis — wrap indicators, factors, and strategies as typed LLM-callable tools",
-	"type": "module",
-	"files": [
-		"src"
-	],
-	"engines": {
-		"node": ">=22",
-		"bun": ">=1.0.0"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gorango/qtm"
 	},
+	"files": [
+		"src"
+	],
+	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
 		"./adapters": "./src/adapters/index.ts",
@@ -64,5 +60,9 @@
 		"openai": {
 			"optional": true
 		}
+	},
+	"engines": {
+		"bun": ">=1.0.0",
+		"node": ">=22"
 	}
 }

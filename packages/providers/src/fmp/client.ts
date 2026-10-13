@@ -90,8 +90,7 @@ export function createFmpClient(options: FmpClientOptions = {}): FmpClient {
 		cashFlowStatement: (symbol, options) =>
 			statement<FmpCashFlowStatement>('cash-flow-statement', symbol, options),
 		keyMetrics: (symbol, options) => statement<FmpKeyMetrics>('key-metrics', symbol, options),
-		financialRatios: (symbol, options) =>
-			statement<FmpFinancialRatios>('ratios', symbol, options),
+		financialRatios: (symbol, options) => statement<FmpFinancialRatios>('ratios', symbol, options),
 		ownerEarnings: (symbol, options) =>
 			statement<FmpOwnerEarnings>('owner-earnings', symbol, options),
 		companyProfile: (symbol) => get<FmpCompanyProfile[]>('profile', { symbol }),

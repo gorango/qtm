@@ -69,14 +69,22 @@ describe('createSecClient', () => {
 	})
 
 	it('honours the limit', async () => {
-		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch([]) })
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch([]),
+		})
 		const filings = await client.findFilings('PLD', { forms: ['10-K', '10-Q'], limit: 1 })
 		expect(filings).toHaveLength(1)
 		expect(filings[0].form).toBe('10-Q')
 	})
 
 	it('returns an empty list for an unknown ticker', async () => {
-		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch([]) })
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch([]),
+		})
 		expect(await client.findFilings('NOPE')).toEqual([])
 	})
 
@@ -92,7 +100,11 @@ describe('createSecClient', () => {
 	})
 
 	it('fetches a document as text', async () => {
-		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch([]) })
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch([]),
+		})
 		const html = await client.fetchDocument(
 			'https://www.sec.gov/Archives/edgar/data/1045609/000104560924000010/pld-20240331.htm',
 		)
@@ -100,7 +112,11 @@ describe('createSecClient', () => {
 	})
 
 	it('lists filing documents via the EDGAR index', async () => {
-		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch([]) })
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch([]),
+		})
 		const [filing] = await client.findFilings('PLD', { forms: ['10-Q'], limit: 1 })
 		const documents = await client.listDocuments(filing)
 
@@ -113,7 +129,11 @@ describe('createSecClient', () => {
 
 	it('uses a supplied CIK without resolving the ticker', async () => {
 		const log: LogEntry[] = []
-		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch(log) })
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch(log),
+		})
 		const filings = await client.findFilings('AVB', { forms: ['10-Q'], cik: 915912 })
 
 		expect(filings[0].cik).toBe(915912)

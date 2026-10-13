@@ -49,14 +49,16 @@ describe('createToolRegistry', () => {
 	})
 
 	it('getManifest returns formatted string', () => {
-		const registry = createToolRegistry({ customTools: [
-			{
-				name: 'test_tool',
-				description: 'Test tool description',
-				parameters: {} as never,
-				execute: async () => ({ status: 'completed' as const, data: null }),
-			},
-		] })
+		const registry = createToolRegistry({
+			customTools: [
+				{
+					name: 'test_tool',
+					description: 'Test tool description',
+					parameters: {} as never,
+					execute: async () => ({ status: 'completed' as const, data: null }),
+				},
+			],
+		})
 		const manifest = registry.getManifest()
 		expect(manifest).toContain('test_tool')
 		expect(manifest).toContain('Test tool description')

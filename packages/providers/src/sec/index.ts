@@ -80,9 +80,7 @@ export function createSecReitEnricher(options: SecReitEnricherOptions): Fundamen
 					warnings.push(`failed to fetch ${filing.form} filed ${filing.filingDate}`)
 				}
 			} else {
-				warnings.push(
-					`no 10-K/10-Q found for ${symbol} (EDGAR may lack a ticker; pass a CIK)`,
-				)
+				warnings.push(`no 10-K/10-Q found for ${symbol} (EDGAR may lack a ticker; pass a CIK)`)
 			}
 
 			const target =

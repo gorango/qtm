@@ -69,7 +69,11 @@ describe('generated pipeline integration', () => {
 
 		it('executes all tools without error', async () => {
 			const results = await Promise.all(
-				tools.map(t => t.execute({ closes: [100, 101, 102] }).catch(e => ({ status: 'failed', error: { message: e.message } } as ToolResult)))
+				tools.map((t) =>
+					t
+						.execute({ closes: [100, 101, 102] })
+						.catch((e) => ({ status: 'failed', error: { message: e.message } }) as ToolResult),
+				),
 			)
 			for (const r of results) {
 				expect(r.status).toBe('completed')
@@ -104,7 +108,11 @@ describe('generated pipeline integration', () => {
 
 		it('executes all tools without error', async () => {
 			const results = await Promise.all(
-				tools.map(t => t.execute({ values: [100, 101, 102] }).catch(e => ({ status: 'failed', error: { message: e.message } } as ToolResult)))
+				tools.map((t) =>
+					t
+						.execute({ values: [100, 101, 102] })
+						.catch((e) => ({ status: 'failed', error: { message: e.message } }) as ToolResult),
+				),
 			)
 			for (const r of results) {
 				expect(r.status).toBe('completed')
@@ -139,7 +147,11 @@ describe('generated pipeline integration', () => {
 
 		it('executes all tools without error', async () => {
 			const results = await Promise.all(
-				tools.map(t => t.execute({ fundamentals: [] }).catch(e => ({ status: 'failed', error: { message: e.message } } as ToolResult)))
+				tools.map((t) =>
+					t
+						.execute({ fundamentals: [] })
+						.catch((e) => ({ status: 'failed', error: { message: e.message } }) as ToolResult),
+				),
 			)
 			for (const r of results) {
 				expect(r.status).toBe('completed')

@@ -152,7 +152,10 @@ function matchPerShare(segments: string[], metric: RegExp, context: Context, ski
 		)
 		if (tokens.length <= context.column) continue
 
-		const candidate: Match = { value: tokens[context.column].value, line: segment.trim().slice(0, 200) }
+		const candidate: Match = {
+			value: tokens[context.column].value,
+			line: segment.trim().slice(0, 200),
+		}
 		if (/diluted/i.test(segment)) return candidate
 		if (fallback.value === undefined) fallback = candidate
 	}
@@ -164,7 +167,12 @@ function matchPerShare(segments: string[], metric: RegExp, context: Context, ski
  * "per share" (the table header carries them). Only accepts rows whose every
  * value is per-share sized, so totals and "% change" rows are rejected.
  */
-function matchPerShareRow(segments: string[], metric: RegExp, context: Context, skip?: RegExp): Match {
+function matchPerShareRow(
+	segments: string[],
+	metric: RegExp,
+	context: Context,
+	skip?: RegExp,
+): Match {
 	let fallback: Match = {}
 	for (const segment of segments) {
 		const label = segment.trim()
@@ -216,7 +224,11 @@ const SCALES = [1, 1e3, 1e6]
  * {units, thousands, millions} lands there. Returns `undefined` when none or
  * several fit, rather than guessing.
  */
-export function perShareFromTotal(total: number, shares: number, scale?: number): number | undefined {
+export function perShareFromTotal(
+	total: number,
+	shares: number,
+	scale?: number,
+): number | undefined {
 	if (!Number.isFinite(total) || total === 0 || !Number.isFinite(shares) || shares <= 0) {
 		return undefined
 	}

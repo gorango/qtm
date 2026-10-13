@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 interface RegistryJson {
 	version: number
@@ -84,7 +84,10 @@ function jsonSchemaTypeToZod(prop: Record<string, unknown>): string {
 	return result
 }
 
-function jsonSchemaToZod(schema: Record<string, unknown>, defaults: Record<string, unknown>): string {
+function jsonSchemaToZod(
+	schema: Record<string, unknown>,
+	defaults: Record<string, unknown>,
+): string {
 	if (!schema || schema.type !== 'object') return 'z.object({}).optional()'
 	const props = schema.properties as Record<string, Record<string, unknown>> | undefined
 	if (!props) return 'z.object({}).optional()'
@@ -111,17 +114,15 @@ function generateConfigSchema(paramsSchema: string, defaults: Record<string, unk
 	}
 }
 
-function capitalize(s: string): string {
-	return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
 function main() {
 	const registryPath = resolve(import.meta.dirname, '../src/generated/registry.json')
 	const registry: RegistryJson = JSON.parse(readFileSync(registryPath, 'utf-8'))
 
 	const EXPECTED_VERSION = 1
 	if (registry.version !== EXPECTED_VERSION) {
-		console.error(`Registry version mismatch: expected ${EXPECTED_VERSION}, got ${registry.version}`)
+		console.error(
+			`Registry version mismatch: expected ${EXPECTED_VERSION}, got ${registry.version}`,
+		)
 		console.error('Run `cargo run -p codegen` to regenerate the registry.')
 		process.exit(1)
 	}
@@ -157,7 +158,9 @@ function main() {
 	lines.push('  strategies: {')
 	for (const [id, entry] of Object.entries(registry.strategies)) {
 		const { defaults, ...meta } = entry
-		lines.push(`    "${id}": { ${JSON.stringify(meta).slice(1, -1)}, defaults: ${JSON.stringify(defaults)} },`)
+		lines.push(
+			`    "${id}": { ${JSON.stringify(meta).slice(1, -1)}, defaults: ${JSON.stringify(defaults)} },`,
+		)
 	}
 	lines.push('  } as const,')
 	lines.push('}')
@@ -166,10 +169,11 @@ function main() {
 	lines.push('// ── Factor tools ────────────────────────────────────────')
 	lines.push('')
 
-	const factorIds = Object.keys(registry.factors)
 	lines.push('export function createStrategyTools(')
 	lines.push('  execute: (id: string, params:')
-	lines.push('    { closes: number[]; highs?: number[]; lows?: number[]; volumes?: number[]; config?: Record<string, unknown> }')
+	lines.push(
+		'    { closes: number[]; highs?: number[]; lows?: number[]; volumes?: number[]; config?: Record<string, unknown> }',
+	)
 	lines.push('  ) => Promise<ToolResult>,')
 	lines.push('): WorkflowTool[] {')
 	lines.push('  const tools: WorkflowTool[] = []')
@@ -178,13 +182,20 @@ function main() {
 	// Generate strategy tools
 	for (const [id, entry] of Object.entries(registry.strategies)) {
 		const safeName = entry.id.replace(/[^a-zA-Z0-9_$]/g, '_')
-		const configSchema = generateConfigSchema(entry.params_schema, entry.defaults as Record<string, unknown>)
+		const configSchema = generateConfigSchema(
+			entry.params_schema,
+			entry.defaults as Record<string, unknown>,
+		)
 		lines.push(`  // ${entry.name} (${entry.category})`)
 		lines.push(`  tools.push(createWorkflowTool({`)
 		lines.push(`    name: "${safeName}",`)
-		lines.push(`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`)
+		lines.push(
+			`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`,
+		)
 		lines.push(`    parameters: z.object({`)
-		lines.push(`      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),`)
+		lines.push(
+			`      closes: z.array(z.number()).describe("Array of closing prices (oldest first)"),`,
+		)
 		lines.push(`      highs: z.array(z.number()).optional().describe("Array of high prices"),`)
 		lines.push(`      lows: z.array(z.number()).optional().describe("Array of low prices"),`)
 		lines.push(`      volumes: z.array(z.number()).optional().describe("Array of volume data"),`)
@@ -203,7 +214,9 @@ function main() {
 	lines.push('// ── Indicator tools ──────────────────────────────────────')
 	lines.push('')
 	lines.push('export function createIndicatorTools(')
-	lines.push('  execute: (id: string, params: { values: number[]; config?: Record<string, unknown> }) => Promise<ToolResult>,')
+	lines.push(
+		'  execute: (id: string, params: { values: number[]; config?: Record<string, unknown> }) => Promise<ToolResult>,',
+	)
 	lines.push('): WorkflowTool[] {')
 	lines.push('  const tools: WorkflowTool[] = []')
 	lines.push('')
@@ -211,9 +224,13 @@ function main() {
 		const safeName = entry.id.replace(/[^a-zA-Z0-9_$]/g, '_')
 		lines.push(`  tools.push(createWorkflowTool({`)
 		lines.push(`    name: "${safeName}",`)
-		lines.push(`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`)
+		lines.push(
+			`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`,
+		)
 		lines.push(`    parameters: z.object({`)
-		lines.push(`      values: z.array(z.number()).describe("Array of input values (oldest first)"),`)
+		lines.push(
+			`      values: z.array(z.number()).describe("Array of input values (oldest first)"),`,
+		)
 		lines.push(`    }),`)
 		lines.push(`    execute: async (params) => execute("${id}", params),`)
 		lines.push(`  }))`)
@@ -229,17 +246,20 @@ function main() {
 	lines.push('')
 
 	lines.push('export function createFactorTools(')
-	lines.push('  execute: (id: string, params: { fundamentals: unknown[]; prices?: unknown[] }) => Promise<ToolResult>,')
+	lines.push(
+		'  execute: (id: string, params: { fundamentals: unknown[]; prices?: unknown[] }) => Promise<ToolResult>,',
+	)
 	lines.push('): WorkflowTool[] {')
 	lines.push('  const tools: WorkflowTool[] = []')
 	lines.push('')
 
 	for (const [id, entry] of Object.entries(registry.factors)) {
 		const safeName = entry.id.replace(/[^a-zA-Z0-9_$]/g, '_')
-		const needsPrices = entry.needs_prices ? 'optional()' : 'optional()'
 		lines.push(`  tools.push(createWorkflowTool({`)
 		lines.push(`    name: "${safeName}",`)
-		lines.push(`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`)
+		lines.push(
+			`    description: ${JSON.stringify(entry.description)} + " (returns: ${entry.output_type})",`,
+		)
 		lines.push(`    parameters: z.object({`)
 		lines.push(`      fundamentals: z.array(z.unknown()).describe("Fundamental data points"),`)
 		if (entry.needs_prices) {
@@ -257,7 +277,9 @@ function main() {
 
 	const outputPath = resolve(import.meta.dirname, '../src/generated/tools.ts')
 	writeFileSync(outputPath, lines.join('\n'), 'utf-8')
-	console.log(`Wrote ${Object.keys(registry.strategies).length} strategy tools, ${Object.keys(registry.indicators).length} indicator tools, ${Object.keys(registry.factors).length} factor tools to ${outputPath}`)
+	console.log(
+		`Wrote ${Object.keys(registry.strategies).length} strategy tools, ${Object.keys(registry.indicators).length} indicator tools, ${Object.keys(registry.factors).length} factor tools to ${outputPath}`,
+	)
 }
 
 main()

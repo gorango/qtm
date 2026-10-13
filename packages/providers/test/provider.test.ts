@@ -6,10 +6,21 @@ import { ProviderError } from '../src/provider'
 function fakeClient(overrides: Partial<FmpClient> = {}): FmpClient {
 	const base: FmpClient = {
 		incomeStatement: async () => [
-			{ date: '2024-03-31', symbol: 'PLD', period: 'Q1', netIncome: 100, ebitda: 300, operatingIncome: 250, depreciationAndAmortization: 150, weightedAverageShsOut: 100 },
+			{
+				date: '2024-03-31',
+				symbol: 'PLD',
+				period: 'Q1',
+				netIncome: 100,
+				ebitda: 300,
+				operatingIncome: 250,
+				depreciationAndAmortization: 150,
+				weightedAverageShsOut: 100,
+			},
 		],
 		balanceSheetStatement: async () => [{ date: '2024-03-31', totalAssets: 5000 }],
-		cashFlowStatement: async () => [{ date: '2024-03-31', operatingCashFlow: 200, capitalExpenditure: 50 }],
+		cashFlowStatement: async () => [
+			{ date: '2024-03-31', operatingCashFlow: 200, capitalExpenditure: 50 },
+		],
 		keyMetrics: async () => [{ date: '2024-03-31', marketCap: 50000 }],
 		financialRatios: async () => [{ date: '2024-03-31', assetTurnover: 0.2 }],
 		companyProfile: async () => [{ symbol: 'PLD', marketCap: 50000 }],
@@ -18,7 +29,9 @@ function fakeClient(overrides: Partial<FmpClient> = {}): FmpClient {
 		ratingsSnapshot: async () => [{ symbol: 'PLD', overallScore: 4 }],
 		dcfValuation: async () => [{ symbol: 'PLD', dcf: 130 }],
 		ownerEarnings: async () => [{ date: '2024-03-31', maintenanceCapex: 20 }],
-		companyDividends: async () => [{ symbol: 'PLD', date: '2024-03-15', dividend: 1.5, frequency: 'Quarterly' }],
+		companyDividends: async () => [
+			{ symbol: 'PLD', date: '2024-03-15', dividend: 1.5, frequency: 'Quarterly' },
+		],
 	}
 	return { ...base, ...overrides }
 }

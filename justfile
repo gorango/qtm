@@ -19,14 +19,17 @@ test:
 	cd bindings/py && uv run python -m pytest -q
 	cd bindings/js && node --test ./index.test.js
 
-# Lint the Rust code.
+# Lint the Rust code, the research Python, and the TS/JS packages.
 lint:
 	cargo clippy --workspace --all-targets
+	cd research/ta && uv run ruff check .
+	bunx oxlint packages
 
-# Format the Rust code.
+# Format the Rust code, the research Python, and the TS/JS packages.
 fmt:
 	cargo fmt
 	cd research/ta && uv run ruff format .
+	bunx oxfmt packages
 
 # Fast compile check (no tests).
 check:

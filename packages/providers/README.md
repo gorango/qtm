@@ -5,7 +5,7 @@ Data providers that normalize external sources into quantamental's contracts —
 consume them without any tool-side changes.
 
 This package is pure I/O + normalization. It depends on `@quantamental/core` for
-the contract *types* only; all computation still happens in the native core.
+the contract _types_ only; all computation still happens in the native core.
 
 > Naming: these are **providers**, not "adapters". `@quantamental/tools` already
 > uses "adapters" for its LLM-framework bindings (Anthropic/OpenAI/etc.).
@@ -39,19 +39,19 @@ const provider = createFmpProvider({ client: fmp })
 
 ## What it maps
 
-| Source rows | Contract fields |
-| --- | --- |
-| `income-statement` | revenue, costOfRevenue, grossProfit, operatingIncome, netIncome, eps, ebitda, costAndExpenses, researchAndDevelopmentExpenses, interestExpense |
+| Source rows               | Contract fields                                                                                                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `income-statement`        | revenue, costOfRevenue, grossProfit, operatingIncome, netIncome, eps, ebitda, costAndExpenses, researchAndDevelopmentExpenses, interestExpense                             |
 | `balance-sheet-statement` | totalAssets, currentAssets, currentLiabilities, totalLiabilities, totalDebt, shareholdersEquity, retainedEarnings, commonStock, cashAndEquivalents, propertyPlantEquipment |
-| `cash-flow-statement` | operatingCashFlow, capitalExpenditure, dividendsPaid, shareRepurchases |
-| `key-metrics` | marketCap, enterpriseValue |
-| `ratios` | assetTurnover, dividendYield |
-| `quote` / `profile` | sharesOutstanding, marketCap |
-| `price-target-consensus` | analystTargetPrice |
-| `ratings-snapshot` | rating |
-| `discounted-cash-flow` | dcf |
-| `dividends` | dividendsPerShare (trailing 365d), forwardAnnualDividendRate |
-| `owner-earnings` | maintenance capex (input to AFFO) |
+| `cash-flow-statement`     | operatingCashFlow, capitalExpenditure, dividendsPaid, shareRepurchases                                                                                                     |
+| `key-metrics`             | marketCap, enterpriseValue                                                                                                                                                 |
+| `ratios`                  | assetTurnover, dividendYield                                                                                                                                               |
+| `quote` / `profile`       | sharesOutstanding, marketCap                                                                                                                                               |
+| `price-target-consensus`  | analystTargetPrice                                                                                                                                                         |
+| `ratings-snapshot`        | rating                                                                                                                                                                     |
+| `discounted-cash-flow`    | dcf                                                                                                                                                                        |
+| `dividends`               | dividendsPerShare (trailing 365d), forwardAnnualDividendRate                                                                                                               |
+| `owner-earnings`          | maintenance capex (input to AFFO)                                                                                                                                          |
 
 Per-period rows are joined on `date`. Point-in-time snapshots (`quote`,
 `profile`, `price-target-consensus`, `ratings-snapshot`, `discounted-cash-flow`)
@@ -99,16 +99,16 @@ Values are resolved in order: the reported **per-share** line; else the reported
 `perShareFromTotal`); else the **earnings release** (a large EX-99 exhibit on a
 recent 8-K), where many issuers state "Core FFO per share" in prose.
 
-| Issuer | FFO/sh | AFFO / Core FFO/sh | Source |
-| --- | --- | --- | --- |
-| O | 1.07 | 1.09 | 10-Q per-share rows |
-| SPG | 3.12 | – | 10-Q per-share row (no AFFO reported) |
-| WELL | 1.56 | – | 10-Q row labelled just "FFO" |
-| DLR | 2.73 | 2.13 | 10-Q + earnings release |
-| PLD | 3.52 | 3.13 | 10-Q totals ÷ shares |
-| VICI | 0.50 | 0.65 | 10-Q totals ÷ shares |
-| EXR | 2.13 | – | 10-Q total ÷ shares |
-| AVB | 2.73 | 2.86 | 10-Q per-share rows, via `cik` |
+| Issuer | FFO/sh | AFFO / Core FFO/sh | Source                                |
+| ------ | ------ | ------------------ | ------------------------------------- |
+| O      | 1.07   | 1.09               | 10-Q per-share rows                   |
+| SPG    | 3.12   | –                  | 10-Q per-share row (no AFFO reported) |
+| WELL   | 1.56   | –                  | 10-Q row labelled just "FFO"          |
+| DLR    | 2.73   | 2.13               | 10-Q + earnings release               |
+| PLD    | 3.52   | 3.13               | 10-Q totals ÷ shares                  |
+| VICI   | 0.50   | 0.65               | 10-Q totals ÷ shares                  |
+| EXR    | 2.13   | –                  | 10-Q total ÷ shares                   |
+| AVB    | 2.73   | 2.86               | 10-Q per-share rows, via `cik`        |
 
 Ticker→CIK discovery uses EDGAR's `company_tickers.json`, which omits some
 issuers whose EDGAR metadata carries no ticker (e.g. AVB). Pass a `cik` (or a

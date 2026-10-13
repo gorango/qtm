@@ -8,11 +8,7 @@ export type {
 	ToolDefinition,
 } from './types'
 
-export {
-	createToolRegistry,
-	createDynamicStrategyTool,
-	buildSystemPrompt,
-} from './registry'
+export { createToolRegistry, createDynamicStrategyTool, buildSystemPrompt } from './registry'
 export type { StrategyDefinition, StrategyRegistryData } from './registry'
 
 export {

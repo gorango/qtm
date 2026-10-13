@@ -1,10 +1,6 @@
 import type { FundamentalPoint, FundamentalPointData } from '@quantamental/core'
 import { num, ts } from '../num'
-import {
-	deriveReitMetrics,
-	forwardAnnualDividendRate,
-	trailingAnnualDividend,
-} from './enrich'
+import { deriveReitMetrics, forwardAnnualDividendRate, trailingAnnualDividend } from './enrich'
 import type { FmpBundle, FmpOwnerEarnings, FmpRow } from './types'
 
 export interface MapResult {

@@ -47,11 +47,11 @@ No environment variables are required — all computation runs locally against t
 
 Tool names are prefixed by category (`strategy_`, `indicator_`, `factor_`) because 35 ids are shared by the indicator and strategy categories (e.g. `rsi` is both an indicator and a strategy).
 
-| Category   | Count | Input                              | Dispatch                                  |
-| ---------- | ----- | ---------------------------------- | ----------------------------------------- |
-| Indicators | 177   | `values: number[]`                 | `core[id]` or `core[camelCase(id)]`       |
-| Factors    | 72    | `fundamentals: FundamentalPoint[]` | `core[id]` or `core[camelCase(id)]`       |
-| Strategies | 112   | `closes: number[]` + OHLCV + config | `core.runStrategy(id, input, config)`    |
+| Category   | Count | Input                               | Dispatch                              |
+| ---------- | ----- | ----------------------------------- | ------------------------------------- |
+| Indicators | 177   | `values: number[]`                  | `core[id]` or `core[camelCase(id)]`   |
+| Factors    | 72    | `fundamentals: FundamentalPoint[]`  | `core[id]` or `core[camelCase(id)]`   |
+| Strategies | 112   | `closes: number[]` + OHLCV + config | `core.runStrategy(id, input, config)` |
 
 ### Strategies
 
@@ -77,13 +77,15 @@ Example:
 {
 	"name": "factor_price_to_book",
 	"arguments": {
-		"fundamentals": [{
-			"symbol": "AAPL",
-			"date": 1000,
-			"filingDate": 1000,
-			"period": "Q1",
-			"data": { "marketCap": 300000, "shareholdersEquity": 150000 }
-		}]
+		"fundamentals": [
+			{
+				"symbol": "AAPL",
+				"date": 1000,
+				"filingDate": 1000,
+				"period": "Q1",
+				"data": { "marketCap": 300000, "shareholdersEquity": 150000 }
+			}
+		]
 	}
 }
 ```

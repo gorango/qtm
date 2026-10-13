@@ -121,16 +121,18 @@ describe('quantamental-mcp server', () => {
 			const res = await request(server, 'tools/call', {
 				name: 'factor_price_to_book',
 				arguments: {
-					fundamentals: [{
-						symbol: 'AAPL',
-						date: 1000,
-						filingDate: 1000,
-						period: 'Q1',
-						data: {
-							marketCap: 300000,
-							shareholdersEquity: 150000,
+					fundamentals: [
+						{
+							symbol: 'AAPL',
+							date: 1000,
+							filingDate: 1000,
+							period: 'Q1',
+							data: {
+								marketCap: 300000,
+								shareholdersEquity: 150000,
+							},
 						},
-					}],
+					],
 				},
 			})
 

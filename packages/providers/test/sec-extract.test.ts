@@ -18,7 +18,9 @@ describe('extractReitMetrics', () => {
 	})
 
 	it('does not read AFFO lines as FFO', () => {
-		const out = extractReitMetrics('<table><tr><td>AFFO per share - Diluted</td><td>$0.77</td></tr></table>')
+		const out = extractReitMetrics(
+			'<table><tr><td>AFFO per share - Diluted</td><td>$0.77</td></tr></table>',
+		)
 		expect(out.affoPerShare).toBeCloseTo(0.77)
 		expect(out.ffoPerShare).toBeUndefined()
 	})
