@@ -1,0 +1,42 @@
+{
+	"name": "@quantamental/providers",
+	"version": "0.5.0",
+	"description": "Data providers that normalize external sources into quantamental's FundamentalPoint / Bar contracts",
+	"keywords": [
+		"quant",
+		"fundamentals",
+		"providers",
+		"fmp",
+		"adapters"
+	],
+	"type": "module",
+	"files": [
+		"src"
+	],
+	"exports": {
+		".": "./src/index.ts",
+		"./fmp": "./src/fmp/index.ts"
+	},
+	"scripts": {
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"@quantamental/core": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/node": "^25.9.4",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.9"
+	},
+	"engines": {
+		"node": ">=22",
+		"bun": ">=1.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gorango/qtm",
+		"directory": "packages/providers"
+	}
+}

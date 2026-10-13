@@ -8,6 +8,7 @@ import {
 	createFactorTools,
 } from '@quantamental/tools'
 import type { WorkflowTool, ToolResult } from '@quantamental/tools'
+import { registerConfiguredProviders } from './providers'
 
 // The generated registry uses snake_case ids; napi exports use camelCase
 // (e.g. "awesome_oscillator" → core.awesomeOscillator). Resolve both forms.
@@ -120,6 +121,9 @@ function createServer() {
 			},
 		)
 	}
+
+	// Optional: registered only when FMP_KEY is set (adds network + credentials).
+	registerConfiguredProviders(server)
 
 	return server
 }

@@ -67,6 +67,8 @@ preflight:
 	"
 	(cd bindings/js && node --test ./index.test.js)
 	echo "pre-flight: js smoke green"
+	(cd packages/providers && bun run typecheck && bun run test)
+	echo "pre-flight: providers green"
 	(cd packages/mcp && bun run typecheck && bun run test)
 	echo "pre-flight: mcp green"
 
