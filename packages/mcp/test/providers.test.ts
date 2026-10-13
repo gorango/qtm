@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { FundamentalProvider } from '@quantamental/providers'
-import { createFmpFundamentalsTool } from '../src/providers'
+import { createFmpFundamentalsTool, createSecReitTool } from '../src/providers'
 
 const point = { symbol: 'PLD', date: 1, filingDate: 1, period: 'Q1', data: { marketCap: 1 } }
 
@@ -41,5 +41,31 @@ describe('createFmpFundamentalsTool', () => {
 
 		expect(result.status).toBe('failed')
 		expect(result.error?.message).toBe('boom')
+	})
+})
+
+describe('createSecReitTool', () => {
+	const enricher = {
+		id: 'sec',
+		async enrich(points: unknown[]) {
+			return {
+				data: points,
+				provenance: {
+					provider: 'sec',
+					retrievedAt: '2024-01-01T00:00:00.000Z',
+					estimated: false,
+					warnings: [],
+				},
+			}
+		},
+	}
+
+	it('passes the panel through and reports provenance', async () => {
+		const tool = createSecReitTool(enricher)
+		const result = await tool.execute({ fundamentals: [{ symbol: 'PLD' }] })
+
+		expect(tool.name).toBe('provider_sec_reit')
+		expect(result.status).toBe('completed')
+		expect(result.provenance).toMatchObject({ provider: 'sec', estimated: false })
 	})
 })
