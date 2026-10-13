@@ -79,4 +79,18 @@ describe('createSecReitEnricher', () => {
 		expect(provenance.estimated).toBe(true)
 		expect(provenance.warnings.join(' ')).toMatch(/no symbol/)
 	})
+
+	it('derives per share from a reported total and the panel share count', async () => {
+		const html =
+			'<tr><td>NAREIT defined FFO attributable to common stockholders</td><td>$</td><td>3,368</td></tr>'
+		const enricher = createSecReitEnricher({ client: client([filing], html), now: fixedNow })
+		const withShares = point('2024-03-31', 2.3)
+		withShares.data.sharesOutstanding = 957_884_000
+
+		const { data, provenance } = await enricher.enrich([withShares])
+
+		expect(data[0].data.ffoPerShare).toBeCloseTo(3.516, 2)
+		expect(provenance.estimated).toBe(true)
+		expect(provenance.warnings.join(' ')).toMatch(/derived/)
+	})
 })

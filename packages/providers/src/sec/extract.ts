@@ -1,8 +1,21 @@
+export interface ReportedTotals {
+	/** FFO total, in the filing's own scale (see `perShareFromTotal`). */
+	ffo?: number
+	/** AFFO / Core FFO / Adjusted FFO total, in the filing's own scale. */
+	affo?: number
+	matched: { ffo?: string; affo?: string }
+}
+
 export interface ReportedReit {
 	/** FFO per share as reported (diluted preferred). */
 	ffoPerShare?: number
 	/** AFFO / Core FFO / Adjusted FFO per share as reported. */
 	affoPerShare?: number
+	/**
+	 * Totals, when the filing reports FFO/AFFO in aggregate (many REITs do not
+	 * print a per-share line). Divide by diluted shares to get per share.
+	 */
+	totals: ReportedTotals
 	/** The filing lines the values were read from, for provenance/debugging. */
 	matched: { ffo?: string; affo?: string }
 	warnings: string[]
@@ -30,8 +43,10 @@ export interface ExtractOptions {
 	perShareMax?: number
 }
 
-const FFO_PER_SHARE = /\bffo\b/i
+const FFO_PER_SHARE = /\bffo\b|funds\s+from\s+operations/i
 const AFFO_PER_SHARE = /\baffo\b|adjusted funds from operations|core ffo|adjusted ffo/i
+/** Measures that are AFFO-like, not headline FFO — excluded from the FFO match. */
+const ADJUSTED_FFO = /\bcore\s+ffo|adjusted\s+ffo|adjusted\s+funds\s+from\s+operations/i
 const FOOTNOTE = /^\(\d+\)/
 const AGGREGATE = /\b(million|billion|thousand)\b/i
 /** A row whose label leads with the metric, e.g. "Diluted FFO", "Core FFO". */
@@ -58,25 +73,45 @@ export function extractReitMetrics(html: string, options: ExtractOptions = {}): 
 	const rows = segments(html, /<\/tr>/gi)
 	const prose = segments(html, /<\/p>|<\/div>|<\/li>|<\/h[1-6]>/gi)
 
-	const pick = (metric: RegExp): Match => {
-		const fromRows = matchPerShare(rows, metric, context)
+	const pick = (metric: RegExp, skip?: RegExp): Match => {
+		const fromRows = matchPerShare(rows, metric, context, skip)
 		if (fromRows.value !== undefined) return fromRows
 		// Some issuers label the per-share row just "FFO"/"AFFO" in a table
 		// whose header says "per share" — accept those when every value looks
 		// per-share sized (which rejects the "dollars in thousands" totals rows).
-		const loose = matchPerShareRow(rows, metric, context)
-		return loose.value !== undefined ? loose : matchPerShare(prose, metric, context)
+		const loose = matchPerShareRow(rows, metric, context, skip)
+		return loose.value !== undefined ? loose : matchPerShare(prose, metric, context, skip)
 	}
 
-	const ffo = pick(FFO_PER_SHARE)
+	const ffo = pick(FFO_PER_SHARE, ADJUSTED_FFO)
 	const affo = pick(AFFO_PER_SHARE)
+	const ffoTotal = matchTotal(rows, FFO_PER_SHARE, context, ADJUSTED_FFO)
+	const affoTotal = matchTotal(rows, AFFO_PER_SHARE, context)
+
 	const warnings: string[] = []
-	if (ffo.value === undefined) warnings.push('no FFO per share line found')
-	if (affo.value === undefined) warnings.push('no AFFO per share line found')
+	if (ffo.value === undefined) {
+		warnings.push(
+			ffoTotal.value === undefined
+				? 'no FFO per share or total found'
+				: 'FFO per share not reported (total found; divide by shares)',
+		)
+	}
+	if (affo.value === undefined) {
+		warnings.push(
+			affoTotal.value === undefined
+				? 'no AFFO per share or total found'
+				: 'AFFO per share not reported (total found; divide by shares)',
+		)
+	}
 
 	return {
 		ffoPerShare: ffo.value,
 		affoPerShare: affo.value,
+		totals: {
+			ffo: ffoTotal.value,
+			affo: affoTotal.value,
+			matched: { ffo: ffoTotal.line, affo: affoTotal.line },
+		},
 		matched: { ffo: ffo.line, affo: affo.line },
 		warnings,
 	}
@@ -100,11 +135,12 @@ interface Context {
 	perShareMax: number
 }
 
-function matchPerShare(segments: string[], metric: RegExp, context: Context): Match {
+function matchPerShare(segments: string[], metric: RegExp, context: Context, skip?: RegExp): Match {
 	let fallback: Match = {}
 	for (const segment of segments) {
 		if (segment.length > context.maxSegmentLength) continue
 		if (!/per\s*share/i.test(segment) || !metric.test(segment)) continue
+		if (skip?.test(segment)) continue
 		// Footnotes and aggregate discussions mention "FFO per share" but quote
 		// totals, not the per-share figure.
 		if (FOOTNOTE.test(segment.trim()) || AGGREGATE.test(segment)) continue
@@ -128,13 +164,14 @@ function matchPerShare(segments: string[], metric: RegExp, context: Context): Ma
  * "per share" (the table header carries them). Only accepts rows whose every
  * value is per-share sized, so totals and "% change" rows are rejected.
  */
-function matchPerShareRow(segments: string[], metric: RegExp, context: Context): Match {
+function matchPerShareRow(segments: string[], metric: RegExp, context: Context, skip?: RegExp): Match {
 	let fallback: Match = {}
 	for (const segment of segments) {
 		const label = segment.trim()
 		if (label.length > context.maxSegmentLength) continue
 		if (FOOTNOTE.test(label) || AGGREGATE.test(segment)) continue
 		if (!LABEL_LEAD.test(label) || !metric.test(segment)) continue
+		if (skip?.test(segment)) continue
 
 		const tokens = tokenize(segment).filter((t) => t.hasDecimal || t.hasCurrency)
 		if (tokens.length <= context.column) continue
@@ -145,6 +182,51 @@ function matchPerShareRow(segments: string[], metric: RegExp, context: Context):
 		if (fallback.value === undefined) fallback = candidate
 	}
 	return fallback
+}
+
+/**
+ * Find a metric's *total* row (as opposed to per-share), e.g.
+ * "NAREIT defined FFO ... $ 3,368". Values are in the filing's own scale
+ * (thousands or millions) — `perShareFromTotal` resolves that against shares.
+ */
+function matchTotal(segments: string[], metric: RegExp, context: Context, skip?: RegExp): Match {
+	for (const segment of segments) {
+		const label = segment.trim()
+		if (label.length > context.maxSegmentLength) continue
+		if (FOOTNOTE.test(label) || AGGREGATE.test(segment)) continue
+		if (!LABEL_LEAD.test(label) || !metric.test(segment)) continue
+		if (skip?.test(segment)) continue
+
+		const big = tokenize(segment).find((t) => Math.abs(t.value) >= context.perShareMax)
+		if (big === undefined) continue
+		return { value: big.value, line: label.slice(0, 200) }
+	}
+	return {}
+}
+
+/** Reporting scales a reconciliation table might use. */
+const SCALES = [1, 1e3, 1e6]
+
+/**
+ * Convert a reported total (in the filing's scale) to per share.
+ *
+ * Filings are inconsistent about scale — one REIT prints FFO in thousands,
+ * another in millions — so the scale is inferred by plausibility: a REIT's
+ * FFO/AFFO per share sits in a narrow band, so typically only one of
+ * {units, thousands, millions} lands there. Returns `undefined` when none or
+ * several fit, rather than guessing.
+ */
+export function perShareFromTotal(total: number, shares: number, scale?: number): number | undefined {
+	if (!Number.isFinite(total) || total === 0 || !Number.isFinite(shares) || shares <= 0) {
+		return undefined
+	}
+	const candidates = scale !== undefined ? [scale] : SCALES
+	const plausible = candidates.filter((s) => {
+		const per = (total * s) / shares
+		return per >= 0.05 && per <= 100
+	})
+	if (plausible.length !== 1) return undefined
+	return (total * plausible[0]) / shares
 }
 
 function tokenize(segment: string): Token[] {
@@ -179,6 +261,7 @@ function segments(html: string, splitter: RegExp): string[] {
 		.replace(/<br\s*\/?>/gi, SENTINEL)
 		.replace(/<[^>]+>/g, ' ')
 		.replace(/&nbsp;/gi, ' ')
+		.replace(/&#\d+;/g, ' ')
 		.replace(/&amp;/gi, '&')
 		.replace(/&#39;|&rsquo;|&apos;/gi, "'")
 		.replace(/[\s\u200b\u200c\u200d\ufeff]+/g, ' ')

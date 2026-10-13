@@ -1,10 +1,10 @@
 import type { FundamentalPoint } from '@quantamental/core'
 import type { EnrichOptions, FundamentalEnricher, Provenance, ProviderResult } from '../provider'
 import { createSecClient, type SecClient } from './client'
-import { extractReitMetrics } from './extract'
+import { extractReitMetrics, perShareFromTotal } from './extract'
 
 export * from './client'
-export { extractReitMetrics, type ExtractOptions, type ReportedReit } from './extract'
+export { extractReitMetrics, perShareFromTotal, type ExtractOptions, type ReportedReit, type ReportedTotals } from './extract'
 
 const REIT_FORMS = ['10-K', '10-Q']
 
@@ -69,17 +69,40 @@ export function createSecReitEnricher(options: SecReitEnricherOptions): Fundamen
 			warnings.push(...reported.warnings)
 
 			const target = pointForReportDate(cloned, filing.reportDate) ?? cloned[cloned.length - 1]
-			if (reported.ffoPerShare !== undefined) target.data.ffoPerShare = reported.ffoPerShare
-			if (reported.affoPerShare !== undefined) {
-				target.data.affoPerShare = reported.affoPerShare
+			const shares = target.data.sharesOutstanding
+
+			// Preferred: the reported per-share line. Otherwise derive it from the
+			// reported total and the period's share count.
+			const ffoPerShare =
+				reported.ffoPerShare ??
+				(reported.totals.ffo !== undefined && shares !== undefined
+					? perShareFromTotal(reported.totals.ffo, shares)
+					: undefined)
+			const affoPerShare =
+				reported.affoPerShare ??
+				(reported.totals.affo !== undefined && shares !== undefined
+					? perShareFromTotal(reported.totals.affo, shares)
+					: undefined)
+
+			let derived = false
+			if (ffoPerShare !== undefined) {
+				if (reported.ffoPerShare === undefined) derived = true
+				target.data.ffoPerShare = ffoPerShare
+			}
+			if (affoPerShare !== undefined) {
+				if (reported.affoPerShare === undefined) derived = true
+				target.data.affoPerShare = affoPerShare
 				const dividend = target.data.forwardAnnualDividendRate
-				if (dividend !== undefined && reported.affoPerShare > 0) {
-					target.data.payoutRatioFfo = dividend / reported.affoPerShare
+				if (dividend !== undefined && affoPerShare > 0) {
+					target.data.payoutRatioFfo = dividend / affoPerShare
 				}
 			}
+			if (derived) {
+				warnings.push('per-share derived: reported total divided by shares outstanding')
+			}
 
-			const estimated = reported.ffoPerShare === undefined && reported.affoPerShare === undefined
-			return { data: cloned, provenance: provenance(estimated, [filing.url]) }
+			const found = reported.ffoPerShare !== undefined || reported.affoPerShare !== undefined
+			return { data: cloned, provenance: provenance(!found, [filing.url]) }
 		},
 	}
 }

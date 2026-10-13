@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { extractReitMetrics } from '../src/sec/extract'
+import { extractReitMetrics, perShareFromTotal } from '../src/sec/extract'
 import { REIT_10Q_HTML } from './fixtures/reit-10q'
 
 describe('extractReitMetrics', () => {
@@ -75,5 +75,42 @@ describe('extractReitMetrics', () => {
 			<tr><td>FFO attributable to common stockholders</td><td>$</td><td>1,153,653</td><td>$</td><td>982,548</td></tr>
 			</table>`
 		expect(extractReitMetrics(html).ffoPerShare).toBeCloseTo(1.56)
+	})
+
+	it('exposes totals when the filing omits a per-share line', () => {
+		const html =
+			'<tr><td>NAREIT defined FFO attributable to common stockholders</td><td>$</td><td>3,368</td><td>$</td><td>2,598</td></tr>'
+		const out = extractReitMetrics(html)
+		expect(out.ffoPerShare).toBeUndefined()
+		expect(out.totals.ffo).toBe(3368)
+		expect(out.warnings.join(' ')).toMatch(/total found/)
+	})
+
+	it('ignores numeric HTML entities (&#160;) that would parse as numbers', () => {
+		const html =
+			'<tr><td>&#160; Funds from operations attributable to common stockholders</td><td>&#160; $ 457,305</td></tr>'
+		const out = extractReitMetrics(html)
+		expect(out.totals.ffo).toBe(457305)
+	})
+})
+
+describe('perShareFromTotal', () => {
+	it('infers millions for a PLD-style total', () => {
+		expect(perShareFromTotal(3368, 957_884_000)).toBeCloseTo(3.516, 2)
+	})
+
+	it('infers thousands for an EXR-style total', () => {
+		expect(perShareFromTotal(457_305, 215_000_000)).toBeCloseTo(2.127, 2)
+	})
+
+	it('honours an explicit scale', () => {
+		expect(perShareFromTotal(3368, 957_884_000, 1e6)).toBeCloseTo(3.516, 2)
+		expect(perShareFromTotal(3368, 957_884_000, 1)).toBeUndefined()
+	})
+
+	it('returns undefined rather than guessing when no scale fits', () => {
+		expect(perShareFromTotal(1, 1e12)).toBeUndefined()
+		expect(perShareFromTotal(0, 1000)).toBeUndefined()
+		expect(perShareFromTotal(100, 0)).toBeUndefined()
 	})
 })
