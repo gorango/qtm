@@ -21,9 +21,17 @@ export interface SecFindOptions {
 	signal?: AbortSignal
 }
 
+export interface SecDocument {
+	name: string
+	url: string
+	size: number
+}
+
 export interface SecClient {
 	findFilings(symbol: string, options?: SecFindOptions): Promise<SecFilingRef[]>
 	fetchDocument(url: string, options?: { signal?: AbortSignal }): Promise<string>
+	/** List a filing's documents (via its EDGAR index), e.g. to find EX-99.1. */
+	listDocuments(filing: SecFilingRef, options?: { signal?: AbortSignal }): Promise<SecDocument[]>
 }
 
 export interface SecClientOptions {
@@ -131,6 +139,19 @@ export function createSecClient(options: SecClientOptions = {}): SecClient {
 		async fetchDocument(url, fetchOptions = {}) {
 			const response = await get(url, fetchOptions.signal)
 			return response.text()
+		},
+
+		async listDocuments(filing, listOptions = {}) {
+			const base = `${SEC_BASE}/Archives/edgar/data/${filing.cik}/${filing.accessionNumber.replace(/-/g, '')}/`
+			const response = await get(`${base}index.json`, listOptions.signal)
+			const data = (await response.json()) as {
+				directory?: { item?: Array<{ name: string; size: string }> }
+			}
+			return (data.directory?.item ?? []).map((item) => ({
+				name: item.name,
+				url: base + item.name,
+				size: Number(item.size),
+			}))
 		},
 	}
 }

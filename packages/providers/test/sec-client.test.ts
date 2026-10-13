@@ -15,6 +15,15 @@ const SUBMISSIONS = {
 	},
 }
 
+const INDEX = {
+	directory: {
+		item: [
+			{ name: 'pld-20240331.htm', size: '12345' },
+			{ name: 'ex99-1.htm', size: '500000' },
+		],
+	},
+}
+
 interface LogEntry {
 	url: string
 	userAgent: string | undefined
@@ -24,7 +33,11 @@ function stubFetch(log: LogEntry[]): typeof fetch {
 	return (async (input: unknown, init?: { headers?: Record<string, string> }) => {
 		const url = String(input)
 		log.push({ url, userAgent: init?.headers?.['User-Agent'] })
-		const body: unknown = url.includes('company_tickers') ? TICKERS : SUBMISSIONS
+		const body: unknown = url.includes('company_tickers')
+			? TICKERS
+			: url.includes('index.json')
+				? INDEX
+				: SUBMISSIONS
 		return {
 			ok: true,
 			status: 200,
@@ -84,5 +97,17 @@ describe('createSecClient', () => {
 			'https://www.sec.gov/Archives/edgar/data/1045609/000104560924000010/pld-20240331.htm',
 		)
 		expect(html).toContain('doc')
+	})
+
+	it('lists filing documents via the EDGAR index', async () => {
+		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch([]) })
+		const [filing] = await client.findFilings('PLD', { forms: ['10-Q'], limit: 1 })
+		const documents = await client.listDocuments(filing)
+
+		expect(documents.map((d) => d.name)).toEqual(['pld-20240331.htm', 'ex99-1.htm'])
+		expect(documents[1].size).toBe(500000)
+		expect(documents[0].url).toBe(
+			'https://www.sec.gov/Archives/edgar/data/1045609/000104560924000010/pld-20240331.htm',
+		)
 	})
 })

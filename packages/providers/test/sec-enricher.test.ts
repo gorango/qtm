@@ -17,6 +17,22 @@ function client(filings: SecFilingRef[], html = REIT_10Q_HTML): SecClient {
 	return {
 		findFilings: async () => filings,
 		fetchDocument: async () => html,
+		listDocuments: async () => [],
+	}
+}
+
+/** Fake where 8-K lookups return a release exhibit and documents differ by URL. */
+function multiClient(filings: SecFilingRef[], documents: Record<string, string>): SecClient {
+	return {
+		findFilings: async (_symbol, options) =>
+			options?.forms?.includes('8-K')
+				? filings.filter((f) => f.form === '8-K')
+				: filings.filter((f) => f.form !== '8-K'),
+		fetchDocument: async (url) => documents[url] ?? '',
+		listDocuments: async (filing) =>
+			filing.form === '8-K'
+				? [{ name: 'ex99-1.htm', url: 'https://sec.example/ex99-1.htm', size: 500_000 }]
+				: [],
 	}
 }
 
@@ -92,5 +108,33 @@ describe('createSecReitEnricher', () => {
 		expect(data[0].data.ffoPerShare).toBeCloseTo(3.516, 2)
 		expect(provenance.estimated).toBe(true)
 		expect(provenance.warnings.join(' ')).toMatch(/derived/)
+	})
+
+	it('falls back to the earnings release for a missing measure', async () => {
+		const eightK: SecFilingRef = {
+			...filing,
+			form: '8-K',
+			filingDate: '2024-07-25',
+			reportDate: '',
+			url: 'https://sec.example/8k.htm',
+		}
+		const releaseHtml =
+			'<p>Reported Core FFO per share of $2.65 in 2Q24, compared to $1.87 in 2Q23</p>'
+		const enricher = createSecReitEnricher({
+			client: multiClient([filing, eightK], {
+				[filing.url]:
+					'<tr><td>NAREIT defined FFO attributable to common stockholders</td><td>$</td><td>3,368</td></tr>',
+				'https://sec.example/ex99-1.htm': releaseHtml,
+			}),
+			now: fixedNow,
+		})
+		const withShares = point('2024-03-31', 2.3)
+		withShares.data.sharesOutstanding = 957_884_000
+
+		const { data, provenance } = await enricher.enrich([withShares])
+
+		expect(data[0].data.ffoPerShare).toBeCloseTo(3.516, 2)
+		expect(data[0].data.affoPerShare).toBeCloseTo(2.65)
+		expect(provenance.sources).toContain('https://sec.example/ex99-1.htm')
 	})
 })
