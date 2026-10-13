@@ -22,6 +22,12 @@ const secParameters = z.object({
 		.array(z.unknown())
 		.describe('A fundamentals panel from provider_fmp_fundamentals'),
 	symbol: z.string().optional().describe('Overrides the symbol inferred from the panel'),
+	cik: z
+		.number()
+		.int()
+		.positive()
+		.optional()
+		.describe('CIK, for issuers EDGAR cannot resolve by ticker'),
 })
 
 export type FmpFundamentalsArgs = z.infer<typeof fmpParameters>
@@ -89,6 +95,7 @@ export function createSecReitTool(enricher: FundamentalEnricher) {
 			try {
 				const result = await enricher.enrich(args.fundamentals as never, {
 					symbol: args.symbol,
+					cik: args.cik,
 				})
 				return {
 					status: 'completed',
