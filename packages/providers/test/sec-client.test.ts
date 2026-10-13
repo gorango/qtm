@@ -110,4 +110,25 @@ describe('createSecClient', () => {
 			'https://www.sec.gov/Archives/edgar/data/1045609/000104560924000010/pld-20240331.htm',
 		)
 	})
+
+	it('uses a supplied CIK without resolving the ticker', async () => {
+		const log: LogEntry[] = []
+		const client = createSecClient({ userAgent: 'x y@z.co', minIntervalMs: 0, fetch: stubFetch(log) })
+		const filings = await client.findFilings('AVB', { forms: ['10-Q'], cik: 915912 })
+
+		expect(filings[0].cik).toBe(915912)
+		expect(log.some((l) => l.url.includes('company_tickers'))).toBe(false)
+		expect(log[0].url).toContain('/submissions/CIK0000915912.json')
+	})
+
+	it('falls back to a resolveCik hook when the ticker is unknown', async () => {
+		const client = createSecClient({
+			userAgent: 'x y@z.co',
+			minIntervalMs: 0,
+			fetch: stubFetch([]),
+			resolveCik: (symbol) => (symbol === 'AVB' ? 915912 : undefined),
+		})
+		const filings = await client.findFilings('AVB', { forms: ['10-Q'] })
+		expect(filings[0].cik).toBe(915912)
+	})
 })

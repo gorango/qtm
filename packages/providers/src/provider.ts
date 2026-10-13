@@ -52,6 +52,8 @@ export interface PriceProvider {
 export interface EnrichOptions {
 	/** Overrides the symbol inferred from the first point. */
 	symbol?: string
+	/** Supply the CIK directly (for issuers EDGAR cannot resolve by ticker). */
+	cik?: number
 	signal?: AbortSignal
 }
 

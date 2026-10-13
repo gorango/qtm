@@ -92,20 +92,27 @@ to ~10 req/s — filings are immutable, so cache them. Extraction is heuristic
 per-share FFO/AFFO lines from the tables (falling back to prose), reports what it
 matched, and warns rather than guessing when a value is absent.
 
-### Coverage, validated against live 10-Qs
+### Coverage, validated against live filings
 
-Enriched (reported values found): issuers that print an FFO/AFFO **per-share**
-line — O, SPG, WELL, DLR. The rest fall back to the Tier-1 proxy
-(`estimated: true`), because:
+Values are resolved in order: the reported **per-share** line; else the reported
+**total ÷ diluted shares** (the filing's scale is inferred — see
+`perShareFromTotal`); else the **earnings release** (a large EX-99 exhibit on a
+recent 8-K), where many issuers state "Core FFO per share" in prose.
 
-- some issuers report FFO/AFFO only as **totals** (in thousands), with no
-  per-share line (PLD, VICI, EXR) — the per-share figure would need
-  totals ÷ diluted shares;
-- some disclose AFFO only in the earnings **supplement** (8-K), not the 10-K/10-Q
-  (SPG, WELL, DLR report FFO in the filing but not AFFO).
+| Issuer | FFO/sh | AFFO / Core FFO/sh | Source |
+| --- | --- | --- | --- |
+| O | 1.07 | 1.09 | 10-Q per-share rows |
+| SPG | 3.12 | – | 10-Q per-share row (no AFFO reported) |
+| WELL | 1.56 | – | 10-Q row labelled just "FFO" |
+| DLR | 2.73 | 2.13 | 10-Q + earnings release |
+| PLD | 3.52 | 3.13 | 10-Q totals ÷ shares |
+| VICI | 0.50 | 0.65 | 10-Q totals ÷ shares |
+| EXR | 2.13 | – | 10-Q total ÷ shares |
+| AVB | 2.73 | 2.86 | 10-Q per-share rows, via `cik` |
 
-Ticker→CIK discovery uses EDGAR's `company_tickers.json`, which omits issuers
-whose EDGAR metadata carries no ticker (e.g. AVB) — those return no filing.
+Ticker→CIK discovery uses EDGAR's `company_tickers.json`, which omits some
+issuers whose EDGAR metadata carries no ticker (e.g. AVB). Pass a `cik` (or a
+`resolveCik` hook on the client) to reach them.
 
 ## Dates
 

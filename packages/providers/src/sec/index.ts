@@ -63,7 +63,12 @@ export function createSecReitEnricher(options: SecReitEnricherOptions): Fundamen
 
 			// 1. The annual/quarterly filing.
 			const filing = (
-				await client.findFilings(symbol, { forms: REIT_FORMS, limit: 1, signal })
+				await client.findFilings(symbol, {
+					forms: REIT_FORMS,
+					limit: 1,
+					cik: enrichOptions.cik,
+					signal,
+				})
 			)[0]
 			let reported: ReportedReit | undefined
 			if (filing) {
@@ -75,7 +80,9 @@ export function createSecReitEnricher(options: SecReitEnricherOptions): Fundamen
 					warnings.push(`failed to fetch ${filing.form} filed ${filing.filingDate}`)
 				}
 			} else {
-				warnings.push(`no 10-K/10-Q found for ${symbol}`)
+				warnings.push(
+					`no 10-K/10-Q found for ${symbol} (EDGAR may lack a ticker; pass a CIK)`,
+				)
 			}
 
 			const target =
@@ -98,7 +105,7 @@ export function createSecReitEnricher(options: SecReitEnricherOptions): Fundamen
 
 			// 2. Earnings release fallback for whatever is still missing.
 			if (ffo === undefined || affo === undefined) {
-				const release = await findEarningsRelease(client, symbol, signal)
+				const release = await findEarningsRelease(client, symbol, enrichOptions.cik, signal)
 				if (release) {
 					try {
 						const html = await client.fetchDocument(release.url, { signal })
@@ -152,9 +159,10 @@ function resolvePerShare(
 async function findEarningsRelease(
 	client: SecClient,
 	symbol: string,
+	cik: number | undefined,
 	signal?: AbortSignal,
 ): Promise<SecDocument | undefined> {
-	const filings = await client.findFilings(symbol, { forms: ['8-K'], limit: MAX_8KS, signal })
+	const filings = await client.findFilings(symbol, { forms: ['8-K'], limit: MAX_8KS, cik, signal })
 	let best: SecDocument | undefined
 	for (const filing of filings) {
 		let documents: SecDocument[]

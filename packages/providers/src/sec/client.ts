@@ -18,6 +18,8 @@ export interface SecFindOptions {
 	/** Form types to keep, e.g. `['10-K', '10-Q']`. Defaults to all. */
 	forms?: string[]
 	limit?: number
+	/** Supply the CIK directly, skipping ticker resolution. */
+	cik?: number
 	signal?: AbortSignal
 }
 
@@ -44,6 +46,12 @@ export interface SecClientOptions {
 	fetch?: typeof fetch
 	/** Minimum gap between requests. SEC permits 10 req/s; default is ~8 req/s. */
 	minIntervalMs?: number
+	/**
+	 * Fallback ticker→CIK resolver, used when EDGAR's `company_tickers.json`
+	 * omits the symbol (it has no ticker for some filers, e.g. AVB). Provide one
+	 * backed by your fundamentals source to close that gap.
+	 */
+	resolveCik?: (symbol: string) => number | undefined | Promise<number | undefined>
 }
 
 /**
@@ -83,19 +91,26 @@ export function createSecClient(options: SecClientOptions = {}): SecClient {
 		return response
 	}
 
-	async function cikFor(symbol: string, signal?: AbortSignal): Promise<number | undefined> {
+	async function cikFor(
+		symbol: string,
+		override: number | undefined,
+		signal?: AbortSignal,
+	): Promise<number | undefined> {
+		if (override !== undefined) return override
 		if (!tickers) {
 			const response = await get(`${SEC_BASE}/files/company_tickers.json`, signal)
 			const data = (await response.json()) as Record<string, { cik_str: number; ticker: string }>
 			tickers = new Map(Object.values(data).map((row) => [row.ticker.toUpperCase(), row.cik_str]))
 		}
-		return tickers.get(symbol.toUpperCase())
+		const fromFile = tickers.get(symbol.toUpperCase())
+		if (fromFile !== undefined) return fromFile
+		return options.resolveCik ? await options.resolveCik(symbol) : undefined
 	}
 
 	return {
 		async findFilings(symbol, findOptions = {}) {
-			const { forms, limit, signal } = findOptions
-			const cik = await cikFor(symbol, signal)
+			const { forms, limit, signal, cik: cikOverride } = findOptions
+			const cik = await cikFor(symbol, cikOverride, signal)
 			if (cik === undefined) return []
 
 			const response = await get(

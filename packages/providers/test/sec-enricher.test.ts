@@ -137,4 +137,19 @@ describe('createSecReitEnricher', () => {
 		expect(data[0].data.affoPerShare).toBeCloseTo(2.65)
 		expect(provenance.sources).toContain('https://sec.example/ex99-1.htm')
 	})
+
+	it('forwards an explicit CIK to the client', async () => {
+		let seen: number | undefined
+		const spy: SecClient = {
+			findFilings: async (_symbol, options) => {
+				seen ??= options?.cik
+				return []
+			},
+			fetchDocument: async () => '',
+			listDocuments: async () => [],
+		}
+		const enricher = createSecReitEnricher({ client: spy, now: fixedNow })
+		await enricher.enrich([point('2024-03-31', 2.3)], { cik: 915912 })
+		expect(seen).toBe(915912)
+	})
 })
