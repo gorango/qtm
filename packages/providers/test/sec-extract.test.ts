@@ -44,4 +44,36 @@ describe('extractReitMetrics', () => {
 		const html = '<tr><td>Adjusted FFO per share - Diluted</td><td>($1,234.50)</td></tr>'
 		expect(extractReitMetrics(html).affoPerShare).toBeCloseTo(-1234.5)
 	})
+
+	it('joins label and value across <p>-wrapped cells (real EDGAR markup)', () => {
+		const html = `
+			<table><tr>
+				<td><p>Diluted FFO per share and unit <sup>(2)(3)</sup></p></td>
+				<td><p><span>&#8203;</span></p></td>
+				<td><p>$</p></td>
+				<td><p><span> 2.73</span></p></td>
+			</tr></table>`
+		expect(extractReitMetrics(html).ffoPerShare).toBeCloseTo(2.73)
+	})
+
+	it('skips footnotes and aggregate discussions', () => {
+		const html = `
+			<tr><td>(1) FFO and Diluted FFO per share includes $40.0 million, or $0.10 per share, of accelerated stock compensation</td><td></td></tr>
+			<tr><td>(2) The Teraco noncontrolling share of FFO was $19,979 for the three months ended</td></tr>`
+		expect(extractReitMetrics(html).ffoPerShare).toBeUndefined()
+	})
+
+	it('reads a per-share figure stated in prose', () => {
+		const html = '<p>our diluted Adjusted Funds from Operations ("AFFO") per share of $2.22.</p>'
+		expect(extractReitMetrics(html).affoPerShare).toBeCloseTo(2.22)
+	})
+
+	it('reads a per-share row labelled just "FFO" but rejects totals in thousands', () => {
+		const html = `
+			<table>
+			<tr><td>FFO</td><td>$</td><td>1.56</td><td>$</td><td>1.24</td></tr>
+			<tr><td>FFO attributable to common stockholders</td><td>$</td><td>1,153,653</td><td>$</td><td>982,548</td></tr>
+			</table>`
+		expect(extractReitMetrics(html).ffoPerShare).toBeCloseTo(1.56)
+	})
 })

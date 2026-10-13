@@ -89,8 +89,23 @@ const { data, provenance } = await enricher.enrich(points)
 `SEC_USER_AGENT` is required (`"YourName your@email.com"`) and EDGAR is rate-limited
 to ~10 req/s — filings are immutable, so cache them. Extraction is heuristic
 (filings have no standard machine format for the reconciliation): it reads the
-diluted per-share FFO/AFFO lines and reports what it matched, warning rather than
-guessing when a value is absent.
+per-share FFO/AFFO lines from the tables (falling back to prose), reports what it
+matched, and warns rather than guessing when a value is absent.
+
+### Coverage, validated against live 10-Qs
+
+Enriched (reported values found): issuers that print an FFO/AFFO **per-share**
+line — O, SPG, WELL, DLR. The rest fall back to the Tier-1 proxy
+(`estimated: true`), because:
+
+- some issuers report FFO/AFFO only as **totals** (in thousands), with no
+  per-share line (PLD, VICI, EXR) — the per-share figure would need
+  totals ÷ diluted shares;
+- some disclose AFFO only in the earnings **supplement** (8-K), not the 10-K/10-Q
+  (SPG, WELL, DLR report FFO in the filing but not AFFO).
+
+Ticker→CIK discovery uses EDGAR's `company_tickers.json`, which omits issuers
+whose EDGAR metadata carries no ticker (e.g. AVB) — those return no filing.
 
 ## Dates
 
