@@ -9,7 +9,9 @@ export type {
 
 export {
 	ProviderError,
+	type EnrichOptions,
 	type FetchOptions,
+	type FundamentalEnricher,
 	type FundamentalProvider,
 	type Period,
 	type PriceProvider,

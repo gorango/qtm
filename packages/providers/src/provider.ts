@@ -21,6 +21,8 @@ export interface Provenance {
 	retrievedAt: string
 	/** True when any value was modelled rather than reported (e.g. proxy AFFO). */
 	estimated: boolean
+	/** URLs (or identifiers) the values were read from, when known. */
+	sources?: string[]
 	warnings: string[]
 }
 
@@ -45,6 +47,24 @@ export interface PriceProvider {
 		symbol: string,
 		options?: { from?: string; to?: string; signal?: AbortSignal },
 	): Promise<ProviderResult<Bar[]>>
+}
+
+export interface EnrichOptions {
+	/** Overrides the symbol inferred from the first point. */
+	symbol?: string
+	signal?: AbortSignal
+}
+
+/**
+ * Overlays authoritative values onto an existing fundamentals panel — e.g.
+ * replacing modelled FFO/AFFO with the figures a REIT actually reported.
+ */
+export interface FundamentalEnricher {
+	readonly id: string
+	enrich(
+		points: FundamentalPoint[],
+		options?: EnrichOptions,
+	): Promise<ProviderResult<FundamentalPoint[]>>
 }
 
 export class ProviderError extends Error {

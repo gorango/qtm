@@ -15,7 +15,8 @@
 	],
 	"exports": {
 		".": "./src/index.ts",
-		"./fmp": "./src/fmp/index.ts"
+		"./fmp": "./src/fmp/index.ts",
+		"./sec": "./src/sec/index.ts"
 	},
 	"scripts": {
 		"typecheck": "tsc --noEmit",

@@ -69,7 +69,28 @@ AFFO = FFO − maintenanceCapex            # owner-earnings model value
 ```
 
 Every result carries `provenance.estimated` and human-readable
-`provenance.warnings`. `affoPerShare` is **annual** (matching P/AFFO semantics).
+`provenance.warnings`. `affoPerShare` is **annual** (matching `price_to_affo`,
+`reit_dividend_safety`, and `high_yield_reit_strategy`).
+
+## Reported FFO/AFFO (SEC, "Tier-2")
+
+The proxies above can be replaced with the figures a REIT actually reported, by
+reading the FFO/AFFO reconciliation from its latest 10-K/10-Q on EDGAR:
+
+```ts
+import { createSecClient, createSecReitEnricher } from '@quantamental/providers/sec'
+
+const enricher = createSecReitEnricher({ client: createSecClient() }) // reads SEC_USER_AGENT
+const { data, provenance } = await enricher.enrich(points)
+// provenance.estimated === false when reported values were found
+// provenance.sources === [filing url]
+```
+
+`SEC_USER_AGENT` is required (`"YourName your@email.com"`) and EDGAR is rate-limited
+to ~10 req/s — filings are immutable, so cache them. Extraction is heuristic
+(filings have no standard machine format for the reconciliation): it reads the
+diluted per-share FFO/AFFO lines and reports what it matched, warning rather than
+guessing when a value is absent.
 
 ## Dates
 
